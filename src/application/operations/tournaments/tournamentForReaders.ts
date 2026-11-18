@@ -20,6 +20,8 @@ import {
 
 /** A competition as a tournament's pages lead to it. */
 export interface CompetitionOfTournament {
+  /** What the competition is kept by, which never changes. */
+  readonly id: string;
   readonly name: string;
   /** Where it is found, as "2026/ac/spring-open/competitions/block-a". */
   readonly address: string;
@@ -128,6 +130,7 @@ export const competitionsInUse = (
     .filter(({ reference }) => !reference.archived)
     .map(({ reference, shape }) => {
       const competition = {
+        id: reference.id.value,
         name: reference.name.toString(),
         address: `${address}/${shape.kind === "test" ? "tests" : "competitions"}/${reference.slug.toString()}`,
       };
@@ -162,6 +165,7 @@ export const playersOf = (tournament: Tournament): Map<string, PlayerInGame> =>
         [
           player.id.value,
           {
+            playerId: player.id.value,
             name: player.name.toString(),
             representing: player.representing,
             handicap: player.handicap,
@@ -175,6 +179,7 @@ export const playersOf = (tournament: Tournament): Map<string, PlayerInGame> =>
           [
             player.id.value,
             {
+              playerId: player.id.value,
               name: player.name.toString(),
               representing: team.name.toString(),
               handicap: undefined,

@@ -12,6 +12,8 @@ export type GamesOfTournamentRefusedCode = "GamesOfTournament.NotText";
 
 /** A player as a game shows them. */
 export interface PlayerInGame {
+  /** What the tournament keeps them by, which never changes. */
+  readonly playerId: string;
   /** What the tournament calls them now. */
   readonly name: string;
   /** What they represent, or nothing where they represent nothing. */

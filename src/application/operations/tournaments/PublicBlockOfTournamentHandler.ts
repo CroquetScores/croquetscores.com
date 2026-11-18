@@ -90,6 +90,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
       usualMaximumHoops: tournament.sport.usualMaximumHoops,
       players,
       games: games.map((game) => ({
+        id: game.id.value,
         winner: game.winner.value,
         winnerScore: game.winnerScore.toString(),
         loser: game.loser.value,

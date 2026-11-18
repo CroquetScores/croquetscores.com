@@ -12,6 +12,8 @@ export type PublicPlayersOfTournamentRefusedCode =
 
 /** A player as a tournament's players' page shows them and leads to them. */
 export interface PublicPlayer {
+  /** What the tournament keeps them by, which never changes. */
+  readonly playerId: string;
   /** What the tournament calls them now. */
   readonly name: string;
   /** What they represent, or nothing where they represent nothing. */
@@ -69,6 +71,8 @@ export interface TeamOfPlayers {
 
 /** A player in a team, as the players' page lists them and leads to them. */
 export interface TeamPlayerOfPlayers {
+  /** What the tournament keeps them by, which never changes. */
+  readonly playerId: string;
   /** What the tournament calls them now. */
   readonly name: string;
   /** Where their page is found, as "2026/ac/spring-tests/players/pat-player". */

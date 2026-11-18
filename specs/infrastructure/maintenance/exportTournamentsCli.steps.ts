@@ -41,7 +41,10 @@ import {
 } from "../../application/operations/tournaments/aRequest.js";
 import { competitionIn } from "../../application/operations/tournaments/requests.js";
 import { testRequestFor } from "../../application/operations/tournaments/teamRequests.js";
-import { playerNamed } from "../../domain/aggregates/tournaments/tournament/aTournament.js";
+import {
+  competitionNamed as competitionOfTournament,
+  playerNamed,
+} from "../../domain/aggregates/tournaments/tournament/aTournament.js";
 import {
   teamNamed as teamOfTournament,
   teamScenarioOf,
@@ -994,6 +997,41 @@ Then(
   },
 );
 
+Then(
+  "the file says the tournament's id is the one the site keeps {string} by",
+  function (this: SpecWorld, name: string) {
+    assert.equal(
+      readOf(this)["tournamentId"],
+      tournamentNamed(this, name).value,
+    );
+  },
+);
+
+Then("the file says the tournament is national", function (this: SpecWorld) {
+  assert.equal(readOf(this)["national"], true);
+});
+
+Then(
+  "the file says the tournament is not national",
+  function (this: SpecWorld) {
+    assert.equal(readOf(this)["national"], false);
+  },
+);
+
+Then(
+  "the file says the tournament is international",
+  function (this: SpecWorld) {
+    assert.equal(readOf(this)["international"], true);
+  },
+);
+
+Then(
+  "the file says the tournament is not international",
+  function (this: SpecWorld) {
+    assert.equal(readOf(this)["international"], false);
+  },
+);
+
 // Players
 
 Then(
@@ -1191,6 +1229,186 @@ Then(
   },
 );
 
+// Ids
+
+// The id the tournament keeps a player by, which the file is to say.
+const playerIdKept = async (
+  world: SpecWorld,
+  player: string,
+  tournament: string,
+): Promise<string> =>
+  playerNamed(await load(world, tournamentNamed(world, tournament)), player).id
+    .value;
+
+Then(
+  "the file says the id of the player {string} is the one the tournament {string} keeps them by",
+  async function (this: SpecWorld, player: string, tournament: string) {
+    assert.equal(
+      named(listIn(readOf(this), "players"), player)?.["playerId"],
+      await playerIdKept(this, player, tournament),
+    );
+  },
+);
+
+Then(
+  "the file says the id of the player {string} of the team {string} is the one the tournament {string} keeps them by",
+  async function (
+    this: SpecWorld,
+    player: string,
+    team: string,
+    tournament: string,
+  ) {
+    assert.equal(
+      named(listIn(teamNamed(this, team), "players"), player)?.["playerId"],
+      (await load(this, tournamentNamed(this, tournament))).teams
+        .flatMap((each) => each.players)
+        .find((each) => each.name.toString() === player)?.id.value,
+    );
+  },
+);
+
+Then(
+  "in the first game of {string} the id of {string} is the one the tournament {string} keeps them by",
+  async function (
+    this: SpecWorld,
+    competition: string,
+    player: string,
+    tournament: string,
+  ) {
+    const game = placed(gamesOf(competitionNamed(this, competition)), "first");
+    assert.equal(
+      named(playersOfGame(game), player)?.["playerId"],
+      await playerIdKept(this, player, tournament),
+    );
+  },
+);
+
+Then(
+  "in the first game of the first match of {string} the id of {string} is the one the tournament {string} keeps them by",
+  async function (
+    this: SpecWorld,
+    competition: string,
+    player: string,
+    tournament: string,
+  ) {
+    const game = placed(
+      gamesOf(
+        placed(listIn(competitionNamed(this, competition), "matches"), "first"),
+      ),
+      "first",
+    );
+    assert.equal(
+      named(playersOfGame(game), player)?.["playerId"],
+      await playerIdKept(this, player, tournament),
+    );
+  },
+);
+
+Then(
+  "in the first game of the first match of the first test the id of {string} is the one the tournament {string} keeps them by",
+  async function (this: SpecWorld, player: string, tournament: string) {
+    const team = (await load(this, tournamentNamed(this, tournament))).teams
+      .flatMap((each) => each.players)
+      .find((each) => each.name.toString() === player);
+    assert.equal(
+      named(playersOfGame(firstGameOfFirstMatch(this)), player)?.["playerId"],
+      team?.id.value,
+    );
+  },
+);
+
+// The id the site keeps a competition by, which the file is to say.
+const idKeptOf = async (
+  world: SpecWorld,
+  competition: string,
+  tournament: string,
+): Promise<string> =>
+  competitionOfTournament(
+    await load(world, tournamentNamed(world, tournament)),
+    competition,
+  ).reference.id.value;
+
+const assertHasAnId = (thing: Thing, key: string): void => {
+  const id = thing[key];
+  assert.ok(
+    typeof id === "string" && id !== "",
+    `It says no ${key}: ${JSON.stringify(id)}.`,
+  );
+};
+
+Then(
+  "the file says the id of {string} is the one the site keeps {string} of {string} by",
+  async function (
+    this: SpecWorld,
+    name: string,
+    kept: string,
+    tournament: string,
+  ) {
+    assert.equal(
+      competitionNamed(this, name)["competitionId"],
+      await idKeptOf(this, kept, tournament),
+    );
+  },
+);
+
+Then(
+  "the file says the id of the first test is the one the site keeps {string} of {string} by",
+  async function (this: SpecWorld, kept: string, tournament: string) {
+    assert.equal(
+      testPlaced(this, "first")["competitionId"],
+      await idKeptOf(this, kept, tournament),
+    );
+  },
+);
+
+Then(
+  "the ids of {string} and {string} differ",
+  function (this: SpecWorld, first: string, second: string) {
+    assertHasAnId(competitionNamed(this, first), "competitionId");
+    assertHasAnId(competitionNamed(this, second), "competitionId");
+    assert.notEqual(
+      competitionNamed(this, first)["competitionId"],
+      competitionNamed(this, second)["competitionId"],
+    );
+  },
+);
+
+Then(
+  "the {word} game of {string} has an id",
+  function (this: SpecWorld, place: string, name: string) {
+    assertHasAnId(
+      placed(gamesOf(competitionNamed(this, name)), place),
+      "gameId",
+    );
+  },
+);
+
+Then(
+  "the {word} game of the {word} match of {string} has an id",
+  function (this: SpecWorld, game: string, match: string, name: string) {
+    assertHasAnId(
+      placed(
+        gamesOf(placed(listIn(competitionNamed(this, name), "matches"), match)),
+        game,
+      ),
+      "gameId",
+    );
+  },
+);
+
+Then(
+  "the ids of the {word} and {word} games of {string} differ",
+  function (this: SpecWorld, one: string, other: string, name: string) {
+    const games = gamesOf(competitionNamed(this, name));
+    assertHasAnId(placed(games, one), "gameId");
+    assertHasAnId(placed(games, other), "gameId");
+    assert.notEqual(
+      placed(games, one)["gameId"],
+      placed(games, other)["gameId"],
+    );
+  },
+);
+
 // Teams and their tests
 
 Then(
@@ -1217,14 +1435,18 @@ Then(
 Then(
   "the file says the team {string} has the player {string}",
   function (this: SpecWorld, team: string, player: string) {
-    assert.ok((teamNamed(this, team)["players"] as string[]).includes(player));
+    assert.ok(
+      named(listIn(teamNamed(this, team), "players"), player) !== undefined,
+    );
   },
 );
 
 Then(
   "the file says the team {string} does not have the player {string}",
   function (this: SpecWorld, team: string, player: string) {
-    assert.ok(!(teamNamed(this, team)["players"] as string[]).includes(player));
+    assert.ok(
+      named(listIn(teamNamed(this, team), "players"), player) === undefined,
+    );
   },
 );
 
@@ -1285,6 +1507,13 @@ Then(
         .length,
       count,
     );
+  },
+);
+
+Then(
+  "the first game of the first match of the first test has an id",
+  function (this: SpecWorld) {
+    assertHasAnId(firstGameOfFirstMatch(this), "gameId");
   },
 );
 

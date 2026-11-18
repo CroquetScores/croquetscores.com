@@ -56,6 +56,8 @@ export interface RoundOfKnockout {
 
 /** One of a knockout's games, as its order of play shows it. */
 export interface GameOfKnockout {
+  /** What the game is kept by, which never changes. */
+  readonly id: string;
   readonly winner: PlayerInGame;
   /** Each score as it was typed, as "26tp". */
   readonly winnerScore: string;

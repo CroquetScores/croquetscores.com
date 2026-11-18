@@ -64,6 +64,7 @@ export class GamesOfTournamentHandler extends QueryHandler<
       return (
         players.get(entered?.tournamentPlayerId.value ?? written) ?? {
           name: "",
+          playerId: "",
         }
       );
     };

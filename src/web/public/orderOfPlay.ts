@@ -87,7 +87,7 @@ export const blockOrderOfPlay =
   (assets: Assets): DrawView<BlockToRead> =>
   (asked, speaking, request) => {
     const byId = playersById(asked);
-    const player = (id: string) => byId.get(id) ?? { name: "" };
+    const player = (id: string) => byId.get(id) ?? { name: "", playerId: "" };
     return orderOfPlay(
       asked.games.map((game) => ({
         ...game,

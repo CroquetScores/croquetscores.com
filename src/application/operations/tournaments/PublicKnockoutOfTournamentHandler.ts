@@ -77,6 +77,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       );
       if (player === undefined) continue;
       shown.set(entered.id.value, {
+        playerId: player.id.value,
         name: player.name.toString(),
         representing: player.representing,
         handicap: player.handicap,
@@ -85,7 +86,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
         withdrawn: entered.withdrawn,
       });
     }
-    const nameless = { name: "" };
+    const nameless = { name: "", playerId: "" };
     const told = toldOf(tournament, reference.id);
 
     const matches = competition.knockoutMatches(told);
@@ -173,6 +174,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       games: competition.games
         .filter((game) => !game.archived)
         .map((game) => ({
+          id: game.id.value,
           winner: shown.get(game.winner.value) ?? nameless,
           winnerScore: game.winnerScore.toString(),
           loser: shown.get(game.loser.value) ?? nameless,

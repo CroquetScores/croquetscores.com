@@ -75,9 +75,11 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
       }
     }
     const shown = playersOf(tournament);
-    const nameless = { name: "" };
+    const nameless = { name: "", playerId: "" };
     const nameOf = (player: string): string =>
       (shown.get(player) ?? nameless).name;
+    const idOf = (player: string): string =>
+      (shown.get(player) ?? nameless).playerId;
     // A team by its names, as they are now.
     const namesOf = (team: string): { name: string; shortName: string } => {
       const found = tournament.teams.find((each) => each.id.value === team);
@@ -91,6 +93,7 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
       games,
       (player) => teamOf.get(player) === first,
       nameOf,
+      idOf,
       shape.bestOf.games,
     );
     // A match counts for the team whose player won it, once it is decided,
@@ -127,6 +130,7 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
       },
       matches,
       games: games.map((game) => ({
+        id: game.id.value,
         winner: shown.get(game.winner.value) ?? nameless,
         winnerScore: game.winnerScore.toString(),
         loser: shown.get(game.loser.value) ?? nameless,
@@ -148,6 +152,7 @@ const matchesOf = (
   games: readonly Game[],
   isFirst: (player: string) => boolean,
   nameOf: (player: string) => string,
+  idOf: (player: string) => string,
   bestOf: number,
 ): MatchOfTest[] => {
   const byPair = new Map<string, { sides: [string, string]; games: Game[] }>();
@@ -171,6 +176,7 @@ const matchesOf = (
     );
     return {
       sides: [nameOf(sides[0]), nameOf(sides[1])],
+      playerIds: [idOf(sides[0]), idOf(sides[1])],
       games: played.map((game) => {
         const winner = sideOf(game.winner.value);
         const scores = [
@@ -178,6 +184,7 @@ const matchesOf = (
           game.loserScore.toString(),
         ];
         return {
+          id: game.id.value,
           scores:
             winner === 0 ? [scores[0]!, scores[1]!] : [scores[1]!, scores[0]!],
           winner: game.drawn ? undefined : winner,
