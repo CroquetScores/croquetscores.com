@@ -40,6 +40,13 @@ export class UpdateKnockoutHandler extends CommandHandler<
     );
     const competition = CompetitionId.from(command.competition);
     const draw = KnockoutDraw.from(command.places, command.rounds);
+    // Whether it has any game kept only matters to a change of whether it is
+    // Advantage, which only a request that says its rules can make, so a
+    // request that says none is not made to read every game it has
+    // (advantage.feature).
+    const hasGames =
+      command.rules !== undefined &&
+      (await this.games.hasAnyIn(tournament.id, competition));
     tournament.updateKnockout(
       competition,
       CompetitionName.from(command.name),
@@ -50,7 +57,7 @@ export class UpdateKnockoutHandler extends CommandHandler<
         draw,
       ),
       await this.games.knockoutRoundsPlayed(tournament.id, competition),
-      await this.games.hasAnyIn(tournament.id, competition),
+      hasGames,
       by,
       command.requestedAt,
       command.rules,

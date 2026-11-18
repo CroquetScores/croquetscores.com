@@ -125,6 +125,11 @@ export const scoresOfRequest = (
     loserTarget.count ?? Number.NaN,
     loserHoops.marked || loserTarget.marked,
   );
+  // Level is as the published tables have it: the whole percentage each side's
+  // scoring fraction is, which is also what decides every game and ranks every
+  // block (Game compares points). A game on the same whole percentage is level
+  // to Game and is refused without a mark, so comparing the exact fractions here
+  // would refuse the mark on it too, and the game could not be kept either way.
   // The mark is for deciding a game the two sides are level in, since it is
   // only there that somebody has to say who won. A winner who is ahead has no
   // need of it, and is refused rather than kept with a mark that says nothing.

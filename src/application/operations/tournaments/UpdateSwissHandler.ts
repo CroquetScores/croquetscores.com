@@ -35,11 +35,18 @@ export class UpdateSwissHandler extends CommandHandler<UpdateSwiss, void> {
       "UpdateSwiss",
     );
     const competition = CompetitionId.from(command.competition);
+    // Whether it has any game kept only matters to a change of whether it is
+    // Advantage, which only a request that says its rules can make, so a
+    // request that says none is not made to read every game it has
+    // (advantage.feature).
+    const hasGames =
+      command.rules !== undefined &&
+      (await this.games.hasAnyIn(tournament.id, competition));
     tournament.updateSwiss(
       competition,
       CompetitionName.from(command.name),
       BestOf.from(command.bestOf),
-      await this.games.hasAnyIn(tournament.id, competition),
+      hasGames,
       by,
       command.requestedAt,
       command.rules,

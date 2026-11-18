@@ -13,6 +13,7 @@ import { QueryHandler } from "../../common/QueryHandler.js";
 import { askedBy, tournamentFor } from "../tournaments/tournamentOperations.js";
 import {
   type Competitions,
+  competitionFound,
   competitionOf,
   toldOf,
 } from "./competitionOperations.js";
@@ -78,9 +79,17 @@ export class GamesOfCompetitionHandler extends QueryHandler<
         team.players.map((player) => [player.id.value, team.id.value] as const),
       ),
     );
+    // Only an Advantage competition's games are kept as scoring fractions. A
+    // score typed in any other that happens to look like one is the scorer's own
+    // text and no hoops or target (advantage.feature).
+    const advantage = competitionFound(tournament, id).rules.advantage;
     return competition.games.map((game) => {
-      const winnerFraction = ScoringFraction.read(String(game.winnerScore));
-      const loserFraction = ScoringFraction.read(String(game.loserScore));
+      const winnerFraction = advantage
+        ? ScoringFraction.read(String(game.winnerScore))
+        : undefined;
+      const loserFraction = advantage
+        ? ScoringFraction.read(String(game.loserScore))
+        : undefined;
       return {
         id: game.id.value,
         winner: people.get(game.winner.value) ?? "",

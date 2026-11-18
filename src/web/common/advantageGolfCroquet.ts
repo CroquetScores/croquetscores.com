@@ -1,4 +1,4 @@
-import type { Website } from "../../domain/common/Website.js";
+import { Website } from "../../domain/common/Website.js";
 
 /**
  * Whether `website` offers Advantage Golf Croquet: a manager is given the
@@ -16,9 +16,8 @@ export const advantageGolfCroquetIsOffered = (
   setting: boolean,
 ): boolean => {
   if (website.site !== "croquetScores") return false;
-  // Development keeps and reads croquetscores.com's, so it is told apart from
-  // it by its host: it is where the site is worked on, and offers whatever is
-  // being worked on.
-  const isDevelopment = website.host !== website.countsAs.host;
-  return website.isTry || isDevelopment || setting;
+  // Development is where the site is worked on, and offers what is being
+  // worked on. It is told apart from croquetscores.com, whose tournaments it
+  // keeps and reads, by being the website it is and not by where it is served.
+  return website.isTry || website.equals(Website.development) || setting;
 };
