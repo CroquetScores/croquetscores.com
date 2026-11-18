@@ -20,6 +20,8 @@ import type { SpecWorld } from "../../support/world.js";
 // still going. The prefix sorts them after every real database in a list of
 // them, and says to whoever finds one there what it is for. The run's template
 // is named the same way, so that one left behind is cleaned up with the rest.
+// The web specs' databases are the exception: they are named beside these and
+// are left to them (see isLeftBehind).
 const prefix = "zzz_delete_me_spec_";
 
 // Making a scenario's database from the template and dropping it again take a
@@ -181,6 +183,18 @@ const isLeftBehind = async (
   client: pg.PoolClient,
   databaseName: string,
 ): Promise<boolean> => {
+  // The web specs make their databases beside these, named with a "w" after the
+  // prefix (specs/web/support/site.ts), and a run of theirs may be going while
+  // this one starts. Taking a name that is not shaped like ours for one from
+  // before names carried a run dropped them from under it, and every scenario
+  // after that failed for want of a database. The cost is that one left behind
+  // by a web run that was killed stays until somebody drops it: a web run holds
+  // no lock to say it is over, and its process number cannot be told from
+  // another machine's. The prefix is written out here and in
+  // specs/web/support/site.ts because specs/web may import nothing of the
+  // repository.
+  if (databaseName.startsWith(`${prefix}w`)) return false;
+
   const owner = named.exec(databaseName)?.[1];
   if (owner === undefined) return true;
 
