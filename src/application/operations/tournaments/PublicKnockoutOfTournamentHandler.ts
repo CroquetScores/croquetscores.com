@@ -4,6 +4,7 @@ import type { Tournament } from "../../../domain/aggregates/tournaments/Tourname
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
+import { NOBODY_IN_GAME } from "./GamesOfTournament.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
@@ -86,7 +87,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
         withdrawn: entered.withdrawn,
       });
     }
-    const nameless = { name: "", playerId: "" };
+    const nameless = NOBODY_IN_GAME;
     const told = toldOf(tournament, reference.id);
 
     const matches = competition.knockoutMatches(told);

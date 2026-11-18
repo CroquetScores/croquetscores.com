@@ -13,6 +13,7 @@ import {
 import {
   type GameOfTournament,
   GamesOfTournament,
+  NOBODY_IN_GAME,
   type PlayerInGame,
   type TournamentGames,
 } from "./GamesOfTournament.js";
@@ -62,10 +63,8 @@ export class GamesOfTournamentHandler extends QueryHandler<
         (player) => player.id.value === written,
       );
       return (
-        players.get(entered?.tournamentPlayerId.value ?? written) ?? {
-          name: "",
-          playerId: "",
-        }
+        players.get(entered?.tournamentPlayerId.value ?? written) ??
+        NOBODY_IN_GAME
       );
     };
     const games: GameOfTournament[] = [];

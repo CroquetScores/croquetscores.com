@@ -16,6 +16,7 @@ import { PublicPlayersOfTournament } from "../../application/operations/tourname
 import { PublicSwissOfTournament } from "../../application/operations/tournaments/PublicSwissOfTournament.js";
 import { PublicTeamSummaryOfTournament } from "../../application/operations/tournaments/PublicTeamSummaryOfTournament.js";
 import { PublicTestOfTournament } from "../../application/operations/tournaments/PublicTestOfTournament.js";
+import type { CompetitionOfTournament } from "../../application/operations/tournaments/tournamentForReaders.js";
 import type { TournamentOfWebsite } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
 import { TournamentFingerprints } from "../../application/operations/tournaments/TournamentFingerprints.js";
 import { TournamentYears } from "../../application/operations/tournaments/TournamentYears.js";
@@ -227,10 +228,10 @@ const competitionOf = async (
   world: ExportWorld,
   website: string,
   address: string,
-  name: string,
-  slug: string,
-  competitionId: string,
+  competition: CompetitionOfTournament,
 ): Promise<Record<string, unknown>> => {
+  const { name, id: competitionId } = competition;
+  const slug = lastPartOf(competition.address);
   try {
     const { block, players, games } = await world.ask(
       new PublicBlockOfTournament(website, address, slug),
@@ -338,10 +339,11 @@ const testOf = async (
   world: ExportWorld,
   website: string,
   address: string,
-  slug: string,
-  group: string | undefined,
-  competitionId: string,
+  competition: CompetitionOfTournament,
 ): Promise<Record<string, unknown>> => {
+  const slug = lastPartOf(competition.address);
+  const group = competition.group?.name;
+  const competitionId = competition.id;
   const { test, matches } = await world.ask(
     new PublicTestOfTournament(website, address, slug),
   );
@@ -422,16 +424,7 @@ const fileOf = async (
     }));
     const tests: Record<string, unknown>[] = [];
     for (const competition of read.competitions) {
-      tests.push(
-        await testOf(
-          world,
-          website,
-          listed.address,
-          lastPartOf(competition.address),
-          competition.group?.name,
-          competition.id,
-        ),
-      );
+      tests.push(await testOf(world, website, listed.address, competition));
     }
     said["tests"] = tests;
   } else {
@@ -443,14 +436,7 @@ const fileOf = async (
     const competitions: Record<string, unknown>[] = [];
     for (const competition of read.competitions) {
       competitions.push(
-        await competitionOf(
-          world,
-          website,
-          listed.address,
-          competition.name,
-          lastPartOf(competition.address),
-          competition.id,
-        ),
+        await competitionOf(world, website, listed.address, competition),
       );
     }
     said["competitions"] = competitions;

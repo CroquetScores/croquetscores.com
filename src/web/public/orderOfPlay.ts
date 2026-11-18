@@ -23,6 +23,7 @@ import {
   sortedGames,
   sortingOf,
 } from "./gamesSorting.js";
+import { NOBODY_IN_GAME } from "../../application/operations/tournaments/GamesOfTournament.js";
 import { type GameShown, gameShown } from "./tournamentPages.js";
 import { ariaSort, arrows } from "./tournamentLists.js";
 
@@ -87,7 +88,7 @@ export const blockOrderOfPlay =
   (assets: Assets): DrawView<BlockToRead> =>
   (asked, speaking, request) => {
     const byId = playersById(asked);
-    const player = (id: string) => byId.get(id) ?? { name: "", playerId: "" };
+    const player = (id: string) => byId.get(id) ?? NOBODY_IN_GAME;
     return orderOfPlay(
       asked.games.map((game) => ({
         ...game,

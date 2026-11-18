@@ -24,6 +24,12 @@ export interface PlayerInGame {
   readonly flag?: string | undefined;
 }
 
+/**
+ * Who a game names where no player of the tournament is found for them. One
+ * place for it, so that a field added to a player is not left out of a copy.
+ */
+export const NOBODY_IN_GAME: PlayerInGame = { name: "", playerId: "" };
+
 /** One of a tournament's games, as its page shows it. */
 export interface GameOfTournament {
   readonly winner: PlayerInGame;
