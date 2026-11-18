@@ -1940,6 +1940,7 @@ export const buildApplication = async (
     prefix: "/api/site",
     assets,
     helpAddressOf,
+    advantageGolfCroquet: config.advantageGolfCroquet,
   });
   await server.register(
     auth({

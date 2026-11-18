@@ -12,6 +12,12 @@ export class WebWorld extends World {
   public browserContext: BrowserContext | undefined;
   public page: Page | undefined;
 
+  /**
+   * The session a scenario that asks the API without a browser holds, as the
+   * cookie a browser would send, where somebody is signed in.
+   */
+  public apiSession: string | undefined;
+
   /** The colour scheme the scenario's machine says it prefers, where it does. */
   public colourScheme: "light" | "dark" | undefined;
 

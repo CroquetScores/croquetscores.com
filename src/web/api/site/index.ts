@@ -120,7 +120,8 @@ import { speakingOf } from "../../common/language.js";
 import { isAdministrator, readerOf } from "../../common/reader.js";
 import { CompetitionNamesOfWebsite } from "../../../application/operations/tournaments/CompetitionNamesOfWebsite.js";
 import { TournamentNamesOfWebsite } from "../../../application/operations/tournaments/TournamentNamesOfWebsite.js";
-import { websiteOf } from "../../common/site.js";
+import { servedAsOf, websiteOf } from "../../common/site.js";
+import { advantageGolfCroquetIsOffered } from "../../common/advantageGolfCroquet.js";
 import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 
 // A year as an address writes one: four digits, the first not a nought.
@@ -234,12 +235,14 @@ const rulesOf = (body: unknown): CompetitionRulesSaid | undefined => {
   const drawsAllowed = yesOrNoOf(body, "drawsAllowed");
   const worldRankings = yesOrNoOf(body, "worldRankings");
   const maximumHoops = maximumHoopsOf(body);
+  const advantage = yesOrNoOf(body, "advantage");
   return handicap === undefined &&
     drawsAllowed === undefined &&
     worldRankings === undefined &&
-    maximumHoops === undefined
+    maximumHoops === undefined &&
+    advantage === undefined
     ? undefined
-    : { handicap, drawsAllowed, worldRankings, maximumHoops };
+    : { handicap, drawsAllowed, worldRankings, maximumHoops, advantage };
 };
 
 // A game's player as the score dialog sends them: a competition's player by
@@ -290,14 +293,59 @@ export interface ApiSiteOptions {
   readonly assets: Assets;
   /** Where the help puts a page, which differs for the few with an address of their own. */
   readonly helpAddressOf: (name: string) => string;
+  /** Whether croquetscores.com offers Advantage Golf Croquet (the setting). */
+  readonly advantageGolfCroquet: boolean;
 }
 
 export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   server,
-  { assets, helpAddressOf },
+  { assets, helpAddressOf, advantageGolfCroquet },
   done,
 ) => {
   server.get("/health", () => ({ status: "ok" }));
+
+  // By the address it was served as and not the website it is for, since
+  // development is for croquetscores.com and is told apart from it here: it
+  // offers what is being worked on (advantageGolfCroquet.feature).
+  const offeredTo = (request: FastifyRequest): boolean =>
+    advantageGolfCroquetIsOffered(servedAsOf(request), advantageGolfCroquet);
+
+  // Whether a request would make a competition Advantage where Advantage is
+  // not offered, which is refused. Leaving one as it is, or switching it off,
+  // is not: a site that offered Advantage and no longer does still has its
+  // Advantage competitions, and the dialog that changes one says what it is as
+  // it says its other rules, so refusing that would leave a manager unable to
+  // rename a competition they had already made. A competition not being
+  // changed, as one being added is not, is not Advantage yet
+  // (advantage.feature).
+  const makesAdvantageNotOffered = async (
+    request: FastifyRequest,
+    reader: AccountId,
+    tournament: string,
+    competition: string | undefined,
+  ): Promise<boolean> => {
+    if (yesOrNoOf(request.body, "advantage") !== true) return false;
+    if (offeredTo(request)) return false;
+    if (competition === undefined) return true;
+    const listed = await request.server.mediator.query(
+      new CompetitionsOfTournament(reader.value, tournament),
+    );
+    return listed.find(({ id }) => id === competition)?.advantage !== true;
+  };
+  const refusedAsNotOffered = (reply: FastifyReply): FastifyReply =>
+    reply
+      .code(422)
+      .header("cache-control", "no-store")
+      .send({ error: "Advantage.NotOffered" });
+
+  // Whether the website offers it, so that the competition dialog and the test
+  // dialog offer the choice only where a request that makes it is answered.
+  // Open to anybody, as the answer is the same for every reader of a website.
+  server.get("/advantage-golf-croquet", (request, reply) =>
+    reply
+      .header("cache-control", "no-store")
+      .send({ offered: offeredTo(request) }),
+  );
 
   // Open to anybody, as the help is.
   void server.register(helpSearchRoute, { addressOf: helpAddressOf });
@@ -587,6 +635,12 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       const name = textOf(body, "name");
       const at = request.requestedAt;
       const kind = textOf(body, "kind");
+      if (
+        kind !== "losers-knockout" &&
+        (await makesAdvantageNotOffered(request, reader, tournament, undefined))
+      ) {
+        return refusedAsNotOffered(reply);
+      }
       const added = await request.server.mediator.send(
         // The knockout whose losers it takes is named by its bare id, as the
         // competitions of a tournament are everywhere in this API.
@@ -653,6 +707,11 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       const name = textOf(body, "name");
       const at = request.requestedAt;
       const kind = textOf(body, "kind");
+      if (
+        await makesAdvantageNotOffered(request, reader, tournament, competition)
+      ) {
+        return refusedAsNotOffered(reply);
+      }
       await request.server.mediator.send(
         kind === "knockout"
           ? new UpdateKnockout(
@@ -2023,6 +2082,16 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
     async (request, reply) => {
       const reader = signedInOrRefused(request, reply);
       if (reader === undefined) return reply;
+      if (
+        await makesAdvantageNotOffered(
+          request,
+          reader,
+          `tournament/${request.params.id}`,
+          undefined,
+        )
+      ) {
+        return refusedAsNotOffered(reply);
+      }
       const added = await request.server.mediator.send(
         new AddTest(
           reader.value,
@@ -2044,6 +2113,16 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
     async (request, reply) => {
       const reader = signedInOrRefused(request, reply);
       if (reader === undefined) return reply;
+      if (
+        await makesAdvantageNotOffered(
+          request,
+          reader,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.test}`,
+        )
+      ) {
+        return refusedAsNotOffered(reply);
+      }
       await request.server.mediator.send(
         new UpdateTest(
           reader.value,

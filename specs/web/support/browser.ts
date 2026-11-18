@@ -41,6 +41,13 @@ Before({ tags: "@browser" }, async function (this: WebWorld) {
   this.page = await this.browserContext.newPage();
 });
 
+// The site a scenario started with settings of its own is stopped with it, with
+// or without a browser: a scenario that talks to the site by plain requests is
+// told settings too, and the next scenario would otherwise be answered by it.
+After(async function () {
+  await endAnotherSite();
+});
+
 // Whatever closing has to say is nothing the scenario's own verdict should be
 // overturned by.
 After({ tags: "@browser" }, async function (this: WebWorld) {

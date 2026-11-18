@@ -10,8 +10,9 @@ Feature: The competitions of a tournament, as its managers and scorers list them
 
   Each is answered with how it is played and counted as well: whether it is
   played under handicap, allows drawn results, and counts towards the world
-  rankings (`competitionRules.feature`), so that the competition dialog and
-  the test dialog begin on what it is.
+  rankings (`competitionRules.feature`), and whether it is played as
+  Advantage Golf Croquet (`advantage.feature`), so that the competition
+  dialog and the test dialog begin on what it is.
 
   Each is answered with its shape too, so that a manager can change it
   starting from what it is (`competition.feature`): what each match of a
@@ -152,6 +153,21 @@ Feature: The competitions of a tournament, as its managers and scorers list them
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
       Then the competition "Block A" is answered as not counting towards the world rankings
+
+  Rule: Every competition is answered with whether it is Advantage
+
+    Scenario: A competition added without saying is answered as not Advantage
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as not Advantage
+
+    Scenario: A competition played as Advantage is answered as such
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Golf"
+      Then the competition "Block A" is answered as Advantage
 
   Rule: A test is answered with its teams and its days
 

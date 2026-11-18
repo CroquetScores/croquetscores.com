@@ -367,6 +367,43 @@ When(
   },
 );
 
+// Advantage is a rule of golf croquet, so a tournament made to play it is one.
+When(
+  "{string} is made the manager of a golf croquet tournament called {string} through the control",
+  async function (this: SpecWorld, manager: string, name: string) {
+    await controlled(this, "/__test/tournaments", {
+      manager,
+      tournament: {
+        name,
+        starts: "2026-10-03T00:00:00Z",
+        finishes: "2026-10-05T00:00:00Z",
+        format: "Standard",
+        sport: "gc",
+        country: "au",
+        region: "vic",
+      },
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    made.set(
+      this,
+      JSON.parse(responseOf(this).body) as { id: string; address: string },
+    );
+  },
+);
+
+Given(
+  "the block {string} played as Advantage is added to the tournament through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/tournaments/blocks", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      name,
+      rules: { advantage: true },
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+  },
+);
+
 When(
   "the tournament is archived through the control",
   async function (this: SpecWorld) {
@@ -1363,7 +1400,12 @@ Then("none is told to hold it", function (this: SpecWorld) {
 interface Held {
   archived: boolean;
   players: { id: string; name: string }[];
-  competitions: { id: string; name: string; kind: string }[];
+  competitions: {
+    id: string;
+    name: string;
+    kind: string;
+    rules: { advantage: boolean };
+  }[];
 }
 
 const held = (world: SpecWorld): Held =>
@@ -1387,6 +1429,18 @@ Then(
     assert.ok(
       held(this).competitions.some(
         (each) => each.name === name && each.kind === "block",
+      ),
+    );
+  },
+);
+
+Then(
+  "it is told to hold the block {string} played as Advantage",
+  function (this: SpecWorld, name: string) {
+    assert.ok(
+      held(this).competitions.some(
+        (each) =>
+          each.name === name && each.kind === "block" && each.rules.advantage,
       ),
     );
   },
