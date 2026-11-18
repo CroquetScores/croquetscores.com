@@ -1,3 +1,4 @@
+import { ValidationError } from "../../../../common/validation/ValidationError.js";
 import { Validator } from "../../../../common/validation/Validator.js";
 
 /** Every rule a scoring fraction can break. */
@@ -46,6 +47,9 @@ const given = new Validator<Given, ScoringFractionErrorCode>({
   ],
 });
 
+// How a game keeps one: the percentage, then the hoops over the target.
+const WRITTEN = /^(\d+)% \((\d+)\/(\d+)\)$/;
+
 /**
  * A player's hoops over their target in an Advantage Golf Croquet game, as the
  * whole percentage Croquet England publishes for it.
@@ -76,6 +80,26 @@ export class ScoringFraction {
   static from(hoops: number, target: number): ScoringFraction {
     given.ensureValid({ hoops, target });
     return new ScoringFraction(hoops, target);
+  }
+
+  /**
+   * The scoring fraction `written` is, as a game keeps one, or nothing where it
+   * is not written so. Only what {@link toString} writes is read: a percentage
+   * that is not the one its hoops and target make, or hoops and a target that
+   * cannot make a fraction, are no scoring fraction, and are never taken for
+   * the nearest (ScoringFraction.feature).
+   */
+  static read(written: string): ScoringFraction | undefined {
+    const found = WRITTEN.exec(written);
+    if (found === null) return undefined;
+    const [, percentage, hoops, target] = found;
+    try {
+      const fraction = ScoringFraction.from(Number(hoops), Number(target));
+      return fraction.percentage === Number(percentage) ? fraction : undefined;
+    } catch (refused) {
+      if (refused instanceof ValidationError) return undefined;
+      throw refused;
+    }
   }
 
   get hoops(): number {

@@ -30,3 +30,47 @@ Then("the percentage is {int}", function (this: SpecWorld, percentage: number) {
   );
   assert.equal(fraction.percentage, percentage);
 });
+
+Then(
+  "the scoring fraction is written {string}",
+  function (this: SpecWorld, written: string) {
+    const fraction = fractions.get(this);
+    assert.ok(
+      fraction !== undefined,
+      `No scoring fraction was worked out: ${inspect(this.failure)}`,
+    );
+    assert.equal(String(fraction), written);
+  },
+);
+
+// What reading a game's text gave, which is nothing where it is no scoring
+// fraction: kept apart from the one a scenario works out, which it is not.
+const reads = new WeakMap<SpecWorld, ScoringFraction | undefined>();
+
+When(
+  "{string} is read as a scoring fraction",
+  function (this: SpecWorld, written: string) {
+    reads.set(this, ScoringFraction.read(written));
+  },
+);
+
+const readOf = (world: SpecWorld): ScoringFraction => {
+  const read = reads.get(world);
+  assert.ok(read !== undefined, "Nothing was read as a scoring fraction.");
+  return read;
+};
+
+Then(
+  "the scoring fraction has {int} hoops",
+  function (this: SpecWorld, hoops: number) {
+    assert.equal(readOf(this).hoops, hoops);
+  },
+);
+
+Then("its target is {int}", function (this: SpecWorld, target: number) {
+  assert.equal(readOf(this).target, target);
+});
+
+Then("nothing is read", function (this: SpecWorld) {
+  assert.equal(reads.get(this), undefined);
+});

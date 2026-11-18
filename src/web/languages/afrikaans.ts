@@ -1042,6 +1042,10 @@ export const afrikaans: Language = {
     "admin.score.winnerScore": "Wenner se telling",
     "admin.score.loser": "Verloorder",
     "admin.score.loserScore": "Verloorder se telling",
+    "admin.score.winnerHoops": "Wenner se poorte",
+    "admin.score.winnerTarget": "Wenner se teiken",
+    "admin.score.loserHoops": "Verloorder se poorte",
+    "admin.score.loserTarget": "Verloorder se teiken",
     "admin.score.beat": "het gewen teen",
     "admin.score.added":
       "Die spel wat {winner} teen {loser} gewen het, is bygevoeg.",
@@ -1055,6 +1059,16 @@ export const afrikaans: Language = {
     "Game.WinnerScoreMissing": "Tik die wenner se telling.",
     "Game.LoserMissing": "Kies die verloorder.",
     "Game.LoserScoreMissing": "Tik die verloorder se telling.",
+    "ScoringFraction.HoopsNotWhole": "Poorte is 'n heelgetal.",
+    "ScoringFraction.HoopsNegative": "Poorte kan nie minder as 0 wees nie.",
+    "ScoringFraction.TargetNotWhole": "'n Teiken is 'n heelgetal.",
+    "ScoringFraction.TargetTooSmall": "'n Teiken is minstens 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Poorte kan nie meer as die teiken wees nie.",
+    "Game.WinnerHoopsMissing": "Tik die wenner se poorte.",
+    "Game.WinnerTargetMissing": "Tik die wenner se teiken.",
+    "Game.LoserHoopsMissing": "Tik die verloorder se poorte.",
+    "Game.LoserTargetMissing": "Tik die verloorder se teiken.",
     "Score.NoPoints": "'n Telling begin met sy aantal punte.",
     "Game.SamePlayer": "Niemand speel teen homself nie.",
     "Game.WinnerNotAhead":

@@ -28,7 +28,7 @@ const fieldOf = (world: WebWorld, label: string): Locator =>
   dialogOf(world).getByLabel(label, { exact: true });
 
 Then(
-  /^the (?:competition|player|team player|test) dialog does not ask for "([^"]*)"$/,
+  /^the (?:competition|player|team player|test|score) dialog does not ask for "([^"]*)"$/,
   async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     await eventually(this, async () => {

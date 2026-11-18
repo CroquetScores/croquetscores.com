@@ -85,6 +85,7 @@ export class CompetitionPageHandler extends QueryHandler<
         ? tournament.sport.code
         : undefined,
       usualMaximumHoops: tournament.sport.usualMaximumHoops,
+      advantage: found.rules.advantage,
     };
   }
 }

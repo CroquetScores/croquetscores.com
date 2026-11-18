@@ -1101,6 +1101,10 @@ export const german: Language = {
     "admin.score.winnerScore": "Ergebnis des Siegers",
     "admin.score.loser": "Verlierer",
     "admin.score.loserScore": "Ergebnis des Verlierers",
+    "admin.score.winnerHoops": "Tore des Siegers",
+    "admin.score.winnerTarget": "Ziel des Siegers",
+    "admin.score.loserHoops": "Tore des Verlierers",
+    "admin.score.loserTarget": "Ziel des Verlierers",
     "admin.score.beat": "schlug",
     "admin.score.added":
       "Das Spiel, das {winner} gegen {loser} gewonnen hat, wurde hinzugefügt.",
@@ -1114,6 +1118,17 @@ export const german: Language = {
     "Game.WinnerScoreMissing": "Geben Sie das Ergebnis des Siegers ein.",
     "Game.LoserMissing": "Wählen Sie den Verlierer.",
     "Game.LoserScoreMissing": "Geben Sie das Ergebnis des Verlierers ein.",
+    "ScoringFraction.HoopsNotWhole": "Die Tore sind eine ganze Zahl.",
+    "ScoringFraction.HoopsNegative":
+      "Die Tore dürfen nicht weniger als 0 sein.",
+    "ScoringFraction.TargetNotWhole": "Das Ziel ist eine ganze Zahl.",
+    "ScoringFraction.TargetTooSmall": "Das Ziel ist mindestens 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Die Tore dürfen nicht höher sein als das Ziel.",
+    "Game.WinnerHoopsMissing": "Geben Sie die Tore des Siegers ein.",
+    "Game.WinnerTargetMissing": "Geben Sie das Ziel des Siegers ein.",
+    "Game.LoserHoopsMissing": "Geben Sie die Tore des Verlierers ein.",
+    "Game.LoserTargetMissing": "Geben Sie das Ziel des Verlierers ein.",
     "Score.NoPoints": "Ein Ergebnis beginnt mit seiner Punktzahl.",
     "Game.SamePlayer": "Niemand spielt gegen sich selbst.",
     "Game.WinnerNotAhead":

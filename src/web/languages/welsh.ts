@@ -1010,6 +1010,10 @@ export const welsh: Language = {
     "admin.score.winnerScore": "Sgôr yr enillydd",
     "admin.score.loser": "Collwr",
     "admin.score.loserScore": "Sgôr y collwr",
+    "admin.score.winnerHoops": "Cylchau'r enillydd",
+    "admin.score.winnerTarget": "Targed yr enillydd",
+    "admin.score.loserHoops": "Cylchau'r collwr",
+    "admin.score.loserTarget": "Targed y collwr",
     "admin.score.beat": "a gurodd",
     "admin.score.added":
       "Ychwanegwyd y gêm a enillodd {winner} yn erbyn {loser}.",
@@ -1023,6 +1027,16 @@ export const welsh: Language = {
     "Game.WinnerScoreMissing": "Teipiwch sgôr yr enillydd.",
     "Game.LoserMissing": "Dewiswch y collwr.",
     "Game.LoserScoreMissing": "Teipiwch sgôr y collwr.",
+    "ScoringFraction.HoopsNotWhole": "Mae cylchau'n rhif cyfan.",
+    "ScoringFraction.HoopsNegative": "Ni all cylchau fod yn llai na 0.",
+    "ScoringFraction.TargetNotWhole": "Mae targed yn rhif cyfan.",
+    "ScoringFraction.TargetTooSmall": "Mae targed o leiaf 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Ni all cylchau fod yn fwy na'r targed.",
+    "Game.WinnerHoopsMissing": "Teipiwch gylchau'r enillydd.",
+    "Game.WinnerTargetMissing": "Teipiwch darged yr enillydd.",
+    "Game.LoserHoopsMissing": "Teipiwch gylchau'r collwr.",
+    "Game.LoserTargetMissing": "Teipiwch darged y collwr.",
     "Score.NoPoints": "Mae sgôr yn dechrau gyda'i nifer o bwyntiau.",
     "Game.SamePlayer": "Nid yw neb yn chwarae yn erbyn ei hun.",
     "Game.WinnerNotAhead":

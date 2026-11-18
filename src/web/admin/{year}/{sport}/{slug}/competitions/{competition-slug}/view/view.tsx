@@ -48,6 +48,8 @@ interface Found {
   readonly worldRankingSport: string | undefined;
   readonly usualMaximumHoops: number;
   readonly hasGames: boolean;
+  /** Whether it is played as Advantage Golf Croquet. */
+  readonly advantage: boolean;
 }
 
 type Asked =
@@ -238,6 +240,7 @@ export const ViewCompetition = ({
                   tournament={asked.competition.tournament}
                   competition={asked.competition.id}
                   kind={asked.competition.kind}
+                  advantage={asked.competition.advantage}
                 />
               )}
             </TabControl>

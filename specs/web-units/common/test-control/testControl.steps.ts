@@ -401,6 +401,7 @@ Given(
       rules: { advantage: true },
     });
     assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    playedIn(this).block = idOfAnswer(this);
   },
 );
 
@@ -492,6 +493,32 @@ When(
         entered: idOfAnswer(this),
       });
     }
+  },
+);
+
+// Each side said as the hoops it made "of" its target, as an Advantage game is.
+When(
+  "Ann is made to have beaten Bea {int} of {int} to {int} of {int} in the block through the control",
+  async function (
+    this: SpecWorld,
+    winnerHoops: number,
+    winnerTarget: number,
+    loserHoops: number,
+    loserTarget: number,
+  ) {
+    const played = playedIn(this);
+    await controlled(this, "/__test/competitions/games", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: played.block,
+      winner: played.players.get("Ann")?.entered,
+      winnerHoops,
+      winnerTarget,
+      loser: played.players.get("Bea")?.entered,
+      loserHoops,
+      loserTarget,
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
   },
 );
 
@@ -1467,6 +1494,23 @@ When("the games of the block are asked for", async function (this: SpecWorld) {
   );
   assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
 });
+
+Then(
+  "it is told to hold a game written {string} to {string}",
+  function (this: SpecWorld, winnerWritten: string, loserWritten: string) {
+    const { games } = JSON.parse(responseOf(this).body) as {
+      games: { winnerWritten: string; loserWritten: string }[];
+    };
+    assert.ok(
+      games.some(
+        (game) =>
+          game.winnerWritten === winnerWritten &&
+          game.loserWritten === loserWritten,
+      ),
+      responseOf(this).body,
+    );
+  },
+);
 
 Then(
   "it is told to hold a game won {int} to {int}",

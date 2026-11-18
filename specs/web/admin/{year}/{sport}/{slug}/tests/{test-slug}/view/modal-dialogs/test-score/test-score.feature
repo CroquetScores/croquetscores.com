@@ -314,3 +314,57 @@ Feature: A game's score is added to a test, or corrected, in a modal dialog
       And the page of the test "AUS v ENG" in "Spring Tests" is open
       When the way to add a score is pressed
       Then every word in the score dialog but the teams' and the players' names is in the test locale
+
+  Rule: A game in an Advantage test asks for hoops and targets
+
+    A test played as Advantage Golf Croquet is asked what any Advantage
+    competition is (`score-modal-dialog.feature`): in place of each score, the
+    hoops that side made and its target. The players are chosen as they are in
+    any test, from both teams under each team's name, and the loser from the
+    other team alone.
+
+    Background:
+      Given the tournament "Spring Tests" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the test between "Australia" and "Scotland" to "Spring Tests"
+
+    Scenario Outline: The dialog asks for hoops and targets
+      Given the page of the test "AUS v SCO" in "Spring Tests" is open
+      When "Add Score" is pressed
+      Then the score dialog asks for "<field>"
+
+      Examples:
+        | field           |
+        | Winner's hoops  |
+        | Winner's target |
+        | Loser's hoops   |
+        | Loser's target  |
+
+    Scenario: A game is added from hoops and targets
+      Given the page of the test "AUS v SCO" in "Spring Tests" is open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "5" is typed as the "Winner's hoops"
+      And "6" is typed as the "Winner's target"
+      And "Kim Keeper" is chosen as the "Loser"
+      And "5" is typed as the "Loser's hoops"
+      And "8" is typed as the "Loser's target"
+      When "Add Game" is pressed
+      Then "AUS v SCO" of "Spring Tests" has the score of "Sam Someone" beating "Kim Keeper" kept as "83% (5/6)" to "63% (5/8)"
+
+    Scenario: What is refused is said beside the field it is about
+      Given the page of the test "AUS v SCO" in "Spring Tests" is open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "7" is typed as the "Winner's hoops"
+      And "6" is typed as the "Winner's target"
+      And "Kim Keeper" is chosen as the "Loser"
+      And "3" is typed as the "Loser's hoops"
+      And "6" is typed as the "Loser's target"
+      When "Add Game" is pressed
+      Then "Winner's hoops" is refused with "ScoringFraction.HoopsAboveTarget"
+
+    Scenario: A test that is not Advantage is asked for a score for each side
+      Given the page of the test "AUS v ENG" in "Spring Tests" is open
+      When "Add Score" is pressed
+      Then the score dialog asks for "Winner's score"

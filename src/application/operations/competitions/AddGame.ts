@@ -6,7 +6,11 @@ export type AddGameErrorCode =
   | "Game.WinnerMissing"
   | "Game.WinnerScoreMissing"
   | "Game.LoserMissing"
-  | "Game.LoserScoreMissing";
+  | "Game.LoserScoreMissing"
+  | "Game.WinnerHoopsMissing"
+  | "Game.WinnerTargetMissing"
+  | "Game.LoserHoopsMissing"
+  | "Game.LoserTargetMissing";
 
 /** What a game to be added says, as it was chosen and typed. */
 export interface GameRequest {
@@ -16,6 +20,14 @@ export interface GameRequest {
   readonly winnerScore?: string | undefined;
   readonly loser?: string | undefined;
   readonly loserScore?: string | undefined;
+  /**
+   * In an Advantage competition, in place of the scores, the hoops each side
+   * made and its target (`ScoresAsked`).
+   */
+  readonly winnerHoops?: number | undefined;
+  readonly winnerTarget?: number | undefined;
+  readonly loserHoops?: number | undefined;
+  readonly loserTarget?: number | undefined;
 }
 
 /**

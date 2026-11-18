@@ -318,6 +318,22 @@ Then(
   },
 );
 
+// The fields of the dialog by the words each is labelled with, in the order the
+// reader comes to them, said as the feature says a list: "A", "B" and "C".
+Then(
+  /^the fields of the score dialog are, in order, (.+)$/,
+  async function (this: WebWorld, said: string) {
+    const expected = [...said.matchAll(/"([^"]*)"/g)].map(([, label]) => label);
+    await dialogOf(this).waitFor();
+    await eventually(this, async () => {
+      const labels = (
+        await dialogOf(this).locator(".field-label").allTextContents()
+      ).map((text) => text.trim());
+      assert.deepEqual(labels, expected);
+    });
+  },
+);
+
 // The players' names are what the manager typed, and nobody's language; they
 // are offered in the dialog's choices, and filled into what it says once a
 // game is added, inside its marks.

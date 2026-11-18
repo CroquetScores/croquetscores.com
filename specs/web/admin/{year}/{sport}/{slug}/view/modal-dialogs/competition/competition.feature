@@ -1584,7 +1584,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
-      And "Sam Someone" has beaten "Alex Another" 7 to 3 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 7 of 7 to 3 of 7 in "Block A" of "Spring Open"
       And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       And the reader unticks "Advantage Golf Croquet"

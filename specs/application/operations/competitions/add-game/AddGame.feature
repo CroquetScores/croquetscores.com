@@ -428,3 +428,105 @@ Feature: Adding a game's score to a competition
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       When the reader signed in to the account for "organiser@example.com" adds the game of "Pat Player" beating "Kim Keeper" 26 to 17 in "AUS v ENG (1)" of "Spring Tests"
       Then it is refused with "Tournament.CompetitionArchived"
+
+  Rule: A game in an Advantage competition is added from hoops and targets
+
+    The two players of an Advantage game have different targets, so a scorer
+    types the hoops each side made and each side's target, and the site works
+    out the scoring fractions (`ScoringFraction.feature`). The game is kept as
+    the text of them, as "83% (5/6)", so that every score is a percentage to
+    everything that reads one, and the winner is whoever made the higher
+    fraction, which is not always the one with more hoops. A game stopped by the
+    clock is entered the same way, with the hoops made when play stopped.
+
+    The competition says which it is (`advantage.feature`). In one that is
+    Advantage a score typed as points is refused by `Game.AdvantageScoreTyped`,
+    and in one that is not, hoops and targets are refused by
+    `Game.HoopsAndTargetsNotAdvantage`, rather than one being taken for the
+    other. Each of the four that make a game is asked for, and a request that
+    names any of them is a request for an Advantage game.
+
+    Background:
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+
+    Scenario: The game is kept as the scoring fractions it makes
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf"
+      Then "Block A" of "Spring Golf" has the score of "Sam Someone" beating "Alex Another" kept as "83% (5/6)" to "63% (5/8)"
+
+    Scenario: The winner can have made fewer hoops than the loser
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 4 of 5 to 5 of 8 in "Block A" of "Spring Golf"
+      Then "Block A" of "Spring Golf" has the score of "Sam Someone" beating "Alex Another" kept as "80% (4/5)" to "63% (5/8)"
+
+    Scenario: The answer is the game's id
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf"
+      Then it is answered with the id of the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf"
+
+    Scenario Outline: A game whose winner did not make the higher fraction is refused
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" <winner> to <loser> in "Block A" of "Spring Golf"
+      Then it is refused with "Game.WinnerNotAhead"
+
+      Examples:
+        | winner | loser  |
+        | 3 of 6 | 5 of 6 |
+        | 3 of 6 | 4 of 8 |
+        | 5 of 8 | 5 of 6 |
+
+    Scenario: A game on equal fractions is kept where the competition allows drawn results
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has added the block "Block B" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Golf"
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 3 of 6 to 4 of 8 in "Block B" of "Spring Golf"
+      Then "Block B" of "Spring Golf" has the score of "Sam Someone" beating "Alex Another" kept as "50% (3/6)" to "50% (4/8)"
+
+    Scenario Outline: Hoops and a target that cannot make a fraction are refused as a scoring fraction refuses them
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" <winner> to <loser> in "Block A" of "Spring Golf"
+      Then it is refused with "<code>"
+
+      Examples:
+        | winner   | loser  | code                             |
+        | 2.5 of 6 | 3 of 6 | ScoringFraction.HoopsNotWhole    |
+        | -1 of 6  | 3 of 6 | ScoringFraction.HoopsNegative    |
+        | 3 of 6.5 | 3 of 6 | ScoringFraction.TargetNotWhole   |
+        | 3 of 0   | 3 of 6 | ScoringFraction.TargetTooSmall   |
+        | 7 of 6   | 3 of 6 | ScoringFraction.HoopsAboveTarget |
+        | 5 of 6   | 7 of 6 | ScoringFraction.HoopsAboveTarget |
+        | 5 of 6   | 3 of 0 | ScoringFraction.TargetTooSmall   |
+
+    Scenario Outline: A game without one of its four parts is refused for it
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf" without its <part>
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "<code>"
+      And it reads the field "<field>"
+
+      Examples:
+        | part            | code                      | field        |
+        | winner's hoops  | Game.WinnerHoopsMissing   | winnerHoops  |
+        | winner's target | Game.WinnerTargetMissing  | winnerTarget |
+        | loser's hoops   | Game.LoserHoopsMissing    | loserHoops   |
+        | loser's target  | Game.LoserTargetMissing   | loserTarget  |
+
+    Scenario: A score typed as points is refused
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Block A" of "Spring Golf"
+      Then it is refused with "Game.AdvantageScoreTyped"
+
+    Scenario: A refused game is not kept
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 7 of 6 to 3 of 6 in "Block A" of "Spring Golf"
+      Then "Block A" of "Spring Golf" has no scores
+
+  Rule: A game in a competition that is not Advantage is added from points as it always was
+
+    Scenario: Hoops and targets are refused
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Open"
+      Then it is refused with "Game.HoopsAndTargetsNotAdvantage"
+
+    Scenario: Hoops and targets are not kept
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Open"
+      Then "Block A" of "Spring Open" has no scores

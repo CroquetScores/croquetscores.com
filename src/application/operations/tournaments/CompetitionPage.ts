@@ -42,6 +42,8 @@ export interface CompetitionAsPaged {
   readonly worldRankingSport: string | undefined;
   /** The most hoops a game of the sport is played to unless a competition says otherwise. */
   readonly usualMaximumHoops: number;
+  /** Whether it is played as Advantage Golf Croquet. */
+  readonly advantage: boolean;
 }
 
 /**

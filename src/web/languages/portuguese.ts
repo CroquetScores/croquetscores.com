@@ -1036,6 +1036,10 @@ export const portuguese: Language = {
     "admin.score.winnerScore": "Pontos do vencedor",
     "admin.score.loser": "Perdedor",
     "admin.score.loserScore": "Pontos do perdedor",
+    "admin.score.winnerHoops": "Arcos do vencedor",
+    "admin.score.winnerTarget": "Meta do vencedor",
+    "admin.score.loserHoops": "Arcos do perdedor",
+    "admin.score.loserTarget": "Meta do perdedor",
     "admin.score.beat": "venceu",
     "admin.score.added":
       "O jogo em que {winner} venceu {loser} foi adicionado.",
@@ -1049,6 +1053,16 @@ export const portuguese: Language = {
     "Game.WinnerScoreMissing": "Digite os pontos do vencedor.",
     "Game.LoserMissing": "Escolha o perdedor.",
     "Game.LoserScoreMissing": "Digite os pontos do perdedor.",
+    "ScoringFraction.HoopsNotWhole": "Os arcos são um número inteiro.",
+    "ScoringFraction.HoopsNegative": "Os arcos não podem ser menos de 0.",
+    "ScoringFraction.TargetNotWhole": "A meta é um número inteiro.",
+    "ScoringFraction.TargetTooSmall": "A meta é pelo menos 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Os arcos não podem ser mais que a meta.",
+    "Game.WinnerHoopsMissing": "Digite os arcos do vencedor.",
+    "Game.WinnerTargetMissing": "Digite a meta do vencedor.",
+    "Game.LoserHoopsMissing": "Digite os arcos do perdedor.",
+    "Game.LoserTargetMissing": "Digite a meta do perdedor.",
     "Score.NoPoints": "Um resultado começa com o seu número de pontos.",
     "Game.SamePlayer": "Ninguém joga contra si mesmo.",
     "Game.WinnerNotAhead":

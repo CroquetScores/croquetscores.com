@@ -1014,6 +1014,10 @@ export const czech: Language = {
     "admin.score.winnerScore": "Skóre vítěze",
     "admin.score.loser": "Poražený",
     "admin.score.loserScore": "Skóre poraženého",
+    "admin.score.winnerHoops": "Branky vítěze",
+    "admin.score.winnerTarget": "Cíl vítěze",
+    "admin.score.loserHoops": "Branky poraženého",
+    "admin.score.loserTarget": "Cíl poraženého",
     "admin.score.beat": "porazil(a)",
     "admin.score.added":
       "Hra byla přidána. Vítěz: {winner}, poražený: {loser}.",
@@ -1027,6 +1031,16 @@ export const czech: Language = {
     "Game.WinnerScoreMissing": "Zadejte skóre vítěze.",
     "Game.LoserMissing": "Vyberte poraženého.",
     "Game.LoserScoreMissing": "Zadejte skóre poraženého.",
+    "ScoringFraction.HoopsNotWhole": "Počet branek je celé číslo.",
+    "ScoringFraction.HoopsNegative": "Počet branek nemůže být menší než 0.",
+    "ScoringFraction.TargetNotWhole": "Cíl je celé číslo.",
+    "ScoringFraction.TargetTooSmall": "Cíl je alespoň 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Počet branek nemůže být vyšší než cíl.",
+    "Game.WinnerHoopsMissing": "Zadejte branky vítěze.",
+    "Game.WinnerTargetMissing": "Zadejte cíl vítěze.",
+    "Game.LoserHoopsMissing": "Zadejte branky poraženého.",
+    "Game.LoserTargetMissing": "Zadejte cíl poraženého.",
     "Score.NoPoints": "Skóre začíná počtem bodů.",
     "Game.SamePlayer": "Nikdo nehraje sám proti sobě.",
     "Game.WinnerNotAhead":

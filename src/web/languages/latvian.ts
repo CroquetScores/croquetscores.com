@@ -1025,6 +1025,10 @@ export const latvian: Language = {
     "admin.score.winnerScore": "Uzvarētāja rezultāts",
     "admin.score.loser": "Zaudētājs",
     "admin.score.loserScore": "Zaudētāja rezultāts",
+    "admin.score.winnerHoops": "Uzvarētāja vārtiņi",
+    "admin.score.winnerTarget": "Uzvarētāja mērķis",
+    "admin.score.loserHoops": "Zaudētāja vārtiņi",
+    "admin.score.loserTarget": "Zaudētāja mērķis",
     "admin.score.beat": "uzvarēja",
     "admin.score.added":
       "Tika pievienota partija, kurā {winner} uzvarēja pret {loser}.",
@@ -1038,6 +1042,16 @@ export const latvian: Language = {
     "Game.WinnerScoreMissing": "Ievadiet uzvarētāja rezultātu.",
     "Game.LoserMissing": "Izvēlieties zaudētāju.",
     "Game.LoserScoreMissing": "Ievadiet zaudētāja rezultātu.",
+    "ScoringFraction.HoopsNotWhole": "Vārtiņu skaits ir vesels skaitlis.",
+    "ScoringFraction.HoopsNegative": "Vārtiņu skaits nevar būt mazāks par 0.",
+    "ScoringFraction.TargetNotWhole": "Mērķis ir vesels skaitlis.",
+    "ScoringFraction.TargetTooSmall": "Mērķis ir vismaz 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Vārtiņu skaits nevar būt lielāks par mērķi.",
+    "Game.WinnerHoopsMissing": "Ievadiet uzvarētāja vārtiņus.",
+    "Game.WinnerTargetMissing": "Ievadiet uzvarētāja mērķi.",
+    "Game.LoserHoopsMissing": "Ievadiet zaudētāja vārtiņus.",
+    "Game.LoserTargetMissing": "Ievadiet zaudētāja mērķi.",
     "Score.NoPoints": "Rezultāts sākas ar punktu skaitu.",
     "Game.SamePlayer": "Neviens nespēlē pats pret sevi.",
     "Game.WinnerNotAhead":

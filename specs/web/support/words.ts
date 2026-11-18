@@ -95,6 +95,11 @@ const words: Readonly<Record<string, string>> = {
   "Rounds.NotWhole": "Enter a whole number of rounds.",
   "Rounds.TooSmall": "A block has to be played in at least 1 round.",
   "Score.NoPoints": "A score begins with its number of points.",
+  "ScoringFraction.HoopsAboveTarget": "Hoops cannot be more than the target.",
+  "ScoringFraction.HoopsNegative": "Hoops cannot be fewer than 0.",
+  "ScoringFraction.HoopsNotWhole": "Hoops are a whole number.",
+  "ScoringFraction.TargetNotWhole": "A target is a whole number.",
+  "ScoringFraction.TargetTooSmall": "A target is at least 1.",
   "Team.Archived": "That team is archived, and is restored first.",
   "Team.PlayerNameTaken": "Another player in this team already has that name.",
   "Team.ShortNameLongerThanName":

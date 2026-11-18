@@ -38,6 +38,8 @@ interface Props {
    * test's players are its teams'.
    */
   readonly kind: "block" | "knockout" | "swiss" | "test";
+  /** Whether it is played as Advantage Golf Croquet (ScoreDialog). */
+  readonly advantage: boolean;
   /** A test's two teams, which its scores are set out by. */
   readonly teams?: readonly [TeamSide, TeamSide] | undefined;
 }
@@ -57,6 +59,11 @@ interface Listed {
   readonly loser: string;
   readonly loserId: string;
   readonly loserScore: string;
+  /** In an Advantage competition, what it was entered as. */
+  readonly winnerHoops?: number;
+  readonly winnerTarget?: number;
+  readonly loserHoops?: number;
+  readonly loserTarget?: number;
   readonly archived: boolean;
   readonly archivable: boolean;
   readonly withdrawn: boolean;
@@ -101,6 +108,7 @@ export const ScoresTab = ({
   tournament,
   competition,
   kind,
+  advantage,
   teams,
 }: Props): React.JSX.Element => {
   const [acting, setActing] = useState(false);
@@ -474,6 +482,7 @@ export const ScoresTab = ({
           tournament={tournament}
           competition={competition}
           inATest={kind === "test"}
+          advantage={advantage}
           correcting={correcting}
           kept={askAgain}
           close={() => {

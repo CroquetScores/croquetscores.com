@@ -1122,6 +1122,10 @@ export const greek: Language = {
     "admin.score.winnerScore": "Σκορ του νικητή",
     "admin.score.loser": "Ηττημένος",
     "admin.score.loserScore": "Σκορ του ηττημένου",
+    "admin.score.winnerHoops": "Τόξα του νικητή",
+    "admin.score.winnerTarget": "Στόχος του νικητή",
+    "admin.score.loserHoops": "Τόξα του ηττημένου",
+    "admin.score.loserTarget": "Στόχος του ηττημένου",
     "admin.score.beat": "νίκησε",
     "admin.score.added":
       "Το παιχνίδι προστέθηκε: νικητής {winner}, ηττημένος {loser}.",
@@ -1135,6 +1139,17 @@ export const greek: Language = {
     "Game.WinnerScoreMissing": "Πληκτρολογήστε το σκορ του νικητή.",
     "Game.LoserMissing": "Επιλέξτε τον ηττημένο.",
     "Game.LoserScoreMissing": "Πληκτρολογήστε το σκορ του ηττημένου.",
+    "ScoringFraction.HoopsNotWhole": "Τα τόξα είναι ακέραιος αριθμός.",
+    "ScoringFraction.HoopsNegative":
+      "Τα τόξα δεν μπορούν να είναι λιγότερα από 0.",
+    "ScoringFraction.TargetNotWhole": "Ο στόχος είναι ακέραιος αριθμός.",
+    "ScoringFraction.TargetTooSmall": "Ο στόχος είναι τουλάχιστον 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Τα τόξα δεν μπορούν να είναι περισσότερα από τον στόχο.",
+    "Game.WinnerHoopsMissing": "Πληκτρολογήστε τα τόξα του νικητή.",
+    "Game.WinnerTargetMissing": "Πληκτρολογήστε τον στόχο του νικητή.",
+    "Game.LoserHoopsMissing": "Πληκτρολογήστε τα τόξα του ηττημένου.",
+    "Game.LoserTargetMissing": "Πληκτρολογήστε τον στόχο του ηττημένου.",
     "Score.NoPoints": "Ένα σκορ αρχίζει με τον αριθμό των πόντων του.",
     "Game.SamePlayer": "Κανείς δεν παίζει με τον εαυτό του.",
     "Game.WinnerNotAhead":

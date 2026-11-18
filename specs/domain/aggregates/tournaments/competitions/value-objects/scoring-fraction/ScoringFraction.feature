@@ -76,3 +76,61 @@ Feature: A player's scoring fraction in an Advantage Golf Croquet game
         | 3     | 6.5    | ScoringFraction.TargetNotWhole   |
         | 0     | 0      | ScoringFraction.TargetTooSmall   |
         | 7     | 6      | ScoringFraction.HoopsAboveTarget |
+
+  Rule: A scoring fraction is written as a game keeps it, and read back from it
+
+    A game in an Advantage competition is kept as the text of its scores
+    (`Score.feature`), so that everything that reads a score reads its points,
+    which are the percentage, and a block's players are ordered by the
+    percentages they have made. It is written as the percentage and then, in
+    brackets, the hoops over the target, as "83% (5/6)", which is how the site
+    shows it. Reading it back gives the hoops and the target, so that a score
+    can be corrected from what it was entered as.
+
+    Only what the site wrote is read. Text that is no scoring fraction, such as
+    a score typed in a competition that is not Advantage, or a percentage that
+    is not the one its hoops and target make, reads as none, and is never taken
+    for the nearest.
+
+    Scenario Outline: A scoring fraction is written as its percentage and its hoops over its target
+      When the scoring fraction of <hoops> hoops with a target of <target> is worked out
+      Then the scoring fraction is written "<written>"
+
+      Examples:
+        | hoops | target | written    |
+        | 5     | 6      | 83% (5/6)  |
+        | 5     | 8      | 63% (5/8)  |
+        | 0     | 6      | 0% (0/6)   |
+        | 9     | 9      | 100% (9/9) |
+        | 13    | 20     | 65% (13/20) |
+
+    Scenario Outline: What a game kept is read back as its hoops and its target
+      When "<written>" is read as a scoring fraction
+      Then the scoring fraction has <hoops> hoops
+      And its target is <target>
+
+      Examples:
+        | written     | hoops | target |
+        | 83% (5/6)   | 5     | 6      |
+        | 63% (5/8)   | 5     | 8      |
+        | 0% (0/6)    | 0     | 6      |
+        | 100% (9/9)  | 9     | 9      |
+        | 65% (13/20) | 13    | 20     |
+
+    Scenario Outline: What is not written so reads as no scoring fraction
+      When "<written>" is read as a scoring fraction
+      Then nothing is read
+
+      Examples:
+        | written       |
+        | 26            |
+        | 6w            |
+        | 83%           |
+        | 5/6           |
+        | 83% (5/6) w   |
+        | 84% (5/6)     |
+        | 83% (7/6)     |
+        | 83% (5/0)     |
+        | 83% (5.5/6)   |
+        | 83%(5/6)      |
+        |               |

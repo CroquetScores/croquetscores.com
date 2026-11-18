@@ -88,6 +88,10 @@ interface Asked {
   winnerScore?: unknown;
   loser?: unknown;
   loserScore?: unknown;
+  winnerHoops?: unknown;
+  winnerTarget?: unknown;
+  loserHoops?: unknown;
+  loserTarget?: unknown;
   manager?: unknown;
   website?: unknown;
   id?: unknown;
@@ -295,6 +299,11 @@ export const registerTestControlTournaments = (
                 winnerScore: asked.winnerScore as string | undefined,
                 loser: asked.loser as string | undefined,
                 loserScore: asked.loserScore as string | undefined,
+                // In an Advantage competition, in place of the scores.
+                winnerHoops: asked.winnerHoops as number | undefined,
+                winnerTarget: asked.winnerTarget as number | undefined,
+                loserHoops: asked.loserHoops as number | undefined,
+                loserTarget: asked.loserTarget as number | undefined,
               },
               at(asked),
             ),
