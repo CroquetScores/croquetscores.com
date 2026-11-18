@@ -28,11 +28,21 @@ export class SearchHandler extends QueryHandler<Search, SearchFound> {
       };
     }
     const website = Website.from(query.website);
-    const [tournaments, players, competitions] = await Promise.all([
-      this.searched.tournaments(website, words, MOST_FOUND),
-      this.searched.players(website, words, MOST_FOUND),
-      this.searched.competitions(website, words, MOST_FOUND),
-    ]);
+    // One after another, not together: a request has one database connection,
+    // and a connection runs one statement at a time. Asked together, the later
+    // statements queued behind the first on the connection by luck of the
+    // driver, which it deprecates (the warning in #671) and will refuse in pg 9.
+    const tournaments = await this.searched.tournaments(
+      website,
+      words,
+      MOST_FOUND,
+    );
+    const players = await this.searched.players(website, words, MOST_FOUND);
+    const competitions = await this.searched.competitions(
+      website,
+      words,
+      MOST_FOUND,
+    );
     return {
       tournaments: tournaments.found,
       players: players.found,
