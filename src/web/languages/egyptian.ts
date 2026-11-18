@@ -982,6 +982,8 @@ export const egyptian: Language = {
     "Game.SamePlayer": "محدش بيلعب ضد نفسه.",
     "Game.WinnerNotAhead":
       "نتيجة الفايز لازم تكون أكتر من نتيجة الخاسر، أو تتعلّم إنها فوز.",
+    "Game.WinnerMarkedNotLevel":
+      "حرف w ينفع بس لما الطرفين يبقوا عاملين نفس الـ SF%.",
     "Game.LoserMarked": "نتيجة الخاسر مينفعش تتعلّم إنها فوز.",
     "Game.ResultChanged":
       "التصحيح بيحافظ على النتيجة: اللعبة المكسوبة تفضل مكسوبة، والمتعادلة تفضل متعادلة.",

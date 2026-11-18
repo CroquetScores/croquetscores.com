@@ -64,6 +64,8 @@ interface Listed {
   readonly winnerTarget?: number;
   readonly loserHoops?: number;
   readonly loserTarget?: number;
+  /** Whether the winner was declared by a "w". */
+  readonly winnerWon?: boolean;
   readonly archived: boolean;
   readonly archivable: boolean;
   readonly withdrawn: boolean;

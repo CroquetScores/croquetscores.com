@@ -530,3 +530,83 @@ Feature: Adding a game's score to a competition
     Scenario: Hoops and targets are not kept
       When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Open"
       Then "Block A" of "Spring Open" has no scores
+
+  Rule: A "w" typed after a side's hoops or its target declares that side the winner
+
+    An Advantage game stopped by the clock can leave both sides on the same
+    scoring fraction, which is refused where drawn games are not allowed
+    (`Game.WinnerNotAhead`), as is any game on equal points with no mark
+    (`Game.feature`). Whoever organises the game says who won it by a "w" after
+    the winner's hoops or after the winner's target, as the winner's score is
+    marked "6w" in any other competition (`Score.feature`): "3w of 6" and "3 of
+    6w" say the same. The request carries the four as they were typed, so the
+    hoops and the target are read from them, and a "w" after either is the mark.
+
+    The game is then kept as the scoring fractions its sides made with the
+    winner's written with a "w" after it, as "50% (3/6) w" (`ScoringFraction.feature`).
+    The mark can only be used where the two scoring fractions are equal, since
+    it is there that somebody has to say who won. A winner who is ahead has no
+    need of it and is refused by `Game.WinnerMarkedNotLevel`, rather than kept
+    with a mark that says nothing, and a winner who is behind is refused as ever
+    by `Game.WinnerNotAhead` (`Game.feature`). A loser is never marked, as in
+    any other game, and is refused by `Game.LoserMarked`.
+
+    Background:
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+
+    Scenario Outline: A game on equal fractions is kept as the winner's where a w is typed
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" <winner> to <loser> in "Block A" of "Spring Golf"
+      Then "Block A" of "Spring Golf" has the score of "Sam Someone" beating "Alex Another" kept as "50% (3/6) w" to "50% (4/8)"
+
+      Examples:
+        | winner  | loser  |
+        | 3w of 6 | 4 of 8 |
+        | 3 of 6w | 4 of 8 |
+        | 3w of 6w | 4 of 8 |
+
+    Scenario: A game on equal fractions is still refused with no w
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 3 of 6 to 4 of 8 in "Block A" of "Spring Golf"
+      Then it is refused with "Game.WinnerNotAhead"
+
+    Scenario Outline: A winner who is ahead is refused for a w
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" <winner> to 5 of 8 in "Block A" of "Spring Golf"
+      Then it is refused with "Game.WinnerMarkedNotLevel"
+
+      Examples:
+        | winner  |
+        | 5w of 6 |
+        | 5 of 6w |
+
+    Scenario: A winner who is ahead and refused for a w is not kept
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 5w of 6 to 5 of 8 in "Block A" of "Spring Golf"
+      Then "Block A" of "Spring Golf" has no scores
+
+    Scenario: A winner who is behind is refused whatever is typed
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 3w of 6 to 5 of 6 in "Block A" of "Spring Golf"
+      Then it is refused with "Game.WinnerNotAhead"
+
+    Scenario Outline: A loser marked is refused as a loser marked is in any other game
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" 5 of 6 to <loser> in "Block A" of "Spring Golf"
+      Then it is refused with "Game.LoserMarked"
+
+      Examples:
+        | loser   |
+        | 4w of 8 |
+        | 4 of 8w |
+
+    Scenario Outline: A w typed any other way is hoops or a target that is not a whole number
+      When the reader signed in to the account for "organiser@example.com" adds the Advantage game of "Sam Someone" beating "Alex Another" <winner> to 4 of 8 in "Block A" of "Spring Golf"
+      Then it is refused with "ScoringFraction.HoopsNotWhole"
+
+      Examples:
+        | winner    |
+        | 3ww of 6  |
+        | 3x of 6   |
+        | w3 of 6   |

@@ -89,3 +89,36 @@ Feature: The API takes a game in an Advantage competition as hoops and targets
       And the players "Sam Someone" and "Alex Another" have been entered in "Block B"
       When a request as "croquetscores.com" adds the game of "Sam Someone" beating "Alex Another" 5 of 6 to 5 of 8 in "Block B"
       Then the request is refused with "Game.HoopsAndTargetsNotAdvantage"
+
+  Rule: A w typed after a side's hoops or its target declares that side the winner
+
+    The four are sent as they were typed, and the site reads the hoops and the
+    target from them (`AddGame.feature`).
+
+    Scenario Outline: A game on equal fractions is kept as the winner's where a w is typed
+      When a request as "croquetscores.com" adds the game of "Sam Someone" beating "Alex Another" <winner> to 4 of 8 in "Block A"
+      Then the request is answered as done
+      And the competition "Block A" holds the score of "Sam Someone" beating "Alex Another" kept as "50% (3/6) w" to "50% (4/8)"
+
+      Examples:
+        | winner   |
+        | 3w of 6  |
+        | 3 of 6w  |
+
+    Scenario: A game on equal fractions with no w is refused
+      When a request as "croquetscores.com" adds the game of "Sam Someone" beating "Alex Another" 3 of 6 to 4 of 8 in "Block A"
+      Then the request is refused with "Game.WinnerNotAhead"
+
+    Scenario: A winner who is ahead is refused for a w
+      When a request as "croquetscores.com" adds the game of "Sam Someone" beating "Alex Another" 5w of 6 to 5 of 8 in "Block A"
+      Then the request is refused with "Game.WinnerMarkedNotLevel"
+
+    Scenario: A loser marked is refused
+      When a request as "croquetscores.com" adds the game of "Sam Someone" beating "Alex Another" 5 of 6 to 4w of 8 in "Block A"
+      Then the request is refused with "Game.LoserMarked"
+
+    Scenario: A game is listed as its winner declared
+      Given the game of "Sam Someone" beating "Alex Another" 3w of 6 to 4 of 8 has been added to "Block A"
+      When a request as "croquetscores.com" lists the games of "Block A"
+      Then the list says the first game was entered as 3 of 6 to 4 of 8
+      And the list says the first game had its winner declared

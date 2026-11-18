@@ -4,7 +4,11 @@ import type { BrokenRule } from "../../../domain/common/validation/Validator.js"
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { AddGame, type AddGameErrorCode } from "./AddGame.js";
-import { namesHoopsOrTargets } from "./advantageScores.js";
+import {
+  namesHoopsOrTargets,
+  readTyped,
+  type Typed,
+} from "./advantageScores.js";
 
 type Code = AddGameErrorCode | ScoreErrorCode | GameErrorCode;
 
@@ -38,8 +42,9 @@ export class AddGameValidator extends CommandValidator<AddGame> {
     // A request that names any of the hoops and targets is for an Advantage
     // game, and is asked for all four in place of the scores. Whether the
     // competition is one is for the tournament to say, once it has.
-    const hoops = (said: number | undefined, missing: Code, field: string) => {
-      if (said === undefined) broken.push({ code: missing, fields: [field] });
+    const hoops = (said: Typed | undefined, missing: Code, field: string) => {
+      if (readTyped(said).count === undefined)
+        broken.push({ code: missing, fields: [field] });
     };
     const forAnAdvantageGame = namesHoopsOrTargets(command.game);
     if (!given(winner))

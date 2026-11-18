@@ -1063,6 +1063,8 @@ export const latvian: Language = {
     "Game.SamePlayer": "Neviens nespēlē pats pret sevi.",
     "Game.WinnerNotAhead":
       "Uzvarētāja rezultātam jābūt lielākam par zaudētāja vai atzīmētam kā uzvarētam.",
+    "Game.WinnerMarkedNotLevel":
+      "Burtu w drīkst izmantot tikai tad, ja abām pusēm ir vienāds SF%.",
     "Game.LoserMarked": "Zaudētāja rezultātu nevar atzīmēt kā uzvarētu.",
     "Game.ResultChanged":
       "Labojums saglabā iznākumu: uzvarēta partija paliek uzvarēta, un neizšķirta partija paliek neizšķirta.",

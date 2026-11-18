@@ -1085,6 +1085,8 @@ export const spanish: Language = {
     "Game.SamePlayer": "Nadie juega contra sí mismo.",
     "Game.WinnerNotAhead":
       "La puntuación del ganador debe ser mayor que la del perdedor, o estar marcada como ganada.",
+    "Game.WinnerMarkedNotLevel":
+      "Una w solo se puede usar cuando los dos lados lograron el mismo SF%.",
     "Game.LoserMarked":
       "La puntuación del perdedor no puede marcarse como ganada.",
     "Game.ResultChanged":

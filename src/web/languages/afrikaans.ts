@@ -1080,6 +1080,8 @@ export const afrikaans: Language = {
     "Game.SamePlayer": "Niemand speel teen homself nie.",
     "Game.WinnerNotAhead":
       "Die wenner se telling moet meer wees as die verloorder s'n, of as gewonne gemerk wees.",
+    "Game.WinnerMarkedNotLevel":
+      "'n w kan net gebruik word waar albei kante dieselfde SF% gemaak het.",
     "Game.LoserMarked":
       "Die verloorder se telling kan nie as gewonne gemerk word nie.",
     "Game.ResultChanged":

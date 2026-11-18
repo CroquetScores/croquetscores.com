@@ -1063,6 +1063,8 @@ export const norwegian: Language = {
     "Game.SamePlayer": "Ingen spiller mot seg selv.",
     "Game.WinnerNotAhead":
       "Vinnerens poengsum må være høyere enn taperens, eller merket som vunnet.",
+    "Game.WinnerMarkedNotLevel":
+      "En w kan bare brukes når begge sider har oppnådd samme SF%.",
     "Game.LoserMarked": "Taperens poengsum kan ikke merkes som vunnet.",
     "Game.ResultChanged":
       "En rettelse beholder resultatet: et vunnet parti forblir vunnet, og et uavgjort parti forblir uavgjort.",

@@ -1052,6 +1052,8 @@ export const czech: Language = {
     "Game.SamePlayer": "Nikdo nehraje sám proti sobě.",
     "Game.WinnerNotAhead":
       "Skóre vítěze musí být vyšší než skóre poraženého, nebo označené jako vítězné.",
+    "Game.WinnerMarkedNotLevel":
+      "Písmeno w lze použít jen tehdy, když obě strany dosáhly stejného SF%.",
     "Game.LoserMarked": "Skóre poraženého nelze označit jako vítězné.",
     "Game.ResultChanged":
       "Oprava ponechává výsledek: vyhraná hra zůstává vyhraná a remizovaná hra zůstává remizovaná.",

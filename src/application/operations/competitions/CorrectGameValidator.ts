@@ -3,7 +3,11 @@ import type { BrokenRule } from "../../../domain/common/validation/Validator.js"
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { CorrectGame, type CorrectGameErrorCode } from "./CorrectGame.js";
-import { namesHoopsOrTargets } from "./advantageScores.js";
+import {
+  namesHoopsOrTargets,
+  readTyped,
+  type Typed,
+} from "./advantageScores.js";
 
 type Code = CorrectGameErrorCode | ScoreErrorCode;
 
@@ -32,8 +36,9 @@ export class CorrectGameValidator extends CommandValidator<CorrectGame> {
       else if (!BEGINS_WITH_A_DIGIT.test(said))
         broken.push({ code: "Score.NoPoints", fields: [field] });
     };
-    const hoops = (said: number | undefined, missing: Code, field: string) => {
-      if (said === undefined) broken.push({ code: missing, fields: [field] });
+    const hoops = (said: Typed | undefined, missing: Code, field: string) => {
+      if (readTyped(said).count === undefined)
+        broken.push({ code: missing, fields: [field] });
     };
     // As when a game is added (AddGameValidator): a request that names any of
     // the hoops and targets is for an Advantage game, and is asked for all four.

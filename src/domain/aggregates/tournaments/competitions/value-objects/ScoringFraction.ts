@@ -47,8 +47,9 @@ const given = new Validator<Given, ScoringFractionErrorCode>({
   ],
 });
 
-// How a game keeps one: the percentage, then the hoops over the target.
-const WRITTEN = /^(\d+)% \((\d+)\/(\d+)\)$/;
+// How a game keeps one: the percentage, then the hoops over the target, and a
+// space and a w where the winner was declared.
+const WRITTEN = /^(\d+)% \((\d+)\/(\d+)\)( w)?$/;
 
 /**
  * A player's hoops over their target in an Advantage Golf Croquet game, as the
@@ -67,19 +68,23 @@ const WRITTEN = /^(\d+)% \((\d+)\/(\d+)\)$/;
 export class ScoringFraction {
   readonly #hoops: number;
   readonly #target: number;
+  readonly #won: boolean;
 
-  private constructor(hoops: number, target: number) {
+  private constructor(hoops: number, target: number, won: boolean) {
     this.#hoops = hoops;
     this.#target = target;
+    this.#won = won;
   }
 
   /**
-   * The scoring fraction of `hoops` against `target`. Throws
-   * {@link ValidationError} naming the first rule broken.
+   * The scoring fraction of `hoops` against `target`, the winner's where `won`
+   * says it was declared, as a score's mark is (`Score.feature`): a game that
+   * leaves both sides on the same fraction is won by whoever is so declared.
+   * Throws {@link ValidationError} naming the first rule broken.
    */
-  static from(hoops: number, target: number): ScoringFraction {
+  static from(hoops: number, target: number, won = false): ScoringFraction {
     given.ensureValid({ hoops, target });
-    return new ScoringFraction(hoops, target);
+    return new ScoringFraction(hoops, target, won);
   }
 
   /**
@@ -92,9 +97,13 @@ export class ScoringFraction {
   static read(written: string): ScoringFraction | undefined {
     const found = WRITTEN.exec(written);
     if (found === null) return undefined;
-    const [, percentage, hoops, target] = found;
+    const [, percentage, hoops, target, mark] = found;
     try {
-      const fraction = ScoringFraction.from(Number(hoops), Number(target));
+      const fraction = ScoringFraction.from(
+        Number(hoops),
+        Number(target),
+        mark !== undefined,
+      );
       return fraction.percentage === Number(percentage) ? fraction : undefined;
     } catch (refused) {
       if (refused instanceof ValidationError) return undefined;
@@ -110,6 +119,11 @@ export class ScoringFraction {
     return this.#target;
   }
 
+  /** Whether it is the winner's, declared as such. */
+  get won(): boolean {
+    return this.#won;
+  }
+
   /** The percentage, a whole number from 0 to 100. */
   get percentage(): number {
     return Math.floor((200 * this.#hoops + this.#target) / (2 * this.#target));
@@ -119,12 +133,13 @@ export class ScoringFraction {
     return (
       other instanceof ScoringFraction &&
       this.#hoops === other.#hoops &&
-      this.#target === other.#target
+      this.#target === other.#target &&
+      this.#won === other.#won
     );
   }
 
-  /** As a game's score is written: `83% (5/6)`. */
+  /** As a game's score is written: `83% (5/6)`, and `50% (3/6) w` where declared. */
   toString(): string {
-    return `${String(this.percentage)}% (${String(this.#hoops)}/${String(this.#target)})`;
+    return `${String(this.percentage)}% (${String(this.#hoops)}/${String(this.#target)})${this.#won ? " w" : ""}`;
   }
 }

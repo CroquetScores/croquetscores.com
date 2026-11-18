@@ -13,7 +13,9 @@ import { ValidationError } from "../../../domain/common/validation/ValidationErr
  * kind it is not.
  */
 export type AdvantageScoresErrorCode =
-  "Game.AdvantageScoreTyped" | "Game.HoopsAndTargetsNotAdvantage";
+  | "Game.AdvantageScoreTyped"
+  | "Game.HoopsAndTargetsNotAdvantage"
+  | "Game.WinnerMarkedNotLevel";
 
 /** What a request for a game says of its two scores. */
 export interface ScoresAsked {
@@ -22,14 +24,42 @@ export interface ScoresAsked {
   readonly loserScore?: string | undefined;
   /**
    * In an Advantage competition, the hoops each side made and its target, as
-   * numbers, one that is no number being NaN so that it is refused as a
-   * scoring fraction refuses it.
+   * they were typed: a number, or text with a "w" after it where the side is
+   * declared the winner (`readTyped`).
    */
-  readonly winnerHoops?: number | undefined;
-  readonly winnerTarget?: number | undefined;
-  readonly loserHoops?: number | undefined;
-  readonly loserTarget?: number | undefined;
+  readonly winnerHoops?: Typed | undefined;
+  readonly winnerTarget?: Typed | undefined;
+  readonly loserHoops?: Typed | undefined;
+  readonly loserTarget?: Typed | undefined;
 }
+
+/** A side's hoops or target as it was typed. */
+export type Typed = number | string;
+
+/**
+ * What a side's hoops or target was typed as: its number, and whether a "w" was
+ * typed after it, which declares that side the winner as "6w" does for a score
+ * (`Score.feature`) whichever of the hoops and the target it is typed after. A
+ * number said as one has no mark. The count is nothing where none was typed, and
+ * `NaN` where what was typed is not a whole number to look at, so that it is
+ * refused as a scoring fraction refuses it. Only a lowercase "w" is a mark, and
+ * only one: "3ww" is not a number.
+ */
+export const readTyped = (
+  said: Typed | undefined,
+): { readonly count: number | undefined; readonly marked: boolean } => {
+  if (said === undefined) return { count: undefined, marked: false };
+  if (typeof said === "number") return { count: said, marked: false };
+  const typed = said.trim();
+  const found = /^(.*?)\s*w$/.exec(typed);
+  const digits = found === null ? typed : (found[1] ?? "");
+  const marked = found !== null;
+  if (digits === "") return { count: undefined, marked };
+  return {
+    count: /^-?\d+(?:\.\d+)?$/.test(digits) ? Number(digits) : Number.NaN,
+    marked,
+  };
+};
 
 /**
  * Whether a request names any of the four that make an Advantage game, which
@@ -78,17 +108,34 @@ export const scoresOfRequest = (
       "Game.AdvantageScoreTyped",
     );
   }
-  // Each is there, once the validator has let it in.
+  // Each is there, once the validator has let it in. A "w" after either of a
+  // side's two is that side declared the winner. A loser's is refused by the
+  // game, as a loser's score marked is in any other competition.
+  const winnerHoops = readTyped(asked.winnerHoops);
+  const winnerTarget = readTyped(asked.winnerTarget);
+  const loserHoops = readTyped(asked.loserHoops);
+  const loserTarget = readTyped(asked.loserTarget);
   const winner = ScoringFraction.from(
-    asked.winnerHoops ?? Number.NaN,
-    asked.winnerTarget ?? Number.NaN,
+    winnerHoops.count ?? Number.NaN,
+    winnerTarget.count ?? Number.NaN,
+    winnerHoops.marked || winnerTarget.marked,
   );
   const loser = ScoringFraction.from(
-    asked.loserHoops ?? Number.NaN,
-    asked.loserTarget ?? Number.NaN,
+    loserHoops.count ?? Number.NaN,
+    loserTarget.count ?? Number.NaN,
+    loserHoops.marked || loserTarget.marked,
   );
+  // The mark is for deciding a game the two sides are level in, since it is
+  // only there that somebody has to say who won. A winner who is ahead has no
+  // need of it, and is refused rather than kept with a mark that says nothing.
+  // One who is behind is refused by the game, as ever.
+  if (winner.won && winner.percentage > loser.percentage) {
+    throw new ValidationError<AdvantageScoresErrorCode>(
+      "Game.WinnerMarkedNotLevel",
+    );
+  }
   return {
-    winner: Score.read(String(winner), tournament.website),
-    loser: Score.read(String(loser), tournament.website),
+    winner: Score.kept(String(winner), winner.won),
+    loser: Score.kept(String(loser), loser.won),
   };
 };

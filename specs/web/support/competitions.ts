@@ -175,11 +175,11 @@ Given(
       tournament: found.id,
       competition: competitionId(this, tournament, competition),
       winner: enteredId(this, tournament, competition, winner),
-      winnerHoops: Number(winnerHoops),
-      winnerTarget: Number(winnerTarget),
+      winnerHoops,
+      winnerTarget,
       loser: enteredId(this, tournament, competition, loser),
-      loserHoops: Number(loserHoops),
-      loserTarget: Number(loserTarget),
+      loserHoops,
+      loserTarget,
     });
     this.games.set(
       within(within(tournament, competition), `${winner}>${loser}`),

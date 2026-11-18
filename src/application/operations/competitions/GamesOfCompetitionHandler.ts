@@ -96,6 +96,7 @@ export class GamesOfCompetitionHandler extends QueryHandler<
         winnerTeam: teams.get(game.winner.value),
         loserTeam: teams.get(game.loser.value),
         winnerHoops: winnerFraction?.hoops,
+        winnerWon: winnerFraction?.won,
         winnerTarget: winnerFraction?.target,
         loserHoops: loserFraction?.hoops,
         loserTarget: loserFraction?.target,

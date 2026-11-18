@@ -94,16 +94,17 @@ const SIDE = String.raw`(\S+) of (\S+)`;
 const SIDES = String.raw`${SIDE} to ${SIDE}`;
 const GAME = String.raw`"([^"]*)" beating "([^"]*)"`;
 
+// As they were typed, with a "w" where the side is declared the winner.
 const hoopsAndTargets = (
   winnerHoops: string,
   winnerTarget: string,
   loserHoops: string,
   loserTarget: string,
-): Record<string, number> => ({
-  winnerHoops: Number(winnerHoops),
-  winnerTarget: Number(winnerTarget),
-  loserHoops: Number(loserHoops),
-  loserTarget: Number(loserTarget),
+): Record<string, string> => ({
+  winnerHoops,
+  winnerTarget,
+  loserHoops,
+  loserTarget,
 });
 
 Given(
@@ -273,6 +274,7 @@ Then(
 );
 
 interface Listed {
+  readonly winnerWon?: boolean;
   readonly winnerScore: string;
   readonly loserScore: string;
   readonly winnerHoops?: number;
@@ -295,6 +297,13 @@ Then(
     const first = firstListed(this);
     assert.equal(first.winnerScore, winnerScore);
     assert.equal(first.loserScore, loserScore);
+  },
+);
+
+Then(
+  "the list says the first game had its winner declared",
+  function (this: WebWorld) {
+    assert.equal(firstListed(this).winnerWon, true);
   },
 );
 

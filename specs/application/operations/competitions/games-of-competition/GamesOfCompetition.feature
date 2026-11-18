@@ -317,3 +317,30 @@ Feature: The scores of a competition, as its tournament's managers and scorers l
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Open"
       Then the first score answered has no hoops and targets
+
+  Rule: A game in an Advantage competition is answered with whether its winner was declared
+
+    So that a correction begins on what was typed: the hoops and the target as
+    typed, and the winner's "w" where there was one.
+
+    Background:
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+
+    Scenario: A game whose winner was declared is answered as such
+      Given "Sam Someone" has beaten "Alex Another" 3w of 6 to 4 of 8 in "Block A" of "Spring Golf"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Golf"
+      Then the first score answered is kept as "50% (3/6) w" to "50% (4/8)"
+      And the first score answered has 3 of 6 to 4 of 8
+      And the first score answered has its winner declared
+
+    Scenario: A game whose winner was not declared is answered as such
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Golf"
+      Then the first score answered does not have its winner declared

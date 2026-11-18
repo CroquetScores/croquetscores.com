@@ -61,6 +61,8 @@ export interface Correcting {
   readonly winnerTarget?: number | undefined;
   readonly loserHoops?: number | undefined;
   readonly loserTarget?: number | undefined;
+  /** Whether the winner was declared by a "w", which is typed back in to correct it. */
+  readonly winnerWon?: boolean | undefined;
   /** Whether it could be archived, which is whether its players can change. */
   readonly archivable: boolean;
 }
@@ -105,6 +107,11 @@ const partsInOrder: readonly Part[] = [
   "loserHoops",
   "loserTarget",
 ];
+
+// The number typed in a field, without the "w" that may follow it, which
+// declares the winner and is no part of the number.
+const typedNumber = (typed: string): number =>
+  Number(typed.trim().replace(/\s*w$/, ""));
 
 // What a scoring fraction refuses, with the part of a side it is about and
 // what it is of the hoops and the target typed. A refusal says what was wrong
@@ -179,7 +186,8 @@ export const ScoreDialog = ({
   const [said, setSaid] = useState<Record<Part, string>>({
     winner: correcting?.winnerId ?? "",
     winnerScore: advantage ? "" : (correcting?.winnerScore ?? ""),
-    winnerHoops: String(correcting?.winnerHoops ?? ""),
+    // Begins as it was typed, with the winner's w where there was one.
+    winnerHoops: `${String(correcting?.winnerHoops ?? "")}${correcting?.winnerWon === true ? "w" : ""}`,
     winnerTarget: String(correcting?.winnerTarget ?? ""),
     loser: correcting?.loserId ?? "",
     loserScore: advantage ? "" : (correcting?.loserScore ?? ""),
@@ -359,11 +367,18 @@ export const ScoreDialog = ({
   const partFor = (code: string): Part | undefined => {
     if (code === "Game.WinnerNotAhead")
       return advantage ? "winnerHoops" : "winnerScore";
+    // A w is refused beside the field it was typed in, the hoops where it is in
+    // both (a side's w is the same wherever it is typed).
+    const whereWTyped = (side: "winner" | "loser"): Part =>
+      /w\s*$/.test(said[`${side}Hoops`]) ? `${side}Hoops` : `${side}Target`;
+    if (advantage && code === "Game.WinnerMarkedNotLevel")
+      return whereWTyped("winner");
+    if (advantage && code === "Game.LoserMarked") return whereWTyped("loser");
     const asScoringFraction = scoringFractionRefusals[code];
     if (asScoringFraction === undefined) return partOf[code];
     const winnerBroke = asScoringFraction.brokenBy(
-      Number(said.winnerHoops),
-      Number(said.winnerTarget),
+      typedNumber(said.winnerHoops),
+      typedNumber(said.winnerTarget),
     );
     return `${winnerBroke ? "winner" : "loser"}${asScoringFraction.part}`;
   };
@@ -568,8 +583,9 @@ export const ScoreDialog = ({
             .filter((id) => id !== undefined)
             .join(" ")}
           ref={fields[part]}
+          // A number, and a w after it where the side is declared the winner, so
+          // it is typed on a keyboard of letters and not a keypad of numbers.
           type="text"
-          inputMode="numeric"
           placeholder=" "
           autoComplete="off"
           value={said[part]}

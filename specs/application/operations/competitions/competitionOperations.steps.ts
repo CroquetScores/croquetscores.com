@@ -1268,10 +1268,10 @@ const addingAs = async (
     readonly winnerScore?: string | undefined;
     readonly loser?: string | undefined;
     readonly loserScore?: string | undefined;
-    readonly winnerHoops?: number | undefined;
-    readonly winnerTarget?: number | undefined;
-    readonly loserHoops?: number | undefined;
-    readonly loserTarget?: number | undefined;
+    readonly winnerHoops?: number | string | undefined;
+    readonly winnerTarget?: number | string | undefined;
+    readonly loserHoops?: number | string | undefined;
+    readonly loserTarget?: number | string | undefined;
   },
 ): Promise<void> => {
   const competitionId = await competitionIn(world, tournament, competition);
@@ -2706,17 +2706,14 @@ Then(
 const SIDE = String.raw`(\S+) of (\S+)`;
 const SIDES = String.raw`${SIDE} to ${SIDE}`;
 
+// As they were typed, so that a "w" after one reaches the request to be read
+// there (`readTyped`): the winner is declared by it.
 const hoopsAndTargets = (
   winnerHoops: string,
   winnerTarget: string,
   loserHoops: string,
   loserTarget: string,
-) => ({
-  winnerHoops: Number(winnerHoops),
-  winnerTarget: Number(winnerTarget),
-  loserHoops: Number(loserHoops),
-  loserTarget: Number(loserTarget),
-});
+) => ({ winnerHoops, winnerTarget, loserHoops, loserTarget });
 
 // A game played before the scenario's own request, entered as the
 // tournament's first manager.
@@ -2954,6 +2951,22 @@ Then(
         Number(loserTarget),
       ],
     );
+  },
+);
+
+Then(
+  "the first score answered has its winner declared",
+  function (this: SpecWorld) {
+    const [first] = gamesListed(this);
+    assert.equal(first?.winnerWon, true);
+  },
+);
+
+Then(
+  "the first score answered does not have its winner declared",
+  function (this: SpecWorld) {
+    const [first] = gamesListed(this);
+    assert.notEqual(first?.winnerWon, true);
   },
 );
 

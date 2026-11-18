@@ -69,6 +69,8 @@ const words: Readonly<Record<string, string>> = {
   "Game.ResultChanged":
     "A correction keeps the result: a game won stays won, and a drawn game stays drawn.",
   "Game.SamePlayer": "Nobody plays themselves.",
+  "Game.WinnerMarkedNotLevel":
+    "A w can only be used where both sides made the same SF%.",
   "Game.WinnerMissing": "Choose the winner.",
   "Game.WinnerNotAhead":
     "The winner's score has to be more than the loser's, or marked as won.",

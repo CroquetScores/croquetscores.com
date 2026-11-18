@@ -1,5 +1,6 @@
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Command } from "../../common/Command.js";
+import type { Typed } from "./advantageScores.js";
 
 /** Every rule corrected scores can break on the way in. */
 export type CorrectGameErrorCode =
@@ -20,10 +21,10 @@ export interface CorrectedScores {
   readonly winnerScore?: string | undefined;
   readonly loserScore?: string | undefined;
   /** In an Advantage competition, in place of the scores (`ScoresAsked`). */
-  readonly winnerHoops?: number | undefined;
-  readonly winnerTarget?: number | undefined;
-  readonly loserHoops?: number | undefined;
-  readonly loserTarget?: number | undefined;
+  readonly winnerHoops?: Typed | undefined;
+  readonly winnerTarget?: Typed | undefined;
+  readonly loserHoops?: Typed | undefined;
+  readonly loserTarget?: Typed | undefined;
   readonly winner?: string | undefined;
   readonly loser?: string | undefined;
 }

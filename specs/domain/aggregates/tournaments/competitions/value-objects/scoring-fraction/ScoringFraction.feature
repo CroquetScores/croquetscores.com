@@ -127,10 +127,52 @@ Feature: A player's scoring fraction in an Advantage Golf Croquet game
         | 6w            |
         | 83%           |
         | 5/6           |
-        | 83% (5/6) w   |
         | 84% (5/6)     |
         | 83% (7/6)     |
         | 83% (5/0)     |
         | 83% (5.5/6)   |
         | 83%(5/6)      |
         |               |
+
+  Rule: A scoring fraction can be the winner's, declared as a score's mark is
+
+    A game stopped by the clock can leave the two sides on the same scoring
+    fraction, and then somebody has to say who won it, as a game on equal points
+    does with "6w" (`Score.feature`). In an Advantage game the winner is
+    declared by a "w" typed after either the hoops or the target, and the
+    scoring fraction is then the winner's, written with a space and a "w" after
+    it, as "50% (3/6) w". It is read back the same way, so that a correction
+    begins on what was typed. Only that exact spelling is read, as for any other
+    scoring fraction.
+
+    Scenario: A scoring fraction declared the winner's is written with a w after it
+      When the scoring fraction of 3 hoops with a target of 6 declared the winner is worked out
+      Then the scoring fraction is written "50% (3/6) w"
+
+    Scenario Outline: What a game kept as the winner's is read back as hoops, a target and the winner's mark
+      When "<written>" is read as a scoring fraction
+      Then the scoring fraction has <hoops> hoops
+      And its target is <target>
+      And it is declared the winner
+
+      Examples:
+        | written       | hoops | target |
+        | 50% (3/6) w   | 3     | 6      |
+        | 50% (4/8) w   | 4     | 8      |
+        | 100% (9/9) w  | 9     | 9      |
+
+    Scenario: A scoring fraction not declared the winner is not
+      When "50% (3/6)" is read as a scoring fraction
+      Then it is not declared the winner
+
+    Scenario Outline: A winner declared any other way reads as no scoring fraction
+      When "<written>" is read as a scoring fraction
+      Then nothing is read
+
+      Examples:
+        | written        |
+        | 50% (3/6)w     |
+        | 50% (3/6) W    |
+        | 50% (3/6) won  |
+        | 50% (3/6) ww   |
+        | 84% (3/6) w    |

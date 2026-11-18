@@ -1124,6 +1124,8 @@ export const english: Language = {
     "Game.SamePlayer": "Nobody plays themselves.",
     "Game.WinnerNotAhead":
       "The winner's score has to be more than the loser's, or marked as won.",
+    "Game.WinnerMarkedNotLevel":
+      "A w can only be used where both sides made the same SF%.",
     "Game.LoserMarked": "The loser's score cannot be marked as won.",
     "Game.ResultChanged":
       "A correction keeps the result: a game won stays won, and a drawn game stays drawn.",

@@ -22,6 +22,8 @@ export interface ListedGame {
   readonly winnerTarget?: number | undefined;
   readonly loserHoops?: number | undefined;
   readonly loserTarget?: number | undefined;
+  /** Whether the winner was declared by a "w", which decides a game on equal fractions. */
+  readonly winnerWon?: boolean | undefined;
   readonly archived: boolean;
   /** Whether it could be archived now, as the competition would say. */
   readonly archivable: boolean;

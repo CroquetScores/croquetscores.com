@@ -208,6 +208,18 @@ const countOf = (body: unknown, field: string): number | undefined => {
   return /^-?\d+(?:\.\d+)?$/.test(typed) ? Number(typed) : Number.NaN;
 };
 
+// A side's hoops or target as it was typed, for the application to read: text
+// with its "w" where there is one, a number as a number, and nothing where it
+// was left empty (`readTyped`). What is neither is not a number to look at.
+const typedOf = (body: unknown, field: string): number | string | undefined => {
+  const value = (body as Record<string, unknown> | null)?.[field];
+  if (value === undefined || value === null) return undefined;
+  if (typeof value === "number") return value;
+  if (typeof value !== "string") return Number.NaN;
+  const typed = value.trim();
+  return typed === "" ? undefined : typed;
+};
+
 // Yes or no where it was said, and unsaid otherwise, which the tournament
 // decides for itself (create.feature).
 const yesOrNoOf = (body: unknown, field: string): boolean | undefined => {
@@ -979,10 +991,10 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
             winnerScore: score("winnerScore"),
             loser: player("loser"),
             loserScore: score("loserScore"),
-            winnerHoops: countOf(request.body, "winnerHoops"),
-            winnerTarget: countOf(request.body, "winnerTarget"),
-            loserHoops: countOf(request.body, "loserHoops"),
-            loserTarget: countOf(request.body, "loserTarget"),
+            winnerHoops: typedOf(request.body, "winnerHoops"),
+            winnerTarget: typedOf(request.body, "winnerTarget"),
+            loserHoops: typedOf(request.body, "loserHoops"),
+            loserTarget: typedOf(request.body, "loserTarget"),
           },
           request.requestedAt,
         ),
@@ -1018,10 +1030,10 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
           {
             winnerScore: score("winnerScore"),
             loserScore: score("loserScore"),
-            winnerHoops: countOf(request.body, "winnerHoops"),
-            winnerTarget: countOf(request.body, "winnerTarget"),
-            loserHoops: countOf(request.body, "loserHoops"),
-            loserTarget: countOf(request.body, "loserTarget"),
+            winnerHoops: typedOf(request.body, "winnerHoops"),
+            winnerTarget: typedOf(request.body, "winnerTarget"),
+            loserHoops: typedOf(request.body, "loserHoops"),
+            loserTarget: typedOf(request.body, "loserTarget"),
             winner: player("winner"),
             loser: player("loser"),
           },

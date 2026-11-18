@@ -1140,6 +1140,8 @@ export const german: Language = {
     "Game.SamePlayer": "Niemand spielt gegen sich selbst.",
     "Game.WinnerNotAhead":
       "Das Ergebnis des Siegers muss höher sein als das des Verlierers oder als gewonnen markiert.",
+    "Game.WinnerMarkedNotLevel":
+      "Ein w kann nur verwendet werden, wenn beide Seiten denselben SF% erreicht haben.",
     "Game.LoserMarked":
       "Das Ergebnis des Verlierers kann nicht als gewonnen markiert werden.",
     "Game.ResultChanged":

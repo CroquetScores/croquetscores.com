@@ -1062,6 +1062,8 @@ export const swedish: Language = {
     "Game.SamePlayer": "Ingen spelar mot sig själv.",
     "Game.WinnerNotAhead":
       "Vinnarens resultat måste vara högre än förlorarens, eller markerat som vunnet.",
+    "Game.WinnerMarkedNotLevel":
+      "Ett w kan bara användas när båda sidor har samma SF%.",
     "Game.LoserMarked": "Förlorarens resultat kan inte markeras som vunnet.",
     "Game.ResultChanged":
       "En rättelse behåller resultatet: ett vunnet parti förblir vunnet, och ett oavgjort förblir oavgjort.",

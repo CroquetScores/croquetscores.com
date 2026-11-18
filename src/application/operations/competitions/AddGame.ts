@@ -1,5 +1,6 @@
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Command } from "../../common/Command.js";
+import type { Typed } from "./advantageScores.js";
 
 /** Every rule a game to be added can break on the way in. */
 export type AddGameErrorCode =
@@ -24,10 +25,10 @@ export interface GameRequest {
    * In an Advantage competition, in place of the scores, the hoops each side
    * made and its target (`ScoresAsked`).
    */
-  readonly winnerHoops?: number | undefined;
-  readonly winnerTarget?: number | undefined;
-  readonly loserHoops?: number | undefined;
-  readonly loserTarget?: number | undefined;
+  readonly winnerHoops?: Typed | undefined;
+  readonly winnerTarget?: Typed | undefined;
+  readonly loserHoops?: Typed | undefined;
+  readonly loserTarget?: Typed | undefined;
 }
 
 /**

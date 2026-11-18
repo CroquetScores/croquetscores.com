@@ -730,3 +730,26 @@ Feature: A block's page shows its results as a grid
       And "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/block-g" is opened
       Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A game won on equal scoring fractions shows its winner's mark
+
+    A cell holds the score as it was kept, so a winner declared on equal scoring
+    fractions (`AddGame.feature`) shows "50% (3/6) w" and the other side's
+    "50% (4/8)", and the game is marked won and lost as any other is.
+
+    Background:
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block W" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block W" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block W" of "Spring Open"
+
+    Scenario: The winner's score shows its mark
+      Given "Sam Someone" has beaten "Alex Another" 3w of 6 to 4 of 8 in "Block W" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-w" is opened
+      Then the first score where "Sam Someone" meets "Alex Another" is "50% (3/6) w"
+
+    Scenario: The loser's score has none
+      Given "Sam Someone" has beaten "Alex Another" 3w of 6 to 4 of 8 in "Block W" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-w" is opened
+      Then the first score where "Alex Another" meets "Sam Someone" is "50% (4/8)"

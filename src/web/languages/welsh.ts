@@ -1048,6 +1048,8 @@ export const welsh: Language = {
     "Game.SamePlayer": "Nid yw neb yn chwarae yn erbyn ei hun.",
     "Game.WinnerNotAhead":
       "Rhaid i sgôr yr enillydd fod yn fwy na sgôr y collwr, neu wedi'i farcio fel un a enillwyd.",
+    "Game.WinnerMarkedNotLevel":
+      "Dim ond lle mae'r ddwy ochr wedi gwneud yr un SF% y gellir defnyddio w.",
     "Game.LoserMarked": "Ni ellir marcio sgôr y collwr fel un a enillwyd.",
     "Game.ResultChanged":
       "Mae cywiriad yn cadw'r canlyniad: erys gêm a enillwyd yn gêm a enillwyd, ac erys gêm gyfartal yn gyfartal.",

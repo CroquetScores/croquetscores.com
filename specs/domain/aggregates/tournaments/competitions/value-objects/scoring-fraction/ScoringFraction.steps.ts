@@ -74,3 +74,23 @@ Then("its target is {int}", function (this: SpecWorld, target: number) {
 Then("nothing is read", function (this: SpecWorld) {
   assert.equal(reads.get(this), undefined);
 });
+
+// The winner's, declared by a w as a score's mark is.
+When(
+  "the scoring fraction of {float} hoops with a target of {float} declared the winner is worked out",
+  function (this: SpecWorld, hoops: number, target: number) {
+    try {
+      fractions.set(this, ScoringFraction.from(hoops, target, true));
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
+
+Then("it is declared the winner", function (this: SpecWorld) {
+  assert.equal(readOf(this).won, true);
+});
+
+Then("it is not declared the winner", function (this: SpecWorld) {
+  assert.equal(readOf(this).won, false);
+});
