@@ -792,6 +792,8 @@ export const swedish: Language = {
     "admin.competition.tieBreaks": "Särskiljning",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Nettopartier, sedan nettobågar, sedan vem som slog vem",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Nettopartier, sedan netto-SF%, sedan vem som slog vem",
     "admin.competition.tieBreak.who-beat-who": "Vem som slog vem",
     "admin.competition.tieBreak.other": "Annat",
     "admin.competition.places": "Platser",
@@ -1033,10 +1035,8 @@ export const swedish: Language = {
     "admin.score.winnerScore": "Vinnarens resultat",
     "admin.score.loser": "Förlorare",
     "admin.score.loserScore": "Förlorarens resultat",
-    "admin.score.winnerHoops": "Vinnarens bågar",
-    "admin.score.winnerTarget": "Vinnarens mål",
-    "admin.score.loserHoops": "Förlorarens bågar",
-    "admin.score.loserTarget": "Förlorarens mål",
+    "admin.score.hoops": "Bågar",
+    "admin.score.target": "Mål",
     "admin.score.beat": "slog",
     "admin.score.added": "Partiet som {winner} vann mot {loser} lades till.",
     "admin.score.otherwise": "Partiet kunde inte läggas till.",

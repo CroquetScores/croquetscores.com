@@ -557,6 +557,16 @@ export const ScoreDialog = ({
       {(tied) => (
         <input
           {...tied}
+          // Said to be the player's as well, since each side has the same two
+          // words and a screen reader would otherwise read out "Hoops" twice.
+          // Described by the player's label rather than named by it, so that
+          // the player's own label still finds one field.
+          aria-describedby={[
+            tied["aria-describedby"],
+            `field-${part.startsWith("winner") ? "winner" : "loser"}-label`,
+          ]
+            .filter((id) => id !== undefined)
+            .join(" ")}
           ref={fields[part]}
           type="text"
           inputMode="numeric"
@@ -620,24 +630,28 @@ export const ScoreDialog = ({
         {added === undefined ? null : say("admin.score.added", added)}
       </DialogStatus>
       <DialogProblems refused={above} />
-      <div className="score-row">
+      <div
+        className={advantage ? "score-row score-row-advantage" : "score-row"}
+      >
         {choosing("winner", "admin.score.winner")}
         {advantage ? (
           <>
-            {typingANumber("winnerHoops", "admin.score.winnerHoops")}
-            {typingANumber("winnerTarget", "admin.score.winnerTarget")}
+            {typingANumber("winnerHoops", "admin.score.hoops")}
+            {typingANumber("winnerTarget", "admin.score.target")}
           </>
         ) : (
           typing("winnerScore", "admin.score.winnerScore")
         )}
       </div>
       <p className="score-beat">{say("admin.score.beat")}</p>
-      <div className="score-row">
+      <div
+        className={advantage ? "score-row score-row-advantage" : "score-row"}
+      >
         {choosing("loser", "admin.score.loser")}
         {advantage ? (
           <>
-            {typingANumber("loserHoops", "admin.score.loserHoops")}
-            {typingANumber("loserTarget", "admin.score.loserTarget")}
+            {typingANumber("loserHoops", "admin.score.hoops")}
+            {typingANumber("loserTarget", "admin.score.target")}
           </>
         ) : (
           typing("loserScore", "admin.score.loserScore")

@@ -417,6 +417,7 @@ export const TestDialog = ({
       {typed("bestOf", "admin.test.bestOf")}
       {hasGroups ? typed("group", "admin.test.group") : null}
       {rules.ticks}
+      {rules.hoops}
     </ModalDialog>
   );
 };

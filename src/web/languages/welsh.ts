@@ -766,6 +766,8 @@ export const welsh: Language = {
     "admin.competition.tieBreaks": "Torri clymau",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Gemau net, yna cylchau net, yna pwy a gurodd pwy",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Gemau net, yna SF% net, yna pwy a gurodd pwy",
     "admin.competition.tieBreak.who-beat-who": "Pwy a gurodd pwy",
     "admin.competition.tieBreak.other": "Arall",
     "admin.competition.places": "Lleoedd",
@@ -1017,10 +1019,8 @@ export const welsh: Language = {
     "admin.score.winnerScore": "Sgôr yr enillydd",
     "admin.score.loser": "Collwr",
     "admin.score.loserScore": "Sgôr y collwr",
-    "admin.score.winnerHoops": "Cylchau'r enillydd",
-    "admin.score.winnerTarget": "Targed yr enillydd",
-    "admin.score.loserHoops": "Cylchau'r collwr",
-    "admin.score.loserTarget": "Targed y collwr",
+    "admin.score.hoops": "Cylchau",
+    "admin.score.target": "Targed",
     "admin.score.beat": "a gurodd",
     "admin.score.added":
       "Ychwanegwyd y gêm a enillodd {winner} yn erbyn {loser}.",

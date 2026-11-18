@@ -132,6 +132,23 @@ Then(
   },
 );
 
+// Found by its place and not by its words, which are in another language where
+// a scenario is about the words.
+When("the box for Advantage is ticked", async function (this: WebWorld) {
+  await dialogOf(this).locator("#field-advantage").check();
+});
+
+Then(
+  "the tie break {string} is not offered",
+  async function (this: WebWorld, tieBreak: string) {
+    await dialogOf(this).waitFor();
+    const offered = (
+      await tieBreakOf(this).locator("option").allInnerTexts()
+    ).map((each) => each.trim());
+    assert.ok(!offered.includes(tieBreak), `${tieBreak} is offered.`);
+  },
+);
+
 Then(
   "the tie break chosen is {string}",
   async function (this: WebWorld, tieBreak: string) {

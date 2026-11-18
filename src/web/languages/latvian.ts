@@ -789,6 +789,8 @@ export const latvian: Language = {
     "admin.competition.tieBreaks": "Neizšķirta rezultāta izšķiršana",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Partiju starpība, tad vārtiņu starpība, tad kurš kuru uzvarēja",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Partiju starpība, tad SF% starpība, tad kurš kuru uzvarēja",
     "admin.competition.tieBreak.who-beat-who": "Kurš kuru uzvarēja",
     "admin.competition.tieBreak.other": "Cits",
     "admin.competition.places": "Vietas",
@@ -1032,10 +1034,8 @@ export const latvian: Language = {
     "admin.score.winnerScore": "Uzvarētāja rezultāts",
     "admin.score.loser": "Zaudētājs",
     "admin.score.loserScore": "Zaudētāja rezultāts",
-    "admin.score.winnerHoops": "Uzvarētāja vārtiņi",
-    "admin.score.winnerTarget": "Uzvarētāja mērķis",
-    "admin.score.loserHoops": "Zaudētāja vārtiņi",
-    "admin.score.loserTarget": "Zaudētāja mērķis",
+    "admin.score.hoops": "Vārtiņi",
+    "admin.score.target": "Mērķis",
     "admin.score.beat": "uzvarēja",
     "admin.score.added":
       "Tika pievienota partija, kurā {winner} uzvarēja pret {loser}.",

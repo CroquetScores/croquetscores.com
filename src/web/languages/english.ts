@@ -851,6 +851,8 @@ export const english: Language = {
     "admin.competition.tieBreaks": "Tie Breaks",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Net games then net hoops then who beat who",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Net games then net SF% then who beat who",
     "admin.competition.tieBreak.who-beat-who": "Who beat who",
     "admin.competition.tieBreak.other": "Other",
     "admin.competition.places": "Places",
@@ -1095,10 +1097,8 @@ export const english: Language = {
     "admin.score.winnerScore": "Winner's score",
     "admin.score.loser": "Loser",
     "admin.score.loserScore": "Loser's score",
-    "admin.score.winnerHoops": "Winner's hoops",
-    "admin.score.winnerTarget": "Winner's target",
-    "admin.score.loserHoops": "Loser's hoops",
-    "admin.score.loserTarget": "Loser's target",
+    "admin.score.hoops": "Hoops",
+    "admin.score.target": "Target",
     "admin.score.beat": "beat",
     "admin.score.added": "The game {winner} won against {loser} was added.",
     "admin.score.otherwise": "The game could not be added.",

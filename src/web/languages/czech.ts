@@ -782,6 +782,8 @@ export const czech: Language = {
     "admin.competition.tieBreaks": "Rozhodování shody",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Rozdíl her, poté rozdíl branek, poté vzájemný zápas",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Rozdíl her, poté rozdíl SF%, poté vzájemný zápas",
     "admin.competition.tieBreak.who-beat-who": "Vzájemný zápas",
     "admin.competition.tieBreak.other": "Jiné",
     "admin.competition.places": "Místa",
@@ -1021,10 +1023,8 @@ export const czech: Language = {
     "admin.score.winnerScore": "Skóre vítěze",
     "admin.score.loser": "Poražený",
     "admin.score.loserScore": "Skóre poraženého",
-    "admin.score.winnerHoops": "Branky vítěze",
-    "admin.score.winnerTarget": "Cíl vítěze",
-    "admin.score.loserHoops": "Branky poraženého",
-    "admin.score.loserTarget": "Cíl poraženého",
+    "admin.score.hoops": "Branky",
+    "admin.score.target": "Cíl",
     "admin.score.beat": "porazil(a)",
     "admin.score.added":
       "Hra byla přidána. Vítěz: {winner}, poražený: {loser}.",

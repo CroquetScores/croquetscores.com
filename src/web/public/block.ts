@@ -45,7 +45,10 @@ export const initialsOf = (name: string): string => {
 const totalsOf = (
   bestOf: number,
   advantage: boolean,
-): readonly { word: string; of: (player: PlayerOfBlock) => number }[] => {
+): readonly {
+  word: string;
+  of: (player: PlayerOfBlock) => number;
+}[] => {
   // The same sum, which in an Advantage block is of percentage points.
   const netHoops = {
     word: advantage ? "block.netSf" : "block.netHoops",

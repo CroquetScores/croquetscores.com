@@ -91,6 +91,124 @@ Given("{string} is emptied", async function (this: WebWorld, label: string) {
   }
 });
 
+// An Advantage game's hoops and target, each side's the same two words, so a
+// field is found by whose it is and which: the winner's "Hoops". By its id,
+// which says both, since the words are the same on each side.
+const SIDE = String.raw`(winner|loser)'s "(Hoops|Target)"`;
+
+const numberFieldOf = (world: WebWorld, side: string, which: string): Locator =>
+  dialogOf(world).locator(`#field-${side}${which}`);
+
+// The box a field is drawn in, which is what is pressed and what sits on a line.
+const numberBoxOf = (world: WebWorld, side: string, which: string): Locator =>
+  dialogOf(world).locator(`label.field-box:has(#field-${side}${which})`);
+
+Given(
+  new RegExp(`^"([^"]*)" is typed as the ${SIDE}$`),
+  async function (this: WebWorld, words: string, side: string, which: string) {
+    await numberFieldOf(this, side, which).fill(words);
+  },
+);
+
+Given(
+  new RegExp(`^the ${SIDE} is emptied$`),
+  async function (this: WebWorld, side: string, which: string) {
+    await numberFieldOf(this, side, which).fill("");
+  },
+);
+
+Then(
+  new RegExp(`^the ${SIDE} says "([^"]*)"$`),
+  async function (this: WebWorld, side: string, which: string, words: string) {
+    await eventually(this, async () => {
+      assert.equal(await numberFieldOf(this, side, which).inputValue(), words);
+    });
+  },
+);
+
+Then(
+  new RegExp(`^the score dialog asks for the ${SIDE}$`),
+  async function (this: WebWorld, side: string, which: string) {
+    await dialogOf(this).waitFor();
+    await eventually(this, async () => {
+      assert.equal(await numberFieldOf(this, side, which).count(), 1);
+    });
+  },
+);
+
+// Read from what the field is described by, as a screen reader reads it out
+// with it, so that a refusal said somewhere else does not count.
+Then(
+  new RegExp(`^the ${SIDE} is refused with "([^"]*)"$`),
+  async function (this: WebWorld, side: string, which: string, code: string) {
+    await eventually(this, async () => {
+      const described = await numberFieldOf(this, side, which).getAttribute(
+        "aria-describedby",
+      );
+      assert.ok(
+        described !== null,
+        `Nothing is said beside the ${side}'s ${which}.`,
+      );
+      const refused = (
+        await Promise.all(
+          described
+            .split(" ")
+            .map((id) =>
+              this.browserPage
+                .locator(`#${id}`)
+                .getAttribute("data-refused", { timeout: 500 }),
+            ),
+        )
+      )
+        .filter((codes) => codes !== null)
+        .join(" ");
+      assert.ok(
+        refused.split(" ").includes(code),
+        `The ${side}'s ${which} is refused with ${refused}.`,
+      );
+    });
+  },
+);
+
+Then(
+  new RegExp(`^the ${SIDE} is at least (\\d+) pixels tall$`),
+  async function (this: WebWorld, side: string, which: string, least: string) {
+    await eventually(this, async () => {
+      const box = await numberBoxOf(this, side, which).boundingBox();
+      assert.ok(box !== null, "The field is not drawn.");
+      assert.ok(
+        box.height >= Number(least),
+        `It is ${String(box.height)} pixels tall.`,
+      );
+    });
+  },
+);
+
+// A side's three fields share a line when each's box spans the same height as
+// the others', as a row of a grid does; one that wrapped would be below.
+Then(
+  /^the (winner|loser)'s player, hoops and target are on one line$/,
+  async function (this: WebWorld, side: string) {
+    await eventually(this, async () => {
+      const boxes = [
+        await dialogOf(this)
+          .locator(`label.field-box:has(#field-${side})`)
+          .boundingBox(),
+        await numberBoxOf(this, side, "Hoops").boundingBox(),
+        await numberBoxOf(this, side, "Target").boundingBox(),
+      ];
+      const tops = boxes.map((box) => {
+        assert.ok(box !== null, "A field is not drawn.");
+        return box.y;
+      });
+      assert.ok(
+        Math.max(...tops) - Math.min(...tops) < 4,
+        `The fields are at ${JSON.stringify(tops)}.`,
+      );
+    });
+  },
+);
+
 // By the fields' own ids, where the reader's language names them otherwise.
 Given(
   /^"([^"]*)" is chosen as the (winner|loser) in the score dialog$/,

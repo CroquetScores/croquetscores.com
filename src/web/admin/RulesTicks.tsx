@@ -90,7 +90,12 @@ export const useRules = (
     readonly worldRankings?: boolean;
     readonly maximumHoops: string | null;
   };
+  /** What the dialog has of Advantage, which what it asks after may depend on. */
+  readonly advantage: boolean;
+  /** The boxes to tick. */
   readonly ticks: React.JSX.Element;
+  /** The most hoops, which a dialog puts last, after whatever else it asks. */
+  readonly hoops: React.JSX.Element;
 } => {
   const [handicap, setHandicap] = useState(begins?.handicap ?? false);
   const [drawsAllowed, setDrawsAllowed] = useState(
@@ -122,6 +127,7 @@ export const useRules = (
   const asksAboutWorldRankings =
     ranked && !handicap && !drawsAllowed && !advantage;
   return {
+    advantage,
     said: {
       handicap: asksAboutHandicap && handicap,
       drawsAllowed,
@@ -161,26 +167,28 @@ export const useRules = (
             tick={setWorldRankings}
           />
         ) : null}
-        <Field
-          name="maximum-hoops"
-          label={say("admin.rules.maximumHoops")}
-          refused={maximumHoopsRefused}
-        >
-          {(tied) => (
-            <input
-              {...tied}
-              type="text"
-              inputMode="numeric"
-              placeholder=" "
-              autoComplete="off"
-              value={maximumHoops}
-              onChange={(event) => {
-                setMaximumHoops(event.target.value);
-              }}
-            />
-          )}
-        </Field>
       </>
+    ),
+    hoops: (
+      <Field
+        name="maximum-hoops"
+        label={say("admin.rules.maximumHoops")}
+        refused={maximumHoopsRefused}
+      >
+        {(tied) => (
+          <input
+            {...tied}
+            type="text"
+            inputMode="numeric"
+            placeholder=" "
+            autoComplete="off"
+            value={maximumHoops}
+            onChange={(event) => {
+              setMaximumHoops(event.target.value);
+            }}
+          />
+        )}
+      </Field>
     ),
   };
 };

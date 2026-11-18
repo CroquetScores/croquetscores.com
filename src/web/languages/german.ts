@@ -831,6 +831,8 @@ export const german: Language = {
     "admin.competition.tieBreaks": "Bei Gleichstand",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Spieldifferenz, dann Tordifferenz, dann wer wen geschlagen hat",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Spieldifferenz, dann SF%-Differenz, dann wer wen geschlagen hat",
     "admin.competition.tieBreak.who-beat-who": "Wer wen geschlagen hat",
     "admin.competition.tieBreak.other": "Andere",
     "admin.competition.places": "Plätze",
@@ -1108,10 +1110,8 @@ export const german: Language = {
     "admin.score.winnerScore": "Ergebnis des Siegers",
     "admin.score.loser": "Verlierer",
     "admin.score.loserScore": "Ergebnis des Verlierers",
-    "admin.score.winnerHoops": "Tore des Siegers",
-    "admin.score.winnerTarget": "Ziel des Siegers",
-    "admin.score.loserHoops": "Tore des Verlierers",
-    "admin.score.loserTarget": "Ziel des Verlierers",
+    "admin.score.hoops": "Tore",
+    "admin.score.target": "Ziel",
     "admin.score.beat": "schlug",
     "admin.score.added":
       "Das Spiel, das {winner} gegen {loser} gewonnen hat, wurde hinzugefügt.",

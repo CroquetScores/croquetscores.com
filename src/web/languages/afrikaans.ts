@@ -797,6 +797,8 @@ export const afrikaans: Language = {
     "admin.competition.tieBreaks": "Gelykopbrekers",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Netto spelle dan netto hoepels dan wie wie geklop het",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Netto spelle dan netto SF% dan wie wie geklop het",
     "admin.competition.tieBreak.who-beat-who": "Wie wie geklop het",
     "admin.competition.tieBreak.other": "Ander",
     "admin.competition.places": "Plekke",
@@ -1049,10 +1051,8 @@ export const afrikaans: Language = {
     "admin.score.winnerScore": "Wenner se telling",
     "admin.score.loser": "Verloorder",
     "admin.score.loserScore": "Verloorder se telling",
-    "admin.score.winnerHoops": "Wenner se poorte",
-    "admin.score.winnerTarget": "Wenner se teiken",
-    "admin.score.loserHoops": "Verloorder se poorte",
-    "admin.score.loserTarget": "Verloorder se teiken",
+    "admin.score.hoops": "Poorte",
+    "admin.score.target": "Teiken",
     "admin.score.beat": "het gewen teen",
     "admin.score.added":
       "Die spel wat {winner} teen {loser} gewen het, is bygevoeg.",

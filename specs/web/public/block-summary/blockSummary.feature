@@ -369,7 +369,9 @@ Feature: A block's summary ranks its players
     As the grid shows it (`block.feature`): the page says it is played as
     Advantage Golf Croquet, and its third column is headed "Net SF%", the
     percentage points a player made less those made against them, in place of
-    "Net Hoops".
+    "Net Hoops". Its values are the plain numbers, with no percent sign after
+    them since the heading already says what they are, and a plus or a minus
+    before them as they do in any other block.
 
     Background:
       Given the tournament "Spring Open" is for the sport "gc"
@@ -390,6 +392,10 @@ Feature: A block's summary ranks its players
       Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
       Then the "Net SF%" of "Sam Someone" in the summary are "+20"
+
+    Scenario: No net SF% carries no sign
+      When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
+      Then the "Net SF%" of "Sam Someone" in the summary are "0"
 
     Scenario: Net SF% behind carries a minus
       Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"

@@ -787,6 +787,8 @@ export const norwegian: Language = {
     "admin.competition.tieBreaks": "Uavgjortregler",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Nettopartier, så nettobuer, så hvem som slo hvem",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Nettopartier, så netto SF%, så hvem som slo hvem",
     "admin.competition.tieBreak.who-beat-who": "Hvem som slo hvem",
     "admin.competition.tieBreak.other": "Annet",
     "admin.competition.places": "Plasser",
@@ -1034,10 +1036,8 @@ export const norwegian: Language = {
     "admin.score.winnerScore": "Vinnerens poengsum",
     "admin.score.loser": "Taper",
     "admin.score.loserScore": "Taperens poengsum",
-    "admin.score.winnerHoops": "Vinnerens buer",
-    "admin.score.winnerTarget": "Vinnerens mål",
-    "admin.score.loserHoops": "Taperens buer",
-    "admin.score.loserTarget": "Taperens mål",
+    "admin.score.hoops": "Buer",
+    "admin.score.target": "Mål",
     "admin.score.beat": "slo",
     "admin.score.added": "Partiet {winner} vant mot {loser} ble lagt til.",
     "admin.score.otherwise": "Partiet kunne ikke legges til.",

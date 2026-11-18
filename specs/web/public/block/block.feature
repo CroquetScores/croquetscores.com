@@ -647,7 +647,9 @@ Feature: A block's page shows its results as a grid
     "83% (5/6)". Net hoops would always favour the player with the larger
     target, so an Advantage block is ordered by the percentage points a player
     made less those made against them, which Croquet England calls net SF%, and
-    its total is headed "Net SF%" in place of "Net Hoops". The page says so
+    its total is headed "Net SF%" in place of "Net Hoops". Its values are the
+    plain numbers, with no percent sign after them, since the heading already
+    says what they are. The page says so
     beneath its results, and how many hoops it is played to is not said, since
     each game has its own targets.
 
@@ -692,6 +694,10 @@ Feature: A block's page shows its results as a grid
       When the page at "/2026/gc/spring-open/competitions/block-g" is opened
       Then the "Net SF%" of "Sam Someone" in the grid are "20"
       And the "Net SF%" of "Alex Another" in the grid are "-20"
+
+    Scenario: A player with no net SF% has 0 shown
+      When the page at "/2026/gc/spring-open/competitions/block-g" is opened
+      Then the "Net SF%" of "Sam Someone" in the grid are "0"
 
     Scenario: Where each match is a single game the totals are Wins and Net SF%
       Given the block is to be the best of 1

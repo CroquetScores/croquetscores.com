@@ -730,6 +730,8 @@ export const egyptian: Language = {
     "admin.competition.tieBreaks": "كسر التعادل",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "صافي الألعاب بعدين صافي الأطواق بعدين مين غلب مين",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "صافي الألعاب بعدين صافي SF% بعدين مين غلب مين",
     "admin.competition.tieBreak.who-beat-who": "مين غلب مين",
     "admin.competition.tieBreak.other": "غير كده",
     "admin.competition.places": "الأماكن",
@@ -953,10 +955,8 @@ export const egyptian: Language = {
     "admin.score.winnerScore": "نتيجة الفايز",
     "admin.score.loser": "الخاسر",
     "admin.score.loserScore": "نتيجة الخاسر",
-    "admin.score.winnerHoops": "حلقات الفايز",
-    "admin.score.winnerTarget": "هدف الفايز",
-    "admin.score.loserHoops": "حلقات الخاسر",
-    "admin.score.loserTarget": "هدف الخاسر",
+    "admin.score.hoops": "حلقات",
+    "admin.score.target": "الهدف",
     "admin.score.beat": "هزم",
     "admin.score.added": "اتضافت اللعبة اللي كسبها {winner} قدّام {loser}.",
     "admin.score.otherwise": "ما قدرناش نضيف اللعبة.",

@@ -384,6 +384,26 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
     net hoops then who beat who, which is how blocks were told apart before
     this could be said. A Swiss and a knockout do not ask.
 
+    It comes after how the competition is played and counted, directly above
+    "Maximum hoops", so that the boxes to tick are together and what follows
+    them is the two things a block is told besides.
+
+    In an Advantage competition (`advantage.feature`) net hoops are net SF%,
+    the percentage points a player made less those made against them, so the
+    first choice reads net games then net SF% then who beat who while the
+    competition is ticked as Advantage, and net hoops otherwise. It is the one
+    tie break, so what is kept is the same either way.
+
+    Scenario: The tie breaks come directly above the most hoops
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then the field after "Tie Breaks" in the competition dialog is "Maximum hoops"
+
+    Scenario: The tie breaks come after how the competition is played and counted
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then the field after "Counts toward world rankings" in the competition dialog is "Tie Breaks"
+
     Scenario: A block asks for the tie break
       Given "Add Competition" is pressed
       When the kind "Block" is chosen
@@ -404,6 +424,63 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
         | Net games then net hoops then who beat who |
         | Who beat who                               |
         | Other                                      |
+
+    Scenario: A block played as Advantage begins on net games then net SF% then who beat who
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the kind "Block" is chosen
+      When the reader ticks "Advantage Golf Croquet"
+      Then the tie break chosen is "Net games then net SF% then who beat who"
+
+    Scenario: A block played as Advantage is not offered net hoops
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the kind "Block" is chosen
+      When the reader ticks "Advantage Golf Croquet"
+      Then the tie break "Net games then net hoops then who beat who" is not offered
+
+    Scenario: A block no longer played as Advantage is offered net hoops again
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the kind "Block" is chosen
+      And the reader ticks "Advantage Golf Croquet"
+      When the reader unticks "Advantage Golf Croquet"
+      Then the tie break chosen is "Net games then net hoops then who beat who"
+
+    Scenario: A block added as Advantage goes by the same tie break
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the kind "Block" is chosen
+      And "Block A" is typed as the "Name"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Add" is pressed
+      Then the competition "Block A" of "Spring Open" goes by the tie break "net-games-net-hoops-who-beat-who"
+
+    Scenario: A block changed that is Advantage begins on net games then net SF% then who beat who
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then the tie break chosen is "Net games then net SF% then who beat who"
+
+    Scenario: The tie breaks of an Advantage block are in the reader's language
+      Given a browser that asks for "en-XA"
+      And the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And the way to add a competition is pressed
+      When the box for Advantage is ticked
+      Then every word in the competition dialog is in the test locale
 
     Scenario Outline: A Swiss and a knockout do not ask for the tie break
       Given "Add Competition" is pressed

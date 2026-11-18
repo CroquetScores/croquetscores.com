@@ -843,6 +843,8 @@ export const greek: Language = {
     "admin.competition.tieBreaks": "Ισοβαθμίες",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Καθαρά παιχνίδια, μετά καθαρά τόξα, μετά ποιος νίκησε ποιον",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Καθαρά παιχνίδια, μετά καθαρό SF%, μετά ποιος νίκησε ποιον",
     "admin.competition.tieBreak.who-beat-who": "Ποιος νίκησε ποιον",
     "admin.competition.tieBreak.other": "Άλλο",
     "admin.competition.places": "Θέσεις",
@@ -1129,10 +1131,8 @@ export const greek: Language = {
     "admin.score.winnerScore": "Σκορ του νικητή",
     "admin.score.loser": "Ηττημένος",
     "admin.score.loserScore": "Σκορ του ηττημένου",
-    "admin.score.winnerHoops": "Τόξα του νικητή",
-    "admin.score.winnerTarget": "Στόχος του νικητή",
-    "admin.score.loserHoops": "Τόξα του ηττημένου",
-    "admin.score.loserTarget": "Στόχος του ηττημένου",
+    "admin.score.hoops": "Τόξα",
+    "admin.score.target": "Στόχος",
     "admin.score.beat": "νίκησε",
     "admin.score.added":
       "Το παιχνίδι προστέθηκε: νικητής {winner}, ηττημένος {loser}.",

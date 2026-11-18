@@ -803,6 +803,8 @@ export const spanish: Language = {
     "admin.competition.tieBreaks": "Desempates",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Partidas netas, luego aros netos, luego quién ganó a quién",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Partidas netas, luego SF% neto, luego quién ganó a quién",
     "admin.competition.tieBreak.who-beat-who": "Quién ganó a quién",
     "admin.competition.tieBreak.other": "Otro",
     "admin.competition.places": "Plazas",
@@ -1055,10 +1057,8 @@ export const spanish: Language = {
     "admin.score.winnerScore": "Puntuación del ganador",
     "admin.score.loser": "Perdedor",
     "admin.score.loserScore": "Puntuación del perdedor",
-    "admin.score.winnerHoops": "Aros del ganador",
-    "admin.score.winnerTarget": "Objetivo del ganador",
-    "admin.score.loserHoops": "Aros del perdedor",
-    "admin.score.loserTarget": "Objetivo del perdedor",
+    "admin.score.hoops": "Aros",
+    "admin.score.target": "Objetivo",
     "admin.score.beat": "ganó a",
     "admin.score.added": "Se añadió la partida que {winner} ganó a {loser}.",
     "admin.score.otherwise": "No se ha podido añadir la partida.",

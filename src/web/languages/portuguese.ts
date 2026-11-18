@@ -790,6 +790,8 @@ export const portuguese: Language = {
     "admin.competition.tieBreaks": "Critérios de desempate",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Saldo de jogos, depois saldo de arcos, depois quem venceu quem",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Saldo de jogos, depois saldo de SF%, depois quem venceu quem",
     "admin.competition.tieBreak.who-beat-who": "Quem venceu quem",
     "admin.competition.tieBreak.other": "Outro",
     "admin.competition.places": "Vagas",
@@ -1043,10 +1045,8 @@ export const portuguese: Language = {
     "admin.score.winnerScore": "Pontos do vencedor",
     "admin.score.loser": "Perdedor",
     "admin.score.loserScore": "Pontos do perdedor",
-    "admin.score.winnerHoops": "Arcos do vencedor",
-    "admin.score.winnerTarget": "Meta do vencedor",
-    "admin.score.loserHoops": "Arcos do perdedor",
-    "admin.score.loserTarget": "Meta do perdedor",
+    "admin.score.hoops": "Arcos",
+    "admin.score.target": "Meta",
     "admin.score.beat": "venceu",
     "admin.score.added":
       "O jogo em que {winner} venceu {loser} foi adicionado.",
