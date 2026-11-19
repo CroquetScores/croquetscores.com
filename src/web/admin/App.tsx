@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Accounts } from "./administrator/accounts/accounts.js";
+import { ApiKeys } from "./administrator/api-keys/apiKeys.js";
 import { DatabaseStatus } from "./administrator/database-status/databaseStatus.js";
 import { AdministratorSections } from "./administrator/AdministratorSections.js";
 import { ImportError } from "./administrator/import-errors/importError.js";
@@ -95,7 +96,7 @@ export const App = (): React.JSX.Element => {
   // beneath it, named by its id as one segment, which is why the address keeps
   // its %2F rather than reading it as a slash.
   const administrator =
-    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors|\/logs|\/database-status|\/countries|\/notable-tournament)?(\/.*)?$/.exec(
+    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors|\/logs|\/database-status|\/countries|\/api-keys|\/notable-tournament)?(\/.*)?$/.exec(
       path,
     );
   if (administrator !== null) {
@@ -114,6 +115,8 @@ export const App = (): React.JSX.Element => {
       administrator[1] === "/logs" && (administrator[2] ?? "/") === "/";
     const theCountriesPage =
       administrator[1] === "/countries" && (administrator[2] ?? "/") === "/";
+    const theApiKeysPage =
+      administrator[1] === "/api-keys" && (administrator[2] ?? "/") === "/";
     // The email telling the administrator of a notable tournament links here,
     // which is none of the sections, so none is marked.
     const theNotableTournamentPage =
@@ -138,7 +141,9 @@ export const App = (): React.JSX.Element => {
                       ? "database-status"
                       : administrator[1] === "/countries"
                         ? "countries"
-                        : undefined
+                        : theApiKeysPage
+                          ? "api-keys"
+                          : undefined
           }
         />
         <main id="content">
@@ -156,6 +161,8 @@ export const App = (): React.JSX.Element => {
                 <DatabaseStatus />
               ) : theCountriesPage ? (
                 <Countries />
+              ) : theApiKeysPage ? (
+                <ApiKeys />
               ) : theNotableTournamentPage ? (
                 <NotableTournament key={window.location.search} />
               ) : importErrorOf !== undefined ? (

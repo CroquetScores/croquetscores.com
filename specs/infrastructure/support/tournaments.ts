@@ -69,6 +69,10 @@ import { CreateTournamentHandler } from "../../../src/application/operations/tou
 import { CreateTournamentValidator } from "../../../src/application/operations/tournaments/CreateTournamentValidator.js";
 import { RemoveManagerHandler } from "../../../src/application/operations/tournaments/RemoveManagerHandler.js";
 import { CompetitionsOfTournamentHandler } from "../../../src/application/operations/tournaments/CompetitionsOfTournamentHandler.js";
+import { IdentifyApiKeyHandler } from "../../../src/application/operations/accounts/IdentifyApiKeyHandler.js";
+import { WhatAKeyMayDoInTournamentHandler } from "../../../src/application/operations/tournaments/WhatAKeyMayDoInTournamentHandler.js";
+import { CryptoApiKeys } from "../../../src/infrastructure/identity/CryptoApiKeys.js";
+import { TournamentsNamedHandler } from "../../../src/application/operations/tournaments/TournamentsNamedHandler.js";
 import { ManagersOfTournamentHandler } from "../../../src/application/operations/tournaments/ManagersOfTournamentHandler.js";
 import { PlayersOfTournamentHandler } from "../../../src/application/operations/tournaments/PlayersOfTournamentHandler.js";
 import { RemoveScorerHandler } from "../../../src/application/operations/tournaments/RemoveScorerHandler.js";
@@ -376,6 +380,17 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleQuery(new PlayersOfTeamHandler(...both, games));
   mediator.handleQuery(new PlayersOfTestHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
+  mediator.handleQuery(new TournamentsNamedHandler(tournaments));
+  mediator.handleQuery(
+    new WhatAKeyMayDoInTournamentHandler(
+      tournaments,
+      new IdentifyApiKeyHandler(
+        accountRepository,
+        accounts.byApiKey,
+        new CryptoApiKeys(),
+      ),
+    ),
+  );
   mediator.handleQuery(
     new PlayersOfTournamentHandler(...both, competitions, games),
   );

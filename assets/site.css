@@ -1773,6 +1773,58 @@ main {
   flex: none;
 }
 
+/* A field that is for one answer of another only, such as the year of the
+   tournament a key is limited to, which means nothing until one tournament is
+   chosen. Hidden with no scripting, by asking the form whether that answer is
+   ticked. A browser that cannot ask shows it always, which does no harm: it is
+   sent and left alone. */
+.dialog-form:not(:has(input[name="limit"][value="one"]:checked))
+  [data-only-when="limit=one"] {
+  display: none;
+}
+
+/* Choices of which only one can be made, each as a box to tick is, under a
+   name that is the group's. */
+.field-radios {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field-radios legend {
+  padding: 0;
+  font-weight: 600;
+}
+
+/* A list chosen from: its label is always lifted, as that of a field holding
+   something is, since a list is never empty to look at. */
+.field-box-select {
+  cursor: pointer;
+}
+
+.field-box-select select {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.field-box-select select:focus-visible {
+  outline: none;
+}
+
+.field-box-select .field-label {
+  top: -3px;
+  margin-inline-start: calc(-1 * var(--space-1));
+  padding-inline: var(--space-1);
+  background: var(--panel);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+}
+
 /* The box draws the ring, so the input does not draw a second one inside it. */
 .field-box input:focus-visible {
   outline: none;
@@ -1963,6 +2015,62 @@ main {
 }
 
 .profile dd {
+  overflow-wrap: anywhere;
+}
+
+/* The API keys page: every heading on it has half a line of the page's own
+   text beneath it, and not of the heading's, which is much taller, before
+   whatever comes next. Each key is a row, with the trash can that asks to
+   revoke it first, red as it is the one thing in the row that is hard to take
+   back, and drawn as a picture alone with its words kept for anyone who cannot
+   see it. */
+.api-keys-page :is(h1, h2, h3, h4, h5, h6) {
+  margin-block: 0 calc(var(--text-base) * var(--leading-body) / 2);
+}
+
+/* A blank line of the page's own text above and below Add Key. */
+.api-keys-page .api-keys-add {
+  margin-block: calc(var(--text-base) * var(--leading-body));
+}
+
+/* Green, as the button that does what a form is for is, and out of sight until
+   scripting shows it: a button's display would otherwise override hidden. */
+.api-key-copy[hidden] {
+  display: none;
+}
+
+.api-keys-page p {
+  margin-block-start: 0;
+}
+
+.api-keys {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.api-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.api-key-revoke {
+  display: inline-flex;
+}
+
+.api-key-revoke > .icon-trash-can {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: var(--danger);
+}
+
+.api-key-label {
+  font-weight: 700;
+}
+
+#api-key-new {
   overflow-wrap: anywhere;
 }
 

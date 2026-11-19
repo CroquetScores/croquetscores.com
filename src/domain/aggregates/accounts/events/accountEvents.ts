@@ -2,6 +2,9 @@
 // back. A name is kept for good, and must never be given to anything else.
 import type { EventRegistry } from "../../../common/EventRegistry.js";
 import { AccountBroughtOver } from "./AccountBroughtOver.js";
+import { ApiKeyCreated } from "./ApiKeyCreated.js";
+import { ApiKeyLimitsChanged } from "./ApiKeyLimitsChanged.js";
+import { ApiKeyRevoked } from "./ApiKeyRevoked.js";
 import { AccountForgotten } from "./AccountForgotten.js";
 import { AccountRegistered } from "./AccountRegistered.js";
 import { EmailAddressChangeAsked } from "./EmailAddressChangeAsked.js";
@@ -36,6 +39,17 @@ const optionalText = (
   field: string,
 ): string | undefined =>
   said[field] === undefined ? undefined : text(said, field);
+
+const whole = (
+  said: Readonly<Record<string, unknown>>,
+  field: string,
+): number => {
+  const value = said[field];
+  if (typeof value !== "number") {
+    throw new TypeError(`it has no ${field}`);
+  }
+  return value;
+};
 
 const role = (said: Readonly<Record<string, unknown>>): Role => {
   const value = text(said, "role");
@@ -149,6 +163,40 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-role-added",
       (said, { createdBy, occurredAt }) =>
         new RoleAdded(role(said), createdBy, occurredAt),
+    )
+    .name(
+      ApiKeyCreated,
+      "account-api-key-created",
+      (said, { createdBy, occurredAt }) =>
+        new ApiKeyCreated(
+          text(said, "keyId"),
+          text(said, "keyHash"),
+          text(said, "label"),
+          text(said, "scope"),
+          optionalText(said, "tournament"),
+          whole(said, "perMinute"),
+          whole(said, "perDay"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      ApiKeyRevoked,
+      "account-api-key-revoked",
+      (said, { createdBy, occurredAt }) =>
+        new ApiKeyRevoked(text(said, "keyId"), createdBy, occurredAt),
+    )
+    .name(
+      ApiKeyLimitsChanged,
+      "account-api-key-limits-changed",
+      (said, { createdBy, occurredAt }) =>
+        new ApiKeyLimitsChanged(
+          text(said, "keyId"),
+          whole(said, "perMinute"),
+          whole(said, "perDay"),
+          createdBy,
+          occurredAt,
+        ),
     )
     .name(
       RoleRemoved,

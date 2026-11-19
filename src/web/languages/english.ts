@@ -84,6 +84,7 @@ export const english: Language = {
     "account.changePassword": "Change Password",
     "account.changeEmailAddress": "Change Email Address",
     "account.changeName": "Change Name",
+    "account.apiKeys": "API Keys",
     "account.setPassword": "Set Password",
     "account.forgetAccount": "Forget Account",
 
@@ -222,6 +223,37 @@ export const english: Language = {
     "profile.name": "Name:",
     "profile.emailAddress": "Email address:",
 
+    // The page where a reader makes the keys an app acts for them with.
+    "apiKeys.title": "API keys",
+    "apiKeys.intro":
+      "A key lets an app read, or read and write, for you without being given your password. Keep a key as secret as a password.",
+    "apiKeys.none": "You have no keys.",
+    "apiKeys.mayRead": "May read",
+    "apiKeys.mayReadAndWrite": "May read and write",
+    "apiKeys.made": "Made",
+    "apiKeys.revoke": "Revoke",
+    "apiKeys.revoke.title": "Revoke key",
+    "apiKeys.revoke.question":
+      "Revoke the key {label}? An app using it will stop working, and it cannot be undone.",
+    "apiKeys.revoke.confirm": "Revoke key",
+    "apiKeys.add": "Add Key",
+    "apiKeys.copy": "Copy",
+    "apiKeys.copied": "Copied",
+    "apiKeys.copyManually": "Press Ctrl+C",
+    "apiKeys.shown":
+      "For security reasons, your new key is only displayed once. Copy and store it securely now.",
+    "apiKeys.new.title": "Make a key",
+    "apiKeys.new.label": "Label",
+    "apiKeys.new.write": "The app may also write",
+    "apiKeys.new.limit": "Tournaments",
+    "apiKeys.new.limitAll": "All tournaments",
+    "apiKeys.new.limitOne": "Limit to one tournament",
+    "apiKeys.new.year": "Year",
+    "apiKeys.new.sport": "Sport",
+    "apiKeys.new.tournamentName": "Tournament name",
+    "apiKeys.limitedTo": "Only {name}",
+    "apiKeys.limitedToOne": "Only one tournament",
+    "apiKeys.new.submit": "Make key",
     "changeName.title": "Change name",
     "changeName.name": "Name",
     "changeName.submit": "Change name",
@@ -290,6 +322,10 @@ export const english: Language = {
 
     // A rule broken, keyed by its code, so that every form saying it says it
     // the same way. Said to whoever typed it, beneath the field it reads.
+    "ApiKeyLabel.Missing": "Enter a label for the key.",
+    "ApiKeyLabel.TooLong": "A label can be at most 60 characters.",
+    "ApiKeyTournament.NotFound":
+      "There is no tournament of that name for that year and sport.",
     "PersonName.Missing": "Enter a name.",
     "PersonName.TooShort": "A name has to be at least 3 characters.",
     "PersonName.TooLong": "A name can be at most 254 characters.",
@@ -665,6 +701,23 @@ export const english: Language = {
     "admin.administrator.sections.logs": "Logs",
     "admin.administrator.sections.databaseStatus": "Database Access",
     "admin.administrator.sections.countries": "Countries",
+    "admin.administrator.sections.apiKeys": "API Keys",
+    // The page where an administrator changes the limits of a key, in English
+    // alone (writtenInEnglishOnly.ts).
+    "admin.apiKeys.title": "API Keys",
+    "admin.apiKeys.none": "No keys work.",
+    "admin.apiKeys.mayRead": "May read",
+    "admin.apiKeys.mayReadAndWrite": "May read and write",
+    "admin.apiKeys.keyName": "Key name",
+    "admin.apiKeys.perMinute": "Requests a minute",
+    "admin.apiKeys.perDay": "Requests a day",
+    "admin.apiKeys.save": "Save",
+    "admin.apiKeys.otherwise": "Something went wrong on the site.",
+    "ApiKeyLimits.NoneAMinute":
+      "Requests a minute must be a whole number above none.",
+    "ApiKeyLimits.NoneADay":
+      "Requests a day must be a whole number above none.",
+    "ChangeApiKeyLimits.NoSuchApiKey": "There is no such key.",
     "admin.databaseStatus.title": "Database Access",
     "admin.databaseStatus.on": "Database access is on.",
     "admin.databaseStatus.off": "Database access is off.",

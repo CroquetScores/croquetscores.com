@@ -54,6 +54,7 @@ const changes: readonly {
     words: "account.setPassword",
     for: "without a password",
   },
+  { href: "/account/api-keys", words: "account.apiKeys" },
   { href: "/account/forget-account", words: "account.forgetAccount" },
 ];
 

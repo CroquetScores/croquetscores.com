@@ -148,6 +148,9 @@ export const assertFirstRecorded = <T extends DomainEvent>(
 // What a scenario that does not say is confirmed as, confirmed with and brought
 // over with: what was typed is not what that scenario is about.
 export const A_NAME = "Sam Someone";
+
+/** The id the one key a scenario about keys makes is given, so that steps can name it. */
+export const A_KEY_ID = "api-key/7c9e6679-7425-40de-944b-e07fc1f90ae7";
 export const A_PASSWORD_HASH = hashOf("correct horse battery staple");
 export const AN_OLD_SITE_HASH = "$old-site$stand-in";
 

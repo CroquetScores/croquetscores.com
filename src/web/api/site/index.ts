@@ -78,6 +78,8 @@ import { UpdateTest } from "../../../application/operations/tournaments/UpdateTe
 import { Flags } from "../../../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { Assets } from "../../common/assets.js";
 import { inCountryGroups } from "../../common/countryOrder.js";
+import { ApiKeysOfEveryAccount } from "../../../application/operations/accounts/ApiKeysOfEveryAccount.js";
+import { ChangeApiKeyLimits } from "../../../application/operations/accounts/ChangeApiKeyLimits.js";
 import { AccountsWithRole } from "../../../application/operations/accounts/AccountsWithRole.js";
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
 import { WhenEmergencyAccessMayBeAskedAgain } from "../../../application/operations/emergency/WhenEmergencyAccessMayBeAskedAgain.js";
@@ -1293,6 +1295,35 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
+
+  // The keys that work, of every account, as an administrator lists them to
+  // change the limits of one (apiKeys.feature). Refused, as the routes for
+  // roles are, to anybody who is not an administrator.
+  server.get("/api-keys", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const keys = await request.server.mediator.query(
+      new ApiKeysOfEveryAccount(reader.value),
+    );
+    return reply.header("cache-control", "no-store").send({ keys });
+  });
+
+  // The limits of a key changed, the key named in the body by the id the list
+  // gave it, since an id has a slash in it and an address has no place for one.
+  server.post("/api-keys/limits", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    await request.server.mediator.send(
+      new ChangeApiKeyLimits(
+        reader.value,
+        textOf(request.body, "keyId"),
+        numberOf(request.body, "perMinute"),
+        numberOf(request.body, "perDay"),
+        request.requestedAt,
+      ),
+    );
+    return reply.code(204).header("cache-control", "no-store").send();
+  });
 
   // Whether the site may use its database, as an administrator sees and sets
   // it from the page for it (databaseStatus.feature). The switch is kept

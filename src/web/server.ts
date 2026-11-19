@@ -62,6 +62,16 @@ import { AddRoleValidator } from "../application/operations/accounts/AddRoleVali
 import { RemoveRoleHandler } from "../application/operations/accounts/RemoveRoleHandler.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
 import { ChangeNameHandler } from "../application/operations/accounts/ChangeNameHandler.js";
+import { ApiKeysOfAccountHandler } from "../application/operations/accounts/ApiKeysOfAccountHandler.js";
+import { ApiKeysOfEveryAccountHandler } from "../application/operations/accounts/ApiKeysOfEveryAccountHandler.js";
+import { ChangeApiKeyLimitsHandler } from "../application/operations/accounts/ChangeApiKeyLimitsHandler.js";
+import { ChangeApiKeyLimitsValidator } from "../application/operations/accounts/ChangeApiKeyLimitsValidator.js";
+import { CreateApiKeyHandler } from "../application/operations/accounts/CreateApiKeyHandler.js";
+import { CreateApiKeyValidator } from "../application/operations/accounts/CreateApiKeyValidator.js";
+import { WhatAKeyMayDoInTournamentHandler } from "../application/operations/tournaments/WhatAKeyMayDoInTournamentHandler.js";
+import { IdentifyApiKeyHandler } from "../application/operations/accounts/IdentifyApiKeyHandler.js";
+import { RevokeApiKeyHandler } from "../application/operations/accounts/RevokeApiKeyHandler.js";
+import { RevokeApiKeyValidator } from "../application/operations/accounts/RevokeApiKeyValidator.js";
 import { ChangePasswordHandler } from "../application/operations/accounts/ChangePasswordHandler.js";
 import { AskToChangeEmailAddressHandler } from "../application/operations/accounts/AskToChangeEmailAddressHandler.js";
 import { AskToChangeEmailAddressValidator } from "../application/operations/accounts/AskToChangeEmailAddressValidator.js";
@@ -142,6 +152,7 @@ import { UpdateTournamentHandler } from "../application/operations/tournaments/U
 import { DeleteTournamentHandler } from "../application/operations/tournaments/DeleteTournamentHandler.js";
 import { RemoveNotableStatusHandler } from "../application/operations/tournaments/RemoveNotableStatusHandler.js";
 import { UpdateTournamentValidator } from "../application/operations/tournaments/UpdateTournamentValidator.js";
+import { TournamentsNamedHandler } from "../application/operations/tournaments/TournamentsNamedHandler.js";
 import { TournamentsOfAccountHandler } from "../application/operations/tournaments/TournamentsOfAccountHandler.js";
 import { CompetitionPageHandler } from "../application/operations/tournaments/CompetitionPageHandler.js";
 import { TeamPageHandler } from "../application/operations/tournaments/TeamPageHandler.js";
@@ -270,6 +281,8 @@ import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebs
 import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReaderCheck.js";
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
+import { AccountsByApiKey } from "../infrastructure/read-models/AccountsByApiKey.js";
+import { CryptoApiKeys } from "../infrastructure/identity/CryptoApiKeys.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { Tournaments } from "../infrastructure/read-models/Tournaments.js";
@@ -387,6 +400,8 @@ import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
 import { registerForgotPasswordPage } from "./public/forgotPassword.js";
 import { registerForgetAccountPage } from "./public/forgetAccount.js";
+import { apiV0 } from "./api/v0/index.js";
+import { registerApiKeysPage } from "./public/apiKeys.js";
 import { registerChangeNamePage } from "./public/changeName.js";
 import { registerChangePasswordPage } from "./public/changePassword.js";
 import { registerChangeEmailAddressPage } from "./public/changeEmailAddress.js";
@@ -985,6 +1000,7 @@ export const buildApplication = async (
   );
 
   const accountsByRole = new AccountsByRole(unitOfWork);
+  const accountsByApiKey = new AccountsByApiKey(unitOfWork);
 
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
   // What the three that follow are written against, so before them.
@@ -1002,6 +1018,7 @@ export const buildApplication = async (
     accountsByEmailAddress,
     accountsByGoogleAccount,
     accountsByRole,
+    accountsByApiKey,
     tournamentsByAddress,
     heldTournaments,
     tournamentsByAccount,
@@ -1196,6 +1213,25 @@ export const buildApplication = async (
   );
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(accounts));
+  const apiKeys = new CryptoApiKeys();
+  validation.register(new CreateApiKeyValidator());
+  mediator.handleCommand(new CreateApiKeyHandler(accounts, apiKeys));
+  validation.register(new RevokeApiKeyValidator());
+  mediator.handleCommand(new RevokeApiKeyHandler(accounts));
+  validation.register(new ChangeApiKeyLimitsValidator());
+  mediator.handleCommand(
+    new ChangeApiKeyLimitsHandler(accounts, accountsByApiKey),
+  );
+  mediator.handleQuery(new ApiKeysOfAccountHandler(accounts));
+  mediator.handleQuery(
+    new ApiKeysOfEveryAccountHandler(accounts, accountsByApiKey),
+  );
+  const identifyingKeys = new IdentifyApiKeyHandler(
+    accounts,
+    accountsByApiKey,
+    apiKeys,
+  );
+  mediator.handleQuery(identifyingKeys);
   mediator.handleQuery(new AccountProfileHandler(accounts));
   mediator.handleQuery(
     new WhenEmergencyAccessMayBeAskedAgainHandler(emailsWritten),
@@ -1458,6 +1494,9 @@ export const buildApplication = async (
   mediator.handleQuery(new TeamsOfTournamentHandler(...both));
   mediator.handleQuery(new PlayersOfTeamHandler(...both, games));
   mediator.handleQuery(new PlayersOfTestHandler(...both));
+  mediator.handleQuery(
+    new WhatAKeyMayDoInTournamentHandler(tournaments, identifyingKeys),
+  );
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
   mediator.handleQuery(
     new PlayersOfTournamentHandler(...both, competitions, games),
@@ -1470,6 +1509,7 @@ export const buildApplication = async (
   mediator.handleQuery(
     new TournamentsOfAccountHandler(tournamentsByAccount, accounts),
   );
+  mediator.handleQuery(new TournamentsNamedHandler(tournaments));
   mediator.handleQuery(
     new TournamentToChangeHandler(tournaments, tournamentsByAddress, accounts),
   );
@@ -1936,6 +1976,7 @@ export const buildApplication = async (
     done(null, payload);
   });
   await registerQuestionLimit(server);
+  await server.register(apiV0, { prefix: "/api/v0" });
   await server.register(apiSite, {
     prefix: "/api/site",
     assets,
@@ -2052,6 +2093,7 @@ export const buildApplication = async (
   registerProfilePage(server, assets);
   registerSetPasswordPage(server, assets);
   registerChangeNamePage(server, assets);
+  registerApiKeysPage(server, assets);
   registerChangeEmailAddressPage(server, assets, failedSignIns, inTransaction);
   registerRegistrationsSuspendedPage(server, assets);
   registerNewConfirmationLinkPage(server, assets, links);

@@ -2,6 +2,9 @@ import { AggregateRoot } from "../../common/AggregateRoot.js";
 import type { DomainEvent } from "../../common/DomainEvent.js";
 import type { ReadOnlyDate } from "../../common/ReadOnlyDate.js";
 import { Refused } from "../../common/Refused.js";
+import { ApiKeyCreated } from "./events/ApiKeyCreated.js";
+import { ApiKeyLimitsChanged } from "./events/ApiKeyLimitsChanged.js";
+import { ApiKeyRevoked } from "./events/ApiKeyRevoked.js";
 import { AccountBroughtOver } from "./events/AccountBroughtOver.js";
 import { AccountForgotten } from "./events/AccountForgotten.js";
 import { AccountRegistered } from "./events/AccountRegistered.js";
@@ -18,6 +21,10 @@ import { SignedIn } from "./events/SignedIn.js";
 import type { AccountId } from "./AccountId.js";
 import { Administrator } from "./Administrator.js";
 import { WorldRankingOfficer } from "./WorldRankingOfficer.js";
+import type { ApiKeyId } from "./ApiKeyId.js";
+import { ApiKeyLimits } from "./value-objects/ApiKeyLimits.js";
+import { ApiKeyScope } from "./value-objects/ApiKeyScope.js";
+import type { ApiKeyLabel } from "./value-objects/ApiKeyLabel.js";
 import { EmailAddress } from "./value-objects/EmailAddress.js";
 import { PersonName } from "./value-objects/PersonName.js";
 import { type Role, sportOfWorldRankingOfficer } from "./value-objects/Role.js";
@@ -26,13 +33,30 @@ import { type Role, sportOfWorldRankingOfficer } from "./value-objects/Role.js";
 export type AccountErrorCode =
   | "Account.NotConfirmed"
   | "Account.Forgotten"
-  | "Account.GoogleAccountAlreadyLinked";
+  | "Account.GoogleAccountAlreadyLinked"
+  | "Account.NoSuchApiKey";
 
 /**
  * An account's refusal, named by its code. The code is what whoever asked
  * decides by; the message is only for whoever reads the log.
  */
 export class AccountRefused extends Refused<AccountErrorCode> {}
+
+/**
+ * One of an account's keys as the account has it. The key itself is not here,
+ * and never was: the account only ever held a hash of it.
+ */
+export interface ApiKeyOfAccount {
+  readonly id: string;
+  readonly keyHash: string;
+  readonly label: string;
+  readonly scope: ApiKeyScope;
+  /** The id of the one tournament it is limited to, or nothing where it is limited to none. */
+  readonly tournament: string | undefined;
+  readonly limits: ApiKeyLimits;
+  readonly madeAt: ReadOnlyDate;
+  readonly revoked: boolean;
+}
 
 /**
  * Somebody known to the site by an email address. Registered with nothing but
@@ -58,6 +82,8 @@ export class Account extends AggregateRoot {
   // The moves asked for and not yet made, by the reference each link carries.
   readonly #movesAsked = new Map<string, EmailAddress>();
   readonly #roles = new Set<Role>();
+  // In the order they were made.
+  readonly #apiKeys = new Map<string, ApiKeyOfAccount>();
 
   private constructor(id: AccountId) {
     super(id);
@@ -170,6 +196,14 @@ export class Account extends AggregateRoot {
    */
   get movedAt(): ReadOnlyDate | undefined {
     return this.#movedAt;
+  }
+
+  /**
+   * The keys the account has made, in the order it made them, revoked ones
+   * among them. None once it is forgotten.
+   */
+  get apiKeys(): readonly ApiKeyOfAccount[] {
+    return [...this.#apiKeys.values()];
   }
 
   get confirmed(): boolean {
@@ -365,6 +399,76 @@ export class Account extends AggregateRoot {
   }
 
   /**
+   * That the account made the key `id`, whose hash is `keyHash`, which the
+   * account's maker alone has seen. Only an account somebody has shown is
+   * theirs makes one, since a key is a way in and one made for any other would
+   * be a way in for whoever turns out to own the address.
+   */
+  createApiKey(
+    id: ApiKeyId,
+    keyHash: string,
+    label: ApiKeyLabel,
+    scope: ApiKeyScope,
+    tournament: string | undefined,
+    limits: ApiKeyLimits,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessInUse();
+    this.record(
+      new ApiKeyCreated(
+        id.value,
+        keyHash,
+        label.toString(),
+        scope.code,
+        tournament,
+        limits.perMinute,
+        limits.perDay,
+        this.id,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That the account revoked its key `id`. One already revoked records
+   * nothing, so a request sent twice records one event. A key the account never
+   * made is refused as not found, the same whoever made it.
+   */
+  revokeApiKey(id: ApiKeyId, at: ReadOnlyDate): void {
+    this.#refuseOnceForgotten();
+    const key = this.#apiKeys.get(id.value);
+    if (key === undefined) throw noSuchApiKey();
+    if (key.revoked) return;
+    this.record(new ApiKeyRevoked(id.value, this.id, at));
+  }
+
+  /**
+   * That `by`, an administrator, changed what its key `id` may do to `limits`.
+   * The limits it has already record nothing. Whether `by` may is not the
+   * account's to know.
+   */
+  changeApiKeyLimits(
+    id: ApiKeyId,
+    limits: ApiKeyLimits,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseOnceForgotten();
+    const key = this.#apiKeys.get(id.value);
+    if (key === undefined) throw noSuchApiKey();
+    if (key.limits.equals(limits)) return;
+    this.record(
+      new ApiKeyLimitsChanged(
+        id.value,
+        limits.perMinute,
+        limits.perDay,
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
    * That the account is forgotten, for good. Only the first forgetting is
    * recorded, so that whatever acts on it acts once.
    */
@@ -415,8 +519,33 @@ export class Account extends AggregateRoot {
       this.#roles.add(event.role);
     } else if (event instanceof RoleRemoved) {
       this.#roles.delete(event.role);
+    } else if (event instanceof ApiKeyCreated) {
+      this.#apiKeys.set(event.keyId, {
+        id: event.keyId,
+        keyHash: event.keyHash,
+        label: event.label,
+        scope: ApiKeyScope.from(event.scope),
+        tournament: event.tournament,
+        limits: ApiKeyLimits.from(event.perMinute, event.perDay),
+        madeAt: event.occurredAt,
+        revoked: false,
+      });
+    } else if (event instanceof ApiKeyRevoked) {
+      const key = this.#apiKeys.get(event.keyId);
+      if (key !== undefined)
+        this.#apiKeys.set(event.keyId, { ...key, revoked: true });
+    } else if (event instanceof ApiKeyLimitsChanged) {
+      const key = this.#apiKeys.get(event.keyId);
+      if (key !== undefined) {
+        this.#apiKeys.set(event.keyId, {
+          ...key,
+          limits: ApiKeyLimits.from(event.perMinute, event.perDay),
+        });
+      }
     } else if (event instanceof AccountForgotten) {
       this.#forgotten = true;
+      // A key is a way in, and none of a forgotten account's may be left one.
+      this.#apiKeys.clear();
       // So that whatever asks what an account may do gets the right answer
       // without also having to ask whether it is forgotten.
       this.#roles.clear();
@@ -453,3 +582,8 @@ export class Account extends AggregateRoot {
     }
   }
 }
+
+// The same refusal whoever's key it was, so that asking cannot tell which keys
+// another account has.
+const noSuchApiKey = (): AccountRefused =>
+  new AccountRefused("Account.NoSuchApiKey", "The account has no such key.");

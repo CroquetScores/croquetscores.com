@@ -171,6 +171,7 @@ Feature: The way to a reader's account is the last thing in the header
         | Change Password      | /account/change-password      |
         | Change Email Address | /account/change-email-address |
         | Change Name          | /account/change-name          |
+        | API Keys             | /account/api-keys             |
 
     @postgres
     Scenario Outline: The menu offers an account with no password nothing that asks for one

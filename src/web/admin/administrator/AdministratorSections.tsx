@@ -22,6 +22,7 @@ interface Props {
     | "logs"
     | "database-status"
     | "countries"
+    | "api-keys"
     | undefined;
 }
 
@@ -86,6 +87,14 @@ export const AdministratorSections = ({
             aria-current={reading === "countries" ? "page" : undefined}
           >
             {say("admin.administrator.sections.countries")}
+          </a>
+        </li>
+        <li>
+          <a
+            href="/admin/administrator/api-keys"
+            aria-current={reading === "api-keys" ? "page" : undefined}
+          >
+            {say("admin.administrator.sections.apiKeys")}
           </a>
         </li>
       </ul>

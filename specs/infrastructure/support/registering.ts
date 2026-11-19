@@ -36,6 +36,22 @@ import { AskToSetPasswordHandler } from "../../../src/application/operations/acc
 import type { AskToForgetAccount } from "../../../src/application/operations/accounts/AskToForgetAccount.js";
 import type { AskToSetPassword } from "../../../src/application/operations/accounts/AskToSetPassword.js";
 import { ForgetAccountHandler } from "../../../src/application/operations/accounts/ForgetAccountHandler.js";
+import type { ApiKeysOfAccount } from "../../../src/application/operations/accounts/ApiKeysOfAccount.js";
+import { ApiKeysOfAccountHandler } from "../../../src/application/operations/accounts/ApiKeysOfAccountHandler.js";
+import type { ChangeApiKeyLimits } from "../../../src/application/operations/accounts/ChangeApiKeyLimits.js";
+import type { ApiKeysOfEveryAccount } from "../../../src/application/operations/accounts/ApiKeysOfEveryAccount.js";
+import { ApiKeysOfEveryAccountHandler } from "../../../src/application/operations/accounts/ApiKeysOfEveryAccountHandler.js";
+import { ChangeApiKeyLimitsHandler } from "../../../src/application/operations/accounts/ChangeApiKeyLimitsHandler.js";
+import { ChangeApiKeyLimitsValidator } from "../../../src/application/operations/accounts/ChangeApiKeyLimitsValidator.js";
+import type { CreateApiKey } from "../../../src/application/operations/accounts/CreateApiKey.js";
+import { CreateApiKeyHandler } from "../../../src/application/operations/accounts/CreateApiKeyHandler.js";
+import { CreateApiKeyValidator } from "../../../src/application/operations/accounts/CreateApiKeyValidator.js";
+import type { IdentifyApiKey } from "../../../src/application/operations/accounts/IdentifyApiKey.js";
+import { IdentifyApiKeyHandler } from "../../../src/application/operations/accounts/IdentifyApiKeyHandler.js";
+import type { RevokeApiKey } from "../../../src/application/operations/accounts/RevokeApiKey.js";
+import { RevokeApiKeyHandler } from "../../../src/application/operations/accounts/RevokeApiKeyHandler.js";
+import { RevokeApiKeyValidator } from "../../../src/application/operations/accounts/RevokeApiKeyValidator.js";
+import { CryptoApiKeys } from "../../../src/infrastructure/identity/CryptoApiKeys.js";
 import type { ChangeName } from "../../../src/application/operations/accounts/ChangeName.js";
 import type {
   AccountProfile,
@@ -204,6 +220,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     accounts.readModel,
     accounts.byGoogleAccount,
     accounts.byRole,
+    accounts.byApiKey,
     refusing,
   ]);
   // Wrapped rather than handed over as it is: a static passed on its own is a
@@ -342,6 +359,22 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(repository));
   mediator.handleQuery(new AccountProfileHandler(repository));
+  const apiKeys = new CryptoApiKeys();
+  validation.register(new CreateApiKeyValidator());
+  mediator.handleCommand(new CreateApiKeyHandler(repository, apiKeys));
+  validation.register(new RevokeApiKeyValidator());
+  mediator.handleCommand(new RevokeApiKeyHandler(repository));
+  validation.register(new ChangeApiKeyLimitsValidator());
+  mediator.handleCommand(
+    new ChangeApiKeyLimitsHandler(repository, accounts.byApiKey),
+  );
+  mediator.handleQuery(new ApiKeysOfAccountHandler(repository));
+  mediator.handleQuery(
+    new ApiKeysOfEveryAccountHandler(repository, accounts.byApiKey),
+  );
+  mediator.handleQuery(
+    new IdentifyApiKeyHandler(repository, accounts.byApiKey, apiKeys),
+  );
   validation.register(new AddRoleValidator());
   mediator.handleCommand(new AddRoleHandler(repository, accounts.readModel));
   // Held just after it takes hold of the administrators, so that two
@@ -621,6 +654,36 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       return mediator.send(command);
     },
 
+    async createApiKey(command: CreateApiKey) {
+      await settle();
+      return mediator.send(command);
+    },
+
+    async revokeApiKey(command: RevokeApiKey): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
+    },
+
+    async changeApiKeyLimits(command: ChangeApiKeyLimits): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
+    async apiKeysOf(query: ApiKeysOfAccount) {
+      await settle();
+      return mediator.query(query);
+    },
+
+    async apiKeysOfEveryAccount(query: ApiKeysOfEveryAccount) {
+      await settle();
+      return mediator.query(query);
+    },
+
+    async identifyApiKey(query: IdentifyApiKey) {
+      await settle();
+      return mediator.query(query);
+    },
+
     async forgetWithLink(command: ForgetAccount): Promise<AccountId> {
       await settle();
       return mediator.send(command);
@@ -881,6 +944,20 @@ Given("the application's signing in with Google", function (this: SpecWorld) {
 Given("the application's forgetting of accounts", function (this: SpecWorld) {
   standUpFor(this);
 });
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about API keys is not about registering.
+for (const words of [
+  "the application's creating of API keys",
+  "the application's revoking of API keys",
+  "the application's identifying of API keys",
+  "the application's changing of the limits of API keys",
+  "the application's listing of every account's API keys",
+]) {
+  Given(words, function (this: SpecWorld) {
+    standUpFor(this);
+  });
+}
 
 // The same mediator over the same accounts, said in its own words because a
 // scenario about changing a name is not about registering.
