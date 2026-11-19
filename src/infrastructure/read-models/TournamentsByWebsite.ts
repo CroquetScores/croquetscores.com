@@ -226,6 +226,24 @@ export class TournamentsByWebsite implements Projection, Asked {
     );
   }
 
+  // Every event about a game says which game, so a game was last changed when
+  // the newest of them happened. Read from the events, as a tournament's is.
+  async changedAtOfGames(
+    competition: string,
+  ): Promise<ReadonlyMap<string, ReadOnlyDate>> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ game_id: string; at: Date }>(
+        `select e.data ->> 'gameId' as game_id,
+                max((e.data ->> 'occurredAt')::timestamptz) as at
+           from events e
+          where e.stream_id = $1 and e.data ? 'gameId'
+          group by 1`,
+        [competition],
+      );
+    return new Map(rows.map((row) => [row.game_id, ReadOnlyDate.from(row.at)]));
+  }
+
   async withSports(): Promise<readonly TournamentOfWebsite[]> {
     const { rows } = await this.unitOfWork.connection().query<Row>(
       `select ${COLUMNS}

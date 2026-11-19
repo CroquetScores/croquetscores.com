@@ -91,6 +91,12 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
     const told = toldOf(tournament, reference.id);
 
     const matches = competition.knockoutMatches(told);
+    // The round each game was played in, by the match of the draw it is in.
+    const roundOf = new Map<string, number>();
+    for (const match of matches) {
+      for (const game of match.games)
+        roundOf.set(game.id.value, match.round + 1);
+    }
     const players = competition.players;
     // Worked out a round at a time, since where the draw's play has nobody in
     // a later round, the round before says why.
@@ -182,6 +188,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
           loserScore: game.loserScore.toString(),
           drawn: game.drawn,
           addedAt: game.addedAt,
+          round: roundOf.get(game.id.value),
         })),
     };
   }

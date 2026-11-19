@@ -4,7 +4,8 @@ Feature: An app lists a year's tournaments
   An app that follows the sport asks the API for a year's tournaments, at
   `/api/v0/tournaments`, and is told, for each one, what it is called, when it
   starts and finishes, where it is played, which sport it is, where it is found
-  on the site, and whether its organiser ticked national or international. The
+  on the site (its uri, a path beginning with a slash), where the API tells of it
+  (its href), and whether its organiser ticked national or international. The
   sport is part of each tournament's answer, so a year of every sport is one
   request, and an app that wants one sport says which. The id is the one the
   published files carry (`tournamentId`), so that a tournament renamed or moved

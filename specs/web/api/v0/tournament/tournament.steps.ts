@@ -162,7 +162,7 @@ saysOfTheTournament("changedAt", "it last changed at");
 Then("the tournament read says where it is found", function (this: WebWorld) {
   const kept = this.tournaments.get(this.lastTournament!);
   assert.ok(kept !== undefined, "No tournament was made.");
-  assert.equal(tournamentRead(this)["address"], kept.address);
+  assert.equal(tournamentRead(this)["uri"], `/${kept.address}`);
 });
 
 Then(
@@ -182,9 +182,9 @@ Then(
 );
 
 Then(
-  "the competition {string} says its address is {string}",
-  function (this: WebWorld, name: string, address: string) {
-    assert.equal(namedIn(this, "competitions", name)["address"], address);
+  "the competition {string} says its uri is {string}",
+  function (this: WebWorld, name: string, uri: string) {
+    assert.equal(namedIn(this, "competitions", name)["uri"], uri);
   },
 );
 
@@ -211,11 +211,11 @@ Then(
 );
 
 Then(
-  "the tournament read lists one competition whose address is under {string}",
+  "the tournament read lists one competition whose uri is under {string}",
   function (this: WebWorld, start: string) {
     const competitions = listed(this, "competitions");
     assert.equal(competitions.length, 1);
-    assert.ok(String(competitions[0]!["address"]).startsWith(start));
+    assert.ok(String(competitions[0]!["uri"]).startsWith(start));
   },
 );
 

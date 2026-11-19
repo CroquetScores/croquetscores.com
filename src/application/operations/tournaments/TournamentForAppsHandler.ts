@@ -1,11 +1,11 @@
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import { later } from "./competitionForApps.js";
 import {
   TournamentOperationRefused,
   tournamentFor,
@@ -19,9 +19,6 @@ import {
 
 // In the order a reader looks for a name in a list, capitals or none.
 const byName = new Intl.Collator("en");
-
-const later = (one: ReadOnlyDate, other: ReadOnlyDate): ReadOnlyDate =>
-  other.toDate() > one.toDate() ? other : one;
 
 const noSuchTournament = (): TournamentOperationRefused =>
   new TournamentOperationRefused(

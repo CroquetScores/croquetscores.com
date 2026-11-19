@@ -11,8 +11,8 @@ Feature: An app reads a tournament, its competitions and its players
 
   The tournament says what the list of a year says of it (`tournaments.feature`)
   and when it last changed. Each competition says its id, its name, which kind
-  it is, where its page is on the site (its address) and where the API tells
-  of it (its href), and when it last changed, and each player their id, name, the name the
+  it is, where its page is on the site (its uri) and where the API tells of it
+  (its href), and when it last changed, and each player their id, name, the name the
   world rankings know them by, their handicap and who they represent, where
   they have one. A kind is a block, a Swiss, a knockout or a test, which is
   the site's word for a match between two teams. A tournament played by teams
@@ -102,7 +102,7 @@ Feature: An app reads a tournament, its competitions and its players
     Scenario: A block says where its page is on the site
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       When the tournament "Spring Open" is read with that key
-      Then the competition "Block A" says its address is "2026/ac/spring-open/competitions/block-a"
+      Then the competition "Block A" says its uri is "/2026/ac/spring-open/competitions/block-a"
 
     Scenario: A block says where the API tells of it
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
@@ -116,7 +116,7 @@ Feature: An app reads a tournament, its competitions and its players
       And "organiser@example.com" has added the team "England" to "Spring Tests"
       And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       When the tournament "Spring Tests" is read with that key
-      Then the tournament read lists one competition whose address is under "2026/ac/spring-tests/tests/"
+      Then the tournament read lists one competition whose uri is under "/2026/ac/spring-tests/tests/"
 
     Scenario: A Swiss says it is a Swiss
       Given "organiser@example.com" has added the Swiss "Swiss A" to "Spring Open"

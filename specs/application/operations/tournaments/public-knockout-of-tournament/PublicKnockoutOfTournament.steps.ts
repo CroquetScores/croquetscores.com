@@ -248,6 +248,17 @@ Then(
 );
 
 Then(
+  /^the (first|second|third|last) game of the knockout answered was played in round (\d+)$/,
+  function (this: SpecWorld, which: string, round: string) {
+    const { games } = answered(this);
+    assert.equal(
+      which === "last" ? games.at(-1)?.round : games[placeOf(which)]?.round,
+      Number(round),
+    );
+  },
+);
+
+Then(
   /^(\d+) games? of the knockout (?:is|are) answered$/,
   function (this: SpecWorld, count: string) {
     assert.equal(answered(this).games.length, Number(count));
