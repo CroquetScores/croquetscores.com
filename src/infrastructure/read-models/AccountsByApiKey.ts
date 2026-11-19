@@ -103,4 +103,18 @@ export class AccountsByApiKey implements Projection, FindsApiKeys {
     const row = rows[0];
     return row === undefined ? undefined : AccountId.from(row.account_id);
   }
+
+  async all(): Promise<
+    readonly { readonly account: AccountId; readonly keyId: string }[]
+  > {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ account_id: string; key_id: string }>(
+        `select account_id, key_id from accounts_by_api_key`,
+      );
+    return rows.map((row) => ({
+      account: AccountId.from(row.account_id),
+      keyId: row.key_id,
+    }));
+  }
 }

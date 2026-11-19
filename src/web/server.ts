@@ -63,6 +63,7 @@ import { RemoveRoleHandler } from "../application/operations/accounts/RemoveRole
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
 import { ChangeNameHandler } from "../application/operations/accounts/ChangeNameHandler.js";
 import { ApiKeysOfAccountHandler } from "../application/operations/accounts/ApiKeysOfAccountHandler.js";
+import { ApiKeysOfEveryAccountHandler } from "../application/operations/accounts/ApiKeysOfEveryAccountHandler.js";
 import { ChangeApiKeyLimitsHandler } from "../application/operations/accounts/ChangeApiKeyLimitsHandler.js";
 import { ChangeApiKeyLimitsValidator } from "../application/operations/accounts/ChangeApiKeyLimitsValidator.js";
 import { CreateApiKeyHandler } from "../application/operations/accounts/CreateApiKeyHandler.js";
@@ -1219,6 +1220,9 @@ export const buildApplication = async (
     new ChangeApiKeyLimitsHandler(accounts, accountsByApiKey),
   );
   mediator.handleQuery(new ApiKeysOfAccountHandler(accounts));
+  mediator.handleQuery(
+    new ApiKeysOfEveryAccountHandler(accounts, accountsByApiKey),
+  );
   mediator.handleQuery(
     new IdentifyApiKeyHandler(accounts, accountsByApiKey, apiKeys),
   );

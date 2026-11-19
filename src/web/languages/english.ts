@@ -691,6 +691,23 @@ export const english: Language = {
     "admin.administrator.sections.logs": "Logs",
     "admin.administrator.sections.databaseStatus": "Database Access",
     "admin.administrator.sections.countries": "Countries",
+    "admin.administrator.sections.apiKeys": "API Keys",
+    // The page where an administrator changes the limits of a key, in English
+    // alone (writtenInEnglishOnly.ts).
+    "admin.apiKeys.title": "API Keys",
+    "admin.apiKeys.none": "No keys work.",
+    "admin.apiKeys.mayRead": "May read",
+    "admin.apiKeys.mayReadAndWrite": "May read and write",
+    "admin.apiKeys.keyName": "Key name",
+    "admin.apiKeys.perMinute": "Requests a minute",
+    "admin.apiKeys.perDay": "Requests a day",
+    "admin.apiKeys.save": "Save",
+    "admin.apiKeys.otherwise": "Something went wrong on the site.",
+    "ApiKeyLimits.NoneAMinute":
+      "Requests a minute must be a whole number above none.",
+    "ApiKeyLimits.NoneADay":
+      "Requests a day must be a whole number above none.",
+    "ChangeApiKeyLimits.NoSuchApiKey": "There is no such key.",
     "admin.databaseStatus.title": "Database Access",
     "admin.databaseStatus.on": "Database access is on.",
     "admin.databaseStatus.off": "Database access is off.",

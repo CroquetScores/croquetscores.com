@@ -39,6 +39,8 @@ import { ForgetAccountHandler } from "../../../src/application/operations/accoun
 import type { ApiKeysOfAccount } from "../../../src/application/operations/accounts/ApiKeysOfAccount.js";
 import { ApiKeysOfAccountHandler } from "../../../src/application/operations/accounts/ApiKeysOfAccountHandler.js";
 import type { ChangeApiKeyLimits } from "../../../src/application/operations/accounts/ChangeApiKeyLimits.js";
+import type { ApiKeysOfEveryAccount } from "../../../src/application/operations/accounts/ApiKeysOfEveryAccount.js";
+import { ApiKeysOfEveryAccountHandler } from "../../../src/application/operations/accounts/ApiKeysOfEveryAccountHandler.js";
 import { ChangeApiKeyLimitsHandler } from "../../../src/application/operations/accounts/ChangeApiKeyLimitsHandler.js";
 import { ChangeApiKeyLimitsValidator } from "../../../src/application/operations/accounts/ChangeApiKeyLimitsValidator.js";
 import type { CreateApiKey } from "../../../src/application/operations/accounts/CreateApiKey.js";
@@ -368,6 +370,9 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   );
   mediator.handleQuery(new ApiKeysOfAccountHandler(repository));
   mediator.handleQuery(
+    new ApiKeysOfEveryAccountHandler(repository, accounts.byApiKey),
+  );
+  mediator.handleQuery(
     new IdentifyApiKeyHandler(repository, accounts.byApiKey, apiKeys),
   );
   validation.register(new AddRoleValidator());
@@ -669,6 +674,11 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       return mediator.query(query);
     },
 
+    async apiKeysOfEveryAccount(query: ApiKeysOfEveryAccount) {
+      await settle();
+      return mediator.query(query);
+    },
+
     async identifyApiKey(query: IdentifyApiKey) {
       await settle();
       return mediator.query(query);
@@ -942,6 +952,7 @@ for (const words of [
   "the application's revoking of API keys",
   "the application's identifying of API keys",
   "the application's changing of the limits of API keys",
+  "the application's listing of every account's API keys",
 ]) {
   Given(words, function (this: SpecWorld) {
     standUpFor(this);

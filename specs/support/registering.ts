@@ -15,6 +15,10 @@ import type {
   ApiKeyShown,
   ApiKeysOfAccount,
 } from "../../src/application/operations/accounts/ApiKeysOfAccount.js";
+import type {
+  ApiKeyOfAnAccount,
+  ApiKeysOfEveryAccount,
+} from "../../src/application/operations/accounts/ApiKeysOfEveryAccount.js";
 import type { ChangeApiKeyLimits } from "../../src/application/operations/accounts/ChangeApiKeyLimits.js";
 import type {
   CreatedApiKey,
@@ -128,6 +132,11 @@ export interface Registering {
 
   /** The keys of an account, as its owner sees them. */
   apiKeysOf(query: ApiKeysOfAccount): Promise<readonly ApiKeyShown[]>;
+
+  /** Every key that works, as an administrator lists them. Throws what the mediator throws. */
+  apiKeysOfEveryAccount(
+    query: ApiKeysOfEveryAccount,
+  ): Promise<readonly ApiKeyOfAnAccount[]>;
 
   /** Who a key sent acts as, or nothing. */
   identifyApiKey(query: IdentifyApiKey): Promise<ApiKeyIdentified | undefined>;

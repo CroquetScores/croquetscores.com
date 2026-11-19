@@ -39,6 +39,12 @@ const administratorsPages: readonly string[] = [
   "admin.emergency.",
   "admin.hover.emergency.",
   "EmergencyAccess.",
+  // The page where the limits of a key are changed, which only an
+  // administrator reads.
+  "admin.apiKeys.",
+  "admin.administrator.sections.apiKeys",
+  "ApiKeyLimits.",
+  "ChangeApiKeyLimits.",
 ];
 
 /** Whether the catalogue entry `key` is one written in English only. */

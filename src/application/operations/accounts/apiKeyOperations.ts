@@ -28,4 +28,9 @@ export interface FindsApiKeys {
 
   /** The account the key `keyId` belongs to, or nothing where there is none. */
   accountOf(keyId: string): Promise<AccountId | undefined>;
+
+  /** Every key that works, with the account it belongs to, in no order. */
+  all(): Promise<
+    readonly { readonly account: AccountId; readonly keyId: string }[]
+  >;
 }

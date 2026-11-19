@@ -193,6 +193,7 @@ const words: Readonly<Record<string, string>> = {
   "changeEmailAddress.emailAddress": "New email address",
   "changeEmailAddress.noLongerWorks.title": "This link no longer works",
   "changeEmailAddress.title": "Change email address",
+  "admin.apiKeys.none": "No keys work.",
   "apiKeys.add": "Add Key",
   "apiKeys.copied": "Copied",
   "apiKeys.copy": "Copy",

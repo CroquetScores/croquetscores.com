@@ -400,13 +400,13 @@ Then("the clipboard holds the new key", async function (this: WebWorld) {
   );
 });
 
+// Waited for, since the clipboard answers after the press and the button then
+// says so.
 Then("the copy button says Copied", async function (this: WebWorld) {
-  assert.equal(
-    unmarked(
-      (await this.browserPage.locator("#api-key-copy").textContent()) ?? "",
-    ),
-    words("apiKeys.copied"),
-  );
+  await this.browserPage
+    .locator("#api-key-copy")
+    .filter({ hasText: words("apiKeys.copied") })
+    .waitFor({ timeout: 1500 });
 });
 
 // The date a key was made: as year, month and day where there is no scripting

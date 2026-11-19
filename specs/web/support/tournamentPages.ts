@@ -74,6 +74,7 @@ const places = [
   "fifth",
   "sixth",
   "seventh",
+  "eighth",
 ];
 
 const labels = async (world: WebWorld): Promise<string[]> => {
@@ -116,7 +117,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third|fourth|fifth|sixth|seventh) section is "([^"]*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth|seventh|eighth) section is "([^"]*)"$/,
   async function (this: WebWorld, which: string, label: string) {
     await settles(this, (found) => found[places.indexOf(which)] === label);
   },

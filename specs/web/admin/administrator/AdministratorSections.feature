@@ -14,7 +14,9 @@ Feature: The section bar of the administrator's pages
   where whether the site may use its database is seen and set, as Database
   Access (`databaseStatus.feature`), which comes sixth; and to the tournaments
   played in countries the world rankings do not list, as Countries
-  (`countries.feature`), which comes seventh.
+  (`countries.feature`), which comes seventh; and to the page where the limits
+  of the keys apps act with are changed, as API Keys (`apiKeys.feature`), which
+  comes eighth.
 
   Tournaments comes first, since it is the admin an administrator came from,
   then Accounts, and World Rankings after it. It leads to /admin/, the admin's own address for the
@@ -137,6 +139,22 @@ Feature: The section bar of the administrator's pages
     Scenario: Countries is marked on the page of the tournaments in countries the lists do not name
       When the page at "/admin/administrator/countries" is opened
       Then the section "Countries" is marked as current
+
+    Scenario: The section bar offers the API keys
+      When the page at "/admin/administrator" is opened
+      Then the section "API Keys" is offered
+
+    Scenario: API Keys comes eighth
+      When the page at "/admin/administrator" is opened
+      Then the eighth section is "API Keys"
+
+    Scenario: API Keys leads to the page where the limits of keys are changed
+      When the page at "/admin/administrator" is opened
+      Then the section "API Keys" leads to "/admin/administrator/api-keys"
+
+    Scenario: API Keys is marked on the page where the limits of keys are changed
+      When the page at "/admin/administrator/api-keys" is opened
+      Then the section "API Keys" is marked as current
 
     Scenario: Tournaments leads to the admin's tournaments
       When the page at "/admin/administrator" is opened

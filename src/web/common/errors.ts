@@ -11,6 +11,7 @@ import { randomUUID } from "node:crypto";
 import { DatabaseUnreachable } from "../../application/common/DatabaseUnreachable.js";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { DatabaseAccessRefused } from "../../application/common/DatabaseAccess.js";
+import { ApiKeyOperationRefused } from "../../application/operations/accounts/apiKeyOperations.js";
 import { RoleOperationRefused } from "../../application/operations/accounts/roleOperations.js";
 import { EmergencyAccessRefused } from "../../application/operations/emergency/AskForEmergencyAccessHandler.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
@@ -202,6 +203,7 @@ export const registerErrorMapping = (
       (error instanceof TournamentRefused ||
         error instanceof TournamentOperationRefused ||
         error instanceof RoleOperationRefused ||
+        error instanceof ApiKeyOperationRefused ||
         error instanceof EmergencyAccessRefused ||
         error instanceof DatabaseAccessRefused ||
         error instanceof WorldRankingPlayersRefused ||
