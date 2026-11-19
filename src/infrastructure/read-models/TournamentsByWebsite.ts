@@ -196,7 +196,7 @@ export class TournamentsByWebsite implements Projection, Asked {
            ) changed
           where t.website = $1 and not t.archived
             and t.starts between $2 and $3 ${narrowed.where}
-          order by t.starts, t.name`,
+          order by t.starts, t.name, t.tournament_id`,
         [website.host, first, last, ...narrowed.values],
       );
     return rows.map((row) => ({

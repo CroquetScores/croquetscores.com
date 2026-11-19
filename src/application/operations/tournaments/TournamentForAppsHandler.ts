@@ -65,7 +65,9 @@ export class TournamentForAppsHandler extends QueryHandler<
     );
     const changedAt = await this.changes.changedAtOfStreams([
       tournament.id.value,
-      ...inUse.map(({ reference }) => reference.id.value),
+      // Every competition's, archived or not, as the list's date is: one
+      // archived has gone from the answer, which is a change of it.
+      ...tournament.competitions.map(({ reference }) => reference.id.value),
     ]);
     const ofTheTournament = changedAt.get(tournament.id.value);
     if (ofTheTournament === undefined) {
@@ -90,8 +92,9 @@ export class TournamentForAppsHandler extends QueryHandler<
       }),
     );
     // The tournament has changed when it or any of its competitions has.
-    const latest = competitions.reduce(
-      (soFar, each) => later(soFar, each.changedAt),
+    const latest = tournament.competitions.reduce(
+      (soFar, { reference }) =>
+        later(soFar, changedAt.get(reference.id.value) ?? soFar),
       ofTheTournament,
     );
 

@@ -18,6 +18,7 @@ const alreadyHas = (
   request: FastifyRequest,
   mark: string,
   changedAt: ReadOnlyDate | undefined,
+  byDate: boolean,
 ): boolean => {
   const marks = request.headers["if-none-match"];
   if (typeof marks === "string") {
@@ -27,7 +28,7 @@ const alreadyHas = (
       .some((each) => each === "*" || each === mark);
   }
   const date = request.headers["if-modified-since"];
-  if (typeof date === "string" && changedAt !== undefined) {
+  if (byDate && typeof date === "string" && changedAt !== undefined) {
     const since = Date.parse(date);
     // Dates are said to the second, so a change within the second the app
     // was told is not seen by comparing more finely than it was told.
@@ -51,6 +52,7 @@ export const sendConditionally = (
   reply: FastifyReply,
   said: unknown,
   changedAt: ReadOnlyDate | undefined,
+  { byDate = true }: { readonly byDate?: boolean } = {},
 ): FastifyReply => {
   const body = JSON.stringify(said);
   const mark = markOf(body);
@@ -58,6 +60,7 @@ export const sendConditionally = (
   if (changedAt !== undefined) {
     reply.header("last-modified", changedAt.toDate().toUTCString());
   }
-  if (alreadyHas(request, mark, changedAt)) return reply.code(304).send();
+  if (alreadyHas(request, mark, changedAt, byDate))
+    return reply.code(304).send();
   return reply.type("application/json; charset=utf-8").send(body);
 };

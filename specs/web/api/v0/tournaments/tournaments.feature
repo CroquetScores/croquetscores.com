@@ -221,13 +221,18 @@ Feature: An app lists a year's tournaments
       Then the API answers 400
       And the API's code is "Tournaments.ChangedSinceNotAMoment"
 
+    Scenario: A day there is not is refused
+      When the tournaments of 2026 are asked with that key changed since "2026-02-30T00:00:00Z"
+      Then the API answers 400
+      And the API's code is "Tournaments.ChangedSinceNotAMoment"
+
     Scenario: A moment that is not one is refused
       When the tournaments of 2026 are asked with that key changed since "yesterday"
       Then the API answers 400
       And the API's code is "Tournaments.ChangedSinceNotAMoment"
       And the API says the field at fault is "changedSince"
 
-  Rule: An answer unchanged is answered not modified
+  Rule: An answer unchanged is answered not modified, by its mark
 
     Scenario: An answer carries a mark of what it said
       Given "organiser@example.com" has created the tournament "Spring Open"
@@ -246,11 +251,22 @@ Feature: An app lists a year's tournaments
       Then the API answers 304
       And the API says nothing more
 
-    Scenario: The same question is answered not modified once its date is sent
+    Scenario: A date alone does not say the list is the one the app has
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournaments of 2026 are asked with that key
       When the tournaments of 2026 are asked again with that key and the date it gave
-      Then the API answers 304
+      Then the API answers 200
+
+    Scenario: A list that has lost a tournament is answered in full to the date it gave
+      Given the server's clock reads "2026-03-01T10:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And the server's clock reads "2026-03-02T10:00:00Z"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournaments of 2026 are asked with that key
+      And "organiser@example.com" has archived the tournament "Autumn Open"
+      When the tournaments of 2026 are asked again with that key and the date it gave
+      Then the API answers 200
+      And the tournaments listed are "Spring Open"
 
     Scenario: A change is answered in full
       Given "organiser@example.com" has created the tournament "Spring Open"

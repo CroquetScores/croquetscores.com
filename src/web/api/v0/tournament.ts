@@ -10,13 +10,8 @@ import { websiteOf } from "../../common/site.js";
 import { refuseKey } from "./apiKey.js";
 import { sendConditionally } from "./conditional.js";
 import { refusal } from "./errors.js";
+import { competitionHref, tournamentHref } from "./hrefs.js";
 import { callerOf } from "./rateLimit.js";
-
-// Where the API answers for a tournament, which is where an app is led to it
-// from a list; the public site's page is its address. Named by the part of the
-// id after its kind, as every address of the API names one.
-const bare = (id: string): string => id.slice(id.indexOf("/") + 1);
-const hrefOf = (id: string): string => `/api/v0/tournaments/${bare(id)}`;
 
 export const tournamentOfApps: FastifyPluginAsync = (server) => {
   server.get<{ Params: { id: string } }>(
@@ -55,7 +50,7 @@ export const tournamentOfApps: FastifyPluginAsync = (server) => {
             region: read.region ?? null,
             sport: read.sport,
             address: read.address,
-            href: hrefOf(read.id),
+            href: tournamentHref(read.id),
             national: read.national,
             international: read.international,
             changedAt: read.changedAt.toISOString(),
@@ -64,7 +59,7 @@ export const tournamentOfApps: FastifyPluginAsync = (server) => {
               name: each.name,
               kind: each.kind,
               address: each.address,
-              href: `${hrefOf(read.id)}/competitions/${bare(each.id)}`,
+              href: competitionHref(read.id, each.id),
               changedAt: each.changedAt.toISOString(),
             })),
             players: read.players.map((each) => ({

@@ -260,6 +260,18 @@ Feature: An app reads a tournament, its competitions and its players
       Then the API answers 304
       And the API says nothing more
 
+    Scenario: The same question is answered not modified once its date is sent
+      Given the tournament "Spring Open" is read with that key
+      When the tournament "Spring Open" is read again with that key and the date it gave
+      Then the API answers 304
+
+    Scenario: Archiving a competition is a change of the tournament
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the server's clock reads "2026-10-05T10:00:00Z"
+      And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
+      When the tournament "Spring Open" is read with that key
+      Then the tournament read says it last changed at "2026-10-05T10:00:00.000Z"
+
     Scenario: A change is answered in full
       Given the tournament "Spring Open" is read with that key
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

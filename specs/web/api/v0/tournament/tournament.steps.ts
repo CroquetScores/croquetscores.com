@@ -75,6 +75,18 @@ When(
   },
 );
 
+When(
+  "the tournament {string} is read again with that key and the date it gave",
+  async function (this: WebWorld, name: string) {
+    const date = answered(this).headers.get("last-modified");
+    assert.ok(date !== null, "The API gave no date.");
+    await read(this, hrefOfTournament(this, name), {
+      ...bearer(keyMade(this)),
+      "if-modified-since": date,
+    });
+  },
+);
+
 // A key made for one tournament, as its owner makes one: by the year, the
 // sport and the name of the tournament it is for.
 Given(
