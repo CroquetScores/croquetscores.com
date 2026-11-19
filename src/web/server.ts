@@ -68,6 +68,7 @@ import { ChangeApiKeyLimitsHandler } from "../application/operations/accounts/Ch
 import { ChangeApiKeyLimitsValidator } from "../application/operations/accounts/ChangeApiKeyLimitsValidator.js";
 import { CreateApiKeyHandler } from "../application/operations/accounts/CreateApiKeyHandler.js";
 import { CreateApiKeyValidator } from "../application/operations/accounts/CreateApiKeyValidator.js";
+import { WhatAKeyMayDoInTournamentHandler } from "../application/operations/tournaments/WhatAKeyMayDoInTournamentHandler.js";
 import { IdentifyApiKeyHandler } from "../application/operations/accounts/IdentifyApiKeyHandler.js";
 import { RevokeApiKeyHandler } from "../application/operations/accounts/RevokeApiKeyHandler.js";
 import { RevokeApiKeyValidator } from "../application/operations/accounts/RevokeApiKeyValidator.js";
@@ -398,6 +399,7 @@ import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
 import { registerForgotPasswordPage } from "./public/forgotPassword.js";
 import { registerForgetAccountPage } from "./public/forgetAccount.js";
+import { apiV0 } from "./api/v0/index.js";
 import { registerApiKeysPage } from "./public/apiKeys.js";
 import { registerChangeNamePage } from "./public/changeName.js";
 import { registerChangePasswordPage } from "./public/changePassword.js";
@@ -1223,9 +1225,12 @@ export const buildApplication = async (
   mediator.handleQuery(
     new ApiKeysOfEveryAccountHandler(accounts, accountsByApiKey),
   );
-  mediator.handleQuery(
-    new IdentifyApiKeyHandler(accounts, accountsByApiKey, apiKeys),
+  const identifyingKeys = new IdentifyApiKeyHandler(
+    accounts,
+    accountsByApiKey,
+    apiKeys,
   );
+  mediator.handleQuery(identifyingKeys);
   mediator.handleQuery(new AccountProfileHandler(accounts));
   mediator.handleQuery(
     new WhenEmergencyAccessMayBeAskedAgainHandler(emailsWritten),
@@ -1488,6 +1493,9 @@ export const buildApplication = async (
   mediator.handleQuery(new TeamsOfTournamentHandler(...both));
   mediator.handleQuery(new PlayersOfTeamHandler(...both, games));
   mediator.handleQuery(new PlayersOfTestHandler(...both));
+  mediator.handleQuery(
+    new WhatAKeyMayDoInTournamentHandler(tournaments, identifyingKeys),
+  );
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
   mediator.handleQuery(
     new PlayersOfTournamentHandler(...both, competitions, games),
@@ -1966,6 +1974,7 @@ export const buildApplication = async (
     done(null, payload);
   });
   await registerQuestionLimit(server);
+  await server.register(apiV0, { prefix: "/api/v0" });
   await server.register(apiSite, {
     prefix: "/api/site",
     assets,
