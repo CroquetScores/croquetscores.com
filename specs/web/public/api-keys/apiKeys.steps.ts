@@ -512,3 +512,205 @@ Then(
     );
   },
 );
+
+// What a key is limited to is asked in the dialog, on a page of its own or laid
+// over the list, whichever there is.
+const asked = (name: string): string => `${dialog} #field-${name}`;
+
+Then(
+  "the dialog offers no choice of tournament",
+  async function (this: WebWorld) {
+    assert.equal(
+      await this.browserPage.locator(`${dialog} input[name="limit"]`).count(),
+      0,
+    );
+  },
+);
+
+const choices = async (world: WebWorld): Promise<string[]> =>
+  (
+    await world.browserPage
+      .locator(`${dialog} .field-radios label`)
+      .allTextContents()
+  ).map((each) => unmarked(each).trim());
+
+Then(
+  "the dialog offers the choice {string}",
+  async function (this: WebWorld, choice: string) {
+    assert.ok((await choices(this)).includes(choice));
+  },
+);
+
+When(
+  "the choice {string} is made",
+  async function (this: WebWorld, choice: string) {
+    await this.browserPage
+      .locator(`${dialog} .field-radios label`, { hasText: choice })
+      .click();
+  },
+);
+
+Then(
+  "the choice {string} is the one made",
+  async function (this: WebWorld, choice: string) {
+    const made = await this.browserPage
+      .locator(`${dialog} .field-radios input:checked + label`)
+      .textContent();
+    assert.equal(unmarked(made ?? "").trim(), choice);
+  },
+);
+
+Then(
+  "the field {string} is shown",
+  async function (this: WebWorld, name: string) {
+    assert.equal(await this.browserPage.locator(asked(name)).isVisible(), true);
+  },
+);
+
+Then(
+  "the field {string} is not shown",
+  async function (this: WebWorld, name: string) {
+    assert.equal(
+      await this.browserPage.locator(asked(name)).isVisible(),
+      false,
+    );
+  },
+);
+
+const optionsOf = async (world: WebWorld, list: string): Promise<string[]> =>
+  (await world.browserPage.locator(`${list} option`).allTextContents()).map(
+    (each) => unmarked(each).trim(),
+  );
+
+Then(
+  "the year {string} is offered",
+  async function (this: WebWorld, year: string) {
+    assert.ok((await optionsOf(this, asked("year"))).includes(year));
+  },
+);
+
+Then(
+  "the sport {string} is offered",
+  async function (this: WebWorld, sport: string) {
+    assert.ok((await optionsOf(this, asked("sport"))).includes(sport));
+  },
+);
+
+When(
+  "the key is limited to the year {string}",
+  async function (this: WebWorld, year: string) {
+    await this.browserPage.selectOption(asked("year"), { label: year });
+  },
+);
+
+When(
+  "the key is limited to the sport {string}",
+  async function (this: WebWorld, sport: string) {
+    await this.browserPage.selectOption(asked("sport"), { label: sport });
+  },
+);
+
+When(
+  "{string} is typed as the tournament name",
+  async function (this: WebWorld, name: string) {
+    await this.browserPage.fill(asked("tournamentName"), name);
+  },
+);
+
+// Words the browser offers to finish the name with, as options of its list.
+// Asked for of the site as they are wanted, so they are waited for, for up to
+// three seconds, and a step that says one is not offered is said after one that
+// says another is, which shows the answer has come.
+const suggested = async (world: WebWorld): Promise<string[]> =>
+  world.browserPage
+    .locator(`${dialog} datalist option`)
+    .evaluateAll((each) =>
+      each.map((option) => (option as { value: string }).value),
+    );
+
+Then(
+  "the tournament name {string} is suggested",
+  async function (this: WebWorld, name: string) {
+    const until = Date.now() + 3000;
+    for (;;) {
+      const now = await suggested(this);
+      if (now.includes(name)) return;
+      assert.ok(
+        Date.now() < until,
+        `The names suggested are ${JSON.stringify(now)}.`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  },
+);
+
+Then(
+  "the tournament name {string} is not suggested",
+  async function (this: WebWorld, name: string) {
+    // Waited for as a name is, since what was typed is asked of the site a
+    // moment after it is typed, and the list is the answer to what was asked
+    // before until then.
+    const until = Date.now() + 3000;
+    for (;;) {
+      const now = await suggested(this);
+      if (!now.includes(name)) return;
+      assert.ok(
+        Date.now() < until,
+        `The names suggested are ${JSON.stringify(now)}.`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  },
+);
+
+// What the dialog over the list says of a name there is no tournament of.
+Then(
+  "the tournament name is refused in the dialog over the list",
+  async function (this: WebWorld) {
+    const message = await this.browserPage
+      .locator("#api-key-dialog #field-tournamentName-message")
+      .textContent();
+    assert.equal(
+      unmarked(message ?? "").trim(),
+      words("ApiKeyTournament.NotFound"),
+    );
+  },
+);
+
+Then(
+  "the {word} key on the page is limited to {string}",
+  async function (this: WebWorld, place: string, said: string) {
+    assert.equal(await saidOf(this, place, ".api-key-limit"), said);
+  },
+);
+
+Then(
+  "the {word} key on the page is not limited to a tournament",
+  async function (this: WebWorld, place: string) {
+    assert.equal(
+      await keyOnPage(this, place).locator(".api-key-limit").count(),
+      0,
+    );
+  },
+);
+
+const chosenIn = async (world: WebWorld, name: string): Promise<string> =>
+  unmarked(
+    (await world.browserPage
+      .locator(`${asked(name)} option:checked`)
+      .textContent()) ?? "",
+  ).trim();
+
+Then(
+  "the year {string} is the one chosen",
+  async function (this: WebWorld, year: string) {
+    assert.equal(await chosenIn(this, "year"), year);
+  },
+);
+
+Then(
+  "the sport {string} is the one chosen",
+  async function (this: WebWorld, sport: string) {
+    assert.equal(await chosenIn(this, "sport"), sport);
+  },
+);

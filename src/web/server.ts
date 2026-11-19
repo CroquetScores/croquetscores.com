@@ -152,6 +152,7 @@ import { UpdateTournamentHandler } from "../application/operations/tournaments/U
 import { DeleteTournamentHandler } from "../application/operations/tournaments/DeleteTournamentHandler.js";
 import { RemoveNotableStatusHandler } from "../application/operations/tournaments/RemoveNotableStatusHandler.js";
 import { UpdateTournamentValidator } from "../application/operations/tournaments/UpdateTournamentValidator.js";
+import { TournamentsNamedHandler } from "../application/operations/tournaments/TournamentsNamedHandler.js";
 import { TournamentsOfAccountHandler } from "../application/operations/tournaments/TournamentsOfAccountHandler.js";
 import { CompetitionPageHandler } from "../application/operations/tournaments/CompetitionPageHandler.js";
 import { TeamPageHandler } from "../application/operations/tournaments/TeamPageHandler.js";
@@ -1508,6 +1509,7 @@ export const buildApplication = async (
   mediator.handleQuery(
     new TournamentsOfAccountHandler(tournamentsByAccount, accounts),
   );
+  mediator.handleQuery(new TournamentsNamedHandler(tournaments));
   mediator.handleQuery(
     new TournamentToChangeHandler(tournaments, tournamentsByAddress, accounts),
   );

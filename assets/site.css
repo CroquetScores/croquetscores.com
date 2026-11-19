@@ -1773,6 +1773,58 @@ main {
   flex: none;
 }
 
+/* A field that is for one answer of another only, such as the year of the
+   tournament a key is limited to, which means nothing until one tournament is
+   chosen. Hidden with no scripting, by asking the form whether that answer is
+   ticked. A browser that cannot ask shows it always, which does no harm: it is
+   sent and left alone. */
+.dialog-form:not(:has(input[name="limit"][value="one"]:checked))
+  [data-only-when="limit=one"] {
+  display: none;
+}
+
+/* Choices of which only one can be made, each as a box to tick is, under a
+   name that is the group's. */
+.field-radios {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field-radios legend {
+  padding: 0;
+  font-weight: 600;
+}
+
+/* A list chosen from: its label is always lifted, as that of a field holding
+   something is, since a list is never empty to look at. */
+.field-box-select {
+  cursor: pointer;
+}
+
+.field-box-select select {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.field-box-select select:focus-visible {
+  outline: none;
+}
+
+.field-box-select .field-label {
+  top: -3px;
+  margin-inline-start: calc(-1 * var(--space-1));
+  padding-inline: var(--space-1);
+  background: var(--panel);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+}
+
 /* The box draws the ring, so the input does not draw a second one inside it. */
 .field-box input:focus-visible {
   outline: none;

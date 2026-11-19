@@ -261,6 +261,16 @@ export const german: Language = {
     "ApiKeyLabel.Missing": "Geben Sie eine Bezeichnung für den Schlüssel ein.",
     "ApiKeyLabel.TooLong":
       "Eine Bezeichnung darf höchstens 60 Zeichen lang sein.",
+    "apiKeys.new.limit": "Turniere",
+    "apiKeys.new.limitAll": "Alle Turniere",
+    "apiKeys.new.limitOne": "Auf ein Turnier beschränken",
+    "apiKeys.new.year": "Jahr",
+    "apiKeys.new.sport": "Sportart",
+    "apiKeys.new.tournamentName": "Turniername",
+    "ApiKeyTournament.NotFound":
+      "Für dieses Jahr und diese Sportart gibt es kein Turnier mit diesem Namen.",
+    "apiKeys.limitedTo": "Nur {name}",
+    "apiKeys.limitedToOne": "Nur ein Turnier",
     "changeName.title": "Namen ändern",
     "changeName.name": "Name",
     "changeName.submit": "Namen ändern",

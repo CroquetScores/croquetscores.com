@@ -258,6 +258,16 @@ export const spanish: Language = {
     "ApiKeyLabel.Missing": "Introduce una etiqueta para la clave.",
     "ApiKeyLabel.TooLong":
       "Una etiqueta puede tener como máximo 60 caracteres.",
+    "apiKeys.new.limit": "Torneos",
+    "apiKeys.new.limitAll": "Todos los torneos",
+    "apiKeys.new.limitOne": "Limitar a un torneo",
+    "apiKeys.new.year": "Año",
+    "apiKeys.new.sport": "Deporte",
+    "apiKeys.new.tournamentName": "Nombre del torneo",
+    "ApiKeyTournament.NotFound":
+      "No hay ningún torneo con ese nombre para ese año y deporte.",
+    "apiKeys.limitedTo": "Solo {name}",
+    "apiKeys.limitedToOne": "Solo un torneo",
     "changeName.title": "Cambiar nombre",
     "changeName.name": "Nombre",
     "changeName.submit": "Cambiar nombre",

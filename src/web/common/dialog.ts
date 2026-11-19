@@ -29,6 +29,15 @@ interface FieldCommon {
   readonly invalid?: boolean | undefined;
   /** Whether the reader is taken here when the page arrives. */
   readonly autofocus?: boolean | undefined;
+  /**
+   * That the field is for one answer of another field only, such as the
+   * tournament's year, which means nothing unless the reader chose to limit a
+   * key to one tournament. It is hidden by the stylesheet until that answer is
+   * the one chosen, with no scripting, and is sent all the same, so whatever
+   * takes the form must leave it alone where the answer is another.
+   */
+  readonly onlyWhen?:
+    { readonly field: string; readonly value: string } | undefined;
 }
 
 /**
@@ -46,10 +55,29 @@ export type Field =
       readonly type: "email" | "text";
       /** What is already in the field, such as what was typed before the form was refused. */
       readonly value?: string | undefined;
+      /**
+       * Words the browser offers to finish what is typed with, as it offers
+       * what it remembers. They are only offered: anything else may be typed.
+       */
+      readonly suggestions?: readonly string[] | undefined;
     })
   | (FieldCommon & {
       readonly type: "password";
       readonly value?: never;
+    })
+  | (FieldCommon & {
+      readonly type: "radio";
+      /** What can be chosen, one of which is chosen. */
+      readonly options: readonly SelectOption[];
+      /** The value of the option chosen, as it was when the form was refused. */
+      readonly value?: string | undefined;
+    })
+  | (FieldCommon & {
+      readonly type: "select";
+      /** What can be chosen, the first being what stands where nothing was said. */
+      readonly options: readonly SelectOption[];
+      /** The value of the option chosen, as it was when the form was refused. */
+      readonly value?: string | undefined;
     })
   | (FieldCommon & {
       readonly type: "checkbox";
@@ -61,6 +89,12 @@ export type Field =
        */
       readonly link?: Link | undefined;
     });
+
+/** One thing a list offers: what is sent, and the words it is shown as. */
+export interface SelectOption {
+  readonly value: string;
+  readonly label: string;
+}
 
 /** Words of a label that lead somewhere, found in the label as written. */
 export interface Link {
@@ -200,6 +234,15 @@ const box = (
                 </div>${beneath}
               </div>`;
 
+// What every kind of field is wrapped in: the class that says it is a field,
+// and where it is for one answer only, the attribute the stylesheet hides it by.
+const wrapper = (given: Field): string =>
+  `<div class="field"${
+    given.onlyWhen === undefined
+      ? ""
+      : ` data-only-when="${escape(given.onlyWhen.field)}=${escape(given.onlyWhen.value)}"`
+  }>`;
+
 const field = (given: Field): string => {
   const {
     name,
@@ -240,11 +283,59 @@ const field = (given: Field): string => {
     return box(given, id, `${described}${wrong}${focused}`, beneath);
   }
 
-  return `              <div class="field">
-                <label class="field-box" for="${id}">
-                  <input id="${id}" name="${escape(name)}" type="${type}" autocomplete="${escape(autocomplete)}" placeholder=" "${kept}${described}${wrong}${focused} />
+  // A list is never empty to look at, so its label is always on the border, as
+  // a field's is once it holds something; the stylesheet lifts it for the
+  // class, where an input would be asked whether its placeholder is shown.
+  // Choices side by side with their words, as a box to tick is: a group named
+  // by its legend, which is what a screen reader announces with each.
+  if (given.type === "radio") {
+    const choices = given.options
+      .map((option, place) => {
+        const choice = `${id}-${String(place + 1)}`;
+        return `                  <div class="field-tick-row">
+                    <input id="${choice}" name="${escape(name)}" type="radio" value="${escape(option.value)}"${option.value === given.value ? " checked" : ""} />
+                    <label class="field-tick-label" for="${choice}">${escape(option.label)}</label>
+                  </div>`;
+      })
+      .join("\n");
+    return `              ${wrapper(given)}
+                <fieldset class="field-radios"${described}>
+                  <legend>${escape(label)}</legend>
+${choices}
+                </fieldset>${beneath}
+              </div>`;
+  }
+
+  if (given.type === "select") {
+    const options = given.options
+      .map(
+        (option) =>
+          `<option value="${escape(option.value)}"${option.value === given.value ? " selected" : ""}>${escape(option.label)}</option>`,
+      )
+      .join("");
+    return `              ${wrapper(given)}
+                <label class="field-box field-box-select" for="${id}">
+                  <select id="${id}" name="${escape(name)}"${described}${wrong}${focused}>${options}</select>
                   <span class="field-label">${escape(label)}</span>
                 </label>${beneath}
+              </div>`;
+  }
+
+  // A password is never offered words to finish it with.
+  const offered = given.type === "password" ? undefined : given.suggestions;
+  const listed = offered === undefined ? "" : ` list="${id}-suggestions"`;
+  const suggestions =
+    offered === undefined
+      ? ""
+      : `
+                <datalist id="${id}-suggestions">${offered
+                  .map((each) => `<option value="${escape(each)}"></option>`)
+                  .join("")}</datalist>`;
+  return `              ${wrapper(given)}
+                <label class="field-box" for="${id}">
+                  <input id="${id}" name="${escape(name)}" type="${type}" autocomplete="${escape(autocomplete)}" placeholder=" "${kept}${listed}${described}${wrong}${focused} />
+                  <span class="field-label">${escape(label)}</span>
+                </label>${suggestions}${beneath}
               </div>`;
 };
 

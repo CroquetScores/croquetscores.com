@@ -195,6 +195,10 @@ const words: Readonly<Record<string, string>> = {
   "changeEmailAddress.title": "Change email address",
   "admin.apiKeys.none": "No keys work.",
   "apiKeys.add": "Add Key",
+  "apiKeys.new.limitAll": "All tournaments",
+  "apiKeys.new.limitOne": "Limit to one tournament",
+  "ApiKeyTournament.NotFound":
+    "There is no tournament of that name for that year and sport.",
   "apiKeys.copied": "Copied",
   "apiKeys.copy": "Copy",
   "apiKeys.mayRead": "May read",

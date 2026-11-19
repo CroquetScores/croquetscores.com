@@ -245,6 +245,14 @@ export const english: Language = {
     "apiKeys.new.title": "Make a key",
     "apiKeys.new.label": "Label",
     "apiKeys.new.write": "The app may also write",
+    "apiKeys.new.limit": "Tournaments",
+    "apiKeys.new.limitAll": "All tournaments",
+    "apiKeys.new.limitOne": "Limit to one tournament",
+    "apiKeys.new.year": "Year",
+    "apiKeys.new.sport": "Sport",
+    "apiKeys.new.tournamentName": "Tournament name",
+    "apiKeys.limitedTo": "Only {name}",
+    "apiKeys.limitedToOne": "Only one tournament",
     "apiKeys.new.submit": "Make key",
     "changeName.title": "Change name",
     "changeName.name": "Name",
@@ -316,6 +324,8 @@ export const english: Language = {
     // the same way. Said to whoever typed it, beneath the field it reads.
     "ApiKeyLabel.Missing": "Enter a label for the key.",
     "ApiKeyLabel.TooLong": "A label can be at most 60 characters.",
+    "ApiKeyTournament.NotFound":
+      "There is no tournament of that name for that year and sport.",
     "PersonName.Missing": "Enter a name.",
     "PersonName.TooShort": "A name has to be at least 3 characters.",
     "PersonName.TooLong": "A name can be at most 254 characters.",
