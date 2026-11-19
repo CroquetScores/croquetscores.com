@@ -232,6 +232,16 @@ fieldIs("sport", "its sport is");
 fieldIs("changedAt", "it last changed at");
 
 Then(
+  "the tournament {string} says where the API tells of it",
+  function (this: WebWorld, name: string) {
+    assert.equal(
+      namedInList(this, name)["href"],
+      `/api/v0/tournaments/${tournamentIdOf(this, name).replace(/^tournament\//, "")}`,
+    );
+  },
+);
+
+Then(
   "the tournament {string} says where it is found",
   function (this: WebWorld, name: string) {
     const kept = this.tournaments.get(name);

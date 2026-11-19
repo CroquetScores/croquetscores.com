@@ -109,12 +109,16 @@ const sendJson = (reply: FastifyReply, body: unknown): FastifyReply =>
 const sendFailure = (
   request: FastifyRequest,
   reply: FastifyReply,
-  said: { readonly code: string; readonly message: string },
+  said: {
+    readonly code: string;
+    readonly message: string;
+    readonly field?: string | undefined;
+  },
   site: unknown,
 ): FastifyReply =>
   sendJson(
     reply,
-    publicApi(request) ? apiError(said.code, said.message) : site,
+    publicApi(request) ? apiError(said.code, said.message, said.field) : site,
   );
 
 // How long a program is told to wait before asking again. A guess at how
@@ -203,7 +207,11 @@ export const registerErrorMapping = (
         return sendFailure(
           request,
           reply.code(422),
-          { code: error.code, message: "The request broke a rule." },
+          {
+            code: error.broken[0]?.code ?? error.code,
+            message: "The request broke a rule.",
+            field: error.broken[0]?.fields[0],
+          },
           { error: error.code, broken: error.broken },
         );
       }

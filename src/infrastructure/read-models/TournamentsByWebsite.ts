@@ -196,13 +196,34 @@ export class TournamentsByWebsite implements Projection, Asked {
            ) changed
           where t.website = $1 and not t.archived
             and t.starts between $2 and $3 ${narrowed.where}
-          order by t.starts, t.name`,
+          order by t.starts, t.name, t.tournament_id`,
         [website.host, first, last, ...narrowed.values],
       );
     return rows.map((row) => ({
       ...listed(row),
       changedAt: ReadOnlyDate.from(row.changed_at),
     }));
+  }
+
+  async changedAtOfStreams(
+    streams: readonly string[],
+  ): Promise<ReadonlyMap<string, ReadOnlyDate>> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ stream_id: string; at: Date }>(
+        `select s.stream_id, newest.at
+           from unnest($1::text[]) as s(stream_id)
+           cross join lateral (
+             select (e.data ->> 'occurredAt')::timestamptz as at
+               from events e
+              where e.stream_id = s.stream_id
+              order by e.version desc
+              limit 1) newest`,
+        [streams],
+      );
+    return new Map(
+      rows.map((row) => [row.stream_id, ReadOnlyDate.from(row.at)]),
+    );
   }
 
   async withSports(): Promise<readonly TournamentOfWebsite[]> {

@@ -77,6 +77,14 @@ export interface TournamentsByWebsite {
   ): Promise<readonly TournamentOfWebsite[]>;
 
   /**
+   * When the newest event of each of the streams `streams` happened, for those
+   * that have any.
+   */
+  changedAtOfStreams(
+    streams: readonly string[],
+  ): Promise<ReadonlyMap<string, ReadOnlyDate>>;
+
+  /**
    * As `startingBetween`, each with when anything was last kept of it or of
    * any of its competitions.
    */
