@@ -1,6 +1,6 @@
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
-import type { GameOfKnockout } from "./PublicKnockoutOfTournament.js";
+import type { GameOfCompetition } from "./PublicKnockoutOfTournament.js";
 import type { PublicPlayer } from "./PublicPlayersOfTournament.js";
 import type {
   CompetitionOfTournament,
@@ -57,7 +57,7 @@ export interface PlayerOfSwiss extends PublicPlayer {
 }
 
 /** One of a Swiss's games, as its order of play shows it. */
-export type GameOfSwiss = GameOfKnockout & {
+export type GameOfSwiss = GameOfCompetition & {
   /**
    * Whether it was played but counts for nothing, being withdrawn itself
    * (`withdrawGame.feature`) or a withdrawn player's

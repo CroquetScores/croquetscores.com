@@ -346,6 +346,16 @@ Feature: A knockout of a tournament, for anybody to read
       When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
       Then the first game of the knockout answered was added at "2026-10-03T10:00:00Z"
 
+    Scenario: A game is answered with the round it was played in
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Finals" of "Spring Open"
+      And "Pat Fourth" has beaten "Chris Third" 26 to 17 in "Finals" of "Spring Open"
+      And "Pat Fourth" has beaten "Chris Third" 26 to 3 in "Finals" of "Spring Open"
+      And "Sam Someone" has beaten "Pat Fourth" 26 to 1 in "Finals" of "Spring Open"
+      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the knockout answered was played in round 1
+      And the last game of the knockout answered was played in round 2
+
     Scenario: An archived game of the knockout is not answered
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Finals" of "Spring Open"

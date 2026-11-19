@@ -10,7 +10,7 @@ import { websiteOf } from "../../common/site.js";
 import { refuseKey } from "./apiKey.js";
 import { sendConditionally } from "./conditional.js";
 import { refusal } from "./errors.js";
-import { competitionHref, tournamentHref } from "./hrefs.js";
+import { competitionHref, tournamentHref, uriOf } from "./hrefs.js";
 import { callerOf } from "./rateLimit.js";
 
 export const tournamentOfApps: FastifyPluginAsync = (server) => {
@@ -49,7 +49,7 @@ export const tournamentOfApps: FastifyPluginAsync = (server) => {
             country: read.country,
             region: read.region ?? null,
             sport: read.sport,
-            address: read.address,
+            uri: uriOf(read.address),
             href: tournamentHref(read.id),
             national: read.national,
             international: read.international,
@@ -58,7 +58,7 @@ export const tournamentOfApps: FastifyPluginAsync = (server) => {
               id: each.id,
               name: each.name,
               kind: each.kind,
-              address: each.address,
+              uri: uriOf(each.address),
               href: competitionHref(read.id, each.id),
               changedAt: each.changedAt.toISOString(),
             })),

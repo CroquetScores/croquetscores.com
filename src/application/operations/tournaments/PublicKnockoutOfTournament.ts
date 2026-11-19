@@ -54,8 +54,8 @@ export interface RoundOfKnockout {
   readonly matches: readonly MatchOfKnockout[];
 }
 
-/** One of a knockout's games, as its order of play shows it. */
-export interface GameOfKnockout {
+/** One of a competition's games with its players named, as a page of it shows it. */
+export interface GameOfCompetition {
   /** What the game is kept by, which never changes. */
   readonly id: string;
   readonly winner: PlayerInGame;
@@ -67,6 +67,15 @@ export interface GameOfKnockout {
   readonly drawn: boolean;
   /** When it was added, or nothing where that was never kept. */
   readonly addedAt: ReadOnlyDate | undefined;
+}
+
+/** One of a knockout's games, as its order of play shows it. */
+export interface GameOfKnockout extends GameOfCompetition {
+  /**
+   * The round it was played in, the first being 1, or nothing where the game
+   * is in no match of the draw.
+   */
+  readonly round: number | undefined;
 }
 
 /** A knockout as its pages show it, and the tournament it is a section of. */

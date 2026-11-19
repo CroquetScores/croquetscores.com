@@ -246,7 +246,7 @@ Then(
   function (this: WebWorld, name: string) {
     const kept = this.tournaments.get(name);
     assert.ok(kept !== undefined, `No tournament called ${name} was made.`);
-    assert.equal(namedInList(this, name)["address"], kept.address);
+    assert.equal(namedInList(this, name)["uri"], `/${kept.address}`);
   },
 );
 

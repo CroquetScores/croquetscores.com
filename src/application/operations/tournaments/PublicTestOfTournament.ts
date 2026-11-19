@@ -1,7 +1,7 @@
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
 import type {
-  GameOfKnockout,
+  GameOfCompetition,
   WhichSide,
 } from "./PublicKnockoutOfTournament.js";
 import type {
@@ -51,7 +51,7 @@ export interface TeamOfTest {
 }
 
 /** One of a test's games, as its order of play shows it. */
-export type GameOfTest = GameOfKnockout;
+export type GameOfTest = GameOfCompetition;
 
 /** A test as its pages show it, and the tournament it is a section of. */
 export interface TestToRead {

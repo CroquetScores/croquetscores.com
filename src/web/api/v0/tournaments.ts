@@ -14,7 +14,7 @@ import { Sport } from "../../../domain/aggregates/tournaments/value-objects/Spor
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { websiteOf } from "../../common/site.js";
 import { sendConditionally } from "./conditional.js";
-import { tournamentHref } from "./hrefs.js";
+import { tournamentHref, uriOf } from "./hrefs.js";
 import { refusal } from "./errors.js";
 import { refuseKey } from "./apiKey.js";
 import { callerOf } from "./rateLimit.js";
@@ -117,7 +117,7 @@ const said = (page: TournamentsForAppsPage): Record<string, unknown> => ({
     country: each.country,
     region: each.region ?? null,
     sport: each.sport,
-    address: each.address,
+    uri: uriOf(each.address),
     href: tournamentHref(each.id),
     national: each.national,
     international: each.international,

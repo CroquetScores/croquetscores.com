@@ -163,6 +163,9 @@ import { RecentResultsHandler } from "../application/operations/tournaments/Rece
 import { UpcomingTournamentsHandler } from "../application/operations/tournaments/UpcomingTournamentsHandler.js";
 import { TournamentYearsHandler } from "../application/operations/tournaments/TournamentYearsHandler.js";
 import { TournamentsInDaysHandler } from "../application/operations/tournaments/TournamentsInDaysHandler.js";
+import { CompetitionOfTournamentForAppsHandler } from "../application/operations/tournaments/CompetitionOfTournamentForAppsHandler.js";
+import { GamesForAppsHandler } from "../application/operations/tournaments/GamesForAppsHandler.js";
+import { StandingsForAppsHandler } from "../application/operations/tournaments/StandingsForAppsHandler.js";
 import { TournamentForAppsHandler } from "../application/operations/tournaments/TournamentForAppsHandler.js";
 import { TournamentsForAppsHandler } from "../application/operations/tournaments/TournamentsForAppsHandler.js";
 import { TournamentsInYearHandler } from "../application/operations/tournaments/TournamentsInYearHandler.js";
@@ -1581,15 +1584,14 @@ export const buildApplication = async (
       commentariesByTournament,
     ),
   );
-  mediator.handleQuery(
-    new PublicBlockOfTournamentHandler(
-      tournaments,
-      competitions,
-      tournamentsByAddress,
-      managerNotesByTournament,
-      commentariesByTournament,
-    ),
+  const publicBlocks = new PublicBlockOfTournamentHandler(
+    tournaments,
+    competitions,
+    tournamentsByAddress,
+    managerNotesByTournament,
+    commentariesByTournament,
   );
+  mediator.handleQuery(publicBlocks);
   mediator.handleQuery(
     new PublicRankingsOfTournamentHandler(
       tournaments,
@@ -1597,24 +1599,22 @@ export const buildApplication = async (
       tournamentsByAddress,
     ),
   );
-  mediator.handleQuery(
-    new PublicKnockoutOfTournamentHandler(
-      tournaments,
-      competitions,
-      tournamentsByAddress,
-      managerNotesByTournament,
-      commentariesByTournament,
-    ),
+  const publicKnockouts = new PublicKnockoutOfTournamentHandler(
+    tournaments,
+    competitions,
+    tournamentsByAddress,
+    managerNotesByTournament,
+    commentariesByTournament,
   );
-  mediator.handleQuery(
-    new PublicSwissOfTournamentHandler(
-      tournaments,
-      competitions,
-      tournamentsByAddress,
-      managerNotesByTournament,
-      commentariesByTournament,
-    ),
+  mediator.handleQuery(publicKnockouts);
+  const publicSwisses = new PublicSwissOfTournamentHandler(
+    tournaments,
+    competitions,
+    tournamentsByAddress,
+    managerNotesByTournament,
+    commentariesByTournament,
   );
+  mediator.handleQuery(publicSwisses);
   mediator.handleQuery(
     new PublicTeamSummaryOfTournamentHandler(
       tournaments,
@@ -1633,13 +1633,36 @@ export const buildApplication = async (
       commentariesByTournament,
     ),
   );
+  const publicTests = new PublicTestOfTournamentHandler(
+    tournaments,
+    competitions,
+    tournamentsByAddress,
+    managerNotesByTournament,
+    commentariesByTournament,
+  );
+  mediator.handleQuery(publicTests);
   mediator.handleQuery(
-    new PublicTestOfTournamentHandler(
+    new CompetitionOfTournamentForAppsHandler(
       tournaments,
-      competitions,
-      tournamentsByAddress,
-      managerNotesByTournament,
-      commentariesByTournament,
+      tournamentsByWebsite,
+    ),
+  );
+  mediator.handleQuery(
+    new StandingsForAppsHandler(
+      tournaments,
+      tournamentsByWebsite,
+      publicBlocks,
+      publicSwisses,
+    ),
+  );
+  mediator.handleQuery(
+    new GamesForAppsHandler(
+      tournaments,
+      tournamentsByWebsite,
+      publicBlocks,
+      publicSwisses,
+      publicKnockouts,
+      publicTests,
     ),
   );
   mediator.handleQuery(
