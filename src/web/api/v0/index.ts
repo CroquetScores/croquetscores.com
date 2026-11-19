@@ -28,16 +28,19 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
   findingCallers(server);
 
   // Each allowance is a scope inside the one before, so that a request is
-  // counted against the day's and then the minute's, whatever it asks for. Every route of the API is registered inside the minute's.
-  await server.register(async (day) => {
-    await counting(day, "day", requestsADayWithNoKey);
-    await day.register(async (minute) => {
-      await counting(minute, "minute", requestsADayWithNoKey);
+  // counted against the minute's and then the day's, whatever it asks for.
+  // The minute's comes first so that a request it refuses is not counted
+  // against the day, which a caller that keeps trying while it waits would
+  // otherwise use up. Every route of the API is registered inside the day's.
+  await server.register(async (minute) => {
+    await counting(minute, "minute", requestsADayWithNoKey);
+    await minute.register(async (day) => {
+      await counting(day, "day", requestsADayWithNoKey);
 
       // What the key sent may do in a tournament, named by the part of its id
       // after "tournament/", so that the id is one segment of an address. Said
       // to the key and nobody else's, so it is neither kept nor shared.
-      minute.get<{ Params: { id: string } }>(
+      day.get<{ Params: { id: string } }>(
         "/tournaments/:id/permissions",
         async (request, reply) => {
           const key = keyOf(request);
@@ -71,7 +74,18 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
         },
       );
 
-      await minute.register(tournamentsOfApps);
+      await day.register(tournamentsOfApps);
+
+      // An address nothing is at is counted as any other request is, so that
+      // asking for what is not there is no way round the allowance.
+      day.all("/*", (_request, reply) =>
+        refusal(
+          reply,
+          404,
+          "Route.NotFound",
+          "There is nothing at that address.",
+        ),
+      );
     });
   });
 };

@@ -108,6 +108,15 @@ Given(
   },
 );
 
+Given(
+  "the API has been asked for an address there is nothing at {int} times",
+  async function (this: WebWorld, times: number) {
+    for (let each = 0; each < times; each++) {
+      await asked(this, "/api/v0/nothing-here", bearer(keyMade(this)));
+    }
+  },
+);
+
 const numberIn = (world: WebWorld, header: string): number => {
   const said = answered(world).headers.get(header);
   assert.ok(said !== null, `The API sent no ${header}.`);

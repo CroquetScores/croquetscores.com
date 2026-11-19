@@ -142,6 +142,15 @@ Feature: The API holds each caller to an allowance
       When the permissions in "Spring Open" are asked with that key
       Then the API says 3 are left
 
+  Rule: An address there is nothing at counts like any other request
+
+    Scenario: Asking for what is not there uses up the allowance
+      Given "reader@example.com" has made a key that may only read
+      And the key of "Rae Reader" is limited to 2 a minute
+      And the API has been asked for an address there is nothing at 2 times
+      When the permissions in "Spring Open" are asked with that key
+      Then the API answers 429
+
   Rule: A request answered not modified counts like any other
 
     Scenario: A request answered not modified is counted

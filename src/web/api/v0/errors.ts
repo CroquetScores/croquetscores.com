@@ -1,22 +1,7 @@
-// The one shape every error of /api/v0 has, wherever it came from: a code apps
-// rely on, the field that was wrong where there is one, and a sentence for
-// whoever reads a log, which apps never rely on (errors.feature).
+// How the routes of /api/v0 answer an error in its one shape (errors.feature).
 import type { FastifyReply } from "fastify";
 
-/** What an error of the API says. */
-export interface ApiError {
-  readonly code: string;
-  readonly message: string;
-  /** The field of the request that was wrong, where one was. */
-  readonly field?: string;
-}
-
-/** The body of an error, in its one shape. */
-export const apiError = (
-  code: string,
-  message: string,
-  field?: string,
-): ApiError => ({ code, message, ...(field === undefined ? {} : { field }) });
+import { apiError } from "../../common/apiError.js";
 
 /**
  * Answers with an error in its shape. Kept by nobody, the caller included: an

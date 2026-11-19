@@ -1,3 +1,4 @@
+import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
@@ -45,10 +46,13 @@ export class TournamentsForAppsHandler extends QueryHandler<
         : all.filter((each) => each.changedAt.toDate().getTime() > since);
     const pageSize = Math.min(query.pageSize, mostInAPage);
     const first = (query.page - 1) * pageSize;
-    let latest = matching[0]?.changedAt;
-    for (const each of matching) {
-      if (each.changedAt.toDate() > latest!.toDate()) latest = each.changedAt;
-    }
+    const latest = matching.reduce<ReadOnlyDate | undefined>(
+      (soFar, { changedAt }) =>
+        soFar === undefined || changedAt.toDate() > soFar.toDate()
+          ? changedAt
+          : soFar,
+      undefined,
+    );
     return {
       tournaments: matching.slice(first, first + pageSize),
       total: matching.length,

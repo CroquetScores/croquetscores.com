@@ -46,6 +46,11 @@ Feature: Every error the API answers has the same shape
       Then the API answers 404
       And the API's code is "Route.NotFound"
 
+    Scenario: The API's own address with nothing after it is answered not found
+      When the API is asked for its own address
+      Then the API answers 404
+      And the API's code is "Route.NotFound"
+
     Scenario: An address there is nothing at says a sentence
       When the API is asked for an address there is nothing at
       Then the API says a sentence

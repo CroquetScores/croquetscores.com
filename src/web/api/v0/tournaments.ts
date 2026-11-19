@@ -91,7 +91,30 @@ const said = (page: TournamentsForAppsPage): Record<string, unknown> => ({
   next: page.next ?? null,
 });
 
-const outOfRange: readonly (readonly [string, string, string, string])[] = [
+const refusedByTheQuery: readonly (readonly [
+  string,
+  string,
+  string,
+  string,
+])[] = [
+  [
+    "TournamentsForApps.YearNotWhole",
+    "Tournaments.YearNotWhole",
+    "year",
+    "The year is a whole number, such as 2026.",
+  ],
+  [
+    "TournamentsForApps.PageNotWhole",
+    "Tournaments.PageNotWhole",
+    "page",
+    "The page is a whole number, from 1.",
+  ],
+  [
+    "TournamentsForApps.PageSizeNotWhole",
+    "Tournaments.PageSizeNotWhole",
+    "pageSize",
+    "The page size is a whole number, up to 100.",
+  ],
   [
     "TournamentsForApps.YearOutOfRange",
     "Tournaments.YearOutOfRange",
@@ -150,7 +173,12 @@ export const tournamentsOfApps: FastifyPluginAsync = (server) => {
     let since: ReadOnlyDate | undefined;
     if (changedSince !== undefined) {
       const moment = Date.parse(changedSince);
-      if (!/^\d{4}-\d{2}-\d{2}T/.test(changedSince) || Number.isNaN(moment)) {
+      // With the zone it is in, since one without is read in the server's own
+      // and would mean something different where the server is run elsewhere.
+      if (
+        !/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/i.test(changedSince) ||
+        Number.isNaN(moment)
+      ) {
         return refusedAsked(
           reply,
           "Tournaments.ChangedSinceNotAMoment",
@@ -190,8 +218,9 @@ export const tournamentsOfApps: FastifyPluginAsync = (server) => {
         ),
       );
     } catch (failure) {
-      // What was asked was whole numbers, but out of the range there is.
-      const refused = outOfRange.find(
+      // What was asked was written as whole numbers but is out of the range
+      // there is, or too large to be one the site can count.
+      const refused = refusedByTheQuery.find(
         ([code]) => failure instanceof ValidationError && failure.code === code,
       );
       if (refused === undefined) throw failure;

@@ -97,6 +97,17 @@ export const counting = async (
     timeWindow: count === "day" ? "1 day" : "1 minute",
     keyGenerator: countedAs,
     cache: 100_000,
+    // The day's count says nothing until it refuses, since the minute's
+    // headers are the ones a caller reads the allowance by.
+    ...(count === "day"
+      ? {
+          addHeadersOnExceeding: {
+            "ratelimit-limit": false,
+            "ratelimit-remaining": false,
+            "ratelimit-reset": false,
+          },
+        }
+      : {}),
     // The headers the issue names, which say what the allowance was, what is
     // left of it and when it is made again, and how long to wait once it is
     // used.

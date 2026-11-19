@@ -157,6 +157,16 @@ Feature: An app lists a year's tournaments
       And the API's code is "Tournaments.PageNotWhole"
       And the API says the field at fault is "page"
 
+    Scenario: A page too large to count is refused
+      When the tournaments of 2026 are asked for page "99999999999999999999" with that key
+      Then the API answers 400
+      And the API's code is "Tournaments.PageNotWhole"
+
+    Scenario: A year too large to count is refused
+      When the tournaments of "99999999999999999999" are asked with that key
+      Then the API answers 400
+      And the API's code is "Tournaments.YearNotWhole"
+
     Scenario: A page size that is not a whole number is refused
       When the tournaments of 2026 are asked with that key and a page size of "many"
       Then the API answers 400
@@ -200,6 +210,11 @@ Feature: An app lists a year's tournaments
       And "organiser@example.com" has created the tournament "Spring Open"
       When the tournaments of 2026 are asked with that key changed since "2026-03-01T10:00:00.000Z"
       Then no tournaments are listed
+
+    Scenario: A moment with no zone is refused
+      When the tournaments of 2026 are asked with that key changed since "2026-03-01T10:00:00"
+      Then the API answers 400
+      And the API's code is "Tournaments.ChangedSinceNotAMoment"
 
     Scenario: A moment that is not one is refused
       When the tournaments of 2026 are asked with that key changed since "yesterday"

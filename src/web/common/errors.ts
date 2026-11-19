@@ -22,7 +22,7 @@ import { ManagerNoteRefused } from "../../domain/aggregates/tournaments/manager-
 import { CompetitionRefused } from "../../domain/aggregates/tournaments/competitions/Competition.js";
 import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
 import { ValidationError } from "../../domain/common/validation/ValidationError.js";
-import { apiError } from "../api/v0/errors.js";
+import { apiError } from "./apiError.js";
 import type { Assets } from "./assets.js";
 import { speakingOf } from "./language.js";
 import { siteNameOf, websiteOf } from "./site.js";
@@ -42,7 +42,7 @@ const wantsJson = (request: FastifyRequest): boolean =>
 // /api/v0), where the website's own interface keeps the one it has. Said in
 // one place so that no failure is shaped by the route that happened to meet it.
 const publicApi = (request: FastifyRequest): boolean =>
-  request.url.startsWith("/api/v0/");
+  /^\/api\/v0(?:[/?]|$)/.test(request.url);
 
 // An error page is still a page of this site, so it wears the same shell and
 // speaks the reader's language. Its words are named by what they are for, and
