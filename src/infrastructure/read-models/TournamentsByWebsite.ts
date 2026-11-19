@@ -205,6 +205,27 @@ export class TournamentsByWebsite implements Projection, Asked {
     }));
   }
 
+  async changedAtOfStreams(
+    streams: readonly string[],
+  ): Promise<ReadonlyMap<string, ReadOnlyDate>> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ stream_id: string; at: Date }>(
+        `select s.stream_id, newest.at
+           from unnest($1::text[]) as s(stream_id)
+           cross join lateral (
+             select (e.data ->> 'occurredAt')::timestamptz as at
+               from events e
+              where e.stream_id = s.stream_id
+              order by e.version desc
+              limit 1) newest`,
+        [streams],
+      );
+    return new Map(
+      rows.map((row) => [row.stream_id, ReadOnlyDate.from(row.at)]),
+    );
+  }
+
   async withSports(): Promise<readonly TournamentOfWebsite[]> {
     const { rows } = await this.unitOfWork.connection().query<Row>(
       `select ${COLUMNS}

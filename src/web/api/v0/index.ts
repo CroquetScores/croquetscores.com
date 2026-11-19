@@ -14,6 +14,7 @@ import {
   findingCallers,
   requestsADayWithNoKeyUsually,
 } from "./rateLimit.js";
+import { tournamentOfApps } from "./tournament.js";
 import { tournamentsOfApps } from "./tournaments.js";
 
 export interface ApiV0Options {
@@ -75,6 +76,7 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
       );
 
       await day.register(tournamentsOfApps);
+      await day.register(tournamentOfApps);
 
       // An address nothing is at is counted as any other request is, so that
       // asking for what is not there is no way round the allowance.

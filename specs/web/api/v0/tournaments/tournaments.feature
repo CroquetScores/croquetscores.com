@@ -73,6 +73,11 @@ Feature: An app lists a year's tournaments
       When the tournaments of 2026 are asked with that key
       Then the tournament "Spring Open" says its sport is "ac"
 
+    Scenario: A tournament says where the API tells of it
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments of 2026 are asked with that key
+      Then the tournament "Spring Open" says where the API tells of it
+
     Scenario: A tournament says where it is found on the site
       Given "organiser@example.com" has created the tournament "Spring Open"
       When the tournaments of 2026 are asked with that key

@@ -2,8 +2,7 @@
 // The first read endpoint, which sets what the others copy: what is asked for
 // in the address, how a page says where the next is, and how an answer says
 // whether it has changed.
-import { createHash } from "node:crypto";
-import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyPluginAsync, FastifyReply } from "fastify";
 
 import {
   mostInAPage,
@@ -14,6 +13,7 @@ import { ValidationError } from "../../../domain/common/validation/ValidationErr
 import { Sport } from "../../../domain/aggregates/tournaments/value-objects/Sport.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { websiteOf } from "../../common/site.js";
+import { sendConditionally } from "./conditional.js";
 import { refusal } from "./errors.js";
 import { refuseKey } from "./apiKey.js";
 import { callerOf } from "./rateLimit.js";
@@ -37,40 +37,6 @@ const refusedAsked = (
   message: string,
 ): FastifyReply => refusal(reply, 400, code, message, field);
 
-// What the answer says, as the answer is, so that two answers are the same
-// where what they say is: a mark made from the words and nothing else about
-// the request.
-const markOf = (said: string): string =>
-  `"${createHash("sha256").update(said).digest("base64url").slice(0, 27)}"`;
-
-// Whether the app already has this answer, by the mark it sent, which is
-// asked before the date: a mark is exact where a date is only to the second.
-const alreadyHas = (
-  request: FastifyRequest,
-  mark: string,
-  changedAt: ReadOnlyDate | undefined,
-): boolean => {
-  const marks = request.headers["if-none-match"];
-  if (typeof marks === "string") {
-    return marks
-      .split(",")
-      .map((each) => each.trim().replace(/^W\//, ""))
-      .some((each) => each === "*" || each === mark);
-  }
-  const date = request.headers["if-modified-since"];
-  if (typeof date === "string" && changedAt !== undefined) {
-    const since = Date.parse(date);
-    // Dates are said to the second, so a change within the second the app
-    // was told is not seen by comparing more finely than it was told.
-    return (
-      Number.isFinite(since) &&
-      Math.floor(changedAt.toDate().getTime() / 1000) <=
-        Math.floor(since / 1000)
-    );
-  }
-  return false;
-};
-
 const said = (page: TournamentsForAppsPage): Record<string, unknown> => ({
   tournaments: page.tournaments.map((each) => ({
     id: each.id,
@@ -81,6 +47,7 @@ const said = (page: TournamentsForAppsPage): Record<string, unknown> => ({
     region: each.region ?? null,
     sport: each.sport,
     address: each.address,
+    href: `/api/v0/tournaments/${each.id.slice(each.id.indexOf("/") + 1)}`,
     national: each.national,
     international: each.international,
     changedAt: each.changedAt.toISOString(),
@@ -228,19 +195,7 @@ export const tournamentsOfApps: FastifyPluginAsync = (server) => {
       return refusedAsked(reply, code, field, message);
     }
 
-    const body = JSON.stringify(said(answer));
-    const mark = markOf(body);
-    // Kept by the app that asked and by nobody between, and not used again
-    // before the app has asked whether it has changed, which is the whole of
-    // what an unchanged answer costs.
-    reply.header("cache-control", "private, no-cache").header("etag", mark);
-    if (answer.changedAt !== undefined) {
-      reply.header("last-modified", answer.changedAt.toDate().toUTCString());
-    }
-    if (alreadyHas(request, mark, answer.changedAt)) {
-      return reply.code(304).send();
-    }
-    return reply.type("application/json; charset=utf-8").send(body);
+    return sendConditionally(request, reply, said(answer), answer.changedAt);
   });
   return Promise.resolve();
 };

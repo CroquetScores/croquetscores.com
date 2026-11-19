@@ -46,6 +46,13 @@ export const sceneOf = (world: WebWorld): Scene => {
   return scene;
 };
 
+/** Keeps the key a page shows its owner, as the owner would copy it. */
+export const rememberKeyShownBy = (world: WebWorld, page: string): void => {
+  const shown = /id="api-key-new">(cs_[^<]+)</.exec(page);
+  assert.ok(shown?.[1] !== undefined, "The page showed no key.");
+  sceneOf(world).key = shown[1];
+};
+
 export const makeKey = async (
   world: WebWorld,
   address: string,
@@ -64,9 +71,7 @@ export const makeKey = async (
     }),
   });
   assert.equal(answer.status, 200, "The site would not make the key.");
-  const shown = /id="api-key-new">(cs_[^<]+)</.exec(await answer.text());
-  assert.ok(shown?.[1] !== undefined, "The page showed no key.");
-  sceneOf(world).key = shown[1];
+  rememberKeyShownBy(world, await answer.text());
 };
 
 export const keyMade = (world: WebWorld): string => {
