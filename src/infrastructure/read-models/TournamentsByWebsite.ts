@@ -1,5 +1,6 @@
 import type { Projection } from "../../application/common/Projection.js";
 import type {
+  TournamentChanged,
   TournamentFingerprint,
   TournamentOfWebsite,
   TournamentPlayed,
@@ -160,6 +161,48 @@ export class TournamentsByWebsite implements Projection, Asked {
       [website.host, first, last, ...narrowed.values],
     );
     return rows.map(listed);
+  }
+
+  // When each last changed is when the newest event of its own stream, or of
+  // any of its competitions' streams, happened: events are only appended, so
+  // the newest is the latest change. It is read from the events and not kept
+  // beside the tournament, so that it is right for every tournament already
+  // kept, without the read model being made again.
+  async startingBetweenWithChange(
+    website: Website,
+    first: string,
+    last: string,
+    filter: TournamentFilter,
+  ): Promise<readonly TournamentChanged[]> {
+    const narrowed = narrowedBy(filter, 4);
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<Row & { changed_at: Date }>(
+        `select ${COLUMNS}, changed.at as changed_at
+           from tournaments t
+           cross join lateral (
+             select max(newest.at) as at
+               from (select t.tournament_id as stream_id
+                      union all
+                     select c.competition_id
+                       from competitions c
+                      where c.tournament_id = t.tournament_id) streams
+               cross join lateral (
+                 select (e.data ->> 'occurredAt')::timestamptz as at
+                   from events e
+                  where e.stream_id = streams.stream_id
+                  order by e.version desc
+                  limit 1) newest
+           ) changed
+          where t.website = $1 and not t.archived
+            and t.starts between $2 and $3 ${narrowed.where}
+          order by t.starts, t.name`,
+        [website.host, first, last, ...narrowed.values],
+      );
+    return rows.map((row) => ({
+      ...listed(row),
+      changedAt: ReadOnlyDate.from(row.changed_at),
+    }));
   }
 
   async withSports(): Promise<readonly TournamentOfWebsite[]> {

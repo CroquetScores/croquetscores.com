@@ -35,6 +35,11 @@ export interface TournamentFingerprint {
   readonly fingerprint: string;
 }
 
+/** A tournament, and when anything was last kept of it or of any of its competitions. */
+export interface TournamentChanged extends TournamentOfWebsite {
+  readonly changedAt: ReadOnlyDate;
+}
+
 /** A tournament played lately, and when the last game in use was added to it. */
 export interface TournamentPlayed extends TournamentOfWebsite {
   readonly lastPlayed: ReadOnlyDate;
@@ -70,6 +75,17 @@ export interface TournamentsByWebsite {
     last: string,
     filter: TournamentFilter,
   ): Promise<readonly TournamentOfWebsite[]>;
+
+  /**
+   * As `startingBetween`, each with when anything was last kept of it or of
+   * any of its competitions.
+   */
+  startingBetweenWithChange(
+    website: Website,
+    first: string,
+    last: string,
+    filter: TournamentFilter,
+  ): Promise<readonly TournamentChanged[]>;
 
   /**
    * Those on every website, each with its sport: the soonest starting first,
