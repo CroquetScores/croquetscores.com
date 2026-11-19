@@ -47,6 +47,7 @@ const theAccounts: readonly MenuItem[] = [
     for: "with a password",
   },
   { href: "/account/change-name", words: "account.changeName" },
+  { href: "/account/api-keys", words: "account.apiKeys" },
 ];
 
 /** Whether `item` is offered to an account that has a password or not. */

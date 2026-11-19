@@ -84,6 +84,7 @@ export const english: Language = {
     "account.changePassword": "Change Password",
     "account.changeEmailAddress": "Change Email Address",
     "account.changeName": "Change Name",
+    "account.apiKeys": "API Keys",
     "account.setPassword": "Set Password",
     "account.forgetAccount": "Forget Account",
 
@@ -222,6 +223,29 @@ export const english: Language = {
     "profile.name": "Name:",
     "profile.emailAddress": "Email address:",
 
+    // The page where a reader makes the keys an app acts for them with.
+    "apiKeys.title": "API keys",
+    "apiKeys.intro":
+      "A key lets an app read, or read and write, for you without being given your password. Keep a key as secret as a password.",
+    "apiKeys.none": "You have no keys.",
+    "apiKeys.mayRead": "May read",
+    "apiKeys.mayReadAndWrite": "May read and write",
+    "apiKeys.made": "Made",
+    "apiKeys.revoke": "Revoke",
+    "apiKeys.revoke.title": "Revoke key",
+    "apiKeys.revoke.question":
+      "Revoke the key {label}? An app using it will stop working, and it cannot be undone.",
+    "apiKeys.revoke.confirm": "Revoke key",
+    "apiKeys.add": "Add Key",
+    "apiKeys.copy": "Copy",
+    "apiKeys.copied": "Copied",
+    "apiKeys.copyManually": "Press Ctrl+C",
+    "apiKeys.shown":
+      "For security reasons, your new key is only displayed once. Copy and store it securely now.",
+    "apiKeys.new.title": "Make a key",
+    "apiKeys.new.label": "Label",
+    "apiKeys.new.write": "The app may also write",
+    "apiKeys.new.submit": "Make key",
     "changeName.title": "Change name",
     "changeName.name": "Name",
     "changeName.submit": "Change name",
@@ -290,6 +314,8 @@ export const english: Language = {
 
     // A rule broken, keyed by its code, so that every form saying it says it
     // the same way. Said to whoever typed it, beneath the field it reads.
+    "ApiKeyLabel.Missing": "Enter a label for the key.",
+    "ApiKeyLabel.TooLong": "A label can be at most 60 characters.",
     "PersonName.Missing": "Enter a name.",
     "PersonName.TooShort": "A name has to be at least 3 characters.",
     "PersonName.TooLong": "A name can be at most 254 characters.",

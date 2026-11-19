@@ -75,7 +75,11 @@ AfterAll(async () => {
  * width, its colour scheme, its languages and whatever it was given to keep,
  * and closes the first.
  */
-export const withScripting = async (world: WebWorld): Promise<void> => {
+export const withScripting = async (
+  world: WebWorld,
+  /** The region the browser is set to, such as "de-DE", where a scenario says. */
+  locale?: string,
+): Promise<void> => {
   const context = world.browserContext;
   const page = world.page;
   if (context === undefined || page === undefined) {
@@ -89,6 +93,7 @@ export const withScripting = async (world: WebWorld): Promise<void> => {
   ).newContext({
     javaScriptEnabled: true,
     viewport: page.viewportSize(),
+    ...(locale === undefined ? {} : { locale }),
     ...(world.colourScheme === undefined
       ? {}
       : { colorScheme: world.colourScheme }),

@@ -1966,6 +1966,62 @@ main {
   overflow-wrap: anywhere;
 }
 
+/* The API keys page: every heading on it has half a line of the page's own
+   text beneath it, and not of the heading's, which is much taller, before
+   whatever comes next. Each key is a row, with the trash can that asks to
+   revoke it first, red as it is the one thing in the row that is hard to take
+   back, and drawn as a picture alone with its words kept for anyone who cannot
+   see it. */
+.api-keys-page :is(h1, h2, h3, h4, h5, h6) {
+  margin-block: 0 calc(var(--text-base) * var(--leading-body) / 2);
+}
+
+/* A blank line of the page's own text above and below Add Key. */
+.api-keys-page .api-keys-add {
+  margin-block: calc(var(--text-base) * var(--leading-body));
+}
+
+/* Green, as the button that does what a form is for is, and out of sight until
+   scripting shows it: a button's display would otherwise override hidden. */
+.api-key-copy[hidden] {
+  display: none;
+}
+
+.api-keys-page p {
+  margin-block-start: 0;
+}
+
+.api-keys {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.api-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.api-key-revoke {
+  display: inline-flex;
+}
+
+.api-key-revoke > .icon-trash-can {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: var(--danger);
+}
+
+.api-key-label {
+  font-weight: 700;
+}
+
+#api-key-new {
+  overflow-wrap: anywhere;
+}
+
 /* The years of the home page and of a year's page, fitted to the window with
    no scripting to measure them (tournamentLists.ts). Every tab is as wide as every other and so is the drop-down
    list, so how many fit is known from the bar's width alone: the newest is

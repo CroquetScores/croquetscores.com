@@ -356,16 +356,45 @@ const withFirstFieldFocused = (dialog: Dialog): Dialog =>
 export const renderDialog = (dialog: Dialog): string =>
   renderFocused(withFirstFieldFocused(dialog));
 
-const renderFocused = (
-  dialog: Dialog,
-): string => `        <section class="dialog" aria-labelledby="dialog-title">
-          <h1 class="dialog-title" id="dialog-title">${escape(dialog.title)}</h1>
-          <form class="dialog-form" method="post" action="${escape(dialog.action)}">
+/**
+ * A dialog laid over the page it was asked from rather than being a page
+ * (STYLE.md §5c): a <dialog> that the page's own script opens with showModal(),
+ * and that stays out of sight where there is none. It has a Cancel button of
+ * its own, since the page's ways out cannot be reached while it is open.
+ * `reopen` marks one that was answered by the page again, with what was wrong,
+ * and so is to be open as soon as the page is.
+ */
+export interface Modal {
+  readonly id: string;
+  readonly cancel: string;
+  readonly reopen?: boolean | undefined;
+}
+
+export const renderModalDialog = (dialog: Dialog, modal: Modal): string =>
+  renderFocused(withFirstFieldFocused(dialog), modal);
+
+const renderFocused = (dialog: Dialog, modal?: Modal): string => {
+  const titleId = modal === undefined ? "dialog-title" : `${modal.id}-title`;
+  const title = escape(dialog.title);
+  const cancel =
+    modal === undefined
+      ? ""
+      : `\n              <button class="button dialog-cancel" type="button">${escape(modal.cancel)}</button>`;
+  const form = `          <form class="dialog-form" method="post" action="${escape(dialog.action)}">
             <div class="dialog-content stack">
 ${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${alternative(dialog.alternative)}${dialog.fields.map(field).join("\n")}
             </div>
             <div class="dialog-buttons">
-${buttons(dialog)}
+${buttons(dialog)}${cancel}
             </div>${hidden(dialog.hidden)}
-          </form>
-        </section>`;
+          </form>`;
+  return modal === undefined
+    ? `        <section class="dialog" aria-labelledby="${titleId}">
+          <h1 class="dialog-title" id="${titleId}">${title}</h1>
+${form}
+        </section>`
+    : `        <dialog class="modal-dialog dialog" id="${escape(modal.id)}" aria-labelledby="${escape(titleId)}"${modal.reopen === true ? " data-reopen" : ""}>
+          <h2 class="dialog-title" id="${escape(titleId)}">${title}</h2>
+${form}
+        </dialog>`;
+};

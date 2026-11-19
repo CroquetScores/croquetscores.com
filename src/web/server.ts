@@ -397,6 +397,7 @@ import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
 import { registerForgotPasswordPage } from "./public/forgotPassword.js";
 import { registerForgetAccountPage } from "./public/forgetAccount.js";
+import { registerApiKeysPage } from "./public/apiKeys.js";
 import { registerChangeNamePage } from "./public/changeName.js";
 import { registerChangePasswordPage } from "./public/changePassword.js";
 import { registerChangeEmailAddressPage } from "./public/changeEmailAddress.js";
@@ -2077,6 +2078,7 @@ export const buildApplication = async (
   registerProfilePage(server, assets);
   registerSetPasswordPage(server, assets);
   registerChangeNamePage(server, assets);
+  registerApiKeysPage(server, assets);
   registerChangeEmailAddressPage(server, assets, failedSignIns, inTransaction);
   registerRegistrationsSuspendedPage(server, assets);
   registerNewConfirmationLinkPage(server, assets, links);
