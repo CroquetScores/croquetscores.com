@@ -22,6 +22,7 @@ import { ManagerNoteRefused } from "../../domain/aggregates/tournaments/manager-
 import { CompetitionRefused } from "../../domain/aggregates/tournaments/competitions/Competition.js";
 import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
 import { ValidationError } from "../../domain/common/validation/ValidationError.js";
+import { apiError } from "../api/v0/errors.js";
 import type { Assets } from "./assets.js";
 import { speakingOf } from "./language.js";
 import { siteNameOf, websiteOf } from "./site.js";
@@ -36,6 +37,12 @@ import { hasPassword, readerKnown, signedIn } from "./reader.js";
 // fail. A browser should not be handed a JSON body for a page it asked for.
 const wantsJson = (request: FastifyRequest): boolean =>
   request.url.startsWith("/api/");
+
+// The public API's errors have one shape, whatever failed (errors.feature for
+// /api/v0), where the website's own interface keeps the one it has. Said in
+// one place so that no failure is shaped by the route that happened to meet it.
+const publicApi = (request: FastifyRequest): boolean =>
+  request.url.startsWith("/api/v0/");
 
 // An error page is still a page of this site, so it wears the same shell and
 // speaks the reader's language. Its words are named by what they are for, and
@@ -97,6 +104,19 @@ const sendPage = (
 const sendJson = (reply: FastifyReply, body: unknown): FastifyReply =>
   reply.header("cache-control", "no-store").send(body);
 
+// A failure said as the request asked for it said: in the public API's shape
+// where it is that API's, and otherwise as the website's interface says it.
+const sendFailure = (
+  request: FastifyRequest,
+  reply: FastifyReply,
+  said: { readonly code: string; readonly message: string },
+  site: unknown,
+): FastifyReply =>
+  sendJson(
+    reply,
+    publicApi(request) ? apiError(said.code, said.message) : site,
+  );
+
 // How long a program is told to wait before asking again. A guess at how
 // long it takes a database to come back from a restart, said in seconds as
 // Retry-After wants it; nothing waits on it being right.
@@ -121,7 +141,15 @@ export const registerErrorMapping = (
 ): void => {
   server.setNotFoundHandler((request, reply) => {
     if (wantsJson(request)) {
-      return sendJson(reply.code(404), { error: "NotFound" });
+      return sendFailure(
+        request,
+        reply.code(404),
+        {
+          code: "Route.NotFound",
+          message: "There is nothing at that address.",
+        },
+        { error: "NotFound" },
+      );
     }
     return sendPage(reply.code(404), assets, request, "errors.notFound");
   });
@@ -140,7 +168,15 @@ export const registerErrorMapping = (
       databaseOutage.tell(request);
       reply.header("retry-after", retryAfterSeconds);
       if (wantsJson(request)) {
-        return sendJson(reply.code(503), { error: error.code });
+        return sendFailure(
+          request,
+          reply.code(503),
+          {
+            code: error.code,
+            message: "The site cannot answer just now. Try again shortly.",
+          },
+          { error: error.code },
+        );
       }
       return sendPage(
         reply.code(503),
@@ -164,10 +200,12 @@ export const registerErrorMapping = (
     if (error instanceof RequestInvalid) {
       request.log.info({ broken: error.broken }, "Request refused");
       if (wantsJson(request)) {
-        return sendJson(reply.code(422), {
-          error: error.code,
-          broken: error.broken,
-        });
+        return sendFailure(
+          request,
+          reply.code(422),
+          { code: error.code, message: "The request broke a rule." },
+          { error: error.code, broken: error.broken },
+        );
       }
       return sendPage(
         reply.code(422),
@@ -215,7 +253,12 @@ export const registerErrorMapping = (
       wantsJson(request)
     ) {
       request.log.info({ code: error.code }, "Request refused");
-      return sendJson(reply.code(422), { error: error.code });
+      return sendFailure(
+        request,
+        reply.code(422),
+        { code: error.code, message: error.message },
+        { error: error.code },
+      );
     }
 
     // A status on the error means something chose it — a route, or Fastify
@@ -241,10 +284,12 @@ export const registerErrorMapping = (
         request.log.warn({ err: error }, "Request failed");
       }
       if (wantsJson(request)) {
-        return sendJson(reply.code(error.statusCode), {
-          error: error.code ?? "Error",
-          message: error.message,
-        });
+        return sendFailure(
+          request,
+          reply.code(error.statusCode),
+          { code: error.code ?? "Error", message: error.message },
+          { error: error.code ?? "Error", message: error.message },
+        );
       }
       return sendPage(
         reply.code(error.statusCode),
@@ -261,7 +306,15 @@ export const registerErrorMapping = (
     request.log.error({ err: error, correlationId }, "Unhandled error");
     errorReport.tell(request, correlationId);
     if (wantsJson(request)) {
-      return sendJson(reply.code(500), { error: "Internal", correlationId });
+      return publicApi(request)
+        ? sendJson(reply.code(500), {
+            ...apiError(
+              "Internal",
+              "The site failed. Give the reference to its administrator.",
+            ),
+            correlationId,
+          })
+        : sendJson(reply.code(500), { error: "Internal", correlationId });
     }
     // The administrator has been told and the log has the cause. What the
     // reader can add is what neither can hold: what they were doing. The
