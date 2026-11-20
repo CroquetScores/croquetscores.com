@@ -474,17 +474,17 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new PublicPlayersOfTournamentHandler(
-      tournaments,
       byAddress,
+      pages,
       byNotes,
       byCommentaries,
     ),
   );
   mediator.handleQuery(
     new PublicPlayerOfTournamentHandler(
-      tournaments,
-      competitions,
       byAddress,
+      pages,
+      byGames,
       byNotes,
       byCommentaries,
     ),

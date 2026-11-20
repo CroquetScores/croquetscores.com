@@ -1,4 +1,4 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
@@ -14,6 +14,13 @@ import { inHandOf } from "../aRequest.js";
 // competition each was played in are said in the words a tournament's games
 // share (GamesOfTournament.steps.ts). What is here is asking, and what is the
 // player's own: how they played each game, and their competitions.
+
+// Every kept event removed, which leaves the read models as the only place
+// the application can learn what it is asked of. It is done here, in the words
+// of the first page that reads them alone, and the others reuse it.
+Given("the kept events are gone", async function (this: SpecWorld) {
+  await this.database.query("delete from events");
+});
 
 const answered = (world: SpecWorld): PlayerToRead => {
   assert.ok(

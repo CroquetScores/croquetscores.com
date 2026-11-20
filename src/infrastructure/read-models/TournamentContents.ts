@@ -478,12 +478,13 @@ export class TournamentContents implements Projection, Asked {
       await connection.query(
         `insert into tournament_team_players
            (player_id, team_id, tournament_id, name, world_ranking_name,
-            position, changed_at)
-         values ($1, $2, $3, $4, $5, $6, $7)
+            position, changed_at, slug)
+         values ($1, $2, $3, $4, $5, $6, $7, $8)
          on conflict (player_id) do update
            set name = excluded.name,
                world_ranking_name = excluded.world_ranking_name,
-               changed_at = excluded.changed_at`,
+               changed_at = excluded.changed_at,
+               slug = coalesce(tournament_team_players.slug, excluded.slug)`,
         [
           event.playerId,
           event.teamId,
@@ -492,6 +493,8 @@ export class TournamentContents implements Projection, Asked {
           player.worldRankingName?.toString() ?? name,
           event instanceof TeamPlayerAdded ? event.order : ORDER_STEP,
           this.#at,
+          // Only said when the player is added: updating keeps it.
+          event instanceof TeamPlayerAdded ? event.slug : null,
         ],
       );
     } else if (event instanceof TeamPlayerArchived) {

@@ -151,6 +151,17 @@ Feature: A player of a tournament, for anybody to read
       Then the first game answered was lost to "Chris Third"
       And the second game answered was won against "Alex Another"
 
+    Scenario: A game corrected is still listed where it was added
+      Given the moment "2026-10-03T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the moment "2026-10-03T11:00:00Z"
+      And "Chris Third" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      And the moment "2026-10-03T12:00:00Z"
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to 26 to 10
+      And the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game answered was lost to "Chris Third"
+      And the second game answered was won against "Alex Another"
+
     Scenario: A game the player did not play is not answered
       Given "Alex Another" has beaten "Chris Third" 26 to 17 in "Block A" of "Spring Open"
       When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
@@ -313,6 +324,28 @@ Feature: A player of a tournament, for anybody to read
       And "organiser@example.com" has archived the team "New Zealand" in "Spring Tests"
       When the player "nat-newman" of the tournament at "2026/ac/spring-tests" is asked for
       Then it is refused with "PublicPlayerOfTournament.NoSuchPlayer"
+
+  Rule: The page is read of the read models, and asks the events nothing
+
+    The kept events are what the read models are made of, and a page that
+    asked them as well could say something the read models do not, so that the
+    site and the API disagreed. So the tournament's events are taken away once
+    the read models are made, and the page is still answered.
+
+    Scenario: A player's games are answered with the events gone
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the kept events are gone
+      When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game answered was won against "Alex Another"
+
+    Scenario: A player of a team is answered with the events gone
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And the kept events are gone
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the player answered is called "Pat Player"
 
   Rule: A player a reader is not sent to is refused
 
