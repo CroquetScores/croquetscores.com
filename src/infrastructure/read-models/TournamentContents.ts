@@ -43,10 +43,14 @@ import { TournamentPlayer } from "../../domain/aggregates/tournaments/Tournament
 import { CompetitionName } from "../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Slug } from "../../domain/common/Slug.js";
 import { ORDER_STEP } from "../../domain/common/orders.js";
+import { TestGroup } from "../../domain/aggregates/tournaments/value-objects/TestGroup.js";
+import { TournamentCreated } from "../../domain/aggregates/tournaments/events/TournamentCreated.js";
+import { TournamentUpdated } from "../../domain/aggregates/tournaments/events/TournamentUpdated.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
+import { standCompetition } from "./CompetitionStandings.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 // In the order a reader looks for a name in a list, capitals or none.
@@ -297,10 +301,85 @@ export class TournamentContents implements Projection, Asked {
   // which is what makes projecting the same events again change nothing.
   async #project(stream: string, event: DomainEvent): Promise<void> {
     if (!stream.startsWith("tournament/")) return;
+    await this.#write(stream, event);
+    await this.#rulesWritten(event);
+    // What a block is played as changes its places, which are kept
+    // (`CompetitionStandings`), so they are worked out again; where the
+    // competition's own events have not been projected yet, there is nothing
+    // to work them out of, and the last of them will.
+    if (
+      event instanceof BlockAdded ||
+      event instanceof BlockUpdated ||
+      event instanceof SwissAdded ||
+      event instanceof SwissUpdated
+    ) {
+      await standCompetition(this.unitOfWork.connection(), event.competitionId);
+    }
+  }
+
+  // What a competition is played as, which every event that adds or updates
+  // one says: the most hoops, Advantage Golf Croquet, and a block's rounds. A
+  // test's group is said with it.
+  async #rulesWritten(event: DomainEvent): Promise<void> {
+    if (!(
+      event instanceof BlockAdded ||
+      event instanceof BlockUpdated ||
+      event instanceof KnockoutAdded ||
+      event instanceof KnockoutUpdated ||
+      event instanceof SwissAdded ||
+      event instanceof SwissUpdated ||
+      event instanceof TestAdded ||
+      event instanceof TestUpdated
+    )) {
+      return;
+    }
+    await this.#competitionWritten(
+      `update competitions
+          set maximum_hoops = $2, maximum_hoops_said = $3, advantage = $4
+        where competition_id = $1`,
+      [
+        event.competitionId,
+        event.maximumHoops ?? null,
+        event.maximumHoops !== undefined,
+        event.advantage ?? false,
+      ],
+    );
+    if (event instanceof BlockAdded || event instanceof BlockUpdated) {
+      await this.#competitionWritten(
+        `update competitions set rounds = $2 where competition_id = $1`,
+        [event.competitionId, event.rounds],
+      );
+    }
+    if (event instanceof TestAdded || event instanceof TestUpdated) {
+      const group =
+        event.group === undefined ? undefined : TestGroup.from(event.group);
+      await this.#competitionWritten(
+        `update competitions set group_name = $2, group_slug = $3
+          where competition_id = $1`,
+        [
+          event.competitionId,
+          group?.toString() ?? null,
+          group?.slug?.toString() ?? null,
+        ],
+      );
+    }
+  }
+
+  async #write(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
 
-    // Its players ----------------------------------------------------------
+    // The tournament itself ------------------------------------------------
     if (
+      event instanceof TournamentCreated ||
+      event instanceof TournamentUpdated
+    ) {
+      await connection.query(
+        `update tournaments set subtitle = $2 where tournament_id = $1`,
+        [stream, event.subtitle ?? null],
+      );
+
+      // Its players ----------------------------------------------------------
+    } else if (
       event instanceof TournamentPlayerAdded ||
       event instanceof TournamentPlayerUpdated
     ) {
@@ -309,13 +388,15 @@ export class TournamentContents implements Projection, Asked {
       await connection.query(
         `insert into tournament_players
            (player_id, tournament_id, name, world_ranking_name, handicap,
-            representing)
-         values ($1, $2, $3, $4, $5, $6)
+            representing, flag, slug)
+         values ($1, $2, $3, $4, $5, $6, $7, $8)
          on conflict (player_id) do update
            set name = excluded.name,
                world_ranking_name = excluded.world_ranking_name,
                handicap = excluded.handicap,
-               representing = excluded.representing`,
+               representing = excluded.representing,
+               flag = excluded.flag,
+               slug = coalesce(tournament_players.slug, excluded.slug)`,
         [
           event.playerId,
           stream,
@@ -323,6 +404,9 @@ export class TournamentContents implements Projection, Asked {
           player.worldRankingName?.toString() ?? name,
           player.handicap ?? null,
           player.representing ?? null,
+          player.flag === undefined ? null : String(player.flag),
+          // Only said when the player is added: updating keeps it.
+          event instanceof TournamentPlayerAdded ? event.slug : null,
         ],
       );
     } else if (event instanceof TournamentPlayerArchived) {
@@ -422,6 +506,14 @@ export class TournamentContents implements Projection, Asked {
           event.order,
         ],
       );
+      // What a block is played as is what its places are worked out by.
+      if (event instanceof BlockAdded) {
+        await this.#competitionWritten(
+          `update competitions set best_of = $2, tie_break = $3
+            where competition_id = $1`,
+          [event.competitionId, event.bestOf, event.tieBreak],
+        );
+      }
       // A knockout's draw is what the games of it are played out against.
       if (event instanceof KnockoutAdded) {
         await this.#competitionWritten(
@@ -459,6 +551,13 @@ export class TournamentContents implements Projection, Asked {
         `update competitions set name = $2 where competition_id = $1`,
         [event.competitionId, CompetitionName.from(event.name).toString()],
       );
+      if (event instanceof BlockUpdated) {
+        await this.#competitionWritten(
+          `update competitions set best_of = $2, tie_break = $3
+            where competition_id = $1`,
+          [event.competitionId, event.bestOf, event.tieBreak],
+        );
+      }
       if (event instanceof KnockoutUpdated) {
         await this.#competitionWritten(
           `update competitions set draw_places = $2, draw_rounds = $3

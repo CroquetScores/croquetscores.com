@@ -28,6 +28,7 @@ import { EventRegistry } from "../../../src/domain/common/EventRegistry.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { Website } from "../../../src/domain/common/Website.js";
 import { CompetitionGames } from "../../../src/infrastructure/read-models/CompetitionGames.js";
+import { TournamentContents } from "../../../src/infrastructure/read-models/TournamentContents.js";
 import { Tournaments } from "../../../src/infrastructure/read-models/Tournaments.js";
 import { TournamentsByWebsite } from "../../../src/infrastructure/read-models/TournamentsByWebsite.js";
 import {
@@ -129,7 +130,15 @@ export const standUp = (
     ? [new Tournaments(unitOfWork), new CompetitionGames(unitOfWork)]
     : readModel instanceof Tournaments
       ? [readModel]
-      : [new Tournaments(unitOfWork), readModel];
+      : readModel instanceof CompetitionGames
+        ? // Its standings are worked out of what a block is played as, which
+          // the tournament's contents keep.
+          [
+            new Tournaments(unitOfWork),
+            new TournamentContents(unitOfWork),
+            readModel,
+          ]
+        : [new Tournaments(unitOfWork), readModel];
   const projecting = new ProjectingEventStore(store, readModels);
   const scenario: Scenario = {
     readModel,

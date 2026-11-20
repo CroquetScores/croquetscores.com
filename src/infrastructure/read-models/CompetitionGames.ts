@@ -15,6 +15,7 @@ import { CompetitionGameMoved } from "../../domain/aggregates/tournaments/compet
 import { CompetitionGameRestored } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
 import { CompetitionGameWithdrawalReversed } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawalReversed.js";
 import { CompetitionGameWithdrawn } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawn.js";
+import { CompetitionPlayerCarryForwardChanged } from "../../domain/aggregates/tournaments/competitions/events/CompetitionPlayerCarryForwardChanged.js";
 import { CompetitionPlayerEntered } from "../../domain/aggregates/tournaments/competitions/events/CompetitionPlayerEntered.js";
 import { CompetitionPlayerMoved } from "../../domain/aggregates/tournaments/competitions/events/CompetitionPlayerMoved.js";
 import { CompetitionPlayerRemoved } from "../../domain/aggregates/tournaments/competitions/events/CompetitionPlayerRemoved.js";
@@ -28,6 +29,7 @@ import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
+import { standCompetition } from "./CompetitionStandings.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 const bye = CompetitionPlayerId.bye().value;
@@ -75,11 +77,10 @@ export class CompetitionGames implements Projection, Asked {
 
   /** Empties its tables, so that every stream can be handed to it again. */
   async clear(): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(
-        `truncate competition_entries, competition_byes, competition_games`,
-      );
+    await this.unitOfWork.connection().query(
+      `truncate competition_entries, competition_byes, competition_games,
+                  competition_standings`,
+    );
   }
 
   /** The tables made again from the streams it is handed, in any order. */
@@ -202,10 +203,18 @@ export class CompetitionGames implements Projection, Asked {
     };
   }
 
-  // Each written so that writing it twice leaves what writing it once did,
-  // which is what makes projecting the same events again change nothing.
+  // What an event of a competition says, and then the standings of the
+  // competition, which any of them can change: a game, a player, what a player
+  // carries forward.
   async #project(stream: string, event: DomainEvent): Promise<void> {
     if (!stream.startsWith("competition/")) return;
+    await this.#write(stream, event);
+    await standCompetition(this.unitOfWork.connection(), stream);
+  }
+
+  // Each written so that writing it twice leaves what writing it once did,
+  // which is what makes projecting the same events again change nothing.
+  async #write(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
 
     // Its players and byes --------------------------------------------------
@@ -280,6 +289,26 @@ export class CompetitionGames implements Projection, Asked {
         `update competition_entries set withdrawn = false
           where entry_id = $1`,
         [event.playerId],
+      );
+    } else if (event instanceof CompetitionPlayerCarryForwardChanged) {
+      // Every count the event says, and nothing where it says none, since it
+      // is what is carried in place of whatever was.
+      const { counts } = event;
+      await connection.query(
+        `update competition_entries
+            set carry_match_wins = $2, carry_match_losses = $3,
+                carry_game_wins = $4, carry_game_losses = $5,
+                carry_hoops_for = $6, carry_hoops_against = $7
+          where entry_id = $1`,
+        [
+          event.playerId,
+          counts.matchWins ?? null,
+          counts.matchLosses ?? null,
+          counts.gameWins ?? null,
+          counts.gameLosses ?? null,
+          counts.hoopsFor ?? null,
+          counts.hoopsAgainst ?? null,
+        ],
       );
     } else if (event instanceof CompetitionPlayerRemoved) {
       // Only archived games are left of a player who is removed, and they go

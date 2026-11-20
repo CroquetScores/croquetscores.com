@@ -1,42 +1,38 @@
-import type { CarryForwardCount } from "../../../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
-import type { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import { Website } from "../../../domain/common/Website.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import { Sport } from "../../../domain/aggregates/tournaments/value-objects/Sport.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
-import type { TournamentManagerNotes } from "./managerNoteOperations.js";
-import {
-  type Competitions,
-  competitionOf,
-  countsForNothingIn,
-} from "../competitions/competitionOperations.js";
+import type { CompetitionGames } from "./competitionGames.js";
+import type { CompetitionStandings } from "./competitionStandings.js";
 import { NOBODY_IN_GAME, type PlayerInGame } from "./GamesOfTournament.js";
+import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type PlayerOfSwiss,
   PublicSwissOfTournament,
   type ResultOfSwiss,
   type SwissToRead,
 } from "./PublicSwissOfTournament.js";
+import { pointsOf } from "./standingsToKeep.js";
+import type { TournamentCommentaries } from "./tournamentForReaders.js";
+import type { TournamentAddresses } from "./tournamentOperations.js";
 import {
-  competitionOfKindForReaders,
-  competitionsInUse,
-  tournamentForReaders,
-  managerNotesChangedOf,
-  type TournamentCommentaries,
-} from "./tournamentForReaders.js";
-import { type TournamentAddresses } from "./tournamentOperations.js";
+  competitionOfPage,
+  managerNotesChangedFor,
+  tournamentOfPage,
+} from "./tournamentOfPage.js";
+import type { TournamentPages } from "./tournamentPages.js";
 
 // What follows the points of a score as the scorer wrote it, as "tp" in
 // "26tp". Taken from the writing rather than asked of the score so that the
 // rankings text file, which reads it the same way, and this agree.
-const peelingOf = (score: Score): string =>
-  score
-    .toString()
-    .replace(/^\s*\d+/u, "")
-    .trim();
+const peelingOf = (written: string): string =>
+  written.replace(/^\s*\d+/u, "").trim();
 
+/**
+ * A Swiss's page, read of the read models alone, as a block's is
+ * (`PublicBlockOfTournamentHandler`): its ranking is kept when the Swiss
+ * changes and not worked out here.
+ */
 export class PublicSwissOfTournamentHandler extends QueryHandler<
   PublicSwissOfTournament,
   SwissToRead
@@ -45,9 +41,10 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
     PublicSwissOfTournament;
 
   constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly competitions: Competitions,
     private readonly addresses: TournamentAddresses,
+    private readonly pages: TournamentPages,
+    private readonly games: CompetitionGames,
+    private readonly standings: CompetitionStandings,
     private readonly notes: TournamentManagerNotes,
     private readonly changes: TournamentCommentaries,
   ) {
@@ -55,14 +52,15 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
   }
 
   async handle(query: PublicSwissOfTournament): Promise<SwissToRead> {
-    const tournament = await tournamentForReaders(
-      this.tournaments,
+    const tournament = await tournamentOfPage(
       this.addresses,
-      Website.from(query.website),
+      this.pages,
+      query.website,
       query.address,
       "PublicSwissOfTournament",
     );
-    const { reference, rules } = competitionOfKindForReaders(
+    const swiss = await competitionOfPage(
+      this.pages,
       tournament,
       query.slug,
       "swiss",
@@ -72,127 +70,108 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
         sentence: "The competition is not a Swiss.",
       },
     );
-    const competition = await competitionOf(this.competitions, reference.id);
-    const games = competition.games.filter((game) => !game.archived);
-    const address = tournament.address.toString();
+    const address = tournament.address;
+    const kept = await this.standings.standingsKept(swiss.id);
+    const standingOf = new Map(
+      kept.standings.map((each) => [each.entryId, each]),
+    );
+    const gamesKept = await this.games.gamesKept(swiss.id);
+    const inUse = gamesKept.games.filter((game) => !game.archived);
+    const withdrawn = new Set(
+      gamesKept.entries.filter((each) => each.withdrawn).map((each) => each.id),
+    );
+    const usual = Sport.from(tournament.sport).usualMaximumHoops;
 
     // Each player of the Swiss as its pages name them, by the id its games
     // name them by.
-    const named = new Map<string, PlayerInGame & { address: string }>();
-    for (const entered of competition.players) {
-      const player = tournament.players.find((each) =>
-        each.id.equals(entered.tournamentPlayerId),
-      );
-      if (player === undefined) continue;
-      named.set(entered.id.value, {
-        playerId: player.id.value,
-        name: player.name.toString(),
-        representing: player.representing,
-        handicap: player.handicap,
-        flag: player.flag === undefined ? undefined : String(player.flag),
-        address: `${address}/players/${player.slug.toString()}`,
-      });
-    }
+    const entered = await this.pages.playersOf(swiss.id);
+    const named = new Map<string, PlayerInGame & { address: string }>(
+      entered.map((player) => [
+        player.entryId,
+        {
+          playerId: player.playerId,
+          name: player.name,
+          representing: player.representing,
+          handicap: player.handicap,
+          flag: player.flag,
+          address: `${address}/players/${player.slug}`,
+        },
+      ]),
+    );
     const nameless = { ...NOBODY_IN_GAME, address };
     // What counts for nothing is still among the results and the games, and
     // said to be withdrawn, so that the pages strike it through.
-    const countsForNothing = countsForNothingIn(
-      competition,
-      tournament,
-      reference.id,
-    );
+    const countsForNothing = (game: (typeof inUse)[number]): boolean =>
+      game.withdrawn || withdrawn.has(game.winner) || withdrawn.has(game.loser);
 
-    const players = competition.players.flatMap((entered): PlayerOfSwiss[] => {
-      const player = named.get(entered.id.value);
-      if (player === undefined) return [];
-      // What is not carried forward counts as nothing carried, and so does
-      // all of it where the player has withdrawn, as their games do.
-      const carried = (count: CarryForwardCount): number =>
-        entered.withdrawn ? 0 : (entered.carryForward.of(count) ?? 0);
-      const results = games.flatMap((game): ResultOfSwiss[] => {
-        const won = game.winner.equals(entered.id);
-        if (!won && !game.loser.equals(entered.id)) return [];
-        const theirs = won ? game.winnerScore : game.loserScore;
-        const against = won ? game.loserScore : game.winnerScore;
-        const opponent =
-          named.get(won ? game.loser.value : game.winner.value) ?? nameless;
+    const players = entered.map((each): PlayerOfSwiss => {
+      const standing = standingOf.get(each.entryId);
+      if (standing === undefined) {
+        throw new Error(
+          `A player of the Swiss has no standing kept: ${each.entryId}`,
+        );
+      }
+      const results = inUse.flatMap((game): ResultOfSwiss[] => {
+        const won = game.winner === each.entryId;
+        if (!won && game.loser !== each.entryId) return [];
+        const theirs = pointsOf(won ? game.winnerScore : game.loserScore);
+        const against = pointsOf(won ? game.loserScore : game.winnerScore);
+        const opponent = named.get(won ? game.loser : game.winner) ?? nameless;
         return [
           {
             opponent: { name: opponent.name, address: opponent.address },
             result: game.drawn ? "drawn" : won ? "won" : "lost",
-            margin: theirs.points - against.points,
+            margin: theirs - against,
             peeling: peelingOf(game.winnerScore) + peelingOf(game.loserScore),
             withdrawn: countsForNothing(game),
           },
         ];
       });
-      const counting = results.filter(({ withdrawn }) => !withdrawn);
-      return [
-        {
-          ...player,
-          id: entered.id.value,
-          withdrawn: entered.withdrawn,
-          gamesPlayed:
-            counting.length + carried("gameWins") + carried("gameLosses"),
-          gamesWon:
-            counting.filter(({ result }) => result === "won").length +
-            carried("gameWins"),
-          netHoops:
-            counting.reduce((net, { margin }) => net + margin, 0) +
-            carried("hoopsFor") -
-            carried("hoopsAgainst"),
-          results,
-        },
-      ];
+      return {
+        ...named.get(each.entryId)!,
+        id: each.entryId,
+        withdrawn: each.withdrawn,
+        // Kept when the competition changes, and not worked out again here,
+        // so that the site and the API cannot say two different things.
+        gamesPlayed: standing.played,
+        gamesWon: standing.won,
+        netHoops: standing.netHoops,
+        results,
+      };
     });
 
     return {
-      name: tournament.name.toString(),
-      subtitle: tournament.subtitle?.markdown,
-      commentariesChanged: await this.changes.of(tournament.id),
-      managerNotes: await managerNotesChangedOf(this.notes, tournament),
+      name: tournament.name,
+      subtitle: tournament.subtitle,
+      commentariesChanged: await this.changes.of(
+        TournamentId.from(tournament.id),
+      ),
+      managerNotes: await managerNotesChangedFor(this.notes, tournament),
       address,
-      competitions: competitionsInUse(tournament),
+      competitions: tournament.competitions,
       swiss: {
-        name: reference.name.toString(),
-        maximumHoops: rules.maximumHoops,
-        advantage: rules.advantage,
+        name: swiss.name,
+        maximumHoops:
+          swiss.maximumHoops === undefined ? usual : swiss.maximumHoops,
+        advantage: swiss.advantage,
       },
-      usualMaximumHoops: tournament.sport.usualMaximumHoops,
+      usualMaximumHoops: usual,
       players,
-      ranked: rankingOf(players).map(({ id }) => id),
-      games: games.map((game) => ({
-        id: game.id.value,
-        winner: named.get(game.winner.value) ?? nameless,
-        winnerScore: game.winnerScore.toString(),
-        loser: named.get(game.loser.value) ?? nameless,
-        loserScore: game.loserScore.toString(),
+      ranked: kept.standings
+        .map((each) => each.entryId)
+        .filter((id) => named.has(id)),
+      games: inUse.map((game) => ({
+        id: game.id,
+        winner: named.get(game.winner) ?? nameless,
+        winnerScore: game.winnerScore,
+        loser: named.get(game.loser) ?? nameless,
+        loserScore: game.loserScore,
         drawn: game.drawn,
         withdrawn: countsForNothing(game),
-        addedAt: game.addedAt,
+        // The read model keeps when a game last changed, which for one never
+        // corrected is when it was added.
+        addedAt: game.changedAt,
       })),
     };
   }
 }
-
-// `players` ranked as the old site ranked a Swiss: the greater share of their
-// games won first, then the more net hoops, and otherwise as they were, since
-// a sort that keeps the order of equals leaves them in the Swiss's. A player
-// who has played no game has no share, and comes after every player who has,
-// since nothing yet says where they stand; a withdrawn player comes after
-// everybody who has not withdrawn, since they have left the Swiss.
-const rankingOf = (players: readonly PlayerOfSwiss[]): PlayerOfSwiss[] => {
-  const shareOf = ({ gamesWon, gamesPlayed }: PlayerOfSwiss): number =>
-    gamesWon / gamesPlayed;
-  const playing = players.filter(({ withdrawn }) => !withdrawn);
-  const played = playing.filter(({ gamesPlayed }) => gamesPlayed > 0);
-  const unplayed = playing.filter(({ gamesPlayed }) => gamesPlayed === 0);
-  return [
-    ...[...played].sort(
-      (one, other) =>
-        shareOf(other) - shareOf(one) || other.netHoops - one.netHoops,
-    ),
-    ...unplayed,
-    ...players.filter(({ withdrawn }) => withdrawn),
-  ];
-};

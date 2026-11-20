@@ -54,7 +54,9 @@ interface Scenario {
 
 const scenarios = new WeakMap<SpecWorld, Scenario>();
 
-const ownScenarioOf = (world: SpecWorld): Scenario => {
+// Shared with the steps for the standings of the same competitions
+// (CompetitionStandings.steps.ts), which are made with this file's words.
+export const ownScenarioOf = (world: SpecWorld): Scenario => {
   let scenario = scenarios.get(world);
   if (scenario === undefined) {
     scenario = {
@@ -70,7 +72,7 @@ const ownScenarioOf = (world: SpecWorld): Scenario => {
   return scenario;
 };
 
-const found = <T>(map: Map<string, T>, key: string): T => {
+export const found = <T>(map: Map<string, T>, key: string): T => {
   const one = map.get(key);
   assert.ok(one !== undefined, `Nothing was made called ${key}.`);
   return one;
@@ -135,7 +137,7 @@ Given(
 // Done to the competition `competition` of `tournament` by whoever created the
 // tournament, who manages it. It is told of itself when it asks rather than
 // once beforehand, since what is done may change what it is told.
-const doneToCompetition = async (
+export const doneToCompetition = async (
   world: SpecWorld,
   competition: string,
   tournament: string,
@@ -194,7 +196,7 @@ Given(
   },
 );
 
-const entryOf = (
+export const entryOf = (
   world: SpecWorld,
   player: string,
   competition: string,
@@ -552,7 +554,7 @@ const labelOf = (world: SpecWorld, id: string): string => {
   return id;
 };
 
-const nameOfPlayer = (world: SpecWorld, id: string): string => {
+export const nameOfPlayer = (world: SpecWorld, id: string): string => {
   for (const [key, entry] of ownScenarioOf(world).entries) {
     if (entry.value === id) return key.slice(0, key.indexOf(" in "));
   }
