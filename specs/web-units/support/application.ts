@@ -119,7 +119,7 @@ const ownKinds = new WeakSet<SpecWorld>();
 // beside it, and so that none is ever left off for the next run.
 const accessFiles = new WeakMap<SpecWorld, string>();
 
-const accessFileOf = (world: SpecWorld): string => {
+export const accessFileOf = (world: SpecWorld): string => {
   let found = accessFiles.get(world);
   if (found === undefined) {
     const directory = mkdtempSync(join(tmpdir(), "site-database-access-"));
