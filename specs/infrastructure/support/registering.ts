@@ -221,6 +221,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     accounts.byGoogleAccount,
     accounts.byRole,
     accounts.byApiKey,
+    accounts.byName,
     refusing,
   ]);
   // Wrapped rather than handed over as it is: a static passed on its own is a

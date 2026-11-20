@@ -460,9 +460,9 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new GamesOfTournamentHandler(
-      tournaments,
-      competitions,
       byAddress,
+      pages,
+      byGames,
       byNotes,
       byCommentaries,
     ),
@@ -549,7 +549,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new PublicCommentariesOfTournamentHandler(
-      accountRepository,
+      accounts.byName,
       byAddress,
       pages,
       byNotes,
@@ -558,7 +558,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new PublicCommentaryOfTournamentHandler(
-      accountRepository,
+      accounts.byName,
       byAddress,
       pages,
       byNotes,
@@ -597,6 +597,13 @@ const standUpTheTournaments = function (this: SpecWorld): void {
             where stream_id like 'tournament/%'
                or stream_id like 'competition/%'`,
         ),
+      );
+    },
+    withoutAccountEvents: async () => {
+      await this.asARequest(() =>
+        unitOfWork
+          .connection()
+          .query(`delete from events where name like 'account-%'`),
       );
     },
     games,

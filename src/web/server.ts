@@ -286,6 +286,7 @@ import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebs
 import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReaderCheck.js";
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
+import { AccountNames } from "../infrastructure/read-models/AccountNames.js";
 import { AccountsByApiKey } from "../infrastructure/read-models/AccountsByApiKey.js";
 import { CryptoApiKeys } from "../infrastructure/identity/CryptoApiKeys.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
@@ -1011,6 +1012,7 @@ export const buildApplication = async (
 
   const accountsByRole = new AccountsByRole(unitOfWork);
   const accountsByApiKey = new AccountsByApiKey(unitOfWork);
+  const accountNames = new AccountNames(unitOfWork);
 
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
   // What the three that follow are written against, so before them.
@@ -1033,6 +1035,7 @@ export const buildApplication = async (
     accountsByGoogleAccount,
     accountsByRole,
     accountsByApiKey,
+    accountNames,
     tournamentsByAddress,
     heldTournaments,
     tournamentsByAccount,
@@ -1564,9 +1567,9 @@ export const buildApplication = async (
   mediator.handleQuery(new RepresentingMatchingHandler(searchByWebsite));
   mediator.handleQuery(
     new GamesOfTournamentHandler(
-      tournaments,
-      competitions,
       tournamentsByAddress,
+      tournamentPages,
+      competitionGames,
       managerNotesByTournament,
       commentariesByTournament,
     ),
@@ -1652,8 +1655,8 @@ export const buildApplication = async (
   );
   mediator.handleQuery(
     new StandingsForAppsHandler(
-      tournaments,
-      tournamentsByWebsite,
+      tournamentContents,
+      tournamentPages,
       competitionStandings,
     ),
   );
@@ -1678,7 +1681,7 @@ export const buildApplication = async (
   );
   mediator.handleQuery(
     new PublicCommentariesOfTournamentHandler(
-      accounts,
+      accountNames,
       tournamentsByAddress,
       tournamentPages,
       managerNotesByTournament,
@@ -1687,7 +1690,7 @@ export const buildApplication = async (
   );
   mediator.handleQuery(
     new PublicCommentaryOfTournamentHandler(
-      accounts,
+      accountNames,
       tournamentsByAddress,
       tournamentPages,
       managerNotesByTournament,

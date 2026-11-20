@@ -1,9 +1,7 @@
-import type { Account } from "../../../domain/aggregates/accounts/Account.js";
-import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import type { AccountNames } from "../accounts/accountNames.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   PublicCommentaryOfTournament,
@@ -16,7 +14,6 @@ import {
   formatOfPage,
 } from "./tournamentOfPage.js";
 import {
-  namesOf,
   type TournamentAddresses,
   TournamentOperationRefused,
 } from "./tournamentOperations.js";
@@ -32,7 +29,7 @@ export class PublicCommentaryOfTournamentHandler extends QueryHandler<
   constructor(
     // The only aggregates it loads, for the name of the commentary's writer,
     // which no read model keeps.
-    private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly names: AccountNames,
     private readonly addresses: TournamentAddresses,
     private readonly pages: TournamentPages,
     private readonly notes: TournamentManagerNotes,
@@ -64,10 +61,9 @@ export class PublicCommentaryOfTournamentHandler extends QueryHandler<
       (await this.changes.read(id, query.slug)) ?? noSuchCommentary();
     // A forgotten writer has no name to be read, and every word of the
     // commentary is theirs, so it is not one a reader is shown.
-    const [writer] = await namesOf(this.accounts, [
-      AccountId.from(commentary.writer),
-    ]);
-    if (writer === undefined) return noSuchCommentary();
+    const writer =
+      (await this.names.of([commentary.writer])).get(commentary.writer) ??
+      noSuchCommentary();
     const address = tournament.address;
     return {
       name: tournament.name,
@@ -81,7 +77,7 @@ export class PublicCommentaryOfTournamentHandler extends QueryHandler<
         id: commentary.id,
         tournament: tournament.id,
         title: commentary.title,
-        writer: writer.name,
+        writer,
         address: `${address}/commentaries/${commentary.slug}`,
         writtenByReader: query.account === commentary.writer,
         comments: commentary.comments.map((comment) => ({

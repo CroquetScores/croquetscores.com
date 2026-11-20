@@ -44,6 +44,21 @@ Feature: What the public pages of a tournament show, asked of the read models
       When the page of "Autumn Open" is read back
       Then the tournament's page has no subtitle
 
+    Scenario: The tournament is kept with the country it is played in
+      When the page of "Spring Open" is read back
+      Then the tournament's page is played in the country "au"
+
+    Scenario: The tournament is kept with the day it starts
+      When the page of "Spring Open" is read back
+      Then the tournament's page starts on "2026-10-03"
+
+    Scenario: The tournament is kept with the day it finishes
+      Given a tournament "Autumn Open" to start on "2026-11-03"
+      And "Autumn Open" to finish on "2026-11-05"
+      And "Autumn Open" is created by the account for "organiser@example.com"
+      When the page of "Autumn Open" is read back
+      Then the tournament's page finishes on "2026-11-05"
+
     Scenario: The competitions in use are kept in the tournament's order
       When the page of "Spring Open" is read back
       Then the competitions of the page are "Block A" and "Block B"
@@ -166,6 +181,28 @@ Feature: What the public pages of a tournament show, asked of the read models
     Scenario: A test is kept with the matches it is expected to have
       When the teams of "Spring Tests" are read back to be stood
       Then the first test to stand is expected to have 10 matches
+
+  Rule: The names of a tournament's players are kept as a line of a standing names them
+
+    A standing names a line by the id the tournament keeps its player by, and
+    asks nothing else of the player, so a player kept without a slug, or one set
+    aside, is still named.
+
+    Scenario: A player is kept with their name
+      When the names of the players of "Spring Open" are read back
+      Then the name of the player "Sam Someone" of "Spring Open" is "Sam Someone"
+
+    Scenario: A player set aside is still named
+      Given the player "Chris Third" is made in "Spring Open"
+      And the player "Chris Third" of "Spring Open" is set aside
+      When the names of the players of "Spring Open" are read back
+      Then the name of the player "Chris Third" of "Spring Open" is "Chris Third"
+
+    Scenario: A player of another tournament is not named
+      Given a tournament "Autumn Open" to start on "2026-11-03"
+      And "Autumn Open" is created by the account for "organiser@example.com"
+      When the names of the players of "Autumn Open" are read back
+      Then the player "Sam Someone" of "Spring Open" is not named
 
   Rule: A tournament kept before its format was is still read
 

@@ -32,10 +32,16 @@ export class TournamentPages implements Asked {
       address: string;
       archived: boolean;
       sport: string;
+      country: string;
+      // Cast to text in the query, since the driver would make a date of it
+      // in the time zone of the machine, which can move it a day.
+      starts: string;
+      finishes: string;
       format: string | null;
       level_tests_drawn: boolean;
     }>(
-      `select website, name, subtitle, address, archived, sport, format,
+      `select website, name, subtitle, address, archived, sport, country,
+              starts::text as starts, finishes::text as finishes, format,
               level_tests_drawn
          from tournaments where tournament_id = $1`,
       [id],
@@ -73,6 +79,9 @@ export class TournamentPages implements Asked {
       address: row.address,
       archived: row.archived,
       sport: row.sport,
+      country: row.country,
+      starts: row.starts,
+      finishes: row.finishes,
       format: row.format ?? undefined,
       levelTestsDrawn: row.level_tests_drawn,
       competitions: competitions.rows.map((each): CompetitionOfTournament => {
@@ -272,6 +281,19 @@ export class TournamentPages implements Asked {
         withdrawn: each.withdrawn,
       };
     });
+  }
+
+  async namesOfPlayers(
+    tournament: string,
+  ): Promise<ReadonlyMap<string, string>> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ player_id: string; name: string }>(
+        `select player_id, name from tournament_players
+          where tournament_id = $1`,
+        [tournament],
+      );
+    return new Map(rows.map((row) => [row.player_id, row.name]));
   }
 
   async peopleOf(tournament: string): Promise<PeopleOfTournament> {

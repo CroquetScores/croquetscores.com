@@ -186,6 +186,46 @@ export default tseslint.config(
       "**/web/**",
     ),
   },
+  // A query reads a read model and nothing else (SETUP.md §7.4): the public pages
+  // of a tournament and the answers made for apps were once built on the
+  // aggregates, which a page then rebuilt from the events on every request.
+  // The aggregate stores are for the commands. Only an import of one is
+  // caught, not a helper that is handed one by a caller. This block says what the one
+  // above says as well, since a later block's `no-restricted-imports` replaces
+  // an earlier one's rather than adding to it.
+  {
+    files: [
+      "src/application/operations/tournaments/Public*.ts",
+      "src/application/operations/tournaments/*ForApps*.ts",
+      // The tournament's own page, which reads as the others do though its
+      // name does not say so.
+      "src/application/operations/tournaments/GamesOfTournament*.ts",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/infrastructure/**", "**/web/**"],
+              message:
+                "application names the interface; infrastructure implements it.",
+            },
+            {
+              group: [
+                "**/AggregateRepository",
+                "**/AggregateRepository.js",
+                "**/application/services/EventStore",
+                "**/application/services/EventStore.js",
+              ],
+              message:
+                "a query reads a read model and never the event store: ask for what the page shows by a read model's interface (SETUP.md §7.4).",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // A page asks the mediator for what it reads and sends the mediator what it
   // writes. The event store, and the stores that load and save aggregates
   // from it, are handed by the composition root to the handlers alone: a page

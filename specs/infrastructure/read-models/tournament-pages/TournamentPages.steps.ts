@@ -35,6 +35,7 @@ interface Read {
   competition?: CompetitionOfPage | undefined;
   asked: boolean;
   players?: readonly PlayerOfPage[];
+  names?: ReadonlyMap<string, string>;
   teams?: TeamsToStand | undefined;
 }
 
@@ -172,6 +173,27 @@ Given(
   },
 );
 
+Given(
+  "the player {string} of {string} is set aside",
+  async function (this: SpecWorld, player: string, tournament: string) {
+    const id = found(ownScenarioOf(this).players, `${player} of ${tournament}`);
+    await doneTo(this, tournament, (each, by) => {
+      each.archivePlayer(id, false, by, at);
+    });
+  },
+);
+
+When(
+  "the names of the players of {string} are read back",
+  async function (this: SpecWorld, tournament: string) {
+    const id = tournamentNamed(this, tournament).value;
+    const pages = pagesOf(this);
+    await this.asARequest(async () => {
+      readOf(this).names = await pages.namesOfPlayers(id);
+    });
+  },
+);
+
 When(
   "the teams of {string} are read back to be stood",
   async function (this: SpecWorld, tournament: string) {
@@ -242,6 +264,27 @@ Then(
 Then("the tournament's page has no subtitle", function (this: SpecWorld) {
   assert.equal(tournamentRead(this).subtitle, undefined);
 });
+
+Then(
+  "the tournament's page is played in the country {string}",
+  function (this: SpecWorld, country: string) {
+    assert.equal(tournamentRead(this).country, country);
+  },
+);
+
+Then(
+  "the tournament's page starts on {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(tournamentRead(this).starts, day);
+  },
+);
+
+Then(
+  "the tournament's page finishes on {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(tournamentRead(this).finishes, day);
+  },
+);
 
 Then(
   /^the competitions of the page are (.+)$/,
@@ -409,3 +452,25 @@ Then(
 Then("the tournament's page has no format", function (this: SpecWorld) {
   assert.equal(tournamentRead(this).format, undefined);
 });
+
+const namesRead = (world: SpecWorld): ReadonlyMap<string, string> => {
+  const { names } = readOf(world);
+  assert.ok(names !== undefined, "No names were read back.");
+  return names;
+};
+
+Then(
+  "the name of the player {string} of {string} is {string}",
+  function (this: SpecWorld, player: string, tournament: string, name: string) {
+    const id = found(ownScenarioOf(this).players, `${player} of ${tournament}`);
+    assert.equal(namesRead(this).get(id.value), name);
+  },
+);
+
+Then(
+  "the player {string} of {string} is not named",
+  function (this: SpecWorld, player: string, tournament: string) {
+    const id = found(ownScenarioOf(this).players, `${player} of ${tournament}`);
+    assert.equal(namesRead(this).get(id.value), undefined);
+  },
+);
