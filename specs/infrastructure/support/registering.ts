@@ -372,9 +372,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   mediator.handleQuery(
     new ApiKeysOfEveryAccountHandler(repository, accounts.byApiKey),
   );
-  mediator.handleQuery(
-    new IdentifyApiKeyHandler(repository, accounts.byApiKey, apiKeys),
-  );
+  mediator.handleQuery(new IdentifyApiKeyHandler(accounts.byApiKey, apiKeys));
   validation.register(new AddRoleValidator());
   mediator.handleCommand(new AddRoleHandler(repository, accounts.readModel));
   // Held just after it takes hold of the administrators, so that two

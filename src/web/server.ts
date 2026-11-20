@@ -1241,11 +1241,7 @@ export const buildApplication = async (
   mediator.handleQuery(
     new ApiKeysOfEveryAccountHandler(accounts, accountsByApiKey),
   );
-  const identifyingKeys = new IdentifyApiKeyHandler(
-    accounts,
-    accountsByApiKey,
-    apiKeys,
-  );
+  const identifyingKeys = new IdentifyApiKeyHandler(accountsByApiKey, apiKeys);
   mediator.handleQuery(identifyingKeys);
   mediator.handleQuery(new AccountProfileHandler(accounts));
   mediator.handleQuery(
