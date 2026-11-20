@@ -11,9 +11,14 @@ Feature: Finding a tournament's notes without reading what they say
   they need instead: a table of notes by tournament, kept by a projection as
   notes are added, edited and deleted, holding each note's id, its
   tournament, its title, its slug, when it was written and when it last
-  changed. It
-  holds no description: a description is read from the note's own stream,
-  and only when a reader reads that note (`note.feature`).
+  changed.
+
+  It holds what a note says too, so that a note's own page is read of it and
+  not of the note's stream (`note.feature`). A list does not ask for it: the
+  notes are listed without their descriptions, which every page of a tournament
+  would otherwise carry, and a description is read only with the one note a
+  reader opened. A note is read with when it was last edited, which is nothing
+  where it never has been.
 
   When a note last changed is when it was last edited, or when it was
   written if it never has been. An edit changes its title and when it last
@@ -29,8 +34,8 @@ Feature: Finding a tournament's notes without reading what they say
   which a rebuild cannot change: the order rows were made in can, since a
   rebuild takes the streams in no order but each stream's own. A tournament with
   no notes is answered with none, and another tournament's notes are not
-  among them. It is asked which note of a tournament is found at a slug, as
-  a note's page is found by its address, and which slugs a tournament's
+  among them. It is asked for the note at a slug, as a note's page is found by its
+  address, and which slugs a tournament's
   notes have taken.
 
   The projection is safe to run twice, as rebuilding the read model does.
@@ -87,27 +92,6 @@ Feature: Finding a tournament's notes without reading what they say
       When the manager notes of "Spring Open" are looked for
       Then the first manager note found is found at "lunch-is-at-noon"
 
-    Scenario: The note at a slug is found
-      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
-      When the manager note of "Spring Open" at "lunch-is-at-noon" is looked for
-      Then the manager note "Lunch is at noon" is found there
-
-    Scenario: No note is found at a slug no note has
-      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
-      When the manager note of "Spring Open" at "tea" is looked for
-      Then no manager note is found there
-
-    Scenario: Another tournament's note is not found at its slug
-      Given the manager note "Lunch is at noon" is added to the tournament "Autumn Open"
-      When the manager note of "Spring Open" at "lunch-is-at-noon" is looked for
-      Then no manager note is found there
-
-    Scenario: No note is found at a deleted note's slug
-      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
-      And the manager note "Lunch is at noon" is deleted
-      When the manager note of "Spring Open" at "lunch-is-at-noon" is looked for
-      Then no manager note is found there
-
     Scenario: A note's slug is taken
       Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
       When the slugs taken by the notes of "Spring Open" are looked for
@@ -147,6 +131,100 @@ Feature: Finding a tournament's notes without reading what they say
       When the manager notes of "Spring Open" are looked for
       Then the first manager note found is found at "lunch-is-at-noon"
 
+  Rule: A note is read with what it says
+
+    Scenario: A note is read with its title
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read is "Lunch is at noon"
+
+    Scenario: A note is read with its description
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read says "In the marquee"
+
+    Scenario: A note is read with when it was written
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read was written at "2026-09-26T10:00:00Z"
+
+    Scenario: A note never edited is read as never edited
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read was never edited
+
+    Scenario: A note edited is read with the description it was edited to
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And the manager note "Lunch is at noon" is to say "By the pool"
+      And the manager note "Lunch is at noon" is edited to "Lunch is at one"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read says "By the pool"
+
+    Scenario: A note edited is read with when it was edited
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And the manager note "Lunch is at noon" is to say "By the pool"
+      And the manager note "Lunch is at noon" is edited to "Lunch is at one"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read was last edited at "2026-09-26T11:00:00Z"
+
+    Scenario: A note with no description is read with none
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read says ""
+
+    Scenario: No note is read at a slug no note has
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager note of "Spring Open" at "tea" is read
+      Then no note is read
+
+    Scenario: Another tournament's note is not read at its slug
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Autumn Open"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then no note is read
+
+    Scenario: A deleted note is not read
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the manager note "Lunch is at noon" is deleted
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then no note is read
+
+    Scenario: A note edited twice is read as it was last edited
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the manager note "Lunch is at noon" is to say "By the pool"
+      And the manager note "Lunch is at noon" is edited to "Lunch is at one"
+      And the manager note "Lunch is at noon" is to say "In the shed"
+      And the manager note "Lunch is at noon" is edited to "Lunch is at one"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read says "In the shed"
+
+  Rule: A note kept before descriptions were is not read
+
+    Scenario: A note kept before descriptions were is refused until the read model is rebuilt
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the note was kept before descriptions were
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note is refused as not kept yet
+
+    Scenario: A note kept before descriptions were is read once the read model is rebuilt
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the note was kept before descriptions were
+      When the read model is rebuilt from the events
+      And the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read says "In the marquee"
+
   Rule: A note deleted is not found
 
     Scenario: A deleted note is not found
@@ -163,6 +241,15 @@ Feature: Finding a tournament's notes without reading what they say
       And the manager notes of "Spring Open" are looked for
       Then 1 manager note is found
 
+    Scenario: A note's editing projected twice leaves it read as edited once
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the manager note "Lunch is at noon" is to say "By the pool"
+      And the manager note "Lunch is at noon" is edited to "Lunch is at one"
+      When the note's events are projected again
+      And the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read says "By the pool"
+
     Scenario: A note's deleting projected twice leaves it not found
       Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
       And the manager note "Lunch is at noon" is deleted
@@ -171,6 +258,17 @@ Feature: Finding a tournament's notes without reading what they say
       Then no manager notes are found
 
   Rule: A rebuild finds every note as it is now
+
+    Scenario: A note edited is read as it was edited once the read model is rebuilt
+      Given the manager note "Lunch is at noon" is to say "In the marquee"
+      And the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And the manager note "Lunch is at noon" is to say "By the pool"
+      And the manager note "Lunch is at noon" is edited to "Lunch is at one"
+      When the read model is rebuilt from the events
+      And the manager note of "Spring Open" at "lunch-is-at-noon" is read
+      Then the note read says "By the pool"
+      And the note read was last edited at "2026-09-26T11:00:00Z"
 
     Scenario: Two notes written at the same moment are found in the same order once the read model is rebuilt
       Given the manager note "Lunch is at noon" is added to the tournament "Spring Open" as "manager-note/123e4567-e89b-42d3-a456-426614174000"

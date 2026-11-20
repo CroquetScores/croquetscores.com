@@ -4,7 +4,10 @@ import { inspect } from "node:util";
 
 import { AggregateRepository } from "../../../../src/application/common/AggregateRepository.js";
 import { ProjectingEventStore } from "../../../../src/application/common/ProjectingEventStore.js";
-import type { ManagerNoteHeading } from "../../../../src/application/operations/tournaments/managerNoteOperations.js";
+import type {
+  ManagerNoteHeading,
+  ManagerNoteRead,
+} from "../../../../src/application/operations/tournaments/managerNoteOperations.js";
 import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import { nameManagerNoteEvents } from "../../../../src/domain/aggregates/tournaments/manager-notes/events/managerNoteEvents.js";
 import { ManagerNote } from "../../../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
@@ -34,8 +37,13 @@ interface Scenario {
   // Each note by the title it was added with, edited or not.
   readonly byTitle: Map<string, ManagerNoteId>;
   found: readonly ManagerNoteHeading[];
-  // The note found at a slug, by its id, or nothing where none was.
-  foundAt: string | undefined;
+  // The note read at a slug, or nothing where none was.
+  read: ManagerNoteRead | undefined;
+  // What a note is to say, by the title the scenario gave it, for the next
+  // time it is added or edited.
+  readonly saying: Map<string, string>;
+  // What reading a note was refused with, where it was.
+  refusal: unknown;
   slugs: readonly string[];
   // Whether a rebuild takes the notes' streams the latest added first.
   latestFirst: boolean;
@@ -88,7 +96,9 @@ Given("the manager notes by tournament read model", function (this: SpecWorld) {
     tournaments: new Map(),
     byTitle: new Map(),
     found: [],
-    foundAt: undefined,
+    read: undefined,
+    saying: new Map(),
+    refusal: undefined,
     slugs: [],
     latestFirst: false,
   });
@@ -126,7 +136,7 @@ const add = async (
         id,
         tournament,
         ManagerNoteTitle.from(title),
-        ManagerNoteDescription.from(""),
+        ManagerNoteDescription.from(scenario.saying.get(title) ?? ""),
         await scenario.readModel.slugsTakenIn(tournament),
         WRITER,
         now(world),
@@ -147,6 +157,26 @@ Given(
   "the manager note {string} is added to the tournament {string} as {string}",
   async function (this: SpecWorld, title: string, name: string, id: string) {
     await add(this, title, name, ManagerNoteId.from(id));
+  },
+);
+
+Given(
+  "the manager note {string} is to say {string}",
+  function (this: SpecWorld, title: string, description: string) {
+    scenarioOf(this).saying.set(title, description);
+  },
+);
+
+// As a note was kept before its description was: the column the migration
+// added, empty.
+Given(
+  "the note was kept before descriptions were",
+  async function (this: SpecWorld) {
+    await this.asARequest(() =>
+      unitOfWorkOf(this)
+        .connection()
+        .query(`update manager_notes_by_tournament set description = null`),
+    );
   },
 );
 
@@ -177,7 +207,15 @@ Given(
   "the manager note {string} is edited to {string}",
   async function (this: SpecWorld, title: string, to: string) {
     await doneTo(this, title, (note) => {
-      note.edit(ManagerNoteTitle.from(to), note.description, WRITER, now(this));
+      const saying = scenarioOf(this).saying.get(title);
+      note.edit(
+        ManagerNoteTitle.from(to),
+        saying === undefined
+          ? note.description
+          : ManagerNoteDescription.from(saying),
+        WRITER,
+        now(this),
+      );
     });
   },
 );
@@ -268,24 +306,68 @@ Then(
 );
 
 When(
-  "the manager note of {string} at {string} is looked for",
+  "the manager note of {string} at {string} is read",
   async function (this: SpecWorld, name: string, slug: string) {
     const scenario = scenarioOf(this);
-    scenario.foundAt = await this.asARequest(() =>
-      scenario.readModel.noteAt(tournamentCalled(this, name), slug),
+    scenario.refusal = undefined;
+    try {
+      scenario.read = await this.asARequest(() =>
+        scenario.readModel.read(tournamentCalled(this, name), slug),
+      );
+    } catch (refused) {
+      scenario.refusal = refused;
+    }
+  },
+);
+
+const noteRead = (world: SpecWorld): ManagerNoteRead => {
+  const { read } = scenarioOf(world);
+  assert.ok(read !== undefined, "No note was read.");
+  return read;
+};
+
+Then("the note read is {string}", function (this: SpecWorld, title: string) {
+  assert.equal(noteRead(this).title, title);
+});
+
+Then("the note read says {string}", function (this: SpecWorld, said: string) {
+  assert.equal(noteRead(this).description, said);
+});
+
+Then(
+  "the note read was written at {string}",
+  function (this: SpecWorld, moment: string) {
+    assert.equal(
+      noteRead(this).writtenAt.toISOString(),
+      new Date(moment).toISOString(),
     );
   },
 );
 
 Then(
-  "the manager note {string} is found there",
-  function (this: SpecWorld, title: string) {
-    assert.equal(scenarioOf(this).foundAt, noteTitled(this, title).value);
+  "the note read was last edited at {string}",
+  function (this: SpecWorld, moment: string) {
+    assert.equal(
+      noteRead(this).lastEditedAt?.toISOString(),
+      new Date(moment).toISOString(),
+    );
   },
 );
 
-Then("no manager note is found there", function (this: SpecWorld) {
-  assert.equal(scenarioOf(this).foundAt, undefined);
+Then("the note read was never edited", function (this: SpecWorld) {
+  assert.equal(noteRead(this).lastEditedAt, undefined);
+});
+
+Then("the note is refused as not kept yet", function (this: SpecWorld) {
+  const { refusal } = scenarioOf(this);
+  assert.ok(
+    refusal instanceof Error && refusal.message.includes("not kept yet"),
+    "The note was not refused.",
+  );
+});
+
+Then("no note is read", function (this: SpecWorld) {
+  assert.equal(scenarioOf(this).read, undefined);
 });
 
 When(

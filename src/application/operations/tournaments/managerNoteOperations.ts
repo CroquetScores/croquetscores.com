@@ -37,20 +37,31 @@ export interface ManagerNoteHeading {
   readonly changedAt: ReadOnlyDate;
 }
 
+/** A note as its own page reads it: its heading and what it says. */
+export interface ManagerNoteRead extends ManagerNoteHeading {
+  /** What it says, which is empty where it says nothing. */
+  readonly description: string;
+  /** When it was last edited, or nothing where it never has been. */
+  readonly lastEditedAt: ReadOnlyDate | undefined;
+}
+
 /**
- * The notes of each tournament, without their descriptions, which a list
- * has no use for and which may be 750,000 characters long
- * (ManagerNotesByTournament.feature).
+ * The notes of each tournament, listed without their descriptions, which a
+ * list has no use for and which may be 750,000 characters long, and read with
+ * their description one at a time (ManagerNotesByTournament.feature).
  */
 export interface TournamentManagerNotes {
   /** The notes of `tournament` not deleted, the most recently written first. */
   of(tournament: TournamentId): Promise<readonly ManagerNoteHeading[]>;
 
   /**
-   * The id of the note of `tournament` found at `slug`, or nothing where no
-   * note not deleted is found there.
+   * The note of `tournament` found at `slug` with what it says, or nothing
+   * where no note not deleted is found there.
    */
-  noteAt(tournament: TournamentId, slug: string): Promise<string | undefined>;
+  read(
+    tournament: TournamentId,
+    slug: string,
+  ): Promise<ManagerNoteRead | undefined>;
 
   /**
    * Every slug the notes of `tournament` have, deleted or not, since a

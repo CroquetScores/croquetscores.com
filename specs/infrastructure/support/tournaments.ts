@@ -427,17 +427,16 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleQuery(new ManagerNotesOfTournamentHandler(...both, byNotes));
   mediator.handleQuery(
     new PublicManagerNotesOfTournamentHandler(
-      tournaments,
       byAddress,
+      pages,
       byNotes,
       byCommentaries,
     ),
   );
   mediator.handleQuery(
     new PublicManagerNoteOfTournamentHandler(
-      tournaments,
       byAddress,
-      managerNotes,
+      pages,
       byNotes,
       byCommentaries,
     ),
@@ -554,19 +553,18 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new PublicCommentariesOfTournamentHandler(
-      tournaments,
       accountRepository,
       byAddress,
+      pages,
       byNotes,
       byCommentaries,
     ),
   );
   mediator.handleQuery(
     new PublicCommentaryOfTournamentHandler(
-      tournaments,
       accountRepository,
-      commentaries,
       byAddress,
+      pages,
       byNotes,
       byCommentaries,
     ),

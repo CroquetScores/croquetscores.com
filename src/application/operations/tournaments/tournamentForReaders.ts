@@ -249,9 +249,30 @@ export interface CommentaryListed extends CommentaryChanged {
   readonly writer: string;
 }
 
+/** A comment as a commentary's page reads it. */
+export interface CommentRead {
+  /** Its id, as the commentary's stream names it. */
+  readonly id: string;
+  readonly text: string;
+  readonly writtenAt: ReadOnlyDate;
+  /** When it was last edited, or nothing where it never has been. */
+  readonly lastEditedAt: ReadOnlyDate | undefined;
+}
+
+/** A commentary as its own page reads it: its heading and its comments. */
+export interface CommentaryRead {
+  readonly id: string;
+  readonly title: string;
+  readonly slug: string;
+  /** Its writer's account's id. */
+  readonly writer: string;
+  /** In the order they were written, those deleted left out. */
+  readonly comments: readonly CommentRead[];
+}
+
 /**
- * The commentaries of each tournament, without reading any comment
- * (CommentariesByTournament.feature). Where a list leaves out a commentary
+ * The commentaries of each tournament, listed without any comment, and read
+ * with their comments one at a time (CommentariesByTournament.feature). Where a list leaves out a commentary
  * whose writer has been forgotten, since a reader is shown nothing of it, its
  * title and slug are still taken.
  */
@@ -271,6 +292,15 @@ export interface TournamentCommentaries {
 
   /** The id of the commentary of `tournament` found at `slug`, if any. */
   at(tournament: TournamentId, slug: string): Promise<string | undefined>;
+
+  /**
+   * The commentary of `tournament` found at `slug` with its comments, its
+   * writer forgotten or not, or nothing where there is none there.
+   */
+  read(
+    tournament: TournamentId,
+    slug: string,
+  ): Promise<CommentaryRead | undefined>;
 
   /**
    * The titles and slugs every commentary of `tournament` has taken, its

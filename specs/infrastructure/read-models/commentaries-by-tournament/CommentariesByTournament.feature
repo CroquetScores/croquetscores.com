@@ -6,14 +6,19 @@ Feature: Finding a tournament's commentaries without reading them
   can do it without replaying every commentary's stream. A read model keeps
   what is needed instead: a table of commentaries by tournament, kept by a
   projection, holding each commentary's id, its tournament, its title, its
-  slug, its writer, when it was started and when it last changed. It holds
-  no comment. It is asked for:
+  slug, its writer, when it was started and when it last changed, and beside
+  it a table of its comments, each with what it says, when it was written and
+  when it was last edited. Listing commentaries asks none of the comments; a
+  commentary's own page asks for them, so that it is read of the read model and
+  not of the commentary's stream (`commentary.feature`). It is asked for:
 
   - a tournament's commentaries, for its commentaries page, the most
     recently started first, each with its title, slug and writer;
   - when each last changed, for every page of the tournament to mark its
     Commentary section by (`commentaries.feature`);
   - which commentary is found at a slug, for a commentary's page;
+  - the commentary found at a slug, read with its comments in the order they
+    were written, for the same page;
   - which titles and slugs the tournament's commentaries have taken, for
     starting one or changing its title (`start.feature`).
 
@@ -146,6 +151,105 @@ Feature: Finding a tournament's commentaries without reading them
       When the commentary of "Spring Open" at "day-one" is looked for
       Then no commentary is found there
 
+  Rule: A commentary is read with its comments, in the order they were written
+
+    Background:
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+
+    Scenario: A commentary is read with its title
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the commentary read is "Day one"
+
+    Scenario: A commentary is read with its writer
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the commentary read is written by "account/123e4567-e89b-42d3-a456-426614174000"
+
+    Scenario: A commentary with no comments is read with none
+      When the commentary of "Spring Open" at "day-one" is read
+      Then no comments are read
+
+    Scenario: A comment is read with what it says
+      Given the comment "Sam is two hoops up" is added to "Day one"
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read says "Sam is two hoops up"
+
+    Scenario: A comment is read with when it was written
+      Given the moment "2026-09-26T11:00:00Z"
+      And the comment "Sam is two hoops up" is added to "Day one"
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read was written at "2026-09-26T11:00:00Z"
+
+    Scenario: A comment never edited is read as never edited
+      Given the comment "Sam is two hoops up" is added to "Day one"
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read was never edited
+
+    Scenario: The comments are read in the order they were written
+      Given the comment "Sam is two hoops up" is added to "Day one"
+      And the moment "2026-09-26T11:00:00Z"
+      And the comment "Alex has levelled it" is added to "Day one"
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read says "Sam is two hoops up"
+      And the second comment read says "Alex has levelled it"
+
+    Scenario: A comment edited is read with what it was edited to
+      Given the comment "Sam is two hoops up" is added to "Day one"
+      And the comment "Sam is two hoops up" in "Day one" is edited to "Sam is three hoops up"
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read says "Sam is three hoops up"
+
+    Scenario: A comment edited is read with when it was edited
+      Given the comment "Sam is two hoops up" is added to "Day one"
+      And the moment "2026-09-26T12:00:00Z"
+      And the comment "Sam is two hoops up" in "Day one" is edited to "Sam is three hoops up"
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read was last edited at "2026-09-26T12:00:00Z"
+
+    Scenario: A comment edited keeps its place
+      Given the comment "Sam is two hoops up" is added to "Day one"
+      And the comment "Alex has levelled it" is added to "Day one"
+      And the comment "Sam is two hoops up" in "Day one" is edited to "Sam is three hoops up"
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read says "Sam is three hoops up"
+
+    Scenario: A comment deleted is not read
+      Given the comment "Sam is two hoops up" is added to "Day one"
+      And the comment "Alex has levelled it" is added to "Day one"
+      And the comment "Sam is two hoops up" in "Day one" is deleted
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read says "Alex has levelled it"
+      And 1 comment is read
+
+    Scenario: A comment is not read as another commentary's
+      Given the commentary "Day two" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the comment "Sam is two hoops up" is added to "Day two"
+      When the commentary of "Spring Open" at "day-one" is read
+      Then no comments are read
+
+    Scenario: No commentary is read at a slug no commentary has
+      When the commentary of "Spring Open" at "day-three" is read
+      Then no commentary is read
+
+    Scenario: Another tournament's commentary is not read at its slug
+      When the commentary of "Autumn Open" at "day-one" is read
+      Then no commentary is read
+
+  Rule: A commentary kept before comments were is not read
+
+    Scenario: A commentary kept before comments were is refused until the read model is rebuilt
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the commentary was kept before comments were
+      When the commentary of "Spring Open" at "day-one" is read
+      Then the commentary is refused as not kept yet
+
+    Scenario: A commentary kept before comments were is read once the read model is rebuilt
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the comment "Sam is two hoops up" is added to "Day one"
+      And the commentary was kept before comments were
+      When the read model is rebuilt from the events
+      And the commentary of "Spring Open" at "day-one" is read
+      Then the first comment read says "Sam is two hoops up"
+
   Rule: The titles and slugs a tournament's commentaries have taken are found
 
     Scenario: A commentary's title is taken
@@ -219,8 +323,38 @@ Feature: Finding a tournament's commentaries without reading them
 
   Rule: Projecting the same events again changes nothing
 
+    Scenario: A comment's adding projected twice is one comment
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the comment "Sam is two hoops up" is added to "Day one"
+      And the comment "Sam is two hoops up" in "Day one" is edited to "Sam is three hoops up"
+      When every stream's events are projected again
+      And the commentary of "Spring Open" at "day-one" is read
+      Then 1 comment is read
+      And the first comment read says "Sam is three hoops up"
+
+    Scenario: A comment's deleting projected twice leaves it not read
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the comment "Sam is two hoops up" is added to "Day one"
+      And the comment "Sam is two hoops up" in "Day one" is deleted
+      When every stream's events are projected again
+      And the commentary of "Spring Open" at "day-one" is read
+      Then no comments are read
+
     Scenario: A commentary's start projected twice is one commentary
       Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
       When every stream's events are projected again
       And the commentaries of "Spring Open" are looked for
       Then 1 commentary is found
+
+  Rule: A rebuild reads every commentary as it is now
+
+    Scenario: The comments are read as they were written once the read model is rebuilt
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the comment "Sam is two hoops up" is added to "Day one"
+      And the comment "Alex has levelled it" is added to "Day one"
+      And the comment "Sam is two hoops up" in "Day one" is edited to "Sam is three hoops up"
+      And the comment "Alex has levelled it" in "Day one" is deleted
+      When the read model is rebuilt from the events
+      And the commentary of "Spring Open" at "day-one" is read
+      Then 1 comment is read
+      And the first comment read says "Sam is three hoops up"

@@ -5,6 +5,7 @@ import { inspect } from "node:util";
 import type {
   CommentaryChanged,
   CommentaryListed,
+  CommentaryRead,
 } from "../../../../src/application/operations/tournaments/tournamentForReaders.js";
 import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import { AccountForgotten } from "../../../../src/domain/aggregates/accounts/events/AccountForgotten.js";
@@ -59,6 +60,8 @@ interface Scenario {
   found: readonly CommentaryListed[];
   changed: readonly CommentaryChanged[];
   foundAt: string | undefined;
+  read: CommentaryRead | undefined;
+  refusal: unknown;
   taken: {
     readonly titles: readonly string[];
     readonly slugs: readonly string[];
@@ -129,6 +132,8 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
     found: [],
     changed: [],
     foundAt: undefined,
+    read: undefined,
+    refusal: undefined,
     taken: { titles: [], slugs: [] },
   };
   scenarios.set(this, scenario);
@@ -280,6 +285,19 @@ Given(
   },
 );
 
+// As a commentary was kept before its comments were: the flag the migration
+// added, unset.
+Given(
+  "the commentary was kept before comments were",
+  async function (this: SpecWorld) {
+    await this.asARequest(() =>
+      unitOfWorkOf(this)
+        .connection()
+        .query(`update commentaries_by_tournament set comments_kept = false`),
+    );
+  },
+);
+
 Given(
   "the commentaries' streams are to be rebuilt the latest started first",
   function (this: SpecWorld) {
@@ -332,6 +350,21 @@ When(
     scenario.foundAt = await this.asARequest(() =>
       scenario.readModel.at(tournamentCalled(this, name), slug),
     );
+  },
+);
+
+When(
+  "the commentary of {string} at {string} is read",
+  async function (this: SpecWorld, name: string, slug: string) {
+    const scenario = scenarioOf(this);
+    scenario.refusal = undefined;
+    try {
+      scenario.read = await this.asARequest(() =>
+        scenario.readModel.read(tournamentCalled(this, name), slug),
+      );
+    } catch (refused) {
+      scenario.refusal = refused;
+    }
   },
 );
 
@@ -454,5 +487,93 @@ Then(
   /^(\d+) commentar(?:y is|ies are) found$/,
   function (this: SpecWorld, count: string) {
     assert.equal(scenarioOf(this).changed.length, Number(count));
+  },
+);
+
+// What was read ------------------------------------------------------------------------
+
+const readCommentary = (world: SpecWorld): CommentaryRead => {
+  const { read } = scenarioOf(world);
+  assert.ok(read !== undefined, "No commentary was read.");
+  return read;
+};
+
+const commentRead = (
+  world: SpecWorld,
+  which: string,
+): CommentaryRead["comments"][number] => {
+  const comment = readCommentary(world).comments[places.indexOf(which)];
+  assert.ok(comment !== undefined, `No ${which} comment was read.`);
+  return comment;
+};
+
+Then(
+  "the commentary read is {string}",
+  function (this: SpecWorld, title: string) {
+    assert.equal(readCommentary(this).title, title);
+  },
+);
+
+Then(
+  "the commentary read is written by {string}",
+  function (this: SpecWorld, writer: string) {
+    assert.equal(readCommentary(this).writer, writer);
+  },
+);
+
+Then("the commentary is refused as not kept yet", function (this: SpecWorld) {
+  const { refusal } = scenarioOf(this);
+  assert.ok(
+    refusal instanceof Error && refusal.message.includes("not kept yet"),
+    "The commentary was not refused.",
+  );
+});
+
+Then("no commentary is read", function (this: SpecWorld) {
+  assert.equal(scenarioOf(this).read, undefined);
+});
+
+Then("no comments are read", function (this: SpecWorld) {
+  assert.deepEqual(readCommentary(this).comments, []);
+});
+
+Then(
+  /^(\d+) comments? (?:is|are) read$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(readCommentary(this).comments.length, Number(count));
+  },
+);
+
+Then(
+  /^the (first|second) comment read says "(.*)"$/,
+  function (this: SpecWorld, which: string, said: string) {
+    assert.equal(commentRead(this, which).text, said);
+  },
+);
+
+Then(
+  /^the (first|second) comment read was written at "(.*)"$/,
+  function (this: SpecWorld, which: string, moment: string) {
+    assert.equal(
+      commentRead(this, which).writtenAt.toISOString(),
+      new Date(moment).toISOString(),
+    );
+  },
+);
+
+Then(
+  /^the (first|second) comment read was last edited at "(.*)"$/,
+  function (this: SpecWorld, which: string, moment: string) {
+    assert.equal(
+      commentRead(this, which).lastEditedAt?.toISOString(),
+      new Date(moment).toISOString(),
+    );
+  },
+);
+
+Then(
+  /^the (first|second) comment read was never edited$/,
+  function (this: SpecWorld, which: string) {
+    assert.equal(commentRead(this, which).lastEditedAt, undefined);
   },
 );

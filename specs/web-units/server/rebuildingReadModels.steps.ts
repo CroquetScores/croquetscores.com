@@ -27,6 +27,7 @@ const READ_MODEL_TABLES = [
   "manager_notes_by_tournament",
   "commentaries_by_tournament",
   "commentaries_by_tournament_forgotten",
+  "commentary_comments",
 ];
 
 // Counted before a rebuild, to be compared with after it.
