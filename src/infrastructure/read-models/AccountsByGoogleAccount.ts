@@ -48,10 +48,11 @@ export class AccountsByGoogleAccount implements Projection, Finding {
     for (const event of events) {
       if (event instanceof GoogleAccountLinked) {
         await connection.query(
-          `insert into accounts_by_google_account (account_id, subject_hash)
-           values ($1, $2)
+          `insert into accounts_by_google_account
+             (account_id, subject_hash, changed_at)
+           values ($1, $2, $3)
            on conflict (account_id) do nothing`,
-          [stream, this.#hash(event.subject)],
+          [stream, this.#hash(event.subject), event.occurredAt.toISOString()],
         );
       } else if (event instanceof AccountForgotten) {
         await connection.query(
