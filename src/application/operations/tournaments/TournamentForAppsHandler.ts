@@ -1,122 +1,38 @@
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
-import { Website } from "../../../domain/common/Website.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import { TournamentOperationRefused } from "./tournamentOperations.js";
+import type { TournamentContents } from "./tournamentContents.js";
 import {
-  TournamentOperationRefused,
-  tournamentFor,
-} from "./tournamentOperations.js";
-import type { TournamentsByWebsite } from "./tournamentsOfWebsite.js";
-import {
-  type CompetitionForApps,
   TournamentForApps,
   type TournamentForAppsRead,
 } from "./TournamentForApps.js";
 
-// In the order a reader looks for a name in a list, capitals or none.
-const byName = new Intl.Collator("en");
-
-const noSuchTournament = (): TournamentOperationRefused =>
-  new TournamentOperationRefused(
-    "TournamentForApps.NoSuchTournament",
-    "There is no such tournament.",
-  );
-
+/**
+ * A tournament as an app is told of it, asked of the read models that keep
+ * what is in a tournament (`TournamentContents.feature`) and so of nothing
+ * else: not of the events, and not of the tournament as they would rebuild it.
+ */
 export class TournamentForAppsHandler extends QueryHandler<
   TournamentForApps,
   TournamentForAppsRead
 > {
   readonly handles: RequestType<TournamentForApps> = TournamentForApps;
 
-  constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly changes: Pick<TournamentsByWebsite, "changesOfTournament">,
-  ) {
+  constructor(private readonly read: Pick<TournamentContents, "tournament">) {
     super();
   }
 
   async handle(query: TournamentForApps): Promise<TournamentForAppsRead> {
-    const tournament = await tournamentFor(
-      this.tournaments,
-      query.tournament,
-      "TournamentForApps",
-    ).catch((failure: unknown) => {
-      if (!(failure instanceof ValidationError)) throw failure;
-      throw noSuchTournament();
-    });
-    // A tournament is of the website it was created on, and one archived is
-    // not one an app is sent to, as a reader is not.
-    if (
-      !tournament.website.equals(Website.from(query.website)) ||
-      tournament.archived
-    ) {
-      throw noSuchTournament();
+    const found = await this.read.tournament(query.website, query.tournament);
+    // What is not an id at all is no tournament there is, and is refused as
+    // one, since an app that mistyped an address has no use for a finer
+    // answer.
+    if (found === undefined) {
+      throw new TournamentOperationRefused(
+        "TournamentForApps.NoSuchTournament",
+        "There is no such tournament.",
+      );
     }
-
-    const inUse = tournament.competitions.filter(
-      ({ reference }) => !reference.archived,
-    );
-    const changed = await this.changes.changesOfTournament(tournament.id.value);
-    if (changed === undefined) {
-      throw new Error(`Nothing is kept of ${tournament.id.value}.`);
-    }
-    const competitions: CompetitionForApps[] = inUse.map(
-      ({ reference, shape }) => ({
-        id: reference.id.value,
-        name: reference.name.toString(),
-        kind: shape.kind,
-        // A test has its own part of the tournament's address, as its page does.
-        address: `${tournament.address.toString()}/${shape.kind === "test" ? "tests" : "competitions"}/${reference.slug.toString()}`,
-        changedAt:
-          changed.competitions.get(reference.id.value) ?? changed.tournament,
-      }),
-    );
-
-    return {
-      id: tournament.id.value,
-      name: tournament.name.toString(),
-      starts: tournament.starts.toISOString().slice(0, 10),
-      finishes: tournament.finishes.toISOString().slice(0, 10),
-      country: tournament.country.code,
-      region: tournament.region?.code,
-      sport: tournament.sport.code,
-      address: tournament.address.toString(),
-      national: tournament.national,
-      international: tournament.international,
-      changedAt: changed.tournament,
-      competitions,
-      players: tournament.players
-        .filter((player) => !player.archived)
-        .map((player) => ({
-          id: player.id.value,
-          name: player.name.toString(),
-          // Every player has one, but a player kept before that was so may
-          // not, and is known by their name as the rest are.
-          worldRankingName:
-            player.worldRankingName?.toString() ?? player.name.toString(),
-          handicap: player.handicap,
-          representing: player.representing,
-        }))
-        .sort((one, other) => byName.compare(one.name, other.name)),
-      teams: tournament.teams
-        .filter((team) => !team.archived)
-        .map((team) => ({
-          id: team.id.value,
-          name: team.name.toString(),
-          shortName: team.shortName.toString(),
-          players: team.players
-            .filter((player) => !player.archived)
-            .map((player) => ({
-              id: player.id.value,
-              name: player.name.toString(),
-              worldRankingName:
-                player.worldRankingName?.toString() ?? player.name.toString(),
-            }))
-            .sort((one, other) => byName.compare(one.name, other.name)),
-        })),
-    };
+    return found;
   }
 }

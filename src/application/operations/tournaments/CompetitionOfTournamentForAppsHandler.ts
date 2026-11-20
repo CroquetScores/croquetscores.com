@@ -1,15 +1,19 @@
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
-import { competitionFoundFor } from "./competitionForApps.js";
 import {
   CompetitionOfTournamentForApps,
   type CompetitionToTell,
 } from "./CompetitionOfTournamentForApps.js";
-import type { TournamentsByWebsite } from "./tournamentsOfWebsite.js";
+import { TournamentOperationRefused } from "./tournamentOperations.js";
+import type { TournamentContents } from "./tournamentContents.js";
 
+/**
+ * A competition as an app is told of it, asked of the read models that keep
+ * what is in a tournament, and so of nothing else. An id that is none is
+ * refused as one there is not, since an app that mistyped an address has no
+ * use for a finer answer, and so is an archived tournament or competition,
+ * and a competition of another tournament.
+ */
 export class CompetitionOfTournamentForAppsHandler extends QueryHandler<
   CompetitionOfTournamentForApps,
   CompetitionToTell
@@ -17,29 +21,30 @@ export class CompetitionOfTournamentForAppsHandler extends QueryHandler<
   readonly handles: RequestType<CompetitionOfTournamentForApps> =
     CompetitionOfTournamentForApps;
 
-  constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly changes: Pick<TournamentsByWebsite, "changesOfTournament">,
-  ) {
+  constructor(private readonly read: Pick<TournamentContents, "competition">) {
     super();
   }
 
   async handle(
     query: CompetitionOfTournamentForApps,
   ): Promise<CompetitionToTell> {
-    const { tournament, reference, shape, head } = await competitionFoundFor(
-      this.tournaments,
-      this.changes,
+    const found = await this.read.competition(
       query.website,
       query.tournament,
       query.competition,
-      "CompetitionOfTournamentForApps",
     );
-    // A test has its own part of the tournament's address, as its page does.
-    const part = shape.kind === "test" ? "tests" : "competitions";
-    return {
-      competition: head,
-      address: `${tournament.address.toString()}/${part}/${reference.slug.toString()}`,
-    };
+    if (found.found === "no tournament") {
+      throw new TournamentOperationRefused(
+        "CompetitionOfTournamentForApps.NoSuchTournament",
+        "There is no such tournament.",
+      );
+    }
+    if (found.found === "no competition") {
+      throw new TournamentOperationRefused(
+        "CompetitionOfTournamentForApps.NoSuchCompetition",
+        "There is no such competition.",
+      );
+    }
+    return { competition: found.head, address: found.address };
   }
 }
