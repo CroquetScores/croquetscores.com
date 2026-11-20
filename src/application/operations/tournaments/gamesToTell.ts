@@ -81,8 +81,6 @@ const roundsOf = (kept: GamesKept): ReadonlyMap<string, number> => {
   return rounds;
 };
 
-const nobody: WhoPlayed = { playerId: "", name: "", team: undefined };
-
 /**
  * The games of a competition of the kind `kind`, which last changed at
  * `changedAt`: a game that has no change held is as changed as the competition,
@@ -93,7 +91,17 @@ export const gamesToTell = (
   kept: GamesKept,
   changedAt: ReadOnlyDate,
 ): GamesOfCompetition => {
-  const whoIs = (id: string): WhoPlayed => kept.who.get(id) ?? nobody;
+  // A gap is never told as if it were a player: it means the read models are
+  // not whole, as when they have not been made again after a migration.
+  const whoIs = (id: string): WhoPlayed => {
+    const who = kept.who.get(id);
+    if (who === undefined) {
+      throw new Error(
+        `A game of the competition names a player it lacks: ${id}`,
+      );
+    }
+    return who;
+  };
   const withdrawnPlayers = new Set(
     kept.entries.filter((each) => each.withdrawn).map((each) => each.id),
   );

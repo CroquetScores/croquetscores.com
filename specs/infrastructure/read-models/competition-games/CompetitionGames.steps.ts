@@ -622,9 +622,20 @@ for (const [said, field, value] of [
 // What a game is told as, of what is kept: a game of a withdrawn player is told
 // as withdrawn, though the game itself was not.
 const toldGame = (world: SpecWorld, label: string) => {
+  // This read model is stood up without the tournament's, which is what says
+  // who each player is, so they are said here.
+  const kept = keptOf(world);
+  const who = new Map(kept.who);
+  for (const entry of kept.entries) {
+    who.set(entry.id, {
+      playerId: entry.tournamentPlayerId,
+      name: nameOfPlayer(world, entry.id),
+      team: undefined,
+    });
+  }
   const told = gamesToTell(
     "block",
-    keptOf(world),
+    { ...kept, who },
     ReadOnlyDate.from(new Date("2026-01-01T00:00:00Z")),
   );
   assert.ok("games" in told);
@@ -632,6 +643,27 @@ const toldGame = (world: SpecWorld, label: string) => {
   assert.ok(game !== undefined, `${label} is not told.`);
   return game;
 };
+
+When(
+  /^the games of "([^"]*)" of "([^"]*)" are read back without who played them$/,
+  async function (this: SpecWorld, competition: string, tournament: string) {
+    await readBack(this, `${competition} of ${tournament}`);
+    const own = ownScenarioOf(this);
+    own.kept = { ...keptOf(this), who: new Map() };
+  },
+);
+
+Then("telling them is refused", function (this: SpecWorld) {
+  assert.throws(
+    () =>
+      gamesToTell(
+        "block",
+        keptOf(this),
+        ReadOnlyDate.from(new Date("2026-01-01T00:00:00Z")),
+      ),
+    /names a player it lacks/,
+  );
+});
 
 Then(
   "the game {string} is told as withdrawn",

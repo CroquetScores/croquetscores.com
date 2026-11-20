@@ -175,6 +175,13 @@ Feature: The games of a competition, kept for the API
       When the games of the test of "Spring Tests" are read back
       Then the games kept are "the second" and "the first"
 
+  Rule: A game that names a player nobody keeps is not told
+
+    Scenario: A game of a player the read models lack is refused
+      Given "Sam Someone" beat "Alex Another" 26 to 17 in "Block A" of "Spring Open" as "the first"
+      When the games of "Block A" of "Spring Open" are read back without who played them
+      Then telling them is refused
+
   Rule: A player is kept as the competition says them
 
     Scenario: The players are kept in the competition's order
@@ -258,6 +265,13 @@ Feature: The games of a competition, kept for the API
       When the events of the competition "Block A" of "Spring Open" are projected again
       And the games of "Block A" of "Spring Open" are read back
       Then the games kept are "the first"
+
+    Scenario: A game corrected and projected twice keeps its correction
+      Given "Sam Someone" beat "Alex Another" 26 to 17 in "Block A" of "Spring Open" as "the first"
+      And the game "the first" in "Block A" of "Spring Open" is corrected to 26 to 20
+      When the events of the competition "Block A" of "Spring Open" are projected again
+      And the games of "Block A" of "Spring Open" are read back
+      Then the game "the first" is kept with the scores "26" and "20"
 
     Scenario: A game archived and projected twice is still archived
       Given "Sam Someone" beat "Alex Another" 26 to 17 in "Block A" of "Spring Open" as "the first"

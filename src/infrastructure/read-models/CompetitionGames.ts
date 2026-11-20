@@ -306,13 +306,9 @@ export class CompetitionGames implements Projection, Asked {
                  (select coalesce(max(position), 0) + 1
                     from competition_games where competition_id = $2),
                  $3, $4, $5, $6, $7, $8)
+         -- Adding it again must not undo a correction made since.
          on conflict (game_id) do update
-           set winner_id = excluded.winner_id,
-               winner_score = excluded.winner_score,
-               loser_id = excluded.loser_id,
-               loser_score = excluded.loser_score,
-               drawn = excluded.drawn,
-               changed_at = greatest(competition_games.changed_at,
+           set changed_at = greatest(competition_games.changed_at,
                                      excluded.changed_at)`,
         [
           event.gameId,
