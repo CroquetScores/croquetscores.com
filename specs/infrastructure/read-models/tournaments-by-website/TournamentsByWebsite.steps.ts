@@ -38,6 +38,7 @@ import {
   foundCalled,
   scenarioOf,
   standUp,
+  tournamentNamed,
   update,
   updated,
 } from "../../support/tournamentReadModels.js";
@@ -113,6 +114,82 @@ const gameAdded = (
   assert.ok(id !== undefined, `No game was added to ${competition} then.`);
   return id;
 };
+
+// When what is held last changed, read from the tables themselves, since no
+// question the read model answers is about it: the API asks it, and its
+// features say so.
+const heldAsLastChanged = async (
+  world: SpecWorld,
+  table: string,
+  where: string,
+  values: readonly string[],
+): Promise<string> => {
+  let found: string | undefined;
+  await world.asARequest(async () => {
+    const { rows } = await unitOfWorkOf(world)
+      .connection()
+      .query<{ changed_at: Date }>(
+        `select changed_at from ${table} where ${where}`,
+        [...values],
+      );
+    found = rows[0]?.changed_at.toISOString();
+  });
+  assert.ok(found !== undefined, `Nothing is held in ${table}.`);
+  return found;
+};
+
+Then(
+  "the tournament {string} is held as last changed at {string}",
+  async function (this: SpecWorld, tournament: string, moment: string) {
+    assert.equal(
+      await heldAsLastChanged(this, "tournaments", "tournament_id = $1", [
+        tournamentNamed(this, tournament).value,
+      ]),
+      new Date(moment).toISOString(),
+    );
+  },
+);
+
+Then(
+  "the competition {string} of {string} is held as last changed at {string}",
+  async function (
+    this: SpecWorld,
+    competition: string,
+    tournament: string,
+    moment: string,
+  ) {
+    assert.equal(
+      await heldAsLastChanged(this, "competitions", "competition_id = $1", [
+        competitionNamed(this, competition, tournament).value,
+      ]),
+      new Date(moment).toISOString(),
+    );
+  },
+);
+
+Then(
+  "the game added to {string} of {string} at {string} is held as last changed at {string}",
+  async function (
+    this: SpecWorld,
+    competition: string,
+    tournament: string,
+    added: string,
+    moment: string,
+  ) {
+    assert.equal(
+      await heldAsLastChanged(
+        this,
+        "tournaments_by_website_games",
+        "competition_id = $1 and game_id = $2",
+        [
+          competitionNamed(this, competition, tournament).value,
+          gameAdded(this, competition, tournament, added).value,
+        ],
+      ),
+      new Date(moment).toISOString(),
+    );
+  },
+);
 
 Given("the tournaments by website read model", function (this: SpecWorld) {
   standUp(this, new TournamentsByWebsite(unitOfWorkOf(this)), {

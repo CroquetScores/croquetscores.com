@@ -19,7 +19,7 @@ export class CompetitionOfTournamentForAppsHandler extends QueryHandler<
 
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly changes: Pick<TournamentsByWebsite, "changedAtOfStreams">,
+    private readonly changes: Pick<TournamentsByWebsite, "changesOfTournament">,
   ) {
     super();
   }

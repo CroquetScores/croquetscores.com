@@ -14,8 +14,9 @@ Feature: The tournaments with recent results
 
   A game counts for as long as it is in use: an archived game counts for
   nothing, as it does everywhere games are counted, and nor do the games of
-  an archived competition. A game restored counts from when it was added. An
-  archived tournament is not listed, whatever was played in it
+  an archived competition. A game restored or corrected counts from then, since
+  that is when it last changed. An archived tournament is not listed, whatever
+  was played in it
   (`TournamentsByWebsite.feature`).
 
   The list is of the website asked about, and can be narrowed to a country, a
@@ -95,14 +96,14 @@ Feature: The tournaments with recent results
       When the recent results are asked for at "2026-10-02T10:00:00Z"
       Then "Spring Open" is answered
 
-    Scenario: An old game restored lately is still old
+    Scenario: An old game restored lately is recent
       Given the moment "2026-09-20T10:00:00Z"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       And the moment "2026-10-01T10:00:00Z"
       And "organiser@example.com" has restored the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the recent results are asked for at "2026-10-02T10:00:00Z"
-      Then "Spring Open" is not answered
+      Then "Spring Open" is answered
 
     Scenario: A tournament whose recent games are in an archived competition is not answered
       Given the moment "2026-10-01T10:00:00Z"
