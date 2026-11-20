@@ -1,7 +1,10 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { TournamentOfAccount } from "../../../../src/application/operations/tournaments/TournamentsOfAccount.js";
+import type {
+  PartInTournamentOfAccount,
+  TournamentOfAccount,
+} from "../../../../src/application/operations/tournaments/TournamentsOfAccount.js";
 import { CompetitionId } from "../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { BestOf } from "../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
@@ -16,6 +19,7 @@ import {
   foundCalled,
   scenarioOf,
   standUp,
+  tournamentNamed,
 } from "../../support/tournamentReadModels.js";
 import { unitOfWorkOf } from "../../support/transactions.js";
 
@@ -45,6 +49,77 @@ Given("the tournaments by account read model", function (this: SpecWorld) {
 });
 
 // What is done to it ------------------------------------------------------------------
+
+// What the read model last said of the part an account has in a tournament,
+// which nothing else here asks: nothing where there is no such tournament.
+const partFound = new WeakMap<
+  SpecWorld,
+  { readonly said: PartInTournamentOfAccount | undefined }
+>();
+
+const said = (world: SpecWorld): PartInTournamentOfAccount | undefined => {
+  const found = partFound.get(world);
+  assert.ok(found !== undefined, "The part was not looked for.");
+  return found.said;
+};
+
+const lookForPart = async (
+  world: SpecWorld,
+  address: string,
+  tournament: string,
+): Promise<void> => {
+  const account = accountFor(world, address);
+  const id = tournamentNamed(world, tournament).value;
+  await world.asARequest(async () => {
+    partFound.set(world, {
+      said: await readModelOf(world).partIn(id, account),
+    });
+  });
+};
+
+When(
+  "the part of the account for {string} in {string} is looked for",
+  async function (this: SpecWorld, address: string, tournament: string) {
+    await lookForPart(this, address, tournament);
+  },
+);
+
+When(
+  "the part of the account for {string} in a tournament there is not is looked for",
+  async function (this: SpecWorld, address: string) {
+    const account = accountFor(this, address);
+    await this.asARequest(async () => {
+      partFound.set(this, {
+        said: await readModelOf(this).partIn("tournament/not-there", account),
+      });
+    });
+  },
+);
+
+Then("the part found is {string}", function (this: SpecWorld, part: string) {
+  assert.equal(said(this)?.part, part);
+});
+
+Then(
+  "no part is found for there being no such tournament",
+  function (this: SpecWorld) {
+    assert.equal(said(this), undefined);
+  },
+);
+
+Then(
+  "the tournament of the part found is archived",
+  function (this: SpecWorld) {
+    assert.equal(said(this)?.archived, true);
+  },
+);
+
+Then(
+  "the tournament of the part found is not archived",
+  function (this: SpecWorld) {
+    assert.equal(said(this)?.archived, false);
+  },
+);
 
 Given(
   "the account for {string} is made a manager of {string}",

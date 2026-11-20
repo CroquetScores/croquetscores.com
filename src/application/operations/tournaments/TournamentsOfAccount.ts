@@ -41,12 +41,31 @@ export interface TournamentOfAccount {
   readonly part: "manager" | "scorer" | "rankingOfficer";
 }
 
+/** The part an account has in one tournament, and whether it is archived. */
+export interface PartInTournamentOfAccount {
+  readonly archived: boolean;
+  /** Neither, for an account that is neither a manager nor a scorer of it. */
+  readonly part: "manager" | "scorer" | "neither";
+}
+
 /**
  * The tournaments an account manages or scores, and the years it has them in,
  * as a read model keeps them. The application names what it asks; the
  * infrastructure keeps the answer.
  */
 export interface TournamentsByAccount {
+  /**
+   * The part `account` has in the tournament `tournament`, by its id, and
+   * whether it is archived; nothing where there is no such tournament, which is
+   * what an id that is no tournament's is too. An administrator who is neither
+   * its manager nor its scorer is neither: what is asked is the part the account
+   * plays in the tournament, and not what it may do at the site.
+   */
+  partIn(
+    tournament: string,
+    account: AccountId,
+  ): Promise<PartInTournamentOfAccount | undefined>;
+
   /**
    * Those on `website` starting in `year`: the newest first, those starting
    * on the same day by name, and archived ones after all the rest.

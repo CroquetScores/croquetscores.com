@@ -1500,7 +1500,7 @@ export const buildApplication = async (
   mediator.handleQuery(new PlayersOfTeamHandler(...both, games));
   mediator.handleQuery(new PlayersOfTestHandler(...both));
   mediator.handleQuery(
-    new WhatAKeyMayDoInTournamentHandler(tournaments, identifyingKeys),
+    new WhatAKeyMayDoInTournamentHandler(tournamentsByAccount, identifyingKeys),
   );
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
   mediator.handleQuery(

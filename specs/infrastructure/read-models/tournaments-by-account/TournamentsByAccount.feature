@@ -601,6 +601,92 @@ Feature: Finding the tournaments an account has a part in
       Then it is rebuilt without failing
       And "Spring Open" is held as counting towards the world rankings
 
+  Rule: The part an account has in one tournament is asked for by its id
+
+    The API asks what a key may do in a tournament by the tournament's id and
+    the account the key acts as (`WhatAKeyMayDoInTournament.feature`), which
+    is a manager, a scorer or neither, and whether the tournament is archived.
+    It is asked of this read model and not of the tournament's events. An
+    account is one of the two or neither, and a manager is not also a scorer.
+    A tournament there is not is found as none, which is what an id that is no
+    tournament's is too.
+
+    Scenario: The creator is a manager
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the part of the account for "organiser@example.com" in "Spring Open" is looked for
+      Then the part found is "manager"
+
+    Scenario: A manager made is a manager
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the account for "helper@example.com" is made a manager of "Spring Open"
+      When the part of the account for "helper@example.com" in "Spring Open" is looked for
+      Then the part found is "manager"
+
+    Scenario: A scorer made is a scorer
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the account for "scorer@example.com" is made a scorer of "Spring Open"
+      When the part of the account for "scorer@example.com" in "Spring Open" is looked for
+      Then the part found is "scorer"
+
+    Scenario: A scorer made a manager is a manager
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the account for "helper@example.com" is made a scorer of "Spring Open"
+      And the account for "helper@example.com" is made a manager of "Spring Open"
+      When the part of the account for "helper@example.com" in "Spring Open" is looked for
+      Then the part found is "manager"
+
+    Scenario: An account with no part in it is neither
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the part of the account for "stranger@example.com" in "Spring Open" is looked for
+      Then the part found is "neither"
+
+    Scenario: A manager taken off is neither
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the account for "helper@example.com" is made a manager of "Spring Open"
+      And the account for "helper@example.com" is taken off the managers of "Spring Open"
+      When the part of the account for "helper@example.com" in "Spring Open" is looked for
+      Then the part found is "neither"
+
+    Scenario: A tournament there is not is found as none
+      When the part of the account for "organiser@example.com" in a tournament there is not is looked for
+      Then no part is found for there being no such tournament
+
+    Scenario: A tournament is not archived until it is archived
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the part of the account for "organiser@example.com" in "Spring Open" is looked for
+      Then the tournament of the part found is not archived
+
+    Scenario: A tournament archived is archived
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is archived
+      When the part of the account for "organiser@example.com" in "Spring Open" is looked for
+      Then the tournament of the part found is archived
+
+    Scenario: A tournament restored is not archived
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is archived
+      And "Spring Open" is restored
+      When the part of the account for "organiser@example.com" in "Spring Open" is looked for
+      Then the tournament of the part found is not archived
+
+    Scenario: The part is the same once the read model is rebuilt
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the account for "scorer@example.com" is made a scorer of "Spring Open"
+      When the read model is rebuilt from the events
+      And the part of the account for "scorer@example.com" in "Spring Open" is looked for
+      Then it is rebuilt without failing
+      And the part found is "scorer"
+
   Rule: Projecting the same events again changes nothing
 
     Scenario: A tournament's creation projected twice is one tournament
