@@ -63,6 +63,11 @@ Given(
     await events.appendEvents(causedBy, 0, [exampleEvent("kept")]);
     const server = Fastify();
     markRequestsToTheApi(server, store);
+    // A hook that waits, after the one that marks, as the site's own are: Fastify
+    // carries on from it on a later turn, which is where a mark could be lost.
+    server.addHook("onRequest", async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1));
+    });
     registerTestControlEventStore(server, token, store);
     // Every address reads the stream, and `POST` appends to it, as whatever is
     // asked would.

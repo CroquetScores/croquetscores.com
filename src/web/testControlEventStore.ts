@@ -24,7 +24,10 @@ export const markRequestsToTheApi = (
   store: ReadsRefusable,
 ): void => {
   server.addHook("onRequest", (request, _reply, done) => {
-    if (request.url.startsWith("/api/v0")) {
+    // The path alone, and whole segments of it: /api/v0-notes is not the API,
+    // and a query string does not make a request something else.
+    const path = request.url.split("?")[0] ?? "";
+    if (path === "/api/v0" || path.startsWith("/api/v0/")) {
       store.marked(done);
       return;
     }
