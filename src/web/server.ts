@@ -295,6 +295,7 @@ import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsB
 import { CompetitionGames } from "../infrastructure/read-models/CompetitionGames.js";
 import { CompetitionStandings } from "../infrastructure/read-models/CompetitionStandings.js";
 import { TournamentPages } from "../infrastructure/read-models/TournamentPages.js";
+import { TournamentRankings } from "../infrastructure/read-models/TournamentRankings.js";
 import { TournamentContents } from "../infrastructure/read-models/TournamentContents.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
@@ -1602,9 +1603,10 @@ export const buildApplication = async (
   mediator.handleQuery(publicBlocks);
   mediator.handleQuery(
     new PublicRankingsOfTournamentHandler(
-      tournaments,
-      competitions,
       tournamentsByAddress,
+      tournamentPages,
+      new TournamentRankings(unitOfWork),
+      competitionGames,
       competitionStandings,
     ),
   );

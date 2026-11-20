@@ -14,9 +14,11 @@ export interface GameOfRanking {
   readonly wonByWinner: boolean;
   /**
    * The day it was added, as "2026-10-03", in the time zone of the place the
-   * tournament is played. Not there for a game kept without when it was added.
+   * tournament is played. A game kept before its first day was held is on the
+   * day it last changed, and one kept with no time at all on the day its
+   * competition last changed.
    */
-  readonly day?: string | undefined;
+  readonly day: string;
 }
 
 /**

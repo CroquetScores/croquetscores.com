@@ -228,3 +228,10 @@ Then(
     assert.equal(resultAnswered(this, "first").games[0]?.loserScore, score);
   },
 );
+
+Then(
+  "the day of the first game of the first result is {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(resultAnswered(this, "first").games[0]?.day, day);
+  },
+);
