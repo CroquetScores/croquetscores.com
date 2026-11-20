@@ -328,3 +328,39 @@ Feature: The games of a tournament, for anybody to read
     Scenario: A test is answered with where it is found
       When the games of the tournament at "2026/ac/spring-tests" are asked for
       Then the competition "AUS v ENG" is answered as found at "2026/ac/spring-tests/tests/aus-v-eng"
+
+  Rule: The games are answered from the read models alone
+
+    The read models keep what a tournament's page shows, so asking for it
+    reads none of the tournament's or the competitions' events. Taking the
+    events away and asking again shows that nothing here still reads them.
+
+    Scenario: A game is answered with no events kept
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the events of the tournaments and the competitions are no longer kept
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the first game answered is of "Sam Someone" beating "Alex Another"
+
+    Scenario: A withdrawn player's game is answered as withdrawn with no events kept
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      And the events of the tournaments and the competitions are no longer kept
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the first game of the tournament answered was withdrawn
+
+    Scenario: A player of a test is answered with their team's flag with no events kept
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And the team is to be known for short as "AUS"
+      And the team is to fly the flag "au"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the team is to be known for short as "ENG"
+      And the team is to fly the flag "england"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And the events of the tournaments and the competitions are no longer kept
+      When the games of the tournament at "2026/ac/spring-tests" are asked for
+      Then the first game answered was lost by a player flying the flag "england"

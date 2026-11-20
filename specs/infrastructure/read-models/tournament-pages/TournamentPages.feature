@@ -44,6 +44,21 @@ Feature: What the public pages of a tournament show, asked of the read models
       When the page of "Autumn Open" is read back
       Then the tournament's page has no subtitle
 
+    Scenario: The tournament is kept with the country it is played in
+      When the page of "Spring Open" is read back
+      Then the tournament's page is played in the country "au"
+
+    Scenario: The tournament is kept with the day it starts
+      When the page of "Spring Open" is read back
+      Then the tournament's page starts on "2026-10-03"
+
+    Scenario: The tournament is kept with the day it finishes
+      Given a tournament "Autumn Open" to start on "2026-11-03"
+      And "Autumn Open" to finish on "2026-11-05"
+      And "Autumn Open" is created by the account for "organiser@example.com"
+      When the page of "Autumn Open" is read back
+      Then the tournament's page finishes on "2026-11-05"
+
     Scenario: The competitions in use are kept in the tournament's order
       When the page of "Spring Open" is read back
       Then the competitions of the page are "Block A" and "Block B"

@@ -16,6 +16,11 @@ export interface TournamentOfPage {
   readonly archived: boolean;
   /** By its code, as "ac". */
   readonly sport: string;
+  /** The country it is played in, by its code, as "au". */
+  readonly country: string;
+  /** The first and last day it is played, each written `2026-03-12`. */
+  readonly starts: string;
+  readonly finishes: string;
   /** The competitions in use, in its order, for its section bar. */
   readonly competitions: readonly CompetitionOfTournament[];
   /**

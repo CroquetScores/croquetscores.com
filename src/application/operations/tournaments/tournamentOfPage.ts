@@ -1,6 +1,6 @@
-// What the pages that read the read models only share, as the pages that read
-// the aggregates share `tournamentForReaders.ts`: the tournament found by the
-// address a reader's browser names, and the competition found by its slug.
+// What the pages of a tournament share: the tournament found by the address a
+// reader's browser names, and the competition found by its slug, each read of
+// the read models.
 import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { TournamentFormat } from "../../../domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import { Website } from "../../../domain/common/Website.js";

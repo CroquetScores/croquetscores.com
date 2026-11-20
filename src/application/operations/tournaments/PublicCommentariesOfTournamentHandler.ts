@@ -1,9 +1,7 @@
-import type { Account } from "../../../domain/aggregates/accounts/Account.js";
-import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import type { AccountNames } from "../accounts/accountNames.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   PublicCommentariesOfTournament,
@@ -15,7 +13,7 @@ import {
   tournamentOfPage,
   formatOfPage,
 } from "./tournamentOfPage.js";
-import { namesOf, type TournamentAddresses } from "./tournamentOperations.js";
+import type { TournamentAddresses } from "./tournamentOperations.js";
 import type { TournamentPages } from "./tournamentPages.js";
 
 export class PublicCommentariesOfTournamentHandler extends QueryHandler<
@@ -26,9 +24,7 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
     PublicCommentariesOfTournament;
 
   constructor(
-    // The only aggregates it loads, for the names of the commentaries'
-    // writers, which no read model keeps.
-    private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly names: AccountNames,
     private readonly addresses: TournamentAddresses,
     private readonly pages: TournamentPages,
     private readonly notes: TournamentManagerNotes,
@@ -51,16 +47,9 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
     const address = tournament.address;
     // From the read model of its commentaries, which reads no comment.
     const listed = await this.changes.listed(id);
-    // A forgotten writer has no name to be read, and namesOf leaves them out,
-    // which is what leaves their commentaries out.
-    const writers = new Map(
-      (
-        await namesOf(
-          this.accounts,
-          listed.map(({ writer }) => AccountId.from(writer)),
-        )
-      ).map(({ id, name }) => [id.value, name]),
-    );
+    // A forgotten writer has no name to be read, and the read model leaves
+    // them out, which is what leaves their commentaries out.
+    const writers = await this.names.of(listed.map(({ writer }) => writer));
     const changed = await this.changes.of(id);
     return {
       id: tournament.id,

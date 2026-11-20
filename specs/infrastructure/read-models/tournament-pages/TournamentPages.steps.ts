@@ -244,6 +244,27 @@ Then("the tournament's page has no subtitle", function (this: SpecWorld) {
 });
 
 Then(
+  "the tournament's page is played in the country {string}",
+  function (this: SpecWorld, country: string) {
+    assert.equal(tournamentRead(this).country, country);
+  },
+);
+
+Then(
+  "the tournament's page starts on {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(tournamentRead(this).starts, day);
+  },
+);
+
+Then(
+  "the tournament's page finishes on {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(tournamentRead(this).finishes, day);
+  },
+);
+
+Then(
   /^the competitions of the page are (.+)$/,
   function (this: SpecWorld, said: string) {
     assert.deepEqual(
