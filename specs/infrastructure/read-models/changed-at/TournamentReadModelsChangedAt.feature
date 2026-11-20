@@ -89,6 +89,12 @@ Feature: The tournaments' read models keep when each row last changed
       When the player "Chris Third" is entered in "Block A" of "Spring Open" at "2026-09-27T10:00:00Z"
       Then the standing row of "Sam Someone" was last changed at "2026-09-26T10:00:00Z"
 
+    Scenario: A withdrawal that leaves a line's figures as they were still moves the line
+      Given the player "Chris Third" is made in "Spring Open"
+      And the player "Chris Third" is entered in "Block A" of "Spring Open" at "2026-09-26T10:00:00Z"
+      When the player "Chris Third" in "Block A" of "Spring Open" is withdrawn at "2026-09-27T10:00:00Z"
+      Then the standing row of "Chris Third" was last changed at "2026-09-27T10:00:00Z"
+
   Rule: The same moments are kept however the read models are made again
 
     Scenario: A rebuild with the competitions' streams first

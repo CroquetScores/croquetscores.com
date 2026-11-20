@@ -110,7 +110,8 @@ export class ManagerNotesByTournament
       description: row.description,
       writtenAt: ReadOnlyDate.from(row.created_at),
       // A note changes only by being edited, so one that has changed since it
-      // was made was edited then.
+      // was made was edited then. One edited at the very moment it was made
+      // reads as never edited, which a clock that moves does not let happen.
       lastEditedAt:
         row.changed_at > row.created_at
           ? ReadOnlyDate.from(row.changed_at)

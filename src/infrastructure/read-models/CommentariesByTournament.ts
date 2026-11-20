@@ -127,7 +127,11 @@ export class CommentariesByTournament
         where tournament_id = $1
           -- The writer's account as the accounts' read model has it, so that
           -- the commentary is not found once it is forgotten, whichever
-          -- stream a rebuild took first.
+          -- stream a rebuild took first. A forgotten account is the one row
+          -- there that holds no address (AccountsByEmailAddress), and the
+          -- rows are written in the transaction of the append, so this is
+          -- never behind. Joined to account_keys instead it would read a
+          -- table that is not a read model and cannot be made again.
           and not exists (
                 select 1 from accounts_by_email_address a
                  where a.account_id = c.writer_id
@@ -204,7 +208,9 @@ export class CommentariesByTournament
         text: comment.text,
         writtenAt: ReadOnlyDate.from(comment.created_at),
         // A comment changes only by being edited, so one that has changed
-        // since it was made was edited then.
+        // since it was made was edited then. One edited at the very moment it
+        // was made reads as never edited, which a clock that moves does not
+        // let happen.
         lastEditedAt:
           comment.changed_at > comment.created_at
             ? ReadOnlyDate.from(comment.changed_at)
