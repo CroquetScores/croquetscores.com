@@ -1,11 +1,11 @@
 @postgres
 Feature: Restoring the website's events and accounts' keys from a backup file
 
-  A file of the backup (`backupCli.feature`) holds the data of two tables,
-  `events` and `account_keys`, and nothing of the rest of the website: not
-  the other tables, which the migrations make, and not the read models, which
-  are made again from the events. So a restore is a database made new, given
-  its tables by the migrations, and the file restored into those two.
+  A restore is a database made new, and the file imported into it, and
+  nothing more. A file of the backup (`backupCli.feature`) holds two tables,
+  `events` and `account_keys`, with their data, and those are the only tables
+  the database comes to have: the script makes none of its own, so the
+  migrations are not run and the rest of the website's tables are not made.
 
   It is run by "npm run db:restore -- <database name> <file>". It is told the
   name of the database to make and the file to restore into it, and nothing
@@ -22,7 +22,7 @@ Feature: Restoring the website's events and accounts' keys from a backup file
   which it knows it made because it found no other of the name before it
   began.
 
-  What it makes is the tables and the data, and not a working site. The read
+  What it makes is what the file held, and not a working site. The read
   models are still to be made, as `npm run db:rebuild-read-models` does with
   `DATABASE_URL` naming the new database, and it says so when it has
   finished.
@@ -37,19 +37,15 @@ Feature: Restoring the website's events and accounts' keys from a backup file
     Given the name of a database that is not there
     And a dump file
 
-  Rule: A database is made, given the website's tables, and the file restored into it
+  Rule: A database is made, and the file restored into it
 
     Scenario: The database is made
       When the restore is run
       Then the restored database is there
 
-    Scenario: The database is given the website's tables
+    Scenario: The database is given no tables of its own
       When the restore is run
-      Then the database has the tables of the website
-
-    Scenario: The tables were there when the file was restored
-      When the restore is run
-      Then the tables were there when the file was restored
+      Then the database has none of the website's tables
 
     Scenario: The file is restored into the database made
       When the restore is run

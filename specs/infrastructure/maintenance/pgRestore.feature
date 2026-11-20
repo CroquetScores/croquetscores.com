@@ -1,12 +1,13 @@
-Feature: Asking pg_restore to put a backup file's data into a database
+Feature: Asking pg_restore to put a backup file's tables into a database
 
-  The restore (`restoreCli.feature`) puts the data in a backup file into a
-  database that already has the tables, which the migrations made. pg_restore
-  is the program Postgres comes with that reads what pg_dump wrote
-  (`pgDump.feature`).
+  The restore (`restoreCli.feature`) puts the tables in a backup file into a
+  database that is empty. pg_restore is the program Postgres comes with that
+  reads what pg_dump wrote (`pgDump.feature`).
 
-  It is asked for the data and nothing else, since the tables are the
-  migrations' and not the file's; for no owners, since the user the website's
+  It is asked for everything the file holds, the tables as well as their
+  data, since the database has none and the file is all it comes to have:
+  only the tables the backup was asked for, and none of the rest of the
+  website's. It is asked for no owners, since the user the website's
   database belonged to is not one of this Postgres's; and to stop at the first
   thing that goes wrong, since a restore that goes on past one has put some
   of the data in and called it done.
@@ -23,12 +24,12 @@ Feature: Asking pg_restore to put a backup file's data into a database
   These scenarios run no pg_restore. They say what it would be run with, and
   what is made of what it says.
 
-  Rule: pg_restore is asked for the data of the file, into the database
+  Rule: pg_restore is asked for the tables of the file, into the database
 
-    Scenario: The data is asked for and not the tables
+    Scenario: The tables are asked for as well as the data
       Given the restored database is at "postgres://postgres:secret-word@localhost:5432/restored"
       When pg_restore is asked to restore "C:\backups\one.dump"
-      Then pg_restore is asked for the data only
+      Then pg_restore is not asked for the data only
 
     Scenario: No owners are asked for
       Given the restored database is at "postgres://postgres:secret-word@localhost:5432/restored"

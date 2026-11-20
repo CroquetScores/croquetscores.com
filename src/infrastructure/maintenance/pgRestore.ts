@@ -53,8 +53,9 @@ export const pgRestoreProgramFor = (
 };
 
 /**
- * What `request` is asked of pg_restore as: the data and no more, since the
- * tables are the migrations'; no owners, since the user the file was made by
+ * What `request` is asked of pg_restore as: the tables of the file as well as
+ * their data, since the database is empty and the migrations are not run; no
+ * owners, since the user the file was made by
  * is not this database's; and to stop at the first thing that goes wrong,
  * since a restore that goes on past one has put some of the data in and
  * called it done. The address as its parts, and the password in the
@@ -71,7 +72,6 @@ export const pgRestoreProgram = (request: PgRestoreRequest): Program => {
   return {
     command: request.program ?? "pg_restore",
     args: [
-      "--data-only",
       "--no-owner",
       "--exit-on-error",
       "--no-password",

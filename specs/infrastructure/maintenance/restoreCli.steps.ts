@@ -15,8 +15,7 @@ import type { SpecWorld } from "../../support/world.js";
 // The restore script, run as its own function (`restoreCli.feature`) over the
 // scenario's own Postgres. The databases it makes are named by the scenario
 // and dropped by it. pg_restore is the scenario's, so that what it was asked
-// is read, what the database had when it was asked is read, and it can be
-// made to fail.
+// is read, and it can be made to fail.
 
 interface Restore {
   /** The name given, or nothing where none was. */
@@ -32,7 +31,6 @@ interface Restore {
   failureWords: string;
   extraArgument: boolean;
   calls: { address: string; file: string; program: string | undefined }[];
-  tablesWereThere: boolean | undefined;
   /** What had been said when pg_restore was asked to begin. */
   saidWhenRestored: string[] | undefined;
   readonly said: string[];
@@ -56,7 +54,6 @@ const restoreOf = (world: SpecWorld): Restore => {
       failureWords: "pg_restore ended with 1",
       extraArgument: false,
       calls: [],
-      tablesWereThere: undefined,
       saidWhenRestored: undefined,
       said: [],
       exitCode: undefined,
@@ -237,14 +234,13 @@ const run = async (world: SpecWorld): Promise<RestoreOutcome> => {
       databaseUrl: restore.serverIsNamed ? serverUrlOf(world) : undefined,
       pgDumpPath: restore.pgDump,
     },
-    restore: async (request) => {
+    restore: (request) => {
       restore.calls.push(request);
       restore.saidWhenRestored = [...restore.said];
-      // What the database had when it was asked to be restored into.
-      restore.tablesWereThere =
-        (await tablesOf(world, restore.name ?? "", ["events", "account_keys"]))
-          .length === 2;
-      if (restore.restoreFails) throw new Error(restore.failureWords);
+      if (restore.restoreFails) {
+        return Promise.reject(new Error(restore.failureWords));
+      }
+      return Promise.resolve();
     },
     say: (line) => {
       restore.said.push(line);
@@ -254,9 +250,9 @@ const run = async (world: SpecWorld): Promise<RestoreOutcome> => {
   return outcome;
 };
 
-// Making a database, migrating it and dropping it is a few seconds of
-// Postgres's, and the default five is not enough for it when six scenarios
-// are doing the same beside it.
+// Making a database and dropping it is a few seconds of Postgres's, and the
+// default five is not enough for it when six scenarios are doing the same
+// beside it.
 const WHAT_MAKING_A_DATABASE_TAKES = 30_000;
 
 When(
@@ -293,26 +289,9 @@ Then("the restored database is not there", async function (this: SpecWorld) {
 });
 
 Then(
-  "the database has the tables of the website",
-  async function (this: SpecWorld) {
-    assert.deepEqual(
-      await tablesOf(this, nameOf(this), WEBSITES_TABLES),
-      WEBSITES_TABLES,
-    );
-  },
-);
-
-Then(
   "the database has none of the website's tables",
   async function (this: SpecWorld) {
     assert.deepEqual(await tablesOf(this, nameOf(this), WEBSITES_TABLES), []);
-  },
-);
-
-Then(
-  "the tables were there when the file was restored",
-  function (this: SpecWorld) {
-    assert.equal(restoreOf(this).tablesWereThere, true);
   },
 );
 

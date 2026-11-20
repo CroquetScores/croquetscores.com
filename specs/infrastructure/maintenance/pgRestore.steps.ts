@@ -110,8 +110,8 @@ When(
   },
 );
 
-Then("pg_restore is asked for the data only", function (this: SpecWorld) {
-  assert.ok(askedOf(this).args.includes("--data-only"));
+Then("pg_restore is not asked for the data only", function (this: SpecWorld) {
+  assert.ok(!askedOf(this).args.includes("--data-only"));
 });
 
 Then("pg_restore is asked for no owners", function (this: SpecWorld) {
