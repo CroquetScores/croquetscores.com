@@ -81,10 +81,7 @@ export class CompetitionGames implements Projection, Asked {
     _firstEvent: number,
     events: readonly DomainEvent[],
   ): Promise<void> {
-    await this.#projectAll(
-      stream.value,
-      events.map((event) => event),
-    );
+    await this.#projectAll(stream.value, events);
   }
 
   /** Empties its tables, so that every stream can be handed to it again. */

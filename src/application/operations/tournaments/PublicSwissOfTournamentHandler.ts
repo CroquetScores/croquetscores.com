@@ -124,8 +124,12 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
           },
         ];
       });
+      const player = named.get(each.entryId);
+      if (player === undefined) {
+        throw new Error(`A player of the Swiss is not named: ${each.entryId}`);
+      }
       return {
-        ...named.get(each.entryId)!,
+        ...player,
         id: each.entryId,
         withdrawn: each.withdrawn,
         // Kept when the competition changes, and not worked out again here,
