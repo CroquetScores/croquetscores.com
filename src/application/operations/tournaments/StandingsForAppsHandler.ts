@@ -54,27 +54,27 @@ export class StandingsForAppsHandler extends QueryHandler<
     );
     return {
       competition: head,
-      standings: kept.standings.map((each): StandingForApps => {
+      // A line of a player the tournament does not have is left out, as it is
+      // where the read models are not whole, rather than told as nobody.
+      standings: kept.standings.flatMap((each): StandingForApps[] => {
         const player = known.get(each.tournamentPlayerId);
-        if (player === undefined) {
-          throw new Error(
-            `A standing names a player the tournament lacks: ${each.tournamentPlayerId}`,
-          );
-        }
+        if (player === undefined) return [];
         const block = shape.kind === "block";
-        return {
-          playerId: player.id.value,
-          name: player.name.toString(),
-          withdrawn: each.withdrawn,
-          played: each.played,
-          won: each.won,
-          lost: each.lost,
-          gamesWon: block ? each.gamesWon : undefined,
-          netGames: block ? each.netGames : undefined,
-          netHoops: each.netHoops,
-          position: each.place,
-          shared: each.shared,
-        };
+        return [
+          {
+            playerId: player.id.value,
+            name: player.name.toString(),
+            withdrawn: each.withdrawn,
+            played: each.played,
+            won: each.won,
+            lost: each.lost,
+            gamesWon: block ? each.gamesWon : undefined,
+            netGames: block ? each.netGames : undefined,
+            netHoops: each.netHoops,
+            position: each.place,
+            shared: each.shared,
+          },
+        ];
       }),
     };
   }

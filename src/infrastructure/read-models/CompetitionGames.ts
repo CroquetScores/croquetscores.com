@@ -46,6 +46,15 @@ const isAboutAGame = (
   event instanceof CompetitionGameWithdrawalReversed ||
   event instanceof CompetitionGameWithdrawn;
 
+// Whether an event of a competition can change its standings: a bye is not a
+// player and has no games, so entering, moving and removing one cannot.
+const changesStandings = (event: DomainEvent): boolean =>
+  !(
+    event instanceof CompetitionByeMoved ||
+    event instanceof CompetitionByeRemoved ||
+    (event instanceof CompetitionPlayerEntered && event.playerId === bye)
+  );
+
 // Whether nobody won, as a game says it: the winner is not ahead and was not
 // marked as the winner.
 const drawnBy = (winner: Score, loser: Score): boolean =>
@@ -72,7 +81,10 @@ export class CompetitionGames implements Projection, Asked {
     _firstEvent: number,
     events: readonly DomainEvent[],
   ): Promise<void> {
-    for (const event of events) await this.#project(stream.value, event);
+    await this.#projectAll(
+      stream.value,
+      events.map((event) => event),
+    );
   }
 
   /** Empties its tables, so that every stream can be handed to it again. */
@@ -88,7 +100,10 @@ export class CompetitionGames implements Projection, Asked {
     stream: string,
     events: readonly StoredEvent[],
   ): Promise<void> {
-    for (const { event } of events) await this.#project(stream, event);
+    await this.#projectAll(
+      stream,
+      events.map(({ event }) => event),
+    );
   }
 
   async gamesKept(competition: string): Promise<GamesKept> {
@@ -203,13 +218,19 @@ export class CompetitionGames implements Projection, Asked {
     };
   }
 
-  // What an event of a competition says, and then the standings of the
-  // competition, which any of them can change: a game, a player, what a player
-  // carries forward.
-  async #project(stream: string, event: DomainEvent): Promise<void> {
+  // What the events of a competition say, and then its standings, once for
+  // all of them rather than after each, since working them out reads every game
+  // and every player: a rebuild hands over a whole stream at a time. Left
+  // alone where none of the events can change them, as a bye's are not.
+  async #projectAll(
+    stream: string,
+    events: readonly DomainEvent[],
+  ): Promise<void> {
     if (!stream.startsWith("competition/")) return;
-    await this.#write(stream, event);
-    await standCompetition(this.unitOfWork.connection(), stream);
+    for (const event of events) await this.#write(stream, event);
+    if (events.some(changesStandings)) {
+      await standCompetition(this.unitOfWork.connection(), stream);
+    }
   }
 
   // Each written so that writing it twice leaves what writing it once did,

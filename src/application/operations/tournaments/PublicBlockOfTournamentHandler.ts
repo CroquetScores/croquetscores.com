@@ -75,16 +75,17 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     );
     const usual = Sport.from(tournament.sport).usualMaximumHoops;
     const bestOf = block.bestOf ?? 1;
-    const tieBreak = TieBreak.from(block.tieBreak ?? "");
+    // A block whose rules are not kept yet is played as an ordinary one.
+    const tieBreak =
+      block.tieBreak === undefined
+        ? TieBreak.unlessTold
+        : TieBreak.from(block.tieBreak);
 
     const players = (await this.pages.playersOf(block.id)).map(
       (player): PlayerOfBlock => {
+        // A player with no standing kept is one the standings have not been
+        // worked out for yet, which is as having played nothing.
         const standing = standingOf.get(player.entryId);
-        if (standing === undefined) {
-          throw new Error(
-            `A player of the block has no standing kept: ${player.entryId}`,
-          );
-        }
         return {
           id: player.entryId,
           playerId: player.playerId,
@@ -94,13 +95,13 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
           flag: player.flag,
           address: `${tournament.address}/players/${player.slug}`,
           withdrawn: player.withdrawn,
-          matchesWon: standing.won,
-          matchesLost: standing.lost ?? 0,
-          gamesWon: standing.gamesWon ?? 0,
-          netGames: standing.netGames ?? 0,
-          netHoops: standing.netHoops,
+          matchesWon: standing?.won ?? 0,
+          matchesLost: standing?.lost ?? 0,
+          gamesWon: standing?.gamesWon ?? 0,
+          netGames: standing?.netGames ?? 0,
+          netHoops: standing?.netHoops ?? 0,
           placing:
-            standing.place === undefined
+            standing?.place === undefined
               ? undefined
               : { place: standing.place, shared: standing.shared },
         };

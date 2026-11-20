@@ -105,12 +105,9 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       game.withdrawn || withdrawn.has(game.winner) || withdrawn.has(game.loser);
 
     const players = entered.map((each): PlayerOfSwiss => {
+      // A player with no standing kept is one the standings have not been
+      // worked out for yet, which is as having played nothing.
       const standing = standingOf.get(each.entryId);
-      if (standing === undefined) {
-        throw new Error(
-          `A player of the Swiss has no standing kept: ${each.entryId}`,
-        );
-      }
       const results = inUse.flatMap((game): ResultOfSwiss[] => {
         const won = game.winner === each.entryId;
         if (!won && game.loser !== each.entryId) return [];
@@ -133,9 +130,9 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
         withdrawn: each.withdrawn,
         // Kept when the competition changes, and not worked out again here,
         // so that the site and the API cannot say two different things.
-        gamesPlayed: standing.played,
-        gamesWon: standing.won,
-        netHoops: standing.netHoops,
+        gamesPlayed: standing?.played ?? 0,
+        gamesWon: standing?.won ?? 0,
+        netHoops: standing?.netHoops ?? 0,
         results,
       };
     });

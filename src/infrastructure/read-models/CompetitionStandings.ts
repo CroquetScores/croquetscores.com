@@ -15,6 +15,21 @@ import {
 import { TieBreak } from "../../domain/aggregates/tournaments/value-objects/TieBreak.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 
+const nothingKept = async (
+  connection: PoolClient,
+  competition: string,
+): Promise<void> => {
+  await connection.query(
+    `delete from competition_standings where competition_id = $1`,
+    [competition],
+  );
+  await connection.query(
+    `update competitions set level_on_matches_won = false
+      where competition_id = $1`,
+    [competition],
+  );
+};
+
 /**
  * The standings of the block or Swiss `competition`, worked out of what the
  * read models keep of it and written, in place of what was kept before. Called
@@ -41,7 +56,12 @@ export const standCompetition = async (
     [competition],
   );
   const [row] = shape.rows;
-  if (row?.kind !== "block" && row?.kind !== "swiss") return;
+  // Where it cannot be stood, nothing is kept of it, so that what was kept
+  // when it could is not served as if it still held.
+  if (row?.kind !== "block" && row?.kind !== "swiss") {
+    await nothingKept(connection, competition);
+    return;
+  }
 
   const entries = await connection.query<{
     entry_id: string;
@@ -104,7 +124,10 @@ export const standCompetition = async (
   if (row.kind === "block") {
     // The rules a block is told of by its tournament's events, which may not
     // have been projected yet.
-    if (row.best_of === null || row.tie_break === null) return;
+    if (row.best_of === null || row.tie_break === null) {
+      await nothingKept(connection, competition);
+      return;
+    }
     stood = standBlock(
       toStand,
       played,
@@ -119,25 +142,33 @@ export const standCompetition = async (
     `delete from competition_standings where competition_id = $1`,
     [competition],
   );
-  for (const each of stood.standings) {
+  // All of the lines in one statement, since a block has a line a player.
+  const lines = stood.standings;
+  if (lines.length > 0) {
     await connection.query(
       `insert into competition_standings
          (entry_id, competition_id, rank, played, won, lost, games_won,
           net_games, net_hoops, withdrawn, place, shared)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+       select entry_id, $1, rank, played, won, lost, games_won, net_games,
+              net_hoops, withdrawn, place, shared
+         from unnest($2::text[], $3::int[], $4::int[], $5::int[], $6::int[],
+                     $7::int[], $8::int[], $9::int[], $10::boolean[],
+                     $11::int[], $12::boolean[])
+              as t(entry_id, rank, played, won, lost, games_won, net_games,
+                   net_hoops, withdrawn, place, shared)`,
       [
-        each.entryId,
         competition,
-        each.rank,
-        each.played,
-        each.won,
-        each.lost ?? null,
-        each.gamesWon ?? null,
-        each.netGames ?? null,
-        each.netHoops,
-        each.withdrawn,
-        each.place ?? null,
-        each.shared,
+        lines.map((each) => each.entryId),
+        lines.map((each) => each.rank),
+        lines.map((each) => each.played),
+        lines.map((each) => each.won),
+        lines.map((each) => each.lost ?? null),
+        lines.map((each) => each.gamesWon ?? null),
+        lines.map((each) => each.netGames ?? null),
+        lines.map((each) => each.netHoops),
+        lines.map((each) => each.withdrawn),
+        lines.map((each) => each.place ?? null),
+        lines.map((each) => each.shared),
       ],
     );
   }

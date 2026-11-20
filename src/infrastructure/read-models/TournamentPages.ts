@@ -141,15 +141,25 @@ export class TournamentPages implements Asked {
         order by e.position`,
       [competition],
     );
-    return found.rows.map((each): PlayerOfPage => ({
-      entryId: each.entry_id,
-      playerId: each.player_id,
-      name: each.name,
-      representing: each.representing ?? undefined,
-      handicap: each.handicap ?? undefined,
-      flag: each.flag ?? undefined,
-      slug: each.slug ?? "",
-      withdrawn: each.withdrawn,
-    }));
+    return found.rows.map((each): PlayerOfPage => {
+      // A page links to a player by it, so a player without one would link to
+      // the players' page instead of theirs: the read models are not whole,
+      // and are to be made again.
+      if (each.slug === null) {
+        throw new Error(
+          `The player ${each.player_id} has no slug kept: the read models are to be made again.`,
+        );
+      }
+      return {
+        entryId: each.entry_id,
+        playerId: each.player_id,
+        name: each.name,
+        representing: each.representing ?? undefined,
+        handicap: each.handicap ?? undefined,
+        flag: each.flag ?? undefined,
+        slug: each.slug,
+        withdrawn: each.withdrawn,
+      };
+    });
   }
 }
