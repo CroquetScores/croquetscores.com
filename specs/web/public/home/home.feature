@@ -1505,6 +1505,54 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then the column headings of the upcoming tournaments are on the colour the secondary navigation is on
 
+  Rule: The two tables have the same columns, as wide in one as in the other
+
+    The recent results are above the upcoming tournaments and read down the
+    page with them, but a table sized by what is in it is as wide in each
+    column as its own longest cell, so that the dates of one list were wider
+    than the other's and the names began in a different place in each. The
+    columns have the widths a year's months' have (`yearMonths.feature`),
+    enough for the longest dates and the sport's code and the flag, and the
+    tables are drawn as a year's are.
+
+    Background:
+      Given the server's clock reads "2026-09-19T10:00:00Z"
+      And "organiser@example.com" has created the tournament "Played Open"
+      And the tournament "Played Open" starts on "2026-09-20"
+      And the tournament "Played Open" finishes on "2026-09-20"
+      And "organiser@example.com" has added the player "Sam Someone" to "Played Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Played Open"
+      And "organiser@example.com" has added the block "Block A" to "Played Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Played Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Played Open"
+      And the server's clock reads "2026-09-20T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Played Open"
+      And the server's clock reads "2026-09-21T10:00:00Z"
+      And "organiser@example.com" has created the tournament "Long Dates Open"
+      And the tournament "Long Dates Open" starts on "2026-09-28"
+      And the tournament "Long Dates Open" finishes on "2026-10-03"
+
+    Scenario: The dates are as wide in each table
+      When the home page is opened
+      Then the column "Date" of the recent results is as wide as that of the upcoming tournaments
+
+    Scenario: The names are as wide in each table
+      When the home page is opened
+      Then the column "Name" of the recent results is as wide as that of the upcoming tournaments
+
+    Scenario: The names begin in the same place in each table
+      When the home page is opened
+      Then the names of the recent results begin where those of the upcoming tournaments do
+
+    Scenario: The longest dates fit their column
+      When the home page is opened
+      Then the dates of the upcoming tournaments fit their column
+
+    Scenario: The longest dates fit their column on a phone
+      Given a viewport 360 pixels wide and 700 pixels tall
+      When the home page is opened
+      Then the dates of the upcoming tournaments fit their column
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). What is nobody's language

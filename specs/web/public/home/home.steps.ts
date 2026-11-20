@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { WebWorld } from "../../support/world.js";
-import { boxOf, list, rows } from "../../support/tournamentLists.js";
+import { boxOf, list, rows, type List } from "../../support/tournamentLists.js";
 
 // What is the home page's own. What its lists share with a year's is said in
 // specs/web-units/support/tournamentLists.ts.
@@ -125,5 +125,55 @@ Given(
         url: this.baseUrl!,
       },
     ]);
+  },
+);
+
+// The widths of the two lists' columns are compared as they are drawn, to a
+// pixel, since a column is as wide as the cells' padding and the browser's
+// rounding make it and not as the stylesheet says.
+const headingOf = (world: WebWorld, name: List, column: string) =>
+  list(world, name).locator("thead th", {
+    hasText: new RegExp(`${column}$`),
+  });
+
+Then(
+  /^the column "(.*)" of the (recent results|upcoming tournaments) is as wide as that of the (recent results|upcoming tournaments)$/,
+  async function (this: WebWorld, column: string, one: List, other: List) {
+    const first = (await boxOf(headingOf(this, one, column))).width;
+    const second = (await boxOf(headingOf(this, other, column))).width;
+    assert.ok(
+      Math.abs(first - second) <= 1,
+      `They are ${String(first)} and ${String(second)} pixels wide.`,
+    );
+  },
+);
+
+Then(
+  /^the names of the (recent results|upcoming tournaments) begin where those of the (recent results|upcoming tournaments) do$/,
+  async function (this: WebWorld, one: List, other: List) {
+    const first = (await boxOf(headingOf(this, one, "Name"))).x;
+    const second = (await boxOf(headingOf(this, other, "Name"))).x;
+    assert.ok(
+      Math.abs(first - second) <= 1,
+      `They begin ${String(first)} and ${String(second)} pixels across.`,
+    );
+  },
+);
+
+Then(
+  /^the dates of the (recent results|upcoming tournaments) fit their column$/,
+  async function (this: WebWorld, name: List) {
+    const cell = list(this, name).locator(".tournament-dates").first();
+    const [needed, given] = await cell.evaluate((element) => {
+      const measured = element as unknown as {
+        scrollWidth: number;
+        clientWidth: number;
+      };
+      return [measured.scrollWidth, measured.clientWidth];
+    });
+    assert.ok(
+      needed <= given,
+      `They need ${String(needed)} of ${String(given)}.`,
+    );
   },
 );
