@@ -292,6 +292,7 @@ import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsB
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { Tournaments } from "../infrastructure/read-models/Tournaments.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
+import { CompetitionGames } from "../infrastructure/read-models/CompetitionGames.js";
 import { TournamentContents } from "../infrastructure/read-models/TournamentContents.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
@@ -1014,6 +1015,7 @@ export const buildApplication = async (
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
   const tournamentContents = new TournamentContents(unitOfWork);
+  const competitionGames = new CompetitionGames(unitOfWork);
   const searchByWebsite = new SearchByWebsite(unitOfWork);
   const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
@@ -1029,8 +1031,8 @@ export const buildApplication = async (
     tournamentsByAddress,
     heldTournaments,
     tournamentsByAccount,
-    tournamentsByWebsite,
     tournamentContents,
+    competitionGames,
     searchByWebsite,
     managerNotesByTournament,
     commentariesByTournament,
@@ -1654,14 +1656,7 @@ export const buildApplication = async (
     ),
   );
   mediator.handleQuery(
-    new GamesForAppsHandler(
-      tournaments,
-      tournamentsByWebsite,
-      publicBlocks,
-      publicSwisses,
-      publicKnockouts,
-      publicTests,
-    ),
+    new GamesForAppsHandler(tournamentContents, competitionGames),
   );
   mediator.handleQuery(
     new PublicManagerNotesOfTournamentHandler(

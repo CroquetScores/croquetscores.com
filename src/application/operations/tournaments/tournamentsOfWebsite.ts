@@ -92,14 +92,6 @@ export interface TournamentsByWebsite {
   ): Promise<ChangesOfTournament | undefined>;
 
   /**
-   * When each game of the competition `competition` was last changed: added,
-   * corrected, moved, withdrawn, archived or restored, by the id of the game.
-   */
-  changesOfGames(
-    competition: string,
-  ): Promise<ReadonlyMap<string, ReadOnlyDate>>;
-
-  /**
    * As `startingBetween`, each with when anything was last kept of it or of
    * any of its competitions.
    */
