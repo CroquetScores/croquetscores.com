@@ -211,11 +211,11 @@ export class TournamentsByWebsite implements Projection, Asked {
   ): Promise<ChangesOfTournament | undefined> {
     const { rows } = await this.unitOfWork
       .connection()
-      .query<{ competition_id: string | null; at: Date; own: Date }>(
-        `select null as competition_id, t.changed_at as at, t.changed_at as own
+      .query<{ competition_id: string | null; at: Date }>(
+        `select null as competition_id, t.changed_at as at
            from tournaments t where t.tournament_id = $1
           union all
-         select c.competition_id, c.changed_at, null
+         select c.competition_id, c.changed_at
            from competitions c where c.tournament_id = $1`,
         [tournament],
       );

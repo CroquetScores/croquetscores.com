@@ -35,7 +35,10 @@ const competitionOf = (event: DomainEvent): string | undefined => {
 
 // What a competition's answers say that is not in its own events: the
 // tournament's days and address, and the names of the players and teams.
-// Archiving, restoring or moving a player changes none of them.
+// Archiving or restoring one may change what is shown, since which players are
+// in use is told, so those are here. Adding or moving a player or a team
+// changes none of them: none is in a competition until it is entered, and that
+// is the competition's own event.
 const changesWhatIsToldOfCompetitions = (event: DomainEvent): boolean =>
   event instanceof TournamentUpdated ||
   event instanceof TournamentPlayerUpdated ||
@@ -59,9 +62,13 @@ const changesWhatIsToldOfCompetitions = (event: DomainEvent): boolean =>
  * written against, which is why it is projected and rebuilt with them and is
  * emptied before they are asked for anything.
  *
- * Everything here is written from a tournament's own stream, since a
- * competition's events do not say which tournament it is in and its
- * tournament's do. So no stream has to come before another in a rebuild.
+ * What a tournament and its competitions are is written from the tournament's
+ * own stream, since a competition's events do not say which tournament it is
+ * in and its tournament's do. A competition's own events say only when it last
+ * changed. They may be projected before its tournament's, which makes its row
+ * with no tournament until the tournament's events say which it is in, and the
+ * tournament takes the time then. So no stream has to come before another in
+ * a rebuild, but a competition's `tournament_id` can be empty until it has.
  */
 export class Tournaments implements Projection {
   constructor(private readonly unitOfWork: UnitOfWork) {}
