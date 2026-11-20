@@ -1,6 +1,8 @@
 import type {
+  CompetitionInUse,
   CompetitionOfPage,
   GameOfTestOfPage,
+  PeopleOfTournament,
   PlayerOfPage,
   TeamOfPage,
   TeamsToStand,
@@ -270,6 +272,111 @@ export class TournamentPages implements Asked {
         withdrawn: each.withdrawn,
       };
     });
+  }
+
+  async peopleOf(tournament: string): Promise<PeopleOfTournament> {
+    const connection = this.unitOfWork.connection();
+    // A page links to a player by their slug, so a player a reader is sent to
+    // without one would link to the wrong page: the read models are not whole,
+    // and are to be made again. An archived player is sent to by nobody, so
+    // one without a slug is no reason to refuse the page of everybody else.
+    const slugOf = (
+      player: string,
+      slug: string | null,
+      archived: boolean,
+    ): string | undefined => {
+      if (slug === null && archived) return undefined;
+      if (slug === null) {
+        throw new Error(
+          `The player ${player} has no slug kept: the read models are to be made again.`,
+        );
+      }
+      return slug;
+    };
+    const players = await connection.query<{
+      player_id: string;
+      name: string;
+      representing: string | null;
+      handicap: string | null;
+      flag: string | null;
+      slug: string | null;
+      archived: boolean;
+    }>(
+      `select player_id, name, representing, handicap, flag, slug, archived
+         from tournament_players where tournament_id = $1`,
+      [tournament],
+    );
+    const teams = await connection.query<{
+      team_id: string;
+      name: string;
+      short_name: string;
+      archived: boolean;
+    }>(
+      `select team_id, name, short_name, archived
+         from tournament_teams where tournament_id = $1
+        order by position`,
+      [tournament],
+    );
+    const teamPlayers = await connection.query<{
+      player_id: string;
+      team_id: string;
+      name: string;
+      slug: string | null;
+      archived: boolean;
+    }>(
+      `select player_id, team_id, name, slug, archived
+         from tournament_team_players where tournament_id = $1
+        order by position`,
+      [tournament],
+    );
+    return {
+      players: players.rows.map((each) => ({
+        playerId: each.player_id,
+        name: each.name,
+        representing: each.representing ?? undefined,
+        handicap: each.handicap ?? undefined,
+        flag: each.flag ?? undefined,
+        slug: slugOf(each.player_id, each.slug, each.archived),
+        archived: each.archived,
+      })),
+      teams: teams.rows.map((team) => ({
+        id: team.team_id,
+        name: team.name,
+        shortName: team.short_name,
+        archived: team.archived,
+        players: teamPlayers.rows
+          .filter((each) => each.team_id === team.team_id)
+          .map((each) => ({
+            playerId: each.player_id,
+            name: each.name,
+            slug: slugOf(each.player_id, each.slug, each.archived),
+            archived: each.archived,
+          })),
+      })),
+    };
+  }
+
+  async competitionsInUse(
+    tournament: string,
+  ): Promise<readonly CompetitionInUse[]> {
+    const found = await this.unitOfWork.connection().query<{
+      competition_id: string;
+      kind: CompetitionInUse["kind"];
+      first_team_id: string | null;
+      second_team_id: string | null;
+    }>(
+      `select competition_id, kind, first_team_id, second_team_id
+         from competitions
+        where tournament_id = $1 and not archived and kind is not null
+        order by position`,
+      [tournament],
+    );
+    return found.rows.map((each) => ({
+      id: each.competition_id,
+      kind: each.kind,
+      firstTeam: each.first_team_id ?? undefined,
+      secondTeam: each.second_team_id ?? undefined,
+    }));
   }
 }
 

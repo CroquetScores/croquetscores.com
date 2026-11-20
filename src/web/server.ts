@@ -1577,17 +1577,17 @@ export const buildApplication = async (
   );
   mediator.handleQuery(
     new PublicPlayersOfTournamentHandler(
-      tournaments,
       tournamentsByAddress,
+      tournamentPages,
       managerNotesByTournament,
       commentariesByTournament,
     ),
   );
   mediator.handleQuery(
     new PublicPlayerOfTournamentHandler(
-      tournaments,
-      competitions,
       tournamentsByAddress,
+      tournamentPages,
+      competitionGames,
       managerNotesByTournament,
       commentariesByTournament,
     ),

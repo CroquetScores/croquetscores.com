@@ -93,6 +93,19 @@ export const formatOfPage = (
   return TournamentFormat.from(tournament.format);
 };
 
+/**
+ * Where a player's page is found. A player with no slug is an archived one kept
+ * before it was said, whom nobody is sent to but who may still be named as an
+ * opponent, so they lead to the players' page, where they are not.
+ */
+export const playerPageOf = (
+  tournamentAddress: string,
+  slug: string | undefined,
+): string =>
+  slug === undefined
+    ? `${tournamentAddress}/players`
+    : `${tournamentAddress}/players/${slug}`;
+
 /** Each note of the tournament with when it last changed, the most recent first. */
 export const managerNotesChangedFor = async (
   notes: TournamentManagerNotes,

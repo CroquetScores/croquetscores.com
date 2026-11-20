@@ -1,6 +1,10 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import type {
+  PeopleOfTournament,
+  TournamentOfPage,
+} from "../../../../src/application/operations/tournaments/tournamentPages.js";
 import type { CompetitionOfApps } from "../../../../src/application/operations/tournaments/tournamentContents.js";
 import type { TournamentForAppsRead } from "../../../../src/application/operations/tournaments/TournamentForApps.js";
 import { CompetitionId } from "../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
@@ -16,6 +20,7 @@ import { ExpectedMatches } from "../../../../src/domain/aggregates/tournaments/v
 import { KnockoutDraw } from "../../../../src/domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 import { Rounds } from "../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
 import { TournamentContents } from "../../../../src/infrastructure/read-models/TournamentContents.js";
+import { TournamentPages } from "../../../../src/infrastructure/read-models/TournamentPages.js";
 import type { SpecWorld } from "../../../support/world.js";
 import {
   at,
@@ -48,6 +53,9 @@ interface Scenario {
   readonly competitions: Map<string, CompetitionId>;
   tournament: TournamentForAppsRead | undefined;
   competition: CompetitionOfApps | undefined;
+  // What the players' pages are told, which is asked of the same tables.
+  people: PeopleOfTournament | undefined;
+  page: TournamentOfPage | undefined;
 }
 
 const scenarios = new WeakMap<SpecWorld, Scenario>();
@@ -62,6 +70,8 @@ const ownScenarioOf = (world: SpecWorld): Scenario => {
       competitions: new Map(),
       tournament: undefined,
       competition: undefined,
+      people: undefined,
+      page: undefined,
     };
     scenarios.set(world, scenario);
   }
@@ -682,3 +692,92 @@ Then("no competition is found", function (this: SpecWorld) {
 Then("no tournament is found", function (this: SpecWorld) {
   assert.equal(ownScenarioOf(this).competition?.found, "no tournament");
 });
+
+// What the players' pages are told ------------------------------------------------------
+
+When(
+  "the people of {string} are read back for its pages",
+  async function (this: SpecWorld, tournament: string) {
+    const id = tournamentNamed(this, tournament).value;
+    const pages = new TournamentPages(unitOfWorkOf(this));
+    // A refusal is what some scenarios are about, so it is kept to be asked of.
+    try {
+      await this.asARequest(async () => {
+        const scenario = ownScenarioOf(this);
+        scenario.people = await pages.peopleOf(id);
+        scenario.page = await pages.tournament(id);
+      });
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
+
+Given(
+  "the slug kept for {string} of {string} is lost",
+  async function (this: SpecWorld, name: string, tournament: string) {
+    const player = found(
+      ownScenarioOf(this).players,
+      `${name} of ${tournament}`,
+    );
+    await this.asARequest(async () => {
+      await unitOfWorkOf(this)
+        .connection()
+        .query(
+          `update tournament_players set slug = null where player_id = $1`,
+          [player.id.value],
+        );
+    });
+  },
+);
+
+Then(
+  "the player {string} is read with no slug",
+  function (this: SpecWorld, name: string) {
+    const player = peopleRead(this).players.find((each) => each.name === name);
+    assert.ok(player !== undefined, `${name} was not read.`);
+    assert.equal(player.slug, undefined);
+  },
+);
+
+Then("the people are not read back", function (this: SpecWorld) {
+  assert.equal(ownScenarioOf(this).people, undefined);
+  assert.ok(this.failure !== undefined, "Reading them back did not fail.");
+});
+
+const peopleRead = (world: SpecWorld): PeopleOfTournament => {
+  const { people } = ownScenarioOf(world);
+  assert.ok(people !== undefined, "Nobody was read back.");
+  return people;
+};
+
+Then(
+  "the player {string} of the team {string} is read with the slug {string}",
+  function (this: SpecWorld, name: string, team: string, slug: string) {
+    const player = peopleRead(this)
+      .teams.find((each) => each.name === team)
+      ?.players.find((each) => each.name === name);
+    assert.ok(player !== undefined, `${name} was not read.`);
+    assert.equal(player.slug, slug);
+  },
+);
+
+Then(
+  "the player {string} of the team {string} is read as archived",
+  function (this: SpecWorld, name: string, team: string) {
+    const player = peopleRead(this)
+      .teams.find((each) => each.name === team)
+      ?.players.find((each) => each.name === name);
+    assert.ok(player !== undefined, `${name} was not read.`);
+    assert.equal(player.archived, true);
+  },
+);
+
+Then(
+  "the player {string} is read as archived",
+  function (this: SpecWorld, name: string) {
+    const player = peopleRead(this).players.find((each) => each.name === name);
+    assert.ok(player !== undefined, `${name} was not read.`);
+    assert.equal(player.archived, true);
+  },
+);

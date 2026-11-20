@@ -223,6 +223,19 @@ Feature: The players of a tournament, for anybody to read
       When the public players of the tournament at "2026/ac/spring-open" are asked for
       Then the tournament answered is not played by teams
 
+  Rule: The page is read of the read models, and asks the events nothing
+
+    The kept events are what the read models are made of, and a page that
+    asked them as well could say something the read models do not, so that the
+    site and the API disagreed. So the tournament's events are taken away once
+    the read models are made, and the page is still answered.
+
+    Scenario: The players are answered with the events gone
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the kept events are gone
+      When the public players of the tournament at "2026/ac/spring-open" are asked for
+      Then the first player answered is "Sam Someone"
+
   Rule: An address with no tournament a reader is sent to is refused
 
     Scenario: An address no tournament has been found at is refused

@@ -107,6 +107,56 @@ export interface PlayerOfPage {
   readonly withdrawn: boolean;
 }
 
+/** A player of a tournament, as its players' pages list them and lead to them. */
+export interface PlayerOfTournamentPage {
+  readonly playerId: string;
+  readonly name: string;
+  readonly representing: string | undefined;
+  readonly handicap: string | undefined;
+  readonly flag: string | undefined;
+  /**
+   * What finds them within the tournament. Nothing only for an archived player
+   * kept before it was said, whom nobody is sent to.
+   */
+  readonly slug: string | undefined;
+  readonly archived: boolean;
+}
+
+/** A player of a team, as the tournament's players' pages know them. */
+export interface TeamPlayerOfTournamentPage {
+  readonly playerId: string;
+  readonly name: string;
+  /** As for a tournament's own player. */
+  readonly slug: string | undefined;
+  readonly archived: boolean;
+}
+
+export interface TeamOfTournamentPage {
+  readonly id: string;
+  readonly name: string;
+  /** As "ENG", which is how a game of a test names the team. */
+  readonly shortName: string;
+  readonly archived: boolean;
+  readonly players: readonly TeamPlayerOfTournamentPage[];
+}
+
+/** Everybody who plays in a tournament, archived ones among them. */
+export interface PeopleOfTournament {
+  /** The tournament's own players, which a tournament played by teams has none of. */
+  readonly players: readonly PlayerOfTournamentPage[];
+  /** Its teams in its order, each with its players. */
+  readonly teams: readonly TeamOfTournamentPage[];
+}
+
+/** A competition in use, as far as the games a player played in it are found. */
+export interface CompetitionInUse {
+  readonly id: string;
+  readonly kind: "block" | "swiss" | "knockout" | "test";
+  /** A test's two teams, which are the ones who play in it. */
+  readonly firstTeam: string | undefined;
+  readonly secondTeam: string | undefined;
+}
+
 export interface TournamentPages {
   /** The tournament `id`, or nothing where there is none. */
   tournament(id: string): Promise<TournamentOfPage | undefined>;
@@ -129,4 +179,14 @@ export interface TournamentPages {
 
   /** The team `id`, or nothing where there is none. */
   team(id: string): Promise<TeamOfPage | undefined>;
+
+  /**
+   * Every player of the tournament, and of each of its teams, archived or
+   * not: an archived one is not found by a reader but is still named as the
+   * opponent in a game that was played.
+   */
+  peopleOf(tournament: string): Promise<PeopleOfTournament>;
+
+  /** The competitions of the tournament in use, in its order. */
+  competitionsInUse(tournament: string): Promise<readonly CompetitionInUse[]>;
 }

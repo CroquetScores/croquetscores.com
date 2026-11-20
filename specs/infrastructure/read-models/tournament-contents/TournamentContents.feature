@@ -363,6 +363,62 @@ Feature: What is in a tournament, kept for the API
       When a competition of a tournament there is not is read for an app
       Then no tournament is found
 
+  Rule: A tournament's players are kept as its players' pages find them
+
+    The players' pages (`TournamentPages.feature`) lead to a player by the
+    slug that finds them within the tournament, as the tournament gave it when
+    they were added.
+
+    Scenario: A player of a team is kept with the slug that finds them
+      Given "Spring Open" is played by teams
+      And the team "Australia" is added to "Spring Open" with the short name "AUS"
+      And the player "Pat Player" is added to the team "Australia" of "Spring Open"
+      When the people of "Spring Open" are read back for its pages
+      Then the player "Pat Player" of the team "Australia" is read with the slug "pat-player"
+
+    Scenario: A player of a team is kept with the slug they were added with, though they are renamed
+      Given "Spring Open" is played by teams
+      And the team "Australia" is added to "Spring Open" with the short name "AUS"
+      And the player "Pat Player" is added to the team "Australia" of "Spring Open"
+      And the player "Pat Player" of the team "Australia" of "Spring Open" is renamed "Patricia Player"
+      When the people of "Spring Open" are read back for its pages
+      Then the player "Patricia Player" of the team "Australia" is read with the slug "pat-player"
+
+    Scenario: A player archived is kept, as archived
+      Given the player "Sam Someone" is added to "Spring Open"
+      And the player "Sam Someone" of "Spring Open" is archived
+      When the people of "Spring Open" are read back for its pages
+      Then the player "Sam Someone" is read as archived
+
+    Scenario: A team's player archived is kept, as archived
+      Given "Spring Open" is played by teams
+      And the team "Australia" is added to "Spring Open" with the short name "AUS"
+      And the player "Pat Player" is added to the team "Australia" of "Spring Open"
+      And the player "Pat Player" of the team "Australia" of "Spring Open" is archived
+      When the people of "Spring Open" are read back for its pages
+      Then the player "Pat Player" of the team "Australia" is read as archived
+
+  Rule: A player kept before their slug was is read back only where nobody is sent to them
+
+    A player's slug is what a page leads to them by, so a player a reader is
+    sent to who has none would be led to the wrong page. The read models are
+    made again to give them one, and until then the pages are refused rather
+    than wrong. An archived player is sent to by nobody, so one without a slug
+    is no reason to refuse the page of everybody else.
+
+    Scenario: An archived player with no slug kept is still read back
+      Given the player "Sam Someone" is added to "Spring Open"
+      And the player "Sam Someone" of "Spring Open" is archived
+      And the slug kept for "Sam Someone" of "Spring Open" is lost
+      When the people of "Spring Open" are read back for its pages
+      Then the player "Sam Someone" is read with no slug
+
+    Scenario: A player with no slug kept is not read back
+      Given the player "Sam Someone" is added to "Spring Open"
+      And the slug kept for "Sam Someone" of "Spring Open" is lost
+      When the people of "Spring Open" are read back for its pages
+      Then the people are not read back
+
   Rule: Projecting the same events again changes nothing
 
     Scenario: A player projected twice is one player

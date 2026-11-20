@@ -1,33 +1,32 @@
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import { Website } from "../../../domain/common/Website.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import type { CompetitionGames } from "./competitionGames.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
-import {
-  type Competitions,
-  competitionOf,
-  countsForNothingIn,
-} from "../competitions/competitionOperations.js";
 import {
   type GameOfPlayer,
   type Opponent,
   PublicPlayerOfTournament,
   type PlayerToRead,
 } from "./PublicPlayerOfTournament.js";
+import type { TournamentCommentaries } from "./tournamentForReaders.js";
 import {
-  type CompetitionOfTournament,
-  competitionsInUse,
-  tournamentForReaders,
-  managerNotesChangedOf,
-  type TournamentCommentaries,
-} from "./tournamentForReaders.js";
+  formatOfPage,
+  managerNotesChangedFor,
+  playerPageOf,
+  tournamentOfPage,
+} from "./tournamentOfPage.js";
 import {
   type TournamentAddresses,
   TournamentOperationRefused,
 } from "./tournamentOperations.js";
+import type { TournamentPages } from "./tournamentPages.js";
 
+/**
+ * A player's page, read of the read models alone: the tournament, its players
+ * and its competitions (`TournamentPages`) and each competition's games
+ * (`CompetitionGames`), so that it asks the events nothing.
+ */
 export class PublicPlayerOfTournamentHandler extends QueryHandler<
   PublicPlayerOfTournament,
   PlayerToRead
@@ -36,9 +35,9 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
     PublicPlayerOfTournament;
 
   constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly competitions: Competitions,
     private readonly addresses: TournamentAddresses,
+    private readonly pages: TournamentPages,
+    private readonly games: CompetitionGames,
     private readonly notes: TournamentManagerNotes,
     private readonly changes: TournamentCommentaries,
   ) {
@@ -46,34 +45,33 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
   }
 
   async handle(query: PublicPlayerOfTournament): Promise<PlayerToRead> {
-    const tournament = await tournamentForReaders(
-      this.tournaments,
+    const tournament = await tournamentOfPage(
       this.addresses,
-      Website.from(query.website),
+      this.pages,
+      query.website,
       query.address,
       "PublicPlayerOfTournament",
     );
-    const address = tournament.address.toString();
-    const pageOf = (slug: { toString(): string }): string =>
-      `${address}/players/${slug.toString()}`;
+    const { address } = tournament;
+    const pageOf = (slug: string | undefined): string =>
+      playerPageOf(address, slug);
+    const people = await this.pages.peopleOf(tournament.id);
     // The player, whether the tournament's own or one of a team's, and the
     // team they play for where they are a team's: a player of an archived
     // team is no more one a reader is sent to than an archived player is.
-    const own = tournament.players.find(
-      (each) => !each.archived && each.slug.toString() === query.slug,
+    const own = people.players.find(
+      (each) => !each.archived && each.slug === query.slug,
     );
-    const team = tournament.teams.find(
+    const team = people.teams.find(
       (each) =>
         !each.archived &&
         each.players.some(
-          (player) => !player.archived && player.slug.toString() === query.slug,
+          (player) => !player.archived && player.slug === query.slug,
         ),
     );
     const player =
       own ??
-      team?.players.find(
-        (each) => !each.archived && each.slug.toString() === query.slug,
-      );
+      team?.players.find((each) => !each.archived && each.slug === query.slug);
     if (player === undefined) {
       throw new TournamentOperationRefused(
         "PublicPlayerOfTournament.NoSuchPlayer",
@@ -84,94 +82,99 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
     // tournament's own, and every team's, since a game in a test names its
     // players by their own ids.
     const opponents = new Map<string, Opponent>([
-      ...tournament.players.map(
+      ...people.players.map(
         (each) =>
           [
-            each.id.value,
-            { name: each.name.toString(), address: pageOf(each.slug) },
+            each.playerId,
+            { name: each.name, address: pageOf(each.slug) },
           ] as const,
       ),
-      ...tournament.teams.flatMap((each) =>
+      ...people.teams.flatMap((each) =>
         each.players.map(
           (other) =>
             [
-              other.id.value,
+              other.playerId,
               {
-                name: other.name.toString(),
+                name: other.name,
                 address: pageOf(other.slug),
-                team: each.shortName.toString(),
+                team: each.shortName,
               },
             ] as const,
         ),
       ),
     ]);
     const nobody: Opponent = { name: "", address };
-    const competitions = competitionsInUse(tournament);
-    const inUse = tournament.competitions.filter(
-      ({ reference }) => !reference.archived,
-    );
     const games: GameOfPlayer[] = [];
-    const entered: CompetitionOfTournament[] = [];
-    for (const [at, { reference, shape }] of inUse.entries()) {
+    const entered: (typeof tournament.competitions)[number][] = [];
+    for (const shape of await this.pages.competitionsInUse(tournament.id)) {
       // A team's players are not entered in a test one by one but play in it
       // for their team, and its games name them by their own ids; anybody
       // else is entered in a competition, and its games name its entries.
       const playing =
         shape.kind === "test"
           ? team !== undefined &&
-            (shape.firstTeam.equals(team.id) ||
-              shape.secondTeam.equals(team.id))
+            (shape.firstTeam === team.id || shape.secondTeam === team.id)
           : own !== undefined;
       if (!playing) continue;
-      const competition = await competitionOf(this.competitions, reference.id);
-      let theirs = player.id.value;
+      const where = tournament.competitions.find(({ id }) => id === shape.id);
+      if (where === undefined) continue;
+      const kept = await this.games.gamesKept(shape.id);
+      let theirs = player.playerId;
       let opponentOf = (written: string): Opponent =>
         opponents.get(written) ?? nobody;
       if (shape.kind !== "test") {
-        const entry = competition.players.find((each) =>
-          each.tournamentPlayerId.equals(player.id),
+        const entry = kept.entries.find(
+          (each) => each.tournamentPlayerId === player.playerId,
         );
         if (entry === undefined) continue;
-        theirs = entry.id.value;
+        theirs = entry.id;
         // Each player in the competition by the id a game names them by.
         opponentOf = (written: string): Opponent => {
-          const found = competition.players.find(
-            (each) => each.id.value === written,
-          );
-          return opponents.get(found?.tournamentPlayerId.value ?? "") ?? nobody;
+          const found = kept.entries.find((each) => each.id === written);
+          return opponents.get(found?.tournamentPlayerId ?? "") ?? nobody;
         };
       }
-      const countsForNothing = countsForNothingIn(
-        competition,
-        tournament,
-        reference.id,
+      // Only in a block or a Swiss does a player's withdrawing take their
+      // games with it: in a knockout each decided a match that stands.
+      const withdrawn = new Set(
+        shape.kind === "block" || shape.kind === "swiss"
+          ? kept.entries.filter((each) => each.withdrawn).map(({ id }) => id)
+          : [],
       );
-      const where = competitions[at]!;
       entered.push(where);
-      for (const game of competition.games) {
-        if (game.archived || game.addedAt === undefined) continue;
-        const won = game.winner.value === theirs;
-        if (!won && game.loser.value !== theirs) continue;
+      for (const game of kept.games) {
+        // Listed by when it was added, which a game kept before that was said
+        // has not got, so by when it last changed until the read models are
+        // made again.
+        const addedAt = game.addedAt ?? game.changedAt;
+        if (game.archived || addedAt === undefined) continue;
+        const won = game.winner === theirs;
+        if (!won && game.loser !== theirs) continue;
         games.push({
           result: game.drawn ? "drawn" : won ? "won" : "lost",
-          opponent: opponentOf(won ? game.loser.value : game.winner.value),
-          score: String(won ? game.winnerScore : game.loserScore),
-          opponentScore: String(won ? game.loserScore : game.winnerScore),
-          withdrawn: countsForNothing(game),
+          opponent: opponentOf(won ? game.loser : game.winner),
+          score: won ? game.winnerScore : game.loserScore,
+          opponentScore: won ? game.loserScore : game.winnerScore,
+          withdrawn:
+            game.withdrawn ||
+            withdrawn.has(game.winner) ||
+            withdrawn.has(game.loser),
           competition: where,
-          addedAt: game.addedAt,
+          addedAt,
         });
       }
     }
     return {
-      name: tournament.name.toString(),
-      subtitle: tournament.subtitle?.markdown,
-      commentariesChanged: await this.changes.of(tournament.id),
-      managerNotes: await managerNotesChangedOf(this.notes, tournament),
+      name: tournament.name,
+      subtitle: tournament.subtitle,
+      commentariesChanged: await this.changes.of(
+        TournamentId.from(tournament.id),
+      ),
+      managerNotes: await managerNotesChangedFor(this.notes, tournament),
       address,
-      competitions,
-      playedByTeams: tournament.format.isTeamFormat,
-      player: { name: player.name.toString() },
+      competitions: tournament.competitions,
+      playedByTeams: formatOfPage(tournament).isTeamFormat,
+      player: { name: player.name },
       // The most recently added first, and of games added at the same moment,
       // the one listed later first, so that the list reads back from now.
       games: games
