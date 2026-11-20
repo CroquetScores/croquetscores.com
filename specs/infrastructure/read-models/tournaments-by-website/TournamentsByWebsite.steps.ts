@@ -179,7 +179,7 @@ Then(
     assert.equal(
       await heldAsLastChanged(
         this,
-        "tournaments_by_website_games",
+        "competition_games",
         "competition_id = $1 and game_id = $2",
         [
           competitionNamed(this, competition, tournament).value,
@@ -532,10 +532,11 @@ When(
   "the events of {string} of {string} are projected again",
   async function (this: SpecWorld, competition: string, tournament: string) {
     const id = competitionNamed(this, competition, tournament);
-    const { readModel, store } = scenarioOf(this);
-    await this.asARequest(async () =>
-      readModel.project(id, 1, await store.getEvents(id)),
-    );
+    const { projections, store } = scenarioOf(this);
+    await this.asARequest(async () => {
+      const events = await store.getEvents(id);
+      for (const each of projections) await each.project(id, 1, events);
+    });
   },
 );
 

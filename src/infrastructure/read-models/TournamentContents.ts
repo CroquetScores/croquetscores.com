@@ -422,6 +422,20 @@ export class TournamentContents implements Projection, Asked {
           event.order,
         ],
       );
+      // A knockout's draw is what the games of it are played out against.
+      if (event instanceof KnockoutAdded) {
+        await this.#competitionWritten(
+          `update competitions
+              set draw_places = $2, draw_rounds = $3, placed_by_order = $4
+            where competition_id = $1`,
+          [
+            event.competitionId,
+            event.places,
+            event.rounds,
+            event.losersOfCompetitionId !== undefined,
+          ],
+        );
+      }
     } else if (event instanceof TestAdded) {
       await this.#competitionWritten(
         `update competitions
@@ -445,6 +459,13 @@ export class TournamentContents implements Projection, Asked {
         `update competitions set name = $2 where competition_id = $1`,
         [event.competitionId, CompetitionName.from(event.name).toString()],
       );
+      if (event instanceof KnockoutUpdated) {
+        await this.#competitionWritten(
+          `update competitions set draw_places = $2, draw_rounds = $3
+            where competition_id = $1`,
+          [event.competitionId, event.places, event.rounds],
+        );
+      }
     } else if (event instanceof TestUpdated) {
       await this.#competitionWritten(
         `update competitions

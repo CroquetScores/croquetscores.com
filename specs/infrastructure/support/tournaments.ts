@@ -171,6 +171,7 @@ import { PublicCommentaryOfTournamentHandler } from "../../../src/application/op
 import { Commentary } from "../../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
 import { ManagerNote } from "../../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import { Tournaments } from "../../../src/infrastructure/read-models/Tournaments.js";
+import { CompetitionGames } from "../../../src/infrastructure/read-models/CompetitionGames.js";
 import { TournamentsByAccount } from "../../../src/infrastructure/read-models/TournamentsByAccount.js";
 import { ManagerNotesByTournament } from "../../../src/infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../../../src/infrastructure/read-models/CommentariesByTournament.js";
@@ -194,6 +195,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   const byAddress = new TournamentsByAddress(unitOfWork);
   const held = new Tournaments(unitOfWork);
   const byWebsite = new TournamentsByWebsite(unitOfWork);
+  const byGames = new CompetitionGames(unitOfWork);
   const byAccount = new TournamentsByAccount(unitOfWork);
   const bySearch = new SearchByWebsite(unitOfWork);
   const byNotes = new ManagerNotesByTournament(unitOfWork);
@@ -201,7 +203,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   const store = new ProjectingEventStore(accounts.store, [
     byAddress,
     held,
-    byWebsite,
+    byGames,
     byAccount,
     bySearch,
     byNotes,

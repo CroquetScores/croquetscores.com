@@ -42,15 +42,13 @@ export interface MatchForApps {
  * The games of a competition: every one of a block, a Swiss or a knockout in
  * the order they were added, and a test's under the match each is in.
  */
-export type GamesToTell =
-  | {
-      readonly competition: CompetitionHead;
-      readonly games: readonly GameForApps[];
-    }
-  | {
-      readonly competition: CompetitionHead;
-      readonly matches: readonly MatchForApps[];
-    };
+export type GamesOfCompetition =
+  | { readonly games: readonly GameForApps[] }
+  | { readonly matches: readonly MatchForApps[] };
+
+export type GamesToTell = {
+  readonly competition: CompetitionHead;
+} & GamesOfCompetition;
 
 /**
  * The games of the competition `competition` of the tournament `tournament`,

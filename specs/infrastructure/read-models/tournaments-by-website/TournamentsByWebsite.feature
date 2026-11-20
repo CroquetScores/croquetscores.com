@@ -4,9 +4,10 @@ Feature: Finding a website's tournaments by when they were played and when they 
   The home page lists the tournaments a game has been added to lately, the
   tournaments about to start, and the years there are tournaments in
   (`home.feature`). None of the three can replay every tournament's events to
-  find out, so a read model keeps the answers: a table of tournaments by
-  website, kept by a projection as tournaments and their competitions are
-  changed, and asked by the queries (`RecentResults.feature`,
+  find out, so read models keep the answers: the tournaments and their
+  competitions (`Tournaments.feature`) and the games of each
+  (`CompetitionGames.feature`), kept by projections as they change, and asked,
+  by website, by the queries (`RecentResults.feature`,
   `UpcomingTournaments.feature`, `TournamentYears.feature`), and by the
   pages of a year's tournaments, and of a sport's in a year (`year.feature`,
   `yearSport.feature`), which can ask for the years of one sport.
@@ -19,9 +20,9 @@ Feature: Finding a website's tournaments by when they were played and when they 
 
   Games are added to a competition rather than to the tournament, and a
   competition's events do not say which tournament it is in. The tournament's
-  do, when the competition is added to it, so the read model keeps which
+  do, when the competition is added to it, so the read models keep which
   tournament each competition is in, and each game by its competition, and
-  puts them together when it is asked. That is what lets a rebuild take the
+  are put together when it is asked. That is what lets a rebuild take the
   streams in any order: a competition's games projected before the
   tournament that has it are still its games once the tournament is.
 

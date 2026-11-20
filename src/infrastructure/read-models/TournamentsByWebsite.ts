@@ -1,4 +1,3 @@
-import type { Projection } from "../../application/common/Projection.js";
 import type {
   ChangesOfTournament,
   TournamentChanged,
@@ -7,21 +6,11 @@ import type {
   TournamentPlayed,
   TournamentsByWebsite as Asked,
 } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
-import { CompetitionGameAdded } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
-import { CompetitionGameArchived } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
-import { CompetitionGameCorrected } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
-import { CompetitionGameMoved } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameMoved.js";
-import { CompetitionGameRestored } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
-import { CompetitionGameWithdrawalReversed } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawalReversed.js";
-import { CompetitionGameWithdrawn } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawn.js";
 import type { Sport } from "../../domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFilter } from "../../domain/aggregates/tournaments/value-objects/TournamentFilter.js";
-import type { DomainEvent } from "../../domain/common/DomainEvent.js";
-import type { Id } from "../../domain/common/Id.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { Website } from "../../domain/common/Website.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
-import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 interface Row {
   tournament_id: string;
@@ -66,18 +55,6 @@ const narrowedBy = (
   return { where: conditions.join(" "), values };
 };
 
-// Every kind of event about one game, each of which says which.
-const isAboutAGame = (
-  event: DomainEvent,
-): event is DomainEvent & { readonly gameId: string } =>
-  event instanceof CompetitionGameAdded ||
-  event instanceof CompetitionGameArchived ||
-  event instanceof CompetitionGameCorrected ||
-  event instanceof CompetitionGameMoved ||
-  event instanceof CompetitionGameRestored ||
-  event instanceof CompetitionGameWithdrawalReversed ||
-  event instanceof CompetitionGameWithdrawn;
-
 const listed = (row: Row): TournamentOfWebsite => ({
   id: row.tournament_id,
   name: row.name,
@@ -92,48 +69,18 @@ const listed = (row: Row): TournamentOfWebsite => ({
 });
 
 /**
- * The tournaments of each website, kept in step with every append, so that
- * the home page can list those played lately and those about to start, and
- * the years there are tournaments in, without replaying every tournament
- * there is.
+ * The tournaments of each website, asked so that the home page can list those
+ * played lately and those about to start, and the years there are tournaments
+ * in, without replaying every tournament there is.
  *
- * The tournaments and the competitions are held once for every read model
- * of tournaments (`Tournaments`), and what is kept here is each game by its
- * competition. Games are added to a competition, whose events do not say which
- * tournament it is in, and the tournament's do, so the games and the
- * tournaments are put together when asked, which lets a competition's games
- * be projected before the tournament that has it.
+ * It keeps nothing of its own. The tournaments and the competitions are held
+ * once for every read model of tournaments (`Tournaments`), and the games by
+ * the competition they are in (`CompetitionGames`), and they are put together
+ * when asked, which lets a competition's games be projected before the
+ * tournament that has it.
  */
-export class TournamentsByWebsite implements Projection, Asked {
+export class TournamentsByWebsite implements Asked {
   constructor(private readonly unitOfWork: UnitOfWork) {}
-
-  async project(
-    stream: Id,
-    _firstEvent: number,
-    events: readonly DomainEvent[],
-  ): Promise<void> {
-    for (const event of events) await this.#project(stream.value, event);
-  }
-
-  /** Empties its tables, so that every stream can be handed to it again. */
-  async clear(): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(`truncate tournaments_by_website_games`);
-  }
-
-  /**
-   * The tables made again from the streams it is handed, one at a time.
-   * Nothing one stream writes depends on another's having been written first,
-   * so the streams can come in any order, as long as each stream's own events
-   * come in the order they were kept, which reading them back gives.
-   */
-  async rebuildFromStream(
-    stream: string,
-    events: readonly StoredEvent[],
-  ): Promise<void> {
-    for (const { event } of events) await this.#project(stream, event);
-  }
 
   async playedSince(
     website: Website,
@@ -148,7 +95,7 @@ export class TournamentsByWebsite implements Projection, Asked {
            from tournaments t
            join competitions c
              on c.tournament_id = t.tournament_id and not c.archived
-           join tournaments_by_website_games g
+           join competition_games g
              on g.competition_id = c.competition_id and not g.archived
           where t.website = $1 and not t.archived ${narrowed.where}
           group by t.tournament_id
@@ -233,21 +180,6 @@ export class TournamentsByWebsite implements Projection, Asked {
     };
   }
 
-  async changesOfGames(
-    competition: string,
-  ): Promise<ReadonlyMap<string, ReadOnlyDate>> {
-    const { rows } = await this.unitOfWork
-      .connection()
-      .query<{ game_id: string; changed_at: Date }>(
-        `select game_id, changed_at from tournaments_by_website_games
-          where competition_id = $1`,
-        [competition],
-      );
-    return new Map(
-      rows.map((row) => [row.game_id, ReadOnlyDate.from(row.changed_at)]),
-    );
-  }
-
   async withSports(): Promise<readonly TournamentOfWebsite[]> {
     const { rows } = await this.unitOfWork.connection().query<Row>(
       `select ${COLUMNS}
@@ -329,49 +261,5 @@ export class TournamentsByWebsite implements Projection, Asked {
       [website.host, sport?.code ?? null],
     );
     return rows.map(({ year }) => year);
-  }
-
-  // Each written so that writing it twice leaves what writing it once did,
-  // which is what makes projecting the same events again change nothing.
-  async #project(stream: string, event: DomainEvent): Promise<void> {
-    const connection = this.unitOfWork.connection();
-    if (event instanceof CompetitionGameAdded) {
-      // Whether it is archived is kept as it was first projected, since a game
-      // is added once and projecting it again is not adding it again.
-      await connection.query(
-        `insert into tournaments_by_website_games
-           (competition_id, game_id, changed_at)
-         values ($1, $2, $3)
-         on conflict (competition_id, game_id) do update
-           set changed_at = greatest(tournaments_by_website_games.changed_at,
-                                     excluded.changed_at)`,
-        [stream, event.gameId, event.occurredAt.toISOString()],
-      );
-    } else if (event instanceof CompetitionGameArchived) {
-      await this.#gameArchived(stream, event.gameId, true);
-    } else if (event instanceof CompetitionGameRestored) {
-      await this.#gameArchived(stream, event.gameId, false);
-    }
-    // Every event about a game, whatever it did, is the game's last change.
-    if (isAboutAGame(event)) {
-      await connection.query(
-        `update tournaments_by_website_games
-            set changed_at = greatest(changed_at, $3)
-          where competition_id = $1 and game_id = $2`,
-        [stream, event.gameId, event.occurredAt.toISOString()],
-      );
-    }
-  }
-
-  async #gameArchived(
-    competition: string,
-    game: string,
-    archived: boolean,
-  ): Promise<void> {
-    await this.unitOfWork.connection().query(
-      `update tournaments_by_website_games set archived = $3
-        where competition_id = $1 and game_id = $2`,
-      [competition, game, archived],
-    );
   }
 }

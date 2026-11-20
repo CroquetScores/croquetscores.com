@@ -27,7 +27,9 @@ import { Tournament } from "../../../src/domain/aggregates/tournaments/Tournamen
 import { EventRegistry } from "../../../src/domain/common/EventRegistry.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { Website } from "../../../src/domain/common/Website.js";
+import { CompetitionGames } from "../../../src/infrastructure/read-models/CompetitionGames.js";
 import { Tournaments } from "../../../src/infrastructure/read-models/Tournaments.js";
+import { TournamentsByWebsite } from "../../../src/infrastructure/read-models/TournamentsByWebsite.js";
 import {
   PostgresEventStore,
   type StoredEvent,
@@ -60,7 +62,11 @@ export interface TournamentReadModel extends Projection, Rebuildable {}
 export type ToBe = TournamentRequest & { readonly website: string };
 
 interface Scenario {
-  readonly readModel: TournamentReadModel;
+  // What the scenario asks, and everything stood up in front of the store with
+  // it: a read model that keeps nothing of its own is asked, and is written
+  // against what others keep.
+  readonly readModel: TournamentReadModel | TournamentsByWebsite;
+  readonly projections: readonly TournamentReadModel[];
   readonly store: PostgresEventStore;
   readonly tournaments: AggregateRepository<Tournament, TournamentId>;
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
@@ -104,7 +110,7 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
  */
 export const standUp = (
   world: SpecWorld,
-  readModel: TournamentReadModel,
+  readModel: TournamentReadModel | TournamentsByWebsite,
   { country, region }: { readonly country: string; readonly region: string },
 ): void => {
   const unitOfWork = unitOfWorkOf(world);
@@ -116,13 +122,18 @@ export const standUp = (
   // Every read model of tournaments is written against the tournaments and
   // competitions held once for all of them, so they are stood up together,
   // unless it is they that the scenario is about.
-  const readModels: readonly TournamentReadModel[] =
-    readModel instanceof Tournaments
+  // The home page's list is asked of the tournaments and the games of their
+  // competitions, which it keeps none of, so they are stood up with it.
+  const asked = readModel instanceof TournamentsByWebsite;
+  const readModels: readonly TournamentReadModel[] = asked
+    ? [new Tournaments(unitOfWork), new CompetitionGames(unitOfWork)]
+    : readModel instanceof Tournaments
       ? [readModel]
       : [new Tournaments(unitOfWork), readModel];
   const projecting = new ProjectingEventStore(store, readModels);
   const scenario: Scenario = {
     readModel,
+    projections: readModels,
     store,
     tournaments: new AggregateRepository(projecting, (id, events) =>
       Tournament.rebuiltFrom(id, events),
@@ -437,12 +448,13 @@ Given("{string} is restored", async function (this: SpecWorld, name: string) {
 // Every event of the one tournament the scenario made, from its first, as
 // rebuilding would give them.
 When("its events are projected again", async function (this: SpecWorld) {
-  const { byName, readModel, store } = scenarioOf(this);
+  const { byName, projections, store } = scenarioOf(this);
   const [id] = new Set(byName.values());
   assert.ok(id !== undefined, "No tournament was created.");
-  await this.asARequest(async () =>
-    readModel.project(id, 1, await store.getEvents(id)),
-  );
+  await this.asARequest(async () => {
+    const events = await store.getEvents(id);
+    for (const each of projections) await each.project(id, 1, events);
+  });
 });
 
 Given(
