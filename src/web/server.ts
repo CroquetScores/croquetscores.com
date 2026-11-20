@@ -261,6 +261,7 @@ import { AccountEventSealing } from "../infrastructure/encryption/AccountEventSe
 import { AccountKeys } from "../infrastructure/encryption/AccountKeys.js";
 import { KeyedEmailAddressHasher } from "../infrastructure/encryption/KeyedEmailAddressHasher.js";
 import { PostgresEmailsWritten } from "../infrastructure/email/PostgresEmailsWritten.js";
+import { EventStoreWithRefusableReads } from "../infrastructure/event-store/EventStoreWithRefusableReads.js";
 import {
   PostgresEventStore,
   type StoredEvent,
@@ -329,6 +330,10 @@ import { registerBetaBanner } from "./common/betaSite.js";
 import { registerPagePreview } from "./common/pagePreview.js";
 import { registerWebAppManifest } from "./common/webAppManifest.js";
 import { registerTestControl, SettableClock } from "./testControl.js";
+import {
+  markRequestsToTheApi,
+  registerTestControlEventStore,
+} from "./testControlEventStore.js";
 import {
   registerTestControlReaders,
   type ReaderMaking,
@@ -1055,10 +1060,17 @@ export const buildApplication = async (
     options.events ?? applicationEvents(),
     sealing,
   );
-  const eventStore = new ProjectingEventStore(
+  const projectingEvents = new ProjectingEventStore(
     keptEvents,
     options.projections ?? readModels,
   );
+  // Only a site with the test control can be told to refuse the API a read of
+  // the events, so that a site in production is handed the store itself.
+  const refusableEvents =
+    config.testControlToken === undefined
+      ? undefined
+      : new EventStoreWithRefusableReads(projectingEvents);
+  const eventStore: EventStore = refusableEvents ?? projectingEvents;
   // Everything it changes is changed in one transaction, so that a change
   // that fails leaves every key as it was. The application goes on using the
   // key it was made with; the setting is changed and the site started again.
@@ -1736,6 +1748,7 @@ export const buildApplication = async (
       pool,
       () => {
         standInReaderCheck?.reset();
+        refusableEvents?.reset();
         listedCountries?.ac.clear();
         listedCountries?.gc.clear();
         // A deploy is something one scenario says happened; left standing, the
@@ -1948,6 +1961,14 @@ export const buildApplication = async (
     };
     registerTestControlReaders(server, config.testControlToken, making);
     registerTestControlTournaments(server, config.testControlToken, making);
+    if (refusableEvents !== undefined) {
+      markRequestsToTheApi(server, refusableEvents);
+      registerTestControlEventStore(
+        server,
+        config.testControlToken,
+        refusableEvents,
+      );
+    }
     if (standInReaderCheck !== undefined) {
       registerTestControlReaderCheck(
         server,

@@ -1382,6 +1382,15 @@ When(
 );
 
 When(
+  "the API is told it may not read the events",
+  async function (this: SpecWorld) {
+    await asking(this, "POST", "/__test/event-store/api-reads", {
+      refused: true,
+    });
+  },
+);
+
+When(
   "{string} is taken down",
   async function (this: SpecWorld, service: string) {
     await asking(this, "POST", "/__test/services", { service, down: true });

@@ -691,6 +691,20 @@ Feature: A site over a database the specs made can be controlled by a token
       When "Google" is taken down
       Then the site answers that the request was wrong
 
+  Rule: A site with the control can be told the API may not read the events
+
+    What that does is said by `testControlEventStore.feature`.
+
+    Scenario: The API can be told it may not read the events
+      Given a site given the token "open sesame"
+      When the API is told it may not read the events
+      Then the site answers that it is fine
+
+    Scenario: A site given no token has no such control
+      Given a site given no token
+      When the API is told it may not read the events
+      Then the site answers that there is no such page
+
   Rule: A site with the control can be told how reCAPTCHA judges
 
     The site never asks Google. Where it has the control it judges a reader as a
