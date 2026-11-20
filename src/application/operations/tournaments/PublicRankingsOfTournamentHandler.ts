@@ -1,29 +1,33 @@
-import type { CompetitionStandings } from "./competitionStandings.js";
-import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import { Countries } from "../../../domain/aggregates/tournaments/value-objects/Countries.js";
+import { Sport } from "../../../domain/aggregates/tournaments/value-objects/Sport.js";
 import {
   dayInTimeZone,
   timeZoneOf,
 } from "../../../domain/aggregates/tournaments/value-objects/timeZones.js";
-import { Website } from "../../../domain/common/Website.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
-import {
-  type Competitions,
-  competitionOf,
-  toldOf,
-} from "../competitions/competitionOperations.js";
+import type { CompetitionGames, GameKept } from "./competitionGames.js";
+import type { CompetitionStandings } from "./competitionStandings.js";
+import { matchesOfKept } from "./knockoutPlayOfKept.js";
 import {
   type CompetitionOfRanking,
   PublicRankingsOfTournament,
   type RankingsToRead,
   type ResultOfRanking,
 } from "./PublicRankingsOfTournament.js";
-import { tournamentForReaders } from "./tournamentForReaders.js";
+import { formatOfPage, tournamentOfPage } from "./tournamentOfPage.js";
 import type { TournamentAddresses } from "./tournamentOperations.js";
+import type { TournamentPages } from "./tournamentPages.js";
+import type { TournamentRankings } from "./tournamentRankings.js";
 
+/**
+ * The rankings of a tournament, read of the read models alone: the tournament
+ * and what it is made of (`TournamentPages`, `TournamentRankings`), its games
+ * (`CompetitionGames`) and a block's winner, which is its kept standings
+ * (`CompetitionStandings`), so that the file and the block's page cannot say
+ * two different things.
+ */
 export class PublicRankingsOfTournamentHandler extends QueryHandler<
   PublicRankingsOfTournament,
   RankingsToRead
@@ -32,39 +36,46 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
     PublicRankingsOfTournament;
 
   constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly competitions: Competitions,
     private readonly addresses: TournamentAddresses,
+    private readonly pages: TournamentPages,
+    private readonly rankings: TournamentRankings,
+    private readonly games: CompetitionGames,
     private readonly standings: CompetitionStandings,
   ) {
     super();
   }
 
   async handle(query: PublicRankingsOfTournament): Promise<RankingsToRead> {
-    const tournament = await tournamentForReaders(
-      this.tournaments,
+    const page = await tournamentOfPage(
       this.addresses,
-      Website.from(query.website),
+      this.pages,
+      query.website,
       query.address,
       "PublicRankingsOfTournament",
     );
+    const tournament = await this.rankings.tournament(page.id);
+    if (tournament === undefined) {
+      // The page found it, so a gap here is the read models not being whole.
+      throw new Error(
+        `The tournament ${page.id} has no rankings kept: the read models are to be made again.`,
+      );
+    }
+    const country = Countries.thereAre.find(tournament.country);
     const answered = {
-      name: tournament.name.toString(),
-      address: tournament.address.toString(),
-      sport: tournament.sport.code,
-      country: tournament.country.name,
-      playedByTeams: tournament.format.isTeamFormat,
-      starts: tournament.starts.toISOString().slice(0, 10),
-      finishes: tournament.finishes.toISOString().slice(0, 10),
+      name: page.name,
+      address: page.address,
+      sport: page.sport,
+      country: country?.name ?? tournament.country,
+      playedByTeams: formatOfPage(page).isTeamFormat,
+      starts: tournament.starts,
+      finishes: tournament.finishes,
     };
     // A competition counts or not for itself, so a tournament has rankings
     // where its sport does and, unless it has none yet, some competition in use
     // counts.
-    const inUse = tournament.competitions.filter(
-      ({ reference }) => !reference.archived,
-    );
-    const counted = inUse.filter(({ rules }) => rules.worldRankings);
-    if (!tournament.sport.countsTowardsWorldRankings) {
+    const inUse = tournament.competitions;
+    const counted = inUse.filter(({ worldRankings }) => worldRankings);
+    if (!Sport.from(page.sport).countsTowardsWorldRankings) {
       return {
         ...answered,
         rankings: { is: "not available", because: "sport" },
@@ -77,91 +88,52 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
       };
     }
 
-    // Each player by the name the world rankings know them by, which is their
-    // name where none was given, under the id a game names them by: a
-    // tournament player's, and a team player's in a test.
-    const known = new Map<string, string>([
-      ...tournament.players.map(
-        (player) =>
-          [
-            player.id.value,
-            (player.worldRankingName ?? player.name).toString(),
-          ] as const,
+    // The day a game was added is the day where the tournament is played, since
+    // that is the day those entering its results kept it by. A game kept before
+    // its first day was held falls back to when it last changed, and one with
+    // no time of its own to when its competition did, which is never earlier
+    // than it truly was.
+    const timeZone = timeZoneOf(tournament.country, tournament.region);
+    const dayOf = (
+      game: GameKept,
+      competitionChangedAt: ReadOnlyDate,
+    ): { day: string } => ({
+      day: dayInTimeZone(
+        (game.addedAt ?? game.changedAt ?? competitionChangedAt).toDate(),
+        timeZone,
       ),
-      ...tournament.teams.flatMap((team) =>
-        team.players.map(
-          (player) =>
-            [
-              player.id.value,
-              (player.worldRankingName ?? player.name).toString(),
-            ] as const,
-        ),
-      ),
-    ]);
-
-    // The day a game was added is the day where the tournament is played,
-    // since that is the day those entering its results kept it by.
-    const timeZone = timeZoneOf(
-      tournament.country.code,
-      tournament.region?.code,
-    );
-    const dayOf = (game: Game): { day?: string } =>
-      game.addedAt === undefined
-        ? {}
-        : { day: dayInTimeZone(game.addedAt.toDate(), timeZone) };
+    });
 
     const competitions: CompetitionOfRanking[] = [];
-    for (const { reference, shape, rules } of tournament.competitions) {
-      if (reference.archived || !rules.worldRankings) continue;
-      const competition = await competitionOf(this.competitions, reference.id);
+    for (const { id, name, kind, worldRankings, changedAt } of inUse) {
+      if (!worldRankings) continue;
+      const kept = await this.games.gamesKept(id);
       // A competition's player by their name, through the tournament player
-      // they were entered as.
-      const nameOf = (written: string): string => {
-        const entered = competition.players.find(
-          (player) => player.id.value === written,
-        );
-        return known.get(entered?.tournamentPlayerId.value ?? written) ?? "";
-      };
+      // they were entered as; a test names its players by their ids in their
+      // teams, which are known as they are.
+      const entered = new Map(
+        kept.entries.map((entry) => [entry.id, entry.tournamentPlayerId]),
+      );
+      const nameOf = (written: string): string =>
+        tournament.names.get(entered.get(written) ?? written) ?? "";
       // A game of a block, a Swiss or a test, or one a knockout has no match
       // for, is a result of one game.
-      const gameAsResult = (game: Game): ResultOfRanking => ({
-        winner: nameOf(game.winner.value),
-        loser: nameOf(game.loser.value),
+      const gameAsResult = (game: GameKept): ResultOfRanking => ({
+        winner: nameOf(game.winner),
+        loser: nameOf(game.loser),
         games: [
           {
-            winnerScore: game.winnerScore.toString(),
-            loserScore: game.loserScore.toString(),
+            winnerScore: game.winnerScore,
+            loserScore: game.loserScore,
             wonByWinner: true,
-            ...dayOf(game),
+            ...dayOf(game, changedAt),
           },
         ],
       });
-      // The player a block places first where only one is, and nobody where
-      // players cannot be told apart for first, as the block's page does, which
-      // reads the same standings.
-      const kept =
-        shape.kind === "block"
-          ? await this.standings.standingsKept(reference.id.value)
-          : undefined;
-      const winnerOfBlock = (): string => {
-        // An entry whose tournament player is not known is left out, as the
-        // block's page leaves it out, so the two name the same winner.
-        const [first] = (kept?.standings ?? []).filter((each) => {
-          const entered = competition.players.find(
-            (player) => player.id.value === each.entryId,
-          );
-          return (
-            entered !== undefined && known.has(entered.tournamentPlayerId.value)
-          );
-        });
-        return first?.place === 1 && !first.shared ? nameOf(first.entryId) : "";
-      };
       const results: ResultOfRanking[] = [];
-      if (shape.kind === "knockout") {
-        const matches = competition.knockoutMatches(
-          toldOf(tournament, reference.id),
-        );
-        for (const match of matches) {
+      if (kind === "knockout") {
+        const keptGame = new Map(kept.games.map((game) => [game.id, game]));
+        for (const match of matchesOfKept(kept)) {
           const [one, other] = match.sides;
           if (
             match.games.length === 0 ||
@@ -188,33 +160,52 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
           results.push({
             winner: nameOf(winner.player.id.value),
             loser: nameOf(loser.player.id.value),
-            games: match.games.map((game) =>
-              game.winner.equals(winner.player.id)
+            games: match.games.map((played) => {
+              // The domain's game knows who played it and not the score, which
+              // is the kept one's, found by its id.
+              const game = keptGame.get(played.id.value)!;
+              return played.winner.equals(winner.player.id)
                 ? {
-                    winnerScore: game.winnerScore.toString(),
-                    loserScore: game.loserScore.toString(),
+                    winnerScore: game.winnerScore,
+                    loserScore: game.loserScore,
                     wonByWinner: true,
-                    ...dayOf(game),
+                    ...dayOf(game, changedAt),
                   }
                 : {
-                    winnerScore: game.loserScore.toString(),
-                    loserScore: game.winnerScore.toString(),
+                    winnerScore: game.loserScore,
+                    loserScore: game.winnerScore,
                     wonByWinner: false,
-                    ...dayOf(game),
-                  },
-            ),
+                    ...dayOf(game, changedAt),
+                  };
+            }),
           });
         }
       } else {
-        for (const game of competition.games) {
+        for (const game of kept.games) {
           if (!game.archived) results.push(gameAsResult(game));
         }
       }
       if (results.length > 0) {
+        // The player a block places first where only one is, and nobody where
+        // players cannot be told apart for first, as the block's page does,
+        // which reads the same standings.
+        // A player whose tournament player is not known is left out, as the
+        // block's page leaves it out, so the two name the same winner.
+        const [first] =
+          kind === "block"
+            ? (await this.standings.standingsKept(id)).standings.filter(
+                (each) => tournament.names.has(each.tournamentPlayerId),
+              )
+            : [];
         competitions.push({
-          name: reference.name.toString(),
+          name,
           results,
-          winner: shape.kind === "block" ? winnerOfBlock() : undefined,
+          winner:
+            kind === "block"
+              ? first?.place === 1 && !first.shared
+                ? nameOf(first.entryId)
+                : ""
+              : undefined,
         });
       }
     }

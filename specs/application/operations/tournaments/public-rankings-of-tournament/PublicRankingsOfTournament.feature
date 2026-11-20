@@ -316,6 +316,50 @@ Feature: A tournament's results, as the world rankings are sent them
       When the rankings of the tournament at "2026/ac/spring-tests" are asked for
       Then the tournament answered is played by teams
 
+  Rule: A tournament played by teams is played by teams before it has a team
+
+    Scenario: A team tournament with no team is answered as played by teams
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      When the rankings of the tournament at "2026/ac/spring-tests" are asked for
+      Then the tournament answered is played by teams
+
+  Rule: A game is on the day it was added, by the clock where the tournament is played
+
+    The rankings file puts each game on a day, which is the day it was added: a
+    later correction, withdrawal or move does not take it to another day, since
+    the day is where those entering the results kept the game. It is the day
+    where the tournament is played, which is not always the day where the
+    site's clock is.
+
+    Scenario: A game added is on the day it was added
+      Given the moment "2026-10-03T02:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the day of the first game of the first result is "2026-10-03"
+
+    Scenario: A game corrected on another day stays on the day it was added
+      Given the moment "2026-10-03T02:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the moment "2026-10-04T02:00:00Z"
+      And the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to 26 to 18
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the day of the first game of the first result is "2026-10-03"
+
+    Scenario: A game withdrawn on another day stays on the day it was added
+      Given the moment "2026-10-03T02:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the moment "2026-10-04T02:00:00Z"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the day of the first game of the first result is "2026-10-03"
+
+    Scenario: The day is the day where the tournament is played
+      Given the moment "2026-10-03T20:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the day of the first game of the first result is "2026-10-04"
+
   Rule: Only an archived game is not a result
 
     Scenario: An archived game is not a result

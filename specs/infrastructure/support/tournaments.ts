@@ -174,6 +174,7 @@ import { ManagerNote } from "../../../src/domain/aggregates/tournaments/manager-
 import { Tournaments } from "../../../src/infrastructure/read-models/Tournaments.js";
 import { CompetitionGames } from "../../../src/infrastructure/read-models/CompetitionGames.js";
 import { CompetitionStandings } from "../../../src/infrastructure/read-models/CompetitionStandings.js";
+import { TournamentRankings } from "../../../src/infrastructure/read-models/TournamentRankings.js";
 import { TournamentPages } from "../../../src/infrastructure/read-models/TournamentPages.js";
 import { TournamentContents } from "../../../src/infrastructure/read-models/TournamentContents.js";
 import { TournamentsByAccount } from "../../../src/infrastructure/read-models/TournamentsByAccount.js";
@@ -509,9 +510,10 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new PublicRankingsOfTournamentHandler(
-      tournaments,
-      competitions,
       byAddress,
+      pages,
+      new TournamentRankings(unitOfWork),
+      byGames,
       standings,
     ),
   );
