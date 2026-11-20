@@ -1,4 +1,4 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
@@ -52,6 +52,12 @@ const playerOf = (side: SideOfKnockout) => {
   assert.equal(side.is, "player", `The side is ${side.is}.`);
   return side.player;
 };
+
+// What is kept stays as it is; only the loading of an aggregate from its
+// stream is lost.
+Given("no stream can be read now", function (this: SpecWorld) {
+  inHandOf(this).stopReadingStreams();
+});
 
 // Asked with nobody signed in.
 When(

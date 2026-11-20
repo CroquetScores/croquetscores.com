@@ -30,6 +30,13 @@ export const tournamentsThrough = (
   const asARequest = <T>(work: () => Promise<T>): Promise<T> =>
     application.unitOfWork.inTransaction(work);
   return {
+    // Only the scenarios that run against Postgres show that a page reads no
+    // stream, and none of these says so.
+    stopReadingStreams: () => {
+      throw new Error(
+        'The step "no stream can be read now" needs the application\'s tournaments, which run against Postgres, and the web units do not.',
+      );
+    },
     send: (command) => application.mediator.send(command),
     ask: (query) => application.mediator.query(query),
     load: (id) => asARequest(() => application.tournaments.load(id)),

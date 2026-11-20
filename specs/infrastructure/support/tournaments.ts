@@ -19,6 +19,7 @@ import { strict as assert } from "node:assert";
 
 import { AggregateRepository } from "../../../src/application/common/AggregateRepository.js";
 import { Mediator } from "../../../src/application/common/Mediator.js";
+import type { EventStore } from "../../../src/application/services/EventStore.js";
 import { ProjectingEventStore } from "../../../src/application/common/ProjectingEventStore.js";
 import { ValidationBehaviour } from "../../../src/application/common/ValidationBehaviour.js";
 import { AddBlockHandler } from "../../../src/application/operations/tournaments/AddBlockHandler.js";
@@ -216,18 +217,32 @@ const standUpTheTournaments = function (this: SpecWorld): void {
     byNotes,
     byCommentaries,
   ]);
+  // What the aggregates are loaded from. It can be made to refuse every read,
+  // so that a scenario can show a page asks the aggregates nothing: a page that
+  // loaded one would fail, where one that reads the read models does not.
+  let streamsReadable = true;
+  const aggregateStore: EventStore = {
+    appendEvents: (streamId, expectedVersion, events) =>
+      store.appendEvents(streamId, expectedVersion, events),
+    getEvents: (streamId) => {
+      if (!streamsReadable) {
+        throw new Error(`The stream ${streamId.value} was read.`);
+      }
+      return store.getEvents(streamId);
+    },
+  };
   // Wrapped rather than handed over as they are: a static passed on its own is
   // a method separated from what it was declared on.
-  const tournaments = new AggregateRepository(store, (id, events) =>
+  const tournaments = new AggregateRepository(aggregateStore, (id, events) =>
     Tournament.rebuiltFrom(id, events),
   );
-  const competitions = new AggregateRepository(store, (id, events) =>
+  const competitions = new AggregateRepository(aggregateStore, (id, events) =>
     Competition.rebuiltFrom(id, events),
   );
-  const commentaries = new AggregateRepository(store, (id, events) =>
+  const commentaries = new AggregateRepository(aggregateStore, (id, events) =>
     Commentary.rebuiltFrom(id, events),
   );
-  const managerNotes = new AggregateRepository(store, (id, events) =>
+  const managerNotes = new AggregateRepository(aggregateStore, (id, events) =>
     ManagerNote.rebuiltFrom(id, events),
   );
   const accountRepository = new AggregateRepository(
@@ -485,9 +500,9 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new PublicKnockoutOfTournamentHandler(
-      tournaments,
-      competitions,
       byAddress,
+      pages,
+      byGames,
       byNotes,
       byCommentaries,
     ),
@@ -558,6 +573,9 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
 
   const inHand: TournamentsInHand = {
+    stopReadingStreams: () => {
+      streamsReadable = false;
+    },
     send: (command) => mediator.send(command),
     ask: (query) => mediator.query(query),
     load: (id) => this.asARequest(() => tournaments.load(id)),
