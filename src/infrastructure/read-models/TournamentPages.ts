@@ -71,11 +71,12 @@ export class TournamentPages implements Asked {
       second_short_name: string | null;
       group_name: string | null;
     }>(
-      `select c.competition_id, c.name, c.kind, c.slug,
+      `select c.competition_id, n.name, c.kind, c.slug,
               f.short_name as first_short_name,
               s.short_name as second_short_name,
               c.group_name
          from competitions c
+         join competition_names n on n.competition_id = c.competition_id
          left join tournament_teams f on f.team_id = c.first_team_id
          left join tournament_teams s on s.team_id = c.second_team_id
         where c.tournament_id = $1 and not c.archived and c.kind is not null
@@ -131,12 +132,13 @@ export class TournamentPages implements Asked {
       first_team_id: string | null;
       second_team_id: string | null;
     }>(
-      `select competition_id, name, kind, best_of, rounds, tie_break,
-              maximum_hoops, maximum_hoops_said, advantage, first_team_id,
-              second_team_id
-         from competitions
-        where tournament_id = $1 and slug = $2 and not archived
-          and kind is not null`,
+      `select c.competition_id, n.name, c.kind, c.best_of, c.rounds,
+              c.tie_break, c.maximum_hoops, c.maximum_hoops_said, c.advantage,
+              c.first_team_id, c.second_team_id
+         from competitions c
+         join competition_names n on n.competition_id = c.competition_id
+        where c.tournament_id = $1 and c.slug = $2 and not c.archived
+          and c.kind is not null`,
       [tournament, slug],
     );
     const [row] = found.rows;

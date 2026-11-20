@@ -148,7 +148,6 @@ export const standCompetition = async (
     rank: number;
     played: number;
     won: number;
-    lost: number | null;
     games_won: number | null;
     net_games: number | null;
     net_hoops: number;
@@ -156,7 +155,7 @@ export const standCompetition = async (
     shared: boolean;
     changed_at: Date | null;
   }>(
-    `select s.entry_id, s.rank, s.played, s.won, s.lost, s.games_won,
+    `select s.entry_id, s.rank, s.played, s.won, s.games_won,
             s.net_games, s.net_hoops, s.place, s.shared, s.changed_at
        from competition_standings s
        join competition_entries e on e.entry_id = s.entry_id
@@ -171,7 +170,6 @@ export const standCompetition = async (
       old.rank === each.rank &&
       old.played === each.played &&
       old.won === each.won &&
-      old.lost === (each.lost ?? null) &&
       old.games_won === (each.gamesWon ?? null) &&
       old.net_games === (each.netGames ?? null) &&
       old.net_hoops === each.netHoops &&
@@ -190,21 +188,19 @@ export const standCompetition = async (
   if (lines.length > 0) {
     await connection.query(
       `insert into competition_standings
-         (entry_id, rank, played, won, lost, games_won, net_games, net_hoops,
+         (entry_id, rank, played, won, games_won, net_games, net_hoops,
           place, shared, changed_at)
-       select entry_id, rank, played, won, lost, games_won, net_games,
+       select entry_id, rank, played, won, games_won, net_games,
               net_hoops, place, shared, changed_at
          from unnest($1::text[], $2::int[], $3::int[], $4::int[], $5::int[],
-                     $6::int[], $7::int[], $8::int[], $9::int[],
-                     $10::boolean[], $11::timestamptz[])
-              as t(entry_id, rank, played, won, lost, games_won, net_games,
+                     $6::int[], $7::int[], $8::int[], $9::boolean[], $10::timestamptz[])
+              as t(entry_id, rank, played, won, games_won, net_games,
                    net_hoops, place, shared, changed_at)`,
       [
         lines.map((each) => each.entryId),
         lines.map((each) => each.rank),
         lines.map((each) => each.played),
         lines.map((each) => each.won),
-        lines.map((each) => each.lost ?? null),
         lines.map((each) => each.gamesWon ?? null),
         lines.map((each) => each.netGames ?? null),
         lines.map((each) => each.netHoops),
@@ -247,7 +243,7 @@ export class CompetitionStandings implements Asked {
       rank: number;
       played: number;
       won: number;
-      lost: number | null;
+      kind: string;
       games_won: number | null;
       net_games: number | null;
       net_hoops: number;
@@ -256,10 +252,11 @@ export class CompetitionStandings implements Asked {
       shared: boolean;
     }>(
       `select s.entry_id, e.tournament_player_id, s.rank, s.played, s.won,
-              s.lost, s.games_won, s.net_games, s.net_hoops, e.withdrawn, s.place,
+              c.kind, s.games_won, s.net_games, s.net_hoops, e.withdrawn, s.place,
               s.shared
          from competition_standings s
          join competition_entries e on e.entry_id = s.entry_id
+         join competitions c on c.competition_id = e.competition_id
         where e.competition_id = $1
         order by s.rank`,
       [competition],
@@ -277,7 +274,9 @@ export class CompetitionStandings implements Asked {
         rank: each.rank,
         played: each.played,
         won: each.won,
-        lost: each.lost ?? undefined,
+        // Every match a block's player played they won or lost, and a Swiss
+        // says nothing of matches lost.
+        lost: each.kind === "block" ? each.played - each.won : undefined,
         gamesWon: each.games_won ?? undefined,
         netGames: each.net_games ?? undefined,
         netHoops: each.net_hoops,

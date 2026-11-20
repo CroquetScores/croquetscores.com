@@ -102,8 +102,8 @@ export class CommentariesByTournament
       await connection.query(
         `insert into commentaries_by_tournament
                 (commentary_id, tournament_id, title, slug, writer_id,
-                 started_at, changed_at, comments_kept)
-         values ($1, $2, $3, $4, $5, $6, $7, true)`,
+                 started_at, changed_at)
+         values ($1, $2, $3, $4, $5, $6, $7)`,
         [
           stream,
           row.tournamentId,
@@ -174,22 +174,14 @@ export class CommentariesByTournament
       title: string;
       slug: string;
       writer_id: string;
-      comments_kept: boolean;
     }>(
-      `select commentary_id, title, slug, writer_id, comments_kept
+      `select commentary_id, title, slug, writer_id
          from commentaries_by_tournament
         where tournament_id = $1 and slug = $2`,
       [tournament.value, slug],
     );
     const [row] = found.rows;
     if (row === undefined) return undefined;
-    // Kept before comments were: none found would look like none written, so
-    // the page is refused instead.
-    if (!row.comments_kept) {
-      throw new Error(
-        "The commentaries' comments are not kept yet: the read models are to be made again.",
-      );
-    }
     const comments = await connection.query<{
       comment_id: string;
       text: string;
@@ -273,8 +265,8 @@ export class CommentariesByTournament
       await connection.query(
         `insert into commentaries_by_tournament
                 (commentary_id, tournament_id, title, slug, writer_id,
-                 started_at, changed_at, comments_kept)
-         values ($1, $2, $3, $4, $5, $6, $6, true)
+                 started_at, changed_at)
+         values ($1, $2, $3, $4, $5, $6, $6)
          on conflict (commentary_id) do nothing`,
         [stream, event.tournamentId, event.title, event.slug, event.writer, at],
       );

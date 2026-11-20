@@ -76,12 +76,6 @@ const teamOf = (event: TeamAdded | TeamUpdated) =>
 const teamPlayerOf = (event: TeamPlayerAdded | TeamPlayerUpdated) =>
   TeamPlayer.from(TeamPlayerId.from(event.playerId), event, anywhere);
 
-// What a test is called, as the tournament calls it: its two teams' short
-// names, kept as the teams' are now.
-const testNameOf = `(select f.short_name from tournament_teams f where f.team_id = $2)
-                    || ' v ' ||
-                    (select s.short_name from tournament_teams s where s.team_id = $3)`;
-
 /**
  * What is in each tournament: its players, its teams and their players, and
  * what each of its competitions is called and is, kept as the tournament's
@@ -166,10 +160,11 @@ export class TournamentContents implements Projection, Asked {
       slug: string;
       changed_at: Date;
     }>(
-      `select competition_id, name, kind, slug, changed_at
-         from competitions
-        where tournament_id = $1 and not archived and kind is not null
-        order by position, competition_id`,
+      `select c.competition_id, n.name, c.kind, c.slug, c.changed_at
+         from competitions c
+         join competition_names n on n.competition_id = c.competition_id
+        where c.tournament_id = $1 and not c.archived and c.kind is not null
+        order by c.position, c.competition_id`,
       [tournament],
     );
     const players = await connection.query<{
@@ -266,11 +261,12 @@ export class TournamentContents implements Projection, Asked {
       archived: boolean | null;
       changed_at: Date | null;
     }>(
-      `select t.address, c.competition_id, c.name, c.kind, c.slug, c.archived,
+      `select t.address, c.competition_id, n.name, c.kind, c.slug, c.archived,
               c.changed_at
          from tournaments t
          left join competitions c
            on c.competition_id = $3 and c.tournament_id = t.tournament_id
+         left join competition_names n on n.competition_id = c.competition_id
         where t.tournament_id = $1 and t.website = $2 and not t.archived`,
       [tournament, website, competition],
     );
@@ -452,7 +448,6 @@ export class TournamentContents implements Projection, Asked {
           team.flag === undefined ? null : String(team.flag),
         ],
       );
-      if (event instanceof TeamUpdated) await this.#renameTestsOf(event.teamId);
     } else if (event instanceof TeamArchived) {
       await connection.query(
         `update tournament_teams
@@ -558,7 +553,7 @@ export class TournamentContents implements Projection, Asked {
     } else if (event instanceof TestAdded) {
       await this.#competitionWritten(
         `update competitions
-            set name = ${testNameOf}, kind = 'test', slug = $4, position = $5,
+            set name = null, kind = 'test', slug = $4, position = $5,
                 first_team_id = $2, second_team_id = $3
           where competition_id = $1`,
         [
@@ -595,7 +590,7 @@ export class TournamentContents implements Projection, Asked {
     } else if (event instanceof TestUpdated) {
       await this.#competitionWritten(
         `update competitions
-            set name = ${testNameOf}, first_team_id = $2, second_team_id = $3
+            set first_team_id = $2, second_team_id = $3
           where competition_id = $1`,
         [event.competitionId, event.firstTeamId, event.secondTeamId],
       );
@@ -647,23 +642,6 @@ export class TournamentContents implements Projection, Asked {
         "A competition has no row to write to: TournamentContents is projected after Tournaments.",
       );
     }
-  }
-
-  // A team called by another short name gives every test it is in another
-  // name with it, as the tournament's own events do: the tests not archived,
-  // which keep their slugs.
-  async #renameTestsOf(team: string): Promise<void> {
-    await this.unitOfWork.connection().query(
-      `update competitions c
-          set name = (select f.short_name from tournament_teams f
-                       where f.team_id = c.first_team_id)
-                     || ' v ' ||
-                     (select s.short_name from tournament_teams s
-                       where s.team_id = c.second_team_id)
-        where c.kind = 'test' and not c.archived
-          and (c.first_team_id = $1 or c.second_team_id = $1)`,
-      [team],
-    );
   }
 
   // The tables and columns named here are this class's own, never a reader's.

@@ -292,19 +292,6 @@ Given(
   },
 );
 
-// As a commentary was kept before its comments were: the flag the migration
-// added, unset.
-Given(
-  "the commentary was kept before comments were",
-  async function (this: SpecWorld) {
-    await this.asARequest(() =>
-      unitOfWorkOf(this)
-        .connection()
-        .query(`update commentaries_by_tournament set comments_kept = false`),
-    );
-  },
-);
-
 Given(
   "the commentaries' streams are to be rebuilt the latest started first",
   function (this: SpecWorld) {
@@ -520,14 +507,6 @@ Then(
     assert.equal(readCommentary(this).writer, writer);
   },
 );
-
-Then("the commentary is refused as not kept yet", function (this: SpecWorld) {
-  const { refusal } = scenarioOf(this);
-  assert.ok(
-    refusal instanceof Error && refusal.message.includes("not kept yet"),
-    "The commentary was not refused.",
-  );
-});
 
 Then("no commentary is read", function (this: SpecWorld) {
   assert.equal(scenarioOf(this).read, undefined);

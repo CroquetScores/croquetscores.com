@@ -235,22 +235,6 @@ Feature: Finding a tournament's commentaries without reading them
       When the commentary of "Autumn Open" at "day-one" is read
       Then no commentary is read
 
-  Rule: A commentary kept before comments were is not read
-
-    Scenario: A commentary kept before comments were is refused until the read model is rebuilt
-      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
-      And the commentary was kept before comments were
-      When the commentary of "Spring Open" at "day-one" is read
-      Then the commentary is refused as not kept yet
-
-    Scenario: A commentary kept before comments were is read once the read model is rebuilt
-      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
-      And the comment "Sam is two hoops up" is added to "Day one"
-      And the commentary was kept before comments were
-      When the read model is rebuilt from the events
-      And the commentary of "Spring Open" at "day-one" is read
-      Then the first comment read says "Sam is two hoops up"
-
   Rule: The titles and slugs a tournament's commentaries have taken are found
 
     Scenario: A commentary's title is taken
