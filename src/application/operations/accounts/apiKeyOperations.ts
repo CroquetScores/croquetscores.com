@@ -13,18 +13,30 @@ export type ApiKeyOperationErrorCode = "ChangeApiKeyLimits.NoSuchApiKey";
  */
 export class ApiKeyOperationRefused extends Refused<ApiKeyOperationErrorCode> {}
 
+/**
+ * A key that works, and all that is needed to let a request in on it: who it
+ * acts as, what it may do, and the limits it is held to.
+ */
+export interface ApiKeyFound {
+  readonly account: AccountId;
+  readonly keyId: string;
+  readonly mayRead: boolean;
+  readonly mayWrite: boolean;
+  /** The id of the one tournament the key is limited to, or nothing for none. */
+  readonly tournament: string | undefined;
+  readonly perMinute: number;
+  readonly perDay: number;
+}
+
 /** Which account a key belongs to, and which key a string is. */
 export interface FindsApiKeys {
   /**
-   * The account and the key id of the key hashing to `hash`, or nothing where
-   * no key does. Revoked keys and forgotten accounts' are found by nothing,
-   * so that a key that no longer works never has to be asked about.
+   * The key hashing to `hash` with what it may do, or nothing where no key
+   * does. Revoked keys and forgotten accounts' are found by nothing, and an
+   * account that is not confirmed has made none, so what is found works and
+   * needs no asking of the account.
    */
-  findByHash(
-    hash: string,
-  ): Promise<
-    { readonly account: AccountId; readonly keyId: string } | undefined
-  >;
+  findByHash(hash: string): Promise<ApiKeyFound | undefined>;
 
   /** The account the key `keyId` belongs to, or nothing where there is none. */
   accountOf(keyId: string): Promise<AccountId | undefined>;

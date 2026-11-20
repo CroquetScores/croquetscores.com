@@ -104,3 +104,34 @@ Feature: Knowing who a key belongs to
     Scenario: A key that is not text is refused
       When something that is not text is presented as a key
       Then it is refused with "IdentifyApiKey.NotText"
+
+  Rule: A key is known of the read model, and the events are asked nothing
+
+    The kept events are what the read model is made of, and a key that was
+    also asked of them could be told something the read model does not, so
+    that the key and the rest of the site disagreed. So the events are taken
+    away once the key is made, and the key is still known.
+
+    Scenario: A key is known with the events gone
+      Given "someone@example.com" has an account, confirmed, called "Sam Someone"
+      And the account for "someone@example.com" has the key labelled "CroquetUniverse"
+      And the kept events are gone
+      When that key is presented
+      Then the key belongs to the account for "someone@example.com"
+
+    Scenario: What a key may do is known with the events gone
+      Given "someone@example.com" has an account, confirmed, called "Sam Someone"
+      And the account for "someone@example.com" has the key labelled "CroquetTournament" that may read and write
+      And the kept events are gone
+      When that key is presented
+      Then the key may write
+
+    Scenario: The limits a key was changed to are known with the events gone
+      Given "admin@example.com" has an account, confirmed, called "Ann Administrator"
+      And "admin@example.com" has been given the role "administrator"
+      And "someone@example.com" has an account, confirmed, called "Sam Someone"
+      And the account for "someone@example.com" has the key labelled "CroquetUniverse"
+      And the administrator "admin@example.com" changes that key to 120 requests a minute and 20000 a day
+      And the kept events are gone
+      When that key is presented
+      Then the key may make 120 requests a minute

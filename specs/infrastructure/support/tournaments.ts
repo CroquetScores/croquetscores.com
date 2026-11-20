@@ -412,11 +412,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleQuery(
     new WhatAKeyMayDoInTournamentHandler(
       byAccount,
-      new IdentifyApiKeyHandler(
-        accountRepository,
-        accounts.byApiKey,
-        new CryptoApiKeys(),
-      ),
+      new IdentifyApiKeyHandler(accounts.byApiKey, new CryptoApiKeys()),
     ),
   );
   mediator.handleQuery(
