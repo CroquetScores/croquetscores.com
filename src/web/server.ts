@@ -292,6 +292,7 @@ import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsB
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { Tournaments } from "../infrastructure/read-models/Tournaments.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
+import { TournamentContents } from "../infrastructure/read-models/TournamentContents.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
 import { CompetitionNamesOfWebsiteHandler } from "../application/operations/tournaments/CompetitionNamesOfWebsiteHandler.js";
@@ -1012,6 +1013,7 @@ export const buildApplication = async (
   const heldTournaments = new Tournaments(unitOfWork);
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
+  const tournamentContents = new TournamentContents(unitOfWork);
   const searchByWebsite = new SearchByWebsite(unitOfWork);
   const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
@@ -1028,6 +1030,7 @@ export const buildApplication = async (
     heldTournaments,
     tournamentsByAccount,
     tournamentsByWebsite,
+    tournamentContents,
     searchByWebsite,
     managerNotesByTournament,
     commentariesByTournament,
@@ -1549,9 +1552,7 @@ export const buildApplication = async (
   mediator.handleQuery(new TournamentYearsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsForAppsHandler(tournamentsByWebsite));
-  mediator.handleQuery(
-    new TournamentForAppsHandler(tournaments, tournamentsByWebsite),
-  );
+  mediator.handleQuery(new TournamentForAppsHandler(tournamentContents));
   mediator.handleQuery(new TournamentsInDaysHandler(tournamentsByWebsite));
   mediator.handleQuery(new SearchHandler(searchByWebsite));
   mediator.handleQuery(new CompetitionNamesOfWebsiteHandler(searchByWebsite));
@@ -1642,10 +1643,7 @@ export const buildApplication = async (
   );
   mediator.handleQuery(publicTests);
   mediator.handleQuery(
-    new CompetitionOfTournamentForAppsHandler(
-      tournaments,
-      tournamentsByWebsite,
-    ),
+    new CompetitionOfTournamentForAppsHandler(tournamentContents),
   );
   mediator.handleQuery(
     new StandingsForAppsHandler(
