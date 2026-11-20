@@ -171,6 +171,7 @@ import { PublicCommentaryOfTournamentHandler } from "../../../src/application/op
 import { Commentary } from "../../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
 import { ManagerNote } from "../../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import { Tournaments } from "../../../src/infrastructure/read-models/Tournaments.js";
+import { TournamentsByAccount } from "../../../src/infrastructure/read-models/TournamentsByAccount.js";
 import { ManagerNotesByTournament } from "../../../src/infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../../../src/infrastructure/read-models/CommentariesByTournament.js";
 import { ManagerNoteToEditHandler } from "../../../src/application/operations/tournaments/ManagerNoteToEditHandler.js";
@@ -193,6 +194,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   const byAddress = new TournamentsByAddress(unitOfWork);
   const held = new Tournaments(unitOfWork);
   const byWebsite = new TournamentsByWebsite(unitOfWork);
+  const byAccount = new TournamentsByAccount(unitOfWork);
   const bySearch = new SearchByWebsite(unitOfWork);
   const byNotes = new ManagerNotesByTournament(unitOfWork);
   const byCommentaries = new CommentariesByTournament(unitOfWork);
@@ -200,6 +202,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
     byAddress,
     held,
     byWebsite,
+    byAccount,
     bySearch,
     byNotes,
     byCommentaries,
@@ -383,7 +386,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleQuery(new TournamentsNamedHandler(tournaments));
   mediator.handleQuery(
     new WhatAKeyMayDoInTournamentHandler(
-      tournaments,
+      byAccount,
       new IdentifyApiKeyHandler(
         accountRepository,
         accounts.byApiKey,

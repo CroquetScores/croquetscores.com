@@ -1,18 +1,11 @@
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import { IdentifyApiKey } from "../accounts/IdentifyApiKey.js";
 import type { IdentifyApiKeyHandler } from "../accounts/IdentifyApiKeyHandler.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
+import { TournamentOperationRefused } from "./tournamentOperations.js";
+import type { TournamentsByAccount } from "./TournamentsOfAccount.js";
 import {
-  TournamentOperationRefused,
-  tournamentFor,
-} from "./tournamentOperations.js";
-import {
-  type PartInTournament,
   type WhatAKeyMayDo,
   WhatAKeyMayDoInTournament,
 } from "./WhatAKeyMayDoInTournament.js";
@@ -23,6 +16,10 @@ import {
  * forgotten is let in by nothing here either. The tournament is asked after
  * that, so that nobody learns which tournaments there are by presenting a key
  * that does not work.
+ *
+ * The part the account has, and whether the tournament is archived, are asked
+ * of the read model that keeps who manages or scores each tournament, and not
+ * of the tournament's events (#699).
  */
 export class WhatAKeyMayDoInTournamentHandler extends QueryHandler<
   WhatAKeyMayDoInTournament,
@@ -32,7 +29,7 @@ export class WhatAKeyMayDoInTournamentHandler extends QueryHandler<
     WhatAKeyMayDoInTournament;
 
   constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
+    private readonly parts: Pick<TournamentsByAccount, "partIn">,
     private readonly identifying: IdentifyApiKeyHandler,
   ) {
     super();
@@ -45,26 +42,20 @@ export class WhatAKeyMayDoInTournamentHandler extends QueryHandler<
       new IdentifyApiKey(query.key),
     );
     if (identified === undefined) return undefined;
-    // What is not an id at all names no tournament, and is refused as one
-    // that is not there, since an app that mistyped an address has no use for
-    // a finer answer.
-    const tournament = await tournamentFor(
-      this.tournaments,
+    const found = await this.parts.partIn(
       query.tournament,
-      "WhatAKeyMayDoInTournament",
-    ).catch((failure: unknown) => {
-      if (!(failure instanceof ValidationError)) throw failure;
+      AccountId.from(identified.account),
+    );
+    // What is not an id at all names no tournament, and is refused as one that
+    // is not there, since an app that mistyped an address has no use for a
+    // finer answer.
+    if (found === undefined) {
       throw new TournamentOperationRefused(
         "WhatAKeyMayDoInTournament.NoSuchTournament",
         "There is no such tournament.",
       );
-    });
-    const account = AccountId.from(identified.account);
-    const part: PartInTournament = tournament.manages(account)
-      ? "manager"
-      : tournament.scores(account)
-        ? "scorer"
-        : "neither";
+    }
+    const { part, archived } = found;
     const inItsTournament =
       identified.tournament === undefined ||
       identified.tournament === query.tournament;
@@ -75,7 +66,7 @@ export class WhatAKeyMayDoInTournamentHandler extends QueryHandler<
         identified.mayWrite &&
         inItsTournament &&
         part !== "neither" &&
-        !tournament.archived,
+        !archived,
     };
   }
 }

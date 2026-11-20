@@ -1,5 +1,6 @@
 import type { Projection } from "../../application/common/Projection.js";
 import type {
+  PartInTournamentOfAccount,
   TournamentOfAccount,
   TournamentsByAccount as Asked,
 } from "../../application/operations/tournaments/TournamentsOfAccount.js";
@@ -90,6 +91,26 @@ export class TournamentsByAccount implements Projection, Asked {
     events: readonly StoredEvent[],
   ): Promise<void> {
     for (const { event } of events) await this.#project(stream, event);
+  }
+
+  async partIn(
+    tournament: string,
+    account: AccountId,
+  ): Promise<PartInTournamentOfAccount | undefined> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ archived: boolean; part: "manager" | "scorer" | null }>(
+        `select t.archived, a.part
+           from tournaments t
+           left join tournaments_by_account a
+             on a.tournament_id = t.tournament_id and a.account_id = $2
+          where t.tournament_id = $1`,
+        [tournament, account.value],
+      );
+    const [row] = rows;
+    return row === undefined
+      ? undefined
+      : { archived: row.archived, part: row.part ?? "neither" };
   }
 
   async tournamentsOf(
