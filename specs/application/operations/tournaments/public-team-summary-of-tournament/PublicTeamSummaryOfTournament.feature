@@ -536,3 +536,14 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       Given "organiser@example.com" has archived the tournament "Spring Tests"
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then it is refused with "PublicTeamSummaryOfTournament.NoSuchTournament"
+
+  Rule: The summary is answered from the read models alone
+
+    The read models keep what the summary counts its teams from, so asking for
+    it reads none of the tournament's or the competitions' events.
+
+    Scenario: A summary is answered with no events kept
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And the events of the tournaments and the competitions are no longer kept
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "Australia" is answered in the summary with 1 game won

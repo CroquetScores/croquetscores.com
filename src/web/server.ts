@@ -1627,26 +1627,24 @@ export const buildApplication = async (
   mediator.handleQuery(publicSwisses);
   mediator.handleQuery(
     new PublicTeamSummaryOfTournamentHandler(
-      tournaments,
-      competitions,
       tournamentsByAddress,
+      tournamentPages,
       managerNotesByTournament,
       commentariesByTournament,
     ),
   );
   mediator.handleQuery(
     new PublicGroupOfTournamentHandler(
-      tournaments,
-      competitions,
       tournamentsByAddress,
+      tournamentPages,
       managerNotesByTournament,
       commentariesByTournament,
     ),
   );
   const publicTests = new PublicTestOfTournamentHandler(
-    tournaments,
-    competitions,
     tournamentsByAddress,
+    tournamentPages,
+    competitionGames,
     managerNotesByTournament,
     commentariesByTournament,
   );

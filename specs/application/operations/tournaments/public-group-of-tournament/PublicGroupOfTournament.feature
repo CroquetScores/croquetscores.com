@@ -228,3 +228,14 @@ Feature: How the teams of a group of a tournament's tests stand, for anybody to 
     Scenario: A tournament there is not is refused
       When the group "block-a" of the tournament at "2026/ac/autumn-open" is asked for
       Then it is refused with "PublicGroupOfTournament.NoSuchTournament"
+
+  Rule: The group is answered from the read models alone
+
+    The read models keep what a group's page counts its teams from, so asking
+    for it reads none of the tournament's or the competitions' events.
+
+    Scenario: A group is answered with no events kept
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And the events of the tournaments and the competitions are no longer kept
+      When the group "block-a" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "Australia" is answered in the summary with 1 game won

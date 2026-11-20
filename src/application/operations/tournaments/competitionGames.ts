@@ -18,6 +18,11 @@ export interface GameKept {
   readonly withdrawn: boolean;
   /** When the game last changed, or nothing where none is held. */
   readonly changedAt: ReadOnlyDate | undefined;
+  /**
+   * When the game was added, which a change does not move, or nothing for a
+   * game kept before it was held.
+   */
+  readonly addedAt?: ReadOnlyDate | undefined;
 }
 
 /** A player of a competition, as it is kept. */
@@ -36,6 +41,10 @@ export interface WhoPlayed {
   readonly name: string;
   /** The team they are of, in a test. */
   readonly team: string | undefined;
+  /** The name of that team, as a team player is known by their team. */
+  readonly teamName?: string | undefined;
+  /** The name of the flag that team flies, if any. */
+  readonly teamFlag?: string | undefined;
 }
 
 /** What is kept of a competition's games, and of what they are played out against. */

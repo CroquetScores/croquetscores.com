@@ -362,6 +362,11 @@ export class TournamentContents implements Projection, Asked {
       );
     }
     if (event instanceof TestAdded || event instanceof TestUpdated) {
+      await this.#competitionWritten(
+        `update competitions set best_of = $2, expected_matches = $3
+          where competition_id = $1`,
+        [event.competitionId, event.bestOf, event.expectedMatches],
+      );
       const group =
         event.group === undefined ? undefined : TestGroup.from(event.group);
       await this.#competitionWritten(
@@ -385,8 +390,10 @@ export class TournamentContents implements Projection, Asked {
       event instanceof TournamentUpdated
     ) {
       await connection.query(
-        `update tournaments set subtitle = $2 where tournament_id = $1`,
-        [stream, event.subtitle ?? null],
+        `update tournaments
+            set subtitle = $2, format = $3, level_tests_drawn = $4
+          where tournament_id = $1`,
+        [stream, event.subtitle ?? null, event.format, event.levelTestsDrawn],
       );
 
       // Its players ----------------------------------------------------------
@@ -432,11 +439,12 @@ export class TournamentContents implements Projection, Asked {
       const team = teamOf(event);
       await connection.query(
         `insert into tournament_teams
-           (team_id, tournament_id, name, short_name, position, changed_at)
-         values ($1, $2, $3, $4, $5, $6)
+           (team_id, tournament_id, name, short_name, position, changed_at,
+            flag)
+         values ($1, $2, $3, $4, $5, $6, $7)
          on conflict (team_id) do update
            set name = excluded.name, short_name = excluded.short_name,
-               changed_at = excluded.changed_at`,
+               changed_at = excluded.changed_at, flag = excluded.flag`,
         [
           event.teamId,
           stream,
@@ -444,6 +452,7 @@ export class TournamentContents implements Projection, Asked {
           team.shortName.toString(),
           event instanceof TeamAdded ? event.order : ORDER_STEP,
           this.#at,
+          team.flag === undefined ? null : String(team.flag),
         ],
       );
       if (event instanceof TeamUpdated) await this.#renameTestsOf(event.teamId);

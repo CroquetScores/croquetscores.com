@@ -61,6 +61,15 @@ export const tournamentsThrough = (
       );
       return Number(rows[0]?.kept ?? 0);
     },
+    withoutEvents: async () => {
+      await asARequest(() =>
+        application.unitOfWork.connection().query(
+          `delete from events
+            where stream_id like 'tournament/%'
+               or stream_id like 'competition/%'`,
+        ),
+      );
+    },
     listedCountries,
     games: gamesKeptByCompetitions(
       application.tournaments,

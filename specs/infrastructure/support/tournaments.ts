@@ -527,27 +527,25 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new PublicTeamSummaryOfTournamentHandler(
-      tournaments,
-      competitions,
       byAddress,
+      pages,
       byNotes,
       byCommentaries,
     ),
   );
   mediator.handleQuery(
     new PublicGroupOfTournamentHandler(
-      tournaments,
-      competitions,
       byAddress,
+      pages,
       byNotes,
       byCommentaries,
     ),
   );
   mediator.handleQuery(
     new PublicTestOfTournamentHandler(
-      tournaments,
-      competitions,
       byAddress,
+      pages,
+      byGames,
       byNotes,
       byCommentaries,
     ),
@@ -595,6 +593,15 @@ const standUpTheTournaments = function (this: SpecWorld): void {
         ),
       );
       return Number(rows[0]?.kept ?? 0);
+    },
+    withoutEvents: async () => {
+      await this.asARequest(() =>
+        unitOfWork.connection().query(
+          `delete from events
+            where stream_id like 'tournament/%'
+               or stream_id like 'competition/%'`,
+        ),
+      );
     },
     games,
     // Through registering, which makes every account the scenario said there

@@ -1,4 +1,8 @@
-import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
+/** A game as a match is decided by it: who won it, and whether nobody did. */
+export interface GameOfMatch {
+  readonly winner: string;
+  readonly drawn: boolean;
+}
 
 /** How a match between two players stands. */
 export interface OutcomeOfMatch {
@@ -21,13 +25,13 @@ export interface OutcomeOfMatch {
  * decide a match differently.
  */
 export const outcomeOfMatch = (
-  played: readonly Game[],
+  played: readonly GameOfMatch[],
   one: string,
   other: string,
   bestOf: number,
 ): OutcomeOfMatch => {
   const won = (player: string): number =>
-    played.filter((game) => !game.drawn && game.winner.value === player).length;
+    played.filter((game) => !game.drawn && game.winner === player).length;
   const left = bestOf - played.length;
   const [oneWon, otherWon] = [won(one), won(other)];
   const decided = left <= 0 || Math.abs(oneWon - otherWon) > left;

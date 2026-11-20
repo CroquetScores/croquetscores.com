@@ -3,12 +3,14 @@
 // (PublicTeamSummaryOfTournament.feature), a group's tests alone for a group's
 // page (PublicGroupOfTournament.feature). One counting for both, so that a
 // group's table and the summary can never come to count a test differently.
-import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import {
-  type Competitions,
-  competitionOf,
-} from "../competitions/competitionOperations.js";
+import { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
+import { formatOfPage } from "./tournamentOfPage.js";
+import type {
+  GameOfTestOfPage,
+  TeamsToStand,
+  TestOfPage,
+  TournamentOfPage,
+} from "./tournamentPages.js";
 import {
   netGamesOf,
   netHoopsOf,
@@ -17,11 +19,8 @@ import {
 } from "./PublicTeamSummaryOfTournament.js";
 import { outcomeOfMatch } from "./outcomeOfMatch.js";
 
-/** A test of a tournament, as standingsOf is asked which to count. */
-export type TestShape = Extract<
-  Tournament["competitions"][number]["shape"],
-  { readonly kind: "test" }
->;
+// The points of a score as it was typed, which are the digits it begins with.
+const pointsOf = (typed: string): number => Score.kept(typed, false).points;
 
 /** How the teams stand in the tests counted. */
 export interface Standings {
@@ -49,24 +48,19 @@ interface Tally {
 }
 
 /**
- * How the teams of `tournament` stand, counting the tests in use that
- * `counts` says to, and no others.
+ * How the teams of `tournament` stand, counting the tests of `kept` that
+ * `counts` says to, and no others, of the read models alone.
  */
-export const standingsOf = async (
-  tournament: Tournament,
-  competitions: Competitions,
-  counts: (test: TestShape) => boolean,
-): Promise<Standings> => {
-  // The team each team player plays for, archived players among them, since
-  // a game an archived player played still counts for their team.
-  const teamOf = new Map<string, string>();
-  for (const team of tournament.teams) {
-    for (const player of team.players)
-      teamOf.set(player.id.value, team.id.value);
-  }
+export const standingsOf = (
+  tournament: TournamentOfPage,
+  kept: TeamsToStand,
+  counts: (test: TestOfPage) => boolean,
+): Standings => {
+  const format = formatOfPage(tournament);
+  const teamOf = kept.teamOf;
   const tallies = new Map<string, Tally>(
-    tournament.teams.map((team) => [
-      team.id.value,
+    kept.teams.map((team) => [
+      team.id,
       {
         testsWon: 0,
         testsLost: 0,
@@ -86,25 +80,24 @@ export const standingsOf = async (
   // it favours neither.
   const testsWonBy: { won: string; lost: string }[] = [];
 
-  for (const { reference, shape } of tournament.competitions) {
-    if (reference.archived || shape.kind !== "test" || !counts(shape)) continue;
-    const competition = await competitionOf(competitions, reference.id);
-    const games = competition.games.filter((game) => !game.archived);
-    const first = shape.firstTeam.value;
-    const second = shape.secondTeam.value;
+  for (const test of kept.tests) {
+    if (!counts(test)) continue;
+    const games = test.games;
+    const first = test.firstTeam;
+    const second = test.secondTeam;
     // This test's games and hoops, each team's, for deciding it.
     const inTest = new Map<string, { net: number; hoops: number }>([
       [first, { net: 0, hoops: 0 }],
       [second, { net: 0, hoops: 0 }],
     ]);
     for (const game of games) {
-      const winner = teamOf.get(game.winner.value);
-      const loser = teamOf.get(game.loser.value);
+      const winner = teamOf.get(game.winner);
+      const loser = teamOf.get(game.loser);
       if (winner === undefined || loser === undefined) continue;
       const won = tallies.get(winner);
       const lost = tallies.get(loser);
-      const winnerPoints = game.winnerScore.points;
-      const loserPoints = game.loserScore.points;
+      const winnerPoints = pointsOf(game.winnerScore);
+      const loserPoints = pointsOf(game.loserScore);
       if (won !== undefined) {
         won.hoopsFor += winnerPoints;
         won.hoopsAgainst += loserPoints;
@@ -127,7 +120,7 @@ export const standingsOf = async (
       }
     }
 
-    const matches = matchesOf(games, shape.bestOf.games);
+    const matches = matchesOf(games, test.bestOf);
     // A match counts for its teams once it is decided, whether or not the
     // test is; a shared one for neither.
     for (const winner of matches) {
@@ -146,7 +139,7 @@ export const standingsOf = async (
     // Not won, lost or drawn until every match it is expected to have is
     // decided, since until then its result is not known; unless a team has
     // won more than half of them, which the other can no longer match.
-    const expected = shape.expectedMatches.count;
+    const expected = test.expectedMatches;
     if (
       matches.length < expected &&
       Math.max(matchesWon(first), matchesWon(second)) * 2 <= expected
@@ -177,25 +170,21 @@ export const standingsOf = async (
     }
   }
 
-  const teams = tournament.teams
+  const teams = kept.teams
     .filter(({ archived }) => !archived)
     .map((team): TeamStanding => ({
-      id: team.id.value,
-      name: team.name.toString(),
-      shortName: team.shortName.toString(),
-      ...tallies.get(team.id.value)!,
+      id: team.id,
+      name: team.name,
+      shortName: team.shortName,
+      ...tallies.get(team.id)!,
     }));
   // Shown where the format ranks by them, since a reader not shown a net takes
   // it to be of no account.
-  const showsNets = tournament.format.ranksByNetMatches;
+  const showsNets = format.ranksByNetMatches;
   return {
     teams,
-    bestOfMoreThanOne: tournament.competitions.some(
-      ({ reference, shape }) =>
-        !reference.archived &&
-        shape.kind === "test" &&
-        counts(shape) &&
-        shape.bestOf.games > 1,
+    bestOfMoreThanOne: kept.tests.some(
+      (test) => counts(test) && test.bestOf > 1,
     ),
     ranked: rankingOf(teams, showsNets, testsWonBy).map(({ id }) => id),
     showsNets,
@@ -209,12 +198,12 @@ export const standingsOf = async (
 // refuses another game of it; a drawn game is played but won by neither, so a
 // match can end level, and is shared.
 const matchesOf = (
-  games: readonly Game[],
+  games: readonly GameOfTestOfPage[],
   bestOf: number,
 ): (string | undefined)[] => {
-  const byPair = new Map<string, Game[]>();
+  const byPair = new Map<string, GameOfTestOfPage[]>();
   for (const game of games) {
-    const pair = [game.winner.value, game.loser.value].sort().join(" ");
+    const pair = [game.winner, game.loser].sort().join(" ");
     byPair.set(pair, [...(byPair.get(pair) ?? []), game]);
   }
   const decided: (string | undefined)[] = [];

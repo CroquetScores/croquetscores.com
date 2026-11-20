@@ -98,6 +98,86 @@ Feature: What the public pages of a tournament show, asked of the read models
       When the players of "Block A" of "Spring Open" are read back for its page
       Then the player "Sam Someone" of the page is withdrawn
 
+  Rule: A tournament played by teams is kept as its team pages count it
+
+    The summary of a tournament's teams, a group's page and a test's page are
+    counted from the teams, the tests and the games kept, as the tournament and
+    its competitions' events said them, so that none of them asks the events.
+    A test's rules are what decide it, and a team is known to a page by its
+    names.
+
+    Background:
+      Given a tournament "Spring Tests" to start on "2026-10-03"
+      And "Spring Tests" is to be played by teams
+      And "Spring Tests" is created by the account for "organiser@example.com"
+      And a test between "Australia" and "England" is made in "Spring Tests"
+      And the team players "Pat Player" and "Kim Keeper" play in the test of "Spring Tests"
+
+    Scenario: The tournament is kept with its format
+      When the page of "Spring Tests" is read back
+      Then the tournament's page is played in the format "Teams"
+
+    Scenario: A tournament is kept as not drawing a level test unless it says
+      When the page of "Spring Tests" is read back
+      Then the tournament's page does not draw a test level on matches
+
+    Scenario: A tournament that draws a level test is kept as drawing it
+      Given the level tests of "Spring Tests" are drawn
+      When the page of "Spring Tests" is read back
+      Then the tournament's page draws a test level on matches
+
+    Scenario: A test is kept with its two teams
+      When the competition "aus-v-eng" of "Spring Tests" is read back
+      Then the competition found is a test between "Australia" and "England"
+
+    Scenario: A test is kept as the best of one unless it says
+      When the competition "aus-v-eng" of "Spring Tests" is read back
+      Then the competition found is played as the best of 1
+
+    Scenario: The teams are kept in the tournament's order
+      When the teams of "Spring Tests" are read back to be stood
+      Then the teams to stand are "Australia" and "England"
+
+    Scenario: A team archived is kept as archived
+      Given the team "Wales" is added to "Spring Tests" with the short name "WAL"
+      And the team "Wales" of "Spring Tests" is set aside
+      When the teams of "Spring Tests" are read back to be stood
+      Then the team "Wales" to stand is archived
+
+    Scenario: A team is kept with its short name
+      When the teams of "Spring Tests" are read back to be stood
+      Then the team "Australia" to stand is known for short as "Aus"
+
+    Scenario: A team player is kept as playing for their team
+      When the teams of "Spring Tests" are read back to be stood
+      Then the team player "Kim Keeper" to stand plays for "England"
+
+    Scenario: A test in use is kept with its games in the order they were added
+      Given "Pat Player" beat "Kim Keeper" 26 to 17 in the test of "Spring Tests" as "the first"
+      When the teams of "Spring Tests" are read back to be stood
+      Then the first test to stand has 1 game
+
+    Scenario: A game archived is not kept to be counted
+      Given "Pat Player" beat "Kim Keeper" 26 to 17 in the test of "Spring Tests" as "the first"
+      And the game "the first" in "the test" of "Spring Tests" is archived
+      When the teams of "Spring Tests" are read back to be stood
+      Then the first test to stand has 0 games
+
+    Scenario: A test is kept with the matches it is expected to have
+      When the teams of "Spring Tests" are read back to be stood
+      Then the first test to stand is expected to have 10 matches
+
+  Rule: A tournament kept before its format was is still read
+
+    A block or a Swiss page needs no format, so it is not refused for want of
+    one while the read models are made again after an upgrade.
+
+    Scenario: A tournament whose format is not kept is read without it
+      Given the format of "Spring Open" is not kept
+      When the page of "Spring Open" is read back
+      Then the tournament's page is called "Spring Open"
+      And the tournament's page has no format
+
   Rule: The same is kept however the read models are made again
 
     Scenario: A rebuild with the competitions' streams first is kept as it was
