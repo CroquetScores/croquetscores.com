@@ -2,10 +2,12 @@ import type { Projection } from "../../application/common/Projection.js";
 import type {
   CommentaryChanged,
   CommentaryListed,
+  CommentaryRead,
   TournamentCommentaries,
 } from "../../application/operations/tournaments/tournamentForReaders.js";
 import { AccountForgotten } from "../../domain/aggregates/accounts/events/AccountForgotten.js";
 import { CommentaryCommentAdded } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentAdded.js";
+import { CommentaryCommentDeleted } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentDeleted.js";
 import { CommentaryCommentEdited } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentEdited.js";
 import { CommentaryStarted } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryStarted.js";
 import { CommentaryTitleChanged } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryTitleChanged.js";
@@ -29,10 +31,11 @@ interface Row {
 
 /**
  * A tournament's commentaries, kept in step with every append, with their
- * titles, slugs, writers and when each last changed, and never what their
- * comments say (CommentariesByTournament.feature): every page of a tournament
- * asks this, and starting a commentary asks it which titles and slugs are
- * taken.
+ * titles, slugs, writers and when each last changed, and beside them their
+ * comments (CommentariesByTournament.feature). Every page of a tournament asks
+ * for the commentaries and starting one asks which titles and slugs are taken,
+ * and neither selects a comment: only `read`, for the one commentary a reader
+ * opened, does.
  */
 export class CommentariesByTournament
   implements Projection, TournamentCommentaries
@@ -51,7 +54,8 @@ export class CommentariesByTournament
   async clear(): Promise<void> {
     await this.unitOfWork.connection().query(
       `truncate commentaries_by_tournament,
-                  commentaries_by_tournament_forgotten`,
+                  commentaries_by_tournament_forgotten,
+                  commentary_comments`,
     );
   }
 
@@ -97,13 +101,15 @@ export class CommentariesByTournament
       } else if (event instanceof AccountForgotten) {
         forgotten = true;
       }
+      // A comment's row is its own, so it can be written as its event comes.
+      await this.#projectComment(stream, event);
     }
     if (row !== undefined) {
       await connection.query(
         `insert into commentaries_by_tournament
                 (commentary_id, tournament_id, title, slug, writer_id,
-                 started_at, changed_at)
-         values ($1, $2, $3, $4, $5, $6, $7)`,
+                 started_at, changed_at, comments_kept)
+         values ($1, $2, $3, $4, $5, $6, $7, true)`,
         [
           stream,
           row.tournamentId,
@@ -167,6 +173,61 @@ export class CommentariesByTournament
     }));
   }
 
+  async read(
+    tournament: TournamentId,
+    slug: string,
+  ): Promise<CommentaryRead | undefined> {
+    const connection = this.unitOfWork.connection();
+    const found = await connection.query<{
+      commentary_id: string;
+      title: string;
+      slug: string;
+      writer_id: string;
+      comments_kept: boolean;
+    }>(
+      `select commentary_id, title, slug, writer_id, comments_kept
+         from commentaries_by_tournament
+        where tournament_id = $1 and slug = $2`,
+      [tournament.value, slug],
+    );
+    const [row] = found.rows;
+    if (row === undefined) return undefined;
+    // Kept before comments were: none found would look like none written, so
+    // the page is refused instead.
+    if (!row.comments_kept) {
+      throw new Error(
+        "The commentaries' comments are not kept yet: the read models are to be made again.",
+      );
+    }
+    const comments = await connection.query<{
+      comment_id: string;
+      text: string;
+      written_at: Date;
+      last_edited_at: Date | null;
+    }>(
+      `select comment_id, text, written_at, last_edited_at
+         from commentary_comments
+        where commentary_id = $1
+        order by position`,
+      [row.commentary_id],
+    );
+    return {
+      id: row.commentary_id,
+      title: row.title,
+      slug: row.slug,
+      writer: row.writer_id,
+      comments: comments.rows.map((comment) => ({
+        id: comment.comment_id,
+        text: comment.text,
+        writtenAt: ReadOnlyDate.from(comment.written_at),
+        lastEditedAt:
+          comment.last_edited_at === null
+            ? undefined
+            : ReadOnlyDate.from(comment.last_edited_at),
+      })),
+    };
+  }
+
   async at(
     tournament: TournamentId,
     slug: string,
@@ -213,13 +274,14 @@ export class CommentariesByTournament
   // moment is kept over an earlier one whichever comes first.
   async #project(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
+    await this.#projectComment(stream, event);
     if (event instanceof CommentaryStarted) {
       const at = event.occurredAt.toDate();
       await connection.query(
         `insert into commentaries_by_tournament
                 (commentary_id, tournament_id, title, slug, writer_id,
-                 started_at, changed_at)
-         values ($1, $2, $3, $4, $5, $6, $6)
+                 started_at, changed_at, comments_kept)
+         values ($1, $2, $3, $4, $5, $6, $6, true)
          on conflict (commentary_id) do nothing`,
         [stream, event.tournamentId, event.title, event.slug, event.writer, at],
       );
@@ -244,6 +306,37 @@ export class CommentariesByTournament
         `insert into commentaries_by_tournament_forgotten (account_id)
          values ($1) on conflict (account_id) do nothing`,
         [stream],
+      );
+    }
+  }
+
+  // A comment kept as its events say, in the place it was first kept in. A
+  // comment added again is the row it already has; an edit sets what the event
+  // says, which is what the stream's last edit leaves when the whole stream is
+  // given again in order; and a deleted comment is taken out, which a second
+  // deleting finds already done.
+  async #projectComment(stream: string, event: DomainEvent): Promise<void> {
+    const connection = this.unitOfWork.connection();
+    if (event instanceof CommentaryCommentAdded) {
+      await connection.query(
+        `insert into commentary_comments
+                (commentary_id, comment_id, text, written_at, changed_at)
+         values ($1, $2, $3, $4, $4)
+         on conflict (commentary_id, comment_id) do nothing`,
+        [stream, event.commentId, event.text, event.occurredAt.toDate()],
+      );
+    } else if (event instanceof CommentaryCommentEdited) {
+      await connection.query(
+        `update commentary_comments
+            set text = $3, last_edited_at = $4, changed_at = $4
+          where commentary_id = $1 and comment_id = $2`,
+        [stream, event.commentId, event.text, event.occurredAt.toDate()],
+      );
+    } else if (event instanceof CommentaryCommentDeleted) {
+      await connection.query(
+        `delete from commentary_comments
+          where commentary_id = $1 and comment_id = $2`,
+        [stream, event.commentId],
       );
     }
   }

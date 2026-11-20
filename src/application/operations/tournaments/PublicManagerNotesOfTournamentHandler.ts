@@ -1,7 +1,4 @@
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import { Website } from "../../../domain/common/Website.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import {
@@ -9,14 +6,17 @@ import {
   type TournamentManagerNotesToRead,
 } from "./PublicManagerNotesOfTournament.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
-import {
-  competitionsInUse,
-  noteAddressIn,
-  tournamentForReaders,
-  type TournamentCommentaries,
-} from "./tournamentForReaders.js";
+import type { TournamentCommentaries } from "./tournamentForReaders.js";
 import type { TournamentAddresses } from "./tournamentOperations.js";
+import { tournamentOfPage, formatOfPage } from "./tournamentOfPage.js";
+import type { TournamentPages } from "./tournamentPages.js";
 
+/**
+ * A tournament's Notes page, read of the read models alone: the header from
+ * the page read model, as the block and Swiss pages read theirs, and the notes
+ * from the read model of them, which holds their titles and not what they say,
+ * since a list is not where a note is read.
+ */
 export class PublicManagerNotesOfTournamentHandler extends QueryHandler<
   PublicManagerNotesOfTournament,
   TournamentManagerNotesToRead
@@ -25,8 +25,8 @@ export class PublicManagerNotesOfTournamentHandler extends QueryHandler<
     PublicManagerNotesOfTournament;
 
   constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly addresses: TournamentAddresses,
+    private readonly pages: TournamentPages,
     private readonly notes: TournamentManagerNotes,
     private readonly changes: TournamentCommentaries,
   ) {
@@ -36,26 +36,28 @@ export class PublicManagerNotesOfTournamentHandler extends QueryHandler<
   async handle(
     query: PublicManagerNotesOfTournament,
   ): Promise<TournamentManagerNotesToRead> {
-    const tournament = await tournamentForReaders(
-      this.tournaments,
+    const tournament = await tournamentOfPage(
       this.addresses,
-      Website.from(query.website),
+      this.pages,
+      query.website,
       query.address,
       "PublicManagerNotesOfTournament",
     );
     return {
-      name: tournament.name.toString(),
-      subtitle: tournament.subtitle?.markdown,
-      address: tournament.address.toString(),
-      playedByTeams: tournament.format.isTeamFormat,
-      competitions: competitionsInUse(tournament),
-      // From the read model of its notes, which holds none of what they say,
-      // since a list is not where a note is read.
-      commentariesChanged: await this.changes.of(tournament.id),
-      managerNotes: (await this.notes.of(tournament.id)).map((note) => ({
-        ...note,
-        address: noteAddressIn(tournament, note.slug),
-      })),
+      name: tournament.name,
+      subtitle: tournament.subtitle,
+      address: tournament.address,
+      playedByTeams: formatOfPage(tournament).isTeamFormat,
+      competitions: tournament.competitions,
+      commentariesChanged: await this.changes.of(
+        TournamentId.from(tournament.id),
+      ),
+      managerNotes: (await this.notes.of(TournamentId.from(tournament.id))).map(
+        (note) => ({
+          ...note,
+          address: `${tournament.address}/notes/${note.slug}`,
+        }),
+      ),
     };
   }
 }

@@ -1666,36 +1666,34 @@ export const buildApplication = async (
   );
   mediator.handleQuery(
     new PublicManagerNotesOfTournamentHandler(
-      tournaments,
       tournamentsByAddress,
+      tournamentPages,
       managerNotesByTournament,
       commentariesByTournament,
     ),
   );
   mediator.handleQuery(
     new PublicManagerNoteOfTournamentHandler(
-      tournaments,
       tournamentsByAddress,
-      managerNotes,
+      tournamentPages,
       managerNotesByTournament,
       commentariesByTournament,
     ),
   );
   mediator.handleQuery(
     new PublicCommentariesOfTournamentHandler(
-      tournaments,
       accounts,
       tournamentsByAddress,
+      tournamentPages,
       managerNotesByTournament,
       commentariesByTournament,
     ),
   );
   mediator.handleQuery(
     new PublicCommentaryOfTournamentHandler(
-      tournaments,
       accounts,
-      commentaries,
       tournamentsByAddress,
+      tournamentPages,
       managerNotesByTournament,
       commentariesByTournament,
     ),

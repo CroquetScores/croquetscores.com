@@ -1,8 +1,6 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import { Website } from "../../../domain/common/Website.js";
+import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
@@ -11,13 +9,14 @@ import {
   PublicCommentariesOfTournament,
   type TournamentCommentariesToRead,
 } from "./PublicCommentariesOfTournament.js";
+import type { TournamentCommentaries } from "./tournamentForReaders.js";
 import {
-  competitionsInUse,
-  tournamentForReaders,
-  managerNotesChangedOf,
-  type TournamentCommentaries,
-} from "./tournamentForReaders.js";
+  managerNotesChangedFor,
+  tournamentOfPage,
+  formatOfPage,
+} from "./tournamentOfPage.js";
 import { namesOf, type TournamentAddresses } from "./tournamentOperations.js";
+import type { TournamentPages } from "./tournamentPages.js";
 
 export class PublicCommentariesOfTournamentHandler extends QueryHandler<
   PublicCommentariesOfTournament,
@@ -27,9 +26,11 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
     PublicCommentariesOfTournament;
 
   constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
+    // The only aggregates it loads, for the names of the commentaries'
+    // writers, which no read model keeps.
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly addresses: TournamentAddresses,
+    private readonly pages: TournamentPages,
     private readonly notes: TournamentManagerNotes,
     private readonly changes: TournamentCommentaries,
   ) {
@@ -39,16 +40,17 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
   async handle(
     query: PublicCommentariesOfTournament,
   ): Promise<TournamentCommentariesToRead> {
-    const tournament = await tournamentForReaders(
-      this.tournaments,
+    const tournament = await tournamentOfPage(
       this.addresses,
-      Website.from(query.website),
+      this.pages,
+      query.website,
       query.address,
       "PublicCommentariesOfTournament",
     );
-    const address = tournament.address.toString();
+    const id = TournamentId.from(tournament.id);
+    const address = tournament.address;
     // From the read model of its commentaries, which reads no comment.
-    const listed = await this.changes.listed(tournament.id);
+    const listed = await this.changes.listed(id);
     // A forgotten writer has no name to be read, and namesOf leaves them out,
     // which is what leaves their commentaries out.
     const writers = new Map(
@@ -59,16 +61,16 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
         )
       ).map(({ id, name }) => [id.value, name]),
     );
-    const changed = await this.changes.of(tournament.id);
+    const changed = await this.changes.of(id);
     return {
-      id: tournament.id.value,
-      name: tournament.name.toString(),
-      subtitle: tournament.subtitle?.markdown,
+      id: tournament.id,
+      name: tournament.name,
+      subtitle: tournament.subtitle,
       commentariesChanged: changed,
-      managerNotes: await managerNotesChangedOf(this.notes, tournament),
+      managerNotes: await managerNotesChangedFor(this.notes, tournament),
       address,
-      playedByTeams: tournament.format.isTeamFormat,
-      competitions: competitionsInUse(tournament),
+      playedByTeams: formatOfPage(tournament).isTeamFormat,
+      competitions: tournament.competitions,
       commentaries: listed.flatMap((commentary) => {
         const writer = writers.get(commentary.writer);
         return writer === undefined

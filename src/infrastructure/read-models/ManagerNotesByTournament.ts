@@ -1,6 +1,7 @@
 import type { Projection } from "../../application/common/Projection.js";
 import type {
   ManagerNoteHeading,
+  ManagerNoteRead,
   TournamentManagerNotes,
 } from "../../application/operations/tournaments/managerNoteOperations.js";
 import { ManagerNoteAdded } from "../../domain/aggregates/tournaments/manager-notes/events/ManagerNoteAdded.js";
@@ -15,10 +16,10 @@ import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 /**
  * The notes of each tournament, kept in step with every append, with their
- * titles, their slugs and when each was written and last changed, and never
- * what they say
- * (ManagerNotesByTournament.feature): a description may be 750,000
- * characters, and every page of a tournament asks this.
+ * titles, their slugs, what they say and when each was written and last
+ * changed (ManagerNotesByTournament.feature). A description may be 750,000
+ * characters and every page of a tournament asks the list, so the list never
+ * selects it, and `read` does, for the one note a reader opened.
  */
 export class ManagerNotesByTournament
   implements Projection, TournamentManagerNotes
@@ -76,18 +77,46 @@ export class ManagerNotesByTournament
     }));
   }
 
-  async noteAt(
+  async read(
     tournament: TournamentId,
     slug: string,
-  ): Promise<string | undefined> {
-    const { rows } = await this.unitOfWork
-      .connection()
-      .query<{ note_id: string }>(
-        `select note_id from manager_notes_by_tournament
-          where tournament_id = $1 and slug = $2 and not deleted`,
-        [tournament.value, slug],
+  ): Promise<ManagerNoteRead | undefined> {
+    const { rows } = await this.unitOfWork.connection().query<{
+      note_id: string;
+      title: string;
+      slug: string;
+      description: string | null;
+      written_at: Date;
+      last_edited_at: Date | null;
+      changed_at: Date;
+    }>(
+      `select note_id, title, slug, description, written_at, last_edited_at,
+              changed_at
+         from manager_notes_by_tournament
+        where tournament_id = $1 and slug = $2 and not deleted`,
+      [tournament.value, slug],
+    );
+    const [row] = rows;
+    if (row === undefined) return undefined;
+    // Kept before descriptions were: a description left out would look like
+    // one the note never had, so the page is refused instead.
+    if (row.description === null) {
+      throw new Error(
+        "The notes' descriptions are not kept yet: the read models are to be made again.",
       );
-    return rows[0]?.note_id;
+    }
+    return {
+      id: row.note_id,
+      title: row.title,
+      slug: row.slug,
+      description: row.description,
+      writtenAt: ReadOnlyDate.from(row.written_at),
+      lastEditedAt:
+        row.last_edited_at === null
+          ? undefined
+          : ReadOnlyDate.from(row.last_edited_at),
+      changedAt: ReadOnlyDate.from(row.changed_at),
+    };
   }
 
   // Held by a lock of the tournament's own for the rest of the transaction
@@ -115,17 +144,26 @@ export class ManagerNotesByTournament
       const at = event.occurredAt.toDate();
       await connection.query(
         `insert into manager_notes_by_tournament
-                (note_id, tournament_id, title, slug, written_at, changed_at)
-         values ($1, $2, $3, $4, $5, $5)
+                (note_id, tournament_id, title, slug, description, written_at,
+                 changed_at)
+         values ($1, $2, $3, $4, $5, $6, $6)
          on conflict (note_id) do nothing`,
-        [stream, event.tournamentId, event.title, event.slug, at],
+        [
+          stream,
+          event.tournamentId,
+          event.title,
+          event.slug,
+          event.description,
+          at,
+        ],
       );
     } else if (event instanceof ManagerNoteEdited) {
       await connection.query(
         `update manager_notes_by_tournament
-            set title = $2, changed_at = $3
+            set title = $2, description = $3, last_edited_at = $4,
+                changed_at = $4
           where note_id = $1`,
-        [stream, event.title, event.occurredAt.toDate()],
+        [stream, event.title, event.description, event.occurredAt.toDate()],
       );
     } else if (event instanceof ManagerNoteDeleted) {
       // Kept, marked, so that its slug stays taken.
