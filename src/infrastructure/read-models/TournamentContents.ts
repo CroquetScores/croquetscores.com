@@ -104,7 +104,11 @@ export class TournamentContents implements Projection, Asked {
     for (const event of events) await this.#project(stream.value, event);
   }
 
-  /** Empties its tables, so that every stream can be handed to it again. */
+  /**
+   * Empties its tables, so that every stream can be handed to it again. What it
+   * keeps in the table of competitions is emptied with it by `Tournaments`,
+   * which empties that table and is cleared in the same rebuild.
+   */
   async clear(): Promise<void> {
     await this.unitOfWork
       .connection()
@@ -402,7 +406,7 @@ export class TournamentContents implements Projection, Asked {
       event instanceof KnockoutAdded ||
       event instanceof SwissAdded
     ) {
-      await connection.query(
+      await this.#competitionWritten(
         `update competitions
             set name = $2, kind = $3, slug = $4, position = $5
           where competition_id = $1`,
@@ -419,7 +423,7 @@ export class TournamentContents implements Projection, Asked {
         ],
       );
     } else if (event instanceof TestAdded) {
-      await connection.query(
+      await this.#competitionWritten(
         `update competitions
             set name = ${testNameOf}, kind = 'test', slug = $4, position = $5,
                 first_team_id = $2, second_team_id = $3
@@ -437,12 +441,12 @@ export class TournamentContents implements Projection, Asked {
       event instanceof KnockoutUpdated ||
       event instanceof SwissUpdated
     ) {
-      await connection.query(
+      await this.#competitionWritten(
         `update competitions set name = $2 where competition_id = $1`,
         [event.competitionId, CompetitionName.from(event.name).toString()],
       );
     } else if (event instanceof TestUpdated) {
-      await connection.query(
+      await this.#competitionWritten(
         `update competitions
             set name = ${testNameOf}, first_team_id = $2, second_team_id = $3
           where competition_id = $1`,
@@ -451,7 +455,7 @@ export class TournamentContents implements Projection, Asked {
     } else if (event instanceof CompetitionArchived) {
       // An archived competition is given a number after its name, so that the
       // name can be used again, and goes after the rest.
-      await connection.query(
+      await this.#competitionWritten(
         `update competitions
             set position = $2, name = coalesce($3, name)
           where competition_id = $1`,
@@ -475,6 +479,25 @@ export class TournamentContents implements Projection, Asked {
         "competitions",
         event.competitionIds,
         "competition_id",
+      );
+    }
+  }
+
+  // Writes what an event says of a competition, to the row the table of
+  // competitions every read model of tournaments is built on has made of it
+  // (`Tournaments`), which is why this is projected after it. A row that is not
+  // there says it was not, and is not skipped in silence: the competition would
+  // never be told of, and nothing would say why.
+  async #competitionWritten(
+    sql: string,
+    values: readonly unknown[],
+  ): Promise<void> {
+    const { rowCount } = await this.unitOfWork
+      .connection()
+      .query(sql, [...values]);
+    if (rowCount !== 1) {
+      throw new Error(
+        "A competition has no row to write to: TournamentContents is projected after Tournaments.",
       );
     }
   }
