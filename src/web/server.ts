@@ -1609,9 +1609,9 @@ export const buildApplication = async (
     ),
   );
   const publicKnockouts = new PublicKnockoutOfTournamentHandler(
-    tournaments,
-    competitions,
     tournamentsByAddress,
+    tournamentPages,
+    competitionGames,
     managerNotesByTournament,
     commentariesByTournament,
   );

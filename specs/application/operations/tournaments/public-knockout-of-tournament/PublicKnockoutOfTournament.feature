@@ -8,7 +8,8 @@ Feature: A knockout of a tournament, for anybody to read
   knockout, found by its slug, with its name; its rounds, first round first,
   each with what its matches are the best of and its matches in the order of
   the draw; and every game of the knockout in use, in the order they were
-  added, each with when it was added.
+  added, each with when it last changed, which for a game never corrected is
+  when it was added.
 
   A knockout's draw is its players in the order they were entered or moved
   to, place 1 meeting place 2, place 3 meeting place 4, and so on, and the
@@ -410,3 +411,34 @@ Feature: A knockout of a tournament, for anybody to read
     Scenario: A knockout not played as Advantage is answered as not
       When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
       Then the knockout answered is not played as Advantage
+
+  Rule: The knockout is answered from the read models, and the events are not read
+
+    What a page shows of a knockout is kept as the events say it, so that
+    answering it does not rebuild the tournament or the competition from their
+    streams. The draw, the byes, who has withdrawn and the games that count
+    are all kept, and the matches are played out of them as they are
+    everywhere else (`KnockoutPlay.feature`).
+
+    Scenario: A knockout is answered where no stream can be read
+      Given no stream can be read now
+      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
+      Then the knockout answered is called "Finals"
+
+    Scenario: A knockout's matches are answered where no stream can be read
+      Given no stream can be read now
+      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first side of the first match of the first round answered is "Sam Someone"
+
+    Scenario: A match's game and winner are answered where no stream can be read
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Finals" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 12 in "Finals" of "Spring Open"
+      And no stream can be read now
+      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the first match of the first round answered was won by the second side
+
+    Scenario: A withdrawn player is answered where no stream can be read
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
+      And no stream can be read now
+      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
+      Then the second side of the first match of the first round answered has withdrawn

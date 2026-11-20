@@ -19,6 +19,12 @@ import type { ManagerNote } from "../../src/domain/aggregates/tournaments/manage
 import type { ManagerNoteId } from "../../src/domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 
 export interface TournamentsInHand {
+  /**
+   * From now on the aggregates cannot be loaded: reading any stream through
+   * them fails. What is already kept, and the read models, are untouched.
+   */
+  stopReadingStreams(): void;
+
   /** Sends `command` to the application. Throws what the mediator throws. */
   send<TResult>(command: Command<TResult>): Promise<TResult>;
 

@@ -65,7 +65,10 @@ export interface GameOfCompetition {
   readonly loserScore: string;
   /** Never, since a knockout allows no drawn games, but said as every game is. */
   readonly drawn: boolean;
-  /** When it was added, or nothing where that was never kept. */
+  /**
+   * When it last changed, which for a game never corrected is when it was
+   * added, or nothing where that was never kept.
+   */
   readonly addedAt: ReadOnlyDate | undefined;
 }
 
