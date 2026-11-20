@@ -18,9 +18,6 @@ import { KnockoutAdded } from "../../domain/aggregates/tournaments/events/Knocko
 import { KnockoutUpdated } from "../../domain/aggregates/tournaments/events/KnockoutUpdated.js";
 import { SwissAdded } from "../../domain/aggregates/tournaments/events/SwissAdded.js";
 import { SwissUpdated } from "../../domain/aggregates/tournaments/events/SwissUpdated.js";
-import { TeamAdded } from "../../domain/aggregates/tournaments/events/TeamAdded.js";
-import { TeamArchived } from "../../domain/aggregates/tournaments/events/TeamArchived.js";
-import { TeamRestored } from "../../domain/aggregates/tournaments/events/TeamRestored.js";
 import { TeamPlayerAdded } from "../../domain/aggregates/tournaments/events/TeamPlayerAdded.js";
 import { TeamPlayerArchived } from "../../domain/aggregates/tournaments/events/TeamPlayerArchived.js";
 import { TeamPlayerRestored } from "../../domain/aggregates/tournaments/events/TeamPlayerRestored.js";
@@ -120,8 +117,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
   async clear(): Promise<void> {
     await this.unitOfWork.connection().query(
       `truncate search_by_website_tournament_names,
-                  search_by_website_competitions, search_by_website_players,
-                  search_by_website_teams`,
+                  search_by_website_competitions, search_by_website_players`,
     );
   }
 
@@ -191,12 +187,12 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     }>(
       `with shown as (
          select distinct on (p.person)
-                p.person, p.world_ranking_name as name, p.folded_name
+                p.person, e.world_ranking_name as name, p.folded_name
            from search_by_website_players p
-           join tournaments t on t.tournament_id = p.tournament_id
-           left join search_by_website_teams team
-             on team.team_id = p.team_id
-          where t.website = $1 and not t.archived and not p.archived
+           join every_player e on e.player_id = p.player_id
+           join tournaments t on t.tournament_id = e.tournament_id
+           left join tournament_teams team on team.team_id = e.team_id
+          where t.website = $1 and not t.archived and not e.archived
             and not coalesce(team.archived, false)
             -- Only the people with some spelling that has the words, which
             -- is no more than the people the latest spelling can have them
@@ -316,15 +312,16 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       international: boolean;
     }>(
       `select distinct on (t.starts, t.tournament_id)
-              p.world_ranking_name as name, t.name as tournament_name,
+              e.world_ranking_name as name, t.name as tournament_name,
               to_char(t.starts, 'YYYY-MM-DD') as starts,
               to_char(t.finishes, 'YYYY-MM-DD') as finishes,
-              t.address, p.slug as player_slug, t.national, t.international
+              t.address, e.slug as player_slug, t.national, t.international
          from search_by_website_players p
-         join tournaments t on t.tournament_id = p.tournament_id
-         left join search_by_website_teams team on team.team_id = p.team_id
+         join every_player e on e.player_id = p.player_id
+         join tournaments t on t.tournament_id = e.tournament_id
+         left join tournament_teams team on team.team_id = e.team_id
         where t.website = $1 and p.person = $2 and not t.archived
-          and not p.archived and not coalesce(team.archived, false)
+          and not e.archived and not coalesce(team.archived, false)
         order by t.starts desc, t.tournament_id desc, p.player_id desc`,
       [website.host, slug],
     );
@@ -421,100 +418,41 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
           event.occurredAt.toISOString(),
         ],
       );
-    } else if (event instanceof TeamAdded) {
-      // Kept as it is, since a team added is not one archived again by
-      // projecting its adding a second time.
-      await connection.query(
-        `insert into search_by_website_teams (team_id, changed_at)
-         values ($1, $2)
-         on conflict (team_id) do nothing`,
-        [event.teamId, event.occurredAt.toISOString()],
-      );
-    } else if (event instanceof TeamArchived) {
-      await this.#archived(
-        "search_by_website_teams",
-        "team_id",
-        [event.teamId, true],
-        event.occurredAt.toISOString(),
-      );
-    } else if (event instanceof TeamRestored) {
-      await this.#archived(
-        "search_by_website_teams",
-        "team_id",
-        [event.teamId, false],
-        event.occurredAt.toISOString(),
-      );
-    } else if (event instanceof TeamPlayerAdded) {
-      await this.#playerKept(
-        stream,
-        event.playerId,
-        event.name,
-        event.worldRankingName,
-        event.teamId,
-        event.slug,
-        undefined,
-        event.occurredAt.toISOString(),
-      );
-    } else if (event instanceof TournamentPlayerAdded) {
-      await this.#playerKept(
-        stream,
-        event.playerId,
-        event.name,
-        event.worldRankingName,
-        undefined,
-        event.slug,
-        event.representing,
-        event.occurredAt.toISOString(),
-      );
     } else if (
+      event instanceof TeamPlayerAdded ||
+      event instanceof TournamentPlayerAdded ||
       event instanceof TournamentPlayerUpdated ||
       event instanceof TeamPlayerUpdated
     ) {
       await this.#playerKept(
-        stream,
         event.playerId,
         event.name,
         event.worldRankingName,
-        event instanceof TeamPlayerUpdated ? event.teamId : undefined,
-        undefined,
-        event instanceof TournamentPlayerUpdated
-          ? event.representing
-          : undefined,
         event.occurredAt.toISOString(),
       );
     } else if (
       event instanceof TournamentPlayerArchived ||
-      event instanceof TeamPlayerArchived
-    ) {
-      await this.#archived(
-        "search_by_website_players",
-        "player_id",
-        [event.playerId, true],
-        event.occurredAt.toISOString(),
-      );
-    } else if (
+      event instanceof TeamPlayerArchived ||
       event instanceof TournamentPlayerRestored ||
       event instanceof TeamPlayerRestored
     ) {
-      await this.#archived(
-        "search_by_website_players",
-        "player_id",
-        [event.playerId, false],
-        event.occurredAt.toISOString(),
+      // Whether the player is archived is the tournament's to say; what is
+      // the search's is when the row last changed.
+      await this.unitOfWork.connection().query(
+        `update search_by_website_players set changed_at = $2
+            where player_id = $1`,
+        [event.playerId, event.occurredAt.toISOString()],
       );
     }
   }
 
-  // Added and updated alike write the player as the event says they now are,
-  // keeping whether they are archived, which an update does not change.
+  // Added and updated alike write the name folded and the person made of it,
+  // as the event says the player now is. Nothing else of the player is kept
+  // here: the rest is the tournament's (every_player).
   async #playerKept(
-    tournament: string,
     player: string,
     name: string,
     worldRankingName: string | undefined,
-    team: string | undefined,
-    slug: string | undefined,
-    representing: string | undefined,
     at: string,
   ): Promise<void> {
     // A blank one is none, as the domain reads it.
@@ -524,34 +462,13 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         : worldRankingName;
     await this.unitOfWork.connection().query(
       `insert into search_by_website_players
-         (player_id, tournament_id, team_id, name, world_ranking_name,
-          folded_name, person, slug, representing, changed_at)
-       values ($1, $2, $7, $3, $4, $5, $6, $8, $9, $10)
+         (player_id, folded_name, person, changed_at)
+       values ($1, $2, $3, $4)
        on conflict (player_id) do update
-         set name = excluded.name,
-             world_ranking_name = excluded.world_ranking_name,
-             folded_name = excluded.folded_name,
+         set folded_name = excluded.folded_name,
              person = excluded.person,
-             representing = excluded.representing,
-             changed_at = excluded.changed_at,
-             -- A player keeps the slug they were given when their name is
-             -- corrected, which an update does not say.
-             slug = case when excluded.slug <> '' then excluded.slug
-                         else search_by_website_players.slug end`,
-      [
-        player,
-        tournament,
-        name,
-        known,
-        foldedForSearch(known),
-        personOf(known, name),
-        team ?? null,
-        slug ?? "",
-        representing === undefined || representing.trim() === ""
-          ? null
-          : representing.trim(),
-        at,
-      ],
+             changed_at = excluded.changed_at`,
+      [player, foldedForSearch(known), personOf(known, name), at],
     );
   }
 
@@ -566,32 +483,19 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       representing: string;
     }>(
       `select representing
-         from (select distinct on (lower(representing)) representing
-                 from search_by_website_players
-                where not archived
-                  and representing is not null
-                  and (lower(representing) like lower($1) escape '\\'
-                    or lower(representing) like lower($2) escape '\\'
-                    or lower(representing) like lower($3) escape '\\')
-                order by lower(representing), kept) as once
+         from (select distinct on (lower(e.representing)) e.representing
+                 from search_by_website_players p
+                 join every_player e on e.player_id = p.player_id
+                where not e.archived
+                  and e.representing is not null
+                  and (lower(e.representing) like lower($1) escape '\\'
+                    or lower(e.representing) like lower($2) escape '\\'
+                    or lower(e.representing) like lower($3) escape '\\')
+                order by lower(e.representing), p.kept) as once
         order by representing
         limit $4`,
       [`${pattern}%`, `% ${pattern}%`, `%-${pattern}%`, most],
     );
     return rows.map((row) => row.representing);
-  }
-
-  async #archived(
-    table: string,
-    key: string,
-    [id, archived]: readonly [string, boolean],
-    at: string,
-  ): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(
-        `update ${table} set archived = $2, changed_at = $3 where ${key} = $1`,
-        [id, archived, at],
-      );
   }
 }

@@ -5,7 +5,6 @@ import type {
   CommentaryRead,
   TournamentCommentaries,
 } from "../../application/operations/tournaments/tournamentForReaders.js";
-import { AccountForgotten } from "../../domain/aggregates/accounts/events/AccountForgotten.js";
 import { CommentaryCommentAdded } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentAdded.js";
 import { CommentaryCommentDeleted } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentDeleted.js";
 import { CommentaryCommentEdited } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentEdited.js";
@@ -52,11 +51,9 @@ export class CommentariesByTournament
 
   /** Empties its tables, so that every stream can be handed to it again. */
   async clear(): Promise<void> {
-    await this.unitOfWork.connection().query(
-      `truncate commentaries_by_tournament,
-                  commentaries_by_tournament_forgotten,
-                  commentary_comments`,
-    );
+    await this.unitOfWork
+      .connection()
+      .query(`truncate commentaries_by_tournament, commentary_comments`);
   }
 
   /**
@@ -77,7 +74,6 @@ export class CommentariesByTournament
   ): Promise<void> {
     const connection = this.unitOfWork.connection();
     let row: Row | undefined;
-    let forgotten = false;
     for (const { event } of events) {
       if (event instanceof CommentaryStarted) {
         if (row !== undefined) continue;
@@ -98,8 +94,6 @@ export class CommentariesByTournament
       ) {
         const at = event.occurredAt.toDate();
         if (row !== undefined && at > row.changedAt) row.changedAt = at;
-      } else if (event instanceof AccountForgotten) {
-        forgotten = true;
       }
       // A comment's row is its own, so it can be written as its event comes.
       await this.#projectComment(stream, event);
@@ -121,13 +115,6 @@ export class CommentariesByTournament
         ],
       );
     }
-    if (forgotten) {
-      await connection.query(
-        `insert into commentaries_by_tournament_forgotten (account_id)
-         values ($1)`,
-        [stream],
-      );
-    }
   }
 
   async of(tournament: TournamentId): Promise<readonly CommentaryChanged[]> {
@@ -138,9 +125,12 @@ export class CommentariesByTournament
       `select commentary_id, changed_at
          from commentaries_by_tournament c
         where tournament_id = $1
+          -- The writer's account as the accounts' read model has it, so that
+          -- the commentary is not found once it is forgotten, whichever
+          -- stream a rebuild took first.
           and not exists (
-                select 1 from commentaries_by_tournament_forgotten f
-                 where f.account_id = c.writer_id)
+                select 1 from accounts_by_email_address a
+                 where a.account_id = c.writer_id and a.forgotten)
         order by started_at desc, commentary_id`,
       [tournament.value],
     );
@@ -300,12 +290,6 @@ export class CommentariesByTournament
             set changed_at = greatest(changed_at, $2)
           where commentary_id = $1`,
         [stream, event.occurredAt.toDate()],
-      );
-    } else if (event instanceof AccountForgotten) {
-      await connection.query(
-        `insert into commentaries_by_tournament_forgotten (account_id)
-         values ($1) on conflict (account_id) do nothing`,
-        [stream],
       );
     }
   }

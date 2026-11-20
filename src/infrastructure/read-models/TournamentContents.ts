@@ -370,13 +370,8 @@ export class TournamentContents implements Projection, Asked {
       const group =
         event.group === undefined ? undefined : TestGroup.from(event.group);
       await this.#competitionWritten(
-        `update competitions set group_name = $2, group_slug = $3
-          where competition_id = $1`,
-        [
-          event.competitionId,
-          group?.toString() ?? null,
-          group?.slug?.toString() ?? null,
-        ],
+        `update competitions set group_name = $2 where competition_id = $1`,
+        [event.competitionId, group?.toString() ?? null],
       );
     }
   }
