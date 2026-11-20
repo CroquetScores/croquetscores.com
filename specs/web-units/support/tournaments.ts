@@ -70,6 +70,13 @@ export const tournamentsThrough = (
         ),
       );
     },
+    withoutAccountEvents: async () => {
+      await asARequest(() =>
+        application.unitOfWork
+          .connection()
+          .query(`delete from events where name like 'account-%'`),
+      );
+    },
     listedCountries,
     games: gamesKeptByCompetitions(
       application.tournaments,

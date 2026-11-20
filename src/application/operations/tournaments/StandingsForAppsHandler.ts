@@ -23,7 +23,7 @@ export class StandingsForAppsHandler extends QueryHandler<
 
   constructor(
     private readonly contents: Pick<TournamentContents, "competition">,
-    private readonly pages: Pick<TournamentPages, "peopleOf">,
+    private readonly pages: Pick<TournamentPages, "namesOfPlayers">,
     private readonly standings: CompetitionStandings,
   ) {
     super();
@@ -57,24 +57,19 @@ export class StandingsForAppsHandler extends QueryHandler<
     const kept = await this.standings.standingsKept(head.id);
     // Who each line is, by the tournament's player the competition entered.
     // Players set aside are among them, as a line of one is still told.
-    const known = new Map(
-      (await this.pages.peopleOf(query.tournament)).players.map((player) => [
-        player.playerId,
-        player,
-      ]),
-    );
+    const known = await this.pages.namesOfPlayers(query.tournament);
     return {
       competition: head,
       // A line of a player the tournament does not have is left out, as it is
       // where the read models are not whole, rather than told as nobody.
       standings: kept.standings.flatMap((each): StandingForApps[] => {
-        const player = known.get(each.tournamentPlayerId);
-        if (player === undefined) return [];
+        const name = known.get(each.tournamentPlayerId);
+        if (name === undefined) return [];
         const block = head.kind === "block";
         return [
           {
-            playerId: player.playerId,
-            name: player.name,
+            playerId: each.tournamentPlayerId,
+            name,
             withdrawn: each.withdrawn,
             played: each.played,
             won: each.won,

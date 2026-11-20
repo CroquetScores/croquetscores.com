@@ -192,6 +192,13 @@ export interface TournamentPages {
    */
   peopleOf(tournament: string): Promise<PeopleOfTournament>;
 
+  /**
+   * What the tournament calls each of its players now, by the id it keeps them
+   * by, archived ones among them. Asked by a page that names a line it
+   * already has, so it needs no more of a player than the name.
+   */
+  namesOfPlayers(tournament: string): Promise<ReadonlyMap<string, string>>;
+
   /** The competitions of the tournament in use, in its order. */
   competitionsInUse(tournament: string): Promise<readonly CompetitionInUse[]>;
 }

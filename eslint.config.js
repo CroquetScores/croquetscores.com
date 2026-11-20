@@ -189,13 +189,17 @@ export default tseslint.config(
   // A query reads a read model and nothing else (SETUP.md §7.4): the public pages
   // of a tournament and the answers made for apps were once built on the
   // aggregates, which a page then rebuilt from the events on every request.
-  // The aggregate stores are for the commands. This block says what the one
+  // The aggregate stores are for the commands. Only an import of one is
+  // caught, not a helper that is handed one by a caller. This block says what the one
   // above says as well, since a later block's `no-restricted-imports` replaces
   // an earlier one's rather than adding to it.
   {
     files: [
       "src/application/operations/tournaments/Public*.ts",
       "src/application/operations/tournaments/*ForApps*.ts",
+      // The tournament's own page, which reads as the others do though its
+      // name does not say so.
+      "src/application/operations/tournaments/GamesOfTournament*.ts",
     ],
     rules: {
       "no-restricted-imports": [

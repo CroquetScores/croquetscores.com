@@ -220,3 +220,14 @@ Feature: A commentary on a tournament, for anybody to read
     Scenario: A tournament on another website is refused
       When the public commentary "day-one" of the tournament on "gateballscores.com" at "2026/ac/spring-open" is asked for
       Then it is refused with "PublicCommentaryOfTournament.NoSuchTournament"
+
+  Rule: The writer is named from the read models alone
+
+    The read models keep what each account is called (`AccountNames.feature`),
+    so naming a commentary's writer reads none of the account's events. Taking
+    them away and asking again shows that nothing here still reads them.
+
+    Scenario: A commentary is answered with its writer's name with no account events kept
+      Given the events of the accounts are no longer kept
+      When the public commentary "day-one" of the tournament at "2026/ac/spring-open" is asked for
+      Then the commentary answered is written by "Wren Writer"

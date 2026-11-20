@@ -9,8 +9,9 @@
 --
 -- It starts empty. A name is sealed in the events it was kept with, so SQL
 -- cannot read it back; the read models are made again once this has run
--- (`npm run db:rebuild-read-models`), and until they are, no commentary is
--- shown, since its writer has no name to be shown by.
+-- (`npm run db:rebuild-read-models`, docs/website/deploying.md §4), and until
+-- they are, no commentary is shown, since its writer has no name to be shown
+-- by. The release that brings this migration is one that needs that rebuild.
 create table account_names (
     account_id text primary key,
     name       text not null,

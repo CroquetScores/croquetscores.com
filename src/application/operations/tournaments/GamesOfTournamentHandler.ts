@@ -51,21 +51,16 @@ export class GamesOfTournamentHandler extends QueryHandler<
     const id = TournamentId.from(tournament.id);
     const people = await this.pages.peopleOf(tournament.id);
     const own = new Map(people.players.map((each) => [each.playerId, each]));
-    const kinds = new Map(
-      (await this.pages.competitionsInUse(tournament.id)).map((each) => [
-        each.id,
-        each.kind,
-      ]),
-    );
 
     const games: GameOfTournament[] = [];
     for (const competition of tournament.competitions) {
       const kept = await this.games.gamesKept(competition.id);
       // Only a block's and a Swiss's games are struck through for a player
-      // who has withdrawn: a knockout's decide matches that stand.
-      const kind = kinds.get(competition.id);
+      // who has withdrawn: a knockout's decide matches that stand. They are
+      // the competitions with neither a draw, which is a knockout's, nor a
+      // first team, which is a test's.
       const withdrawn = new Set(
-        kind === "block" || kind === "swiss"
+        kept.draw === undefined && kept.firstTeam === undefined
           ? kept.entries.filter((each) => each.withdrawn).map((each) => each.id)
           : [],
       );
@@ -94,9 +89,10 @@ export class GamesOfTournamentHandler extends QueryHandler<
         };
       };
       for (const game of kept.games) {
-        // A game kept before it was held when it was added is told by when it
-        // last changed, as the other pages tell it.
-        const addedAt = game.addedAt ?? game.changedAt;
+        // A game kept before it was held when it was added has no place in a
+        // list ordered by when games were added, so it is left out, as it
+        // always has been.
+        const { addedAt } = game;
         if (game.archived || addedAt === undefined) continue;
         games.push({
           winner: playerFor(game.winner),

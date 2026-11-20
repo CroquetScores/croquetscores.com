@@ -283,6 +283,19 @@ export class TournamentPages implements Asked {
     });
   }
 
+  async namesOfPlayers(
+    tournament: string,
+  ): Promise<ReadonlyMap<string, string>> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ player_id: string; name: string }>(
+        `select player_id, name from tournament_players
+          where tournament_id = $1`,
+        [tournament],
+      );
+    return new Map(rows.map((row) => [row.player_id, row.name]));
+  }
+
   async peopleOf(tournament: string): Promise<PeopleOfTournament> {
     const connection = this.unitOfWork.connection();
     // A page links to a player by their slug, so a player a reader is sent to

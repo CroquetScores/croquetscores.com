@@ -12,3 +12,12 @@ Given(
     await inHandOf(this).withoutEvents();
   },
 );
+
+// What a page that names who wrote something is shown to ask of the accounts'
+// events, which is nothing.
+Given(
+  "the events of the accounts are no longer kept",
+  async function (this: SpecWorld) {
+    await inHandOf(this).withoutAccountEvents();
+  },
+);

@@ -599,6 +599,13 @@ const standUpTheTournaments = function (this: SpecWorld): void {
         ),
       );
     },
+    withoutAccountEvents: async () => {
+      await this.asARequest(() =>
+        unitOfWork
+          .connection()
+          .query(`delete from events where name like 'account-%'`),
+      );
+    },
     games,
     // Through registering, which makes every account the scenario said there
     // was the first time one is asked for, so that whatever the request finds

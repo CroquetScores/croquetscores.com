@@ -183,6 +183,16 @@ Feature: The games of a tournament, for anybody to read
       Then the first game answered is of "Chris Third" beating "Sam Someone"
       And the second game answered is of "Sam Someone" beating "Alex Another"
 
+    Scenario: Of games added at the same moment the one added later is first
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And the moment "2026-10-03T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the first game answered is of "Chris Third" beating "Sam Someone"
+      And the second game answered is of "Sam Someone" beating "Alex Another"
+
     Scenario: The games of every competition are answered together
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
