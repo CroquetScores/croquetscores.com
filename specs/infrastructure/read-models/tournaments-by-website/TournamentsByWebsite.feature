@@ -13,7 +13,7 @@ Feature: Finding a website's tournaments by when they were played and when they 
 
   A tournament has a row holding what the home page shows of it: its name,
   its dates, its country, its region, its sport, where it is found, and when
-  the last game in use was added to it. The row follows the tournament, as
+  a game in use was last changed in it. The row follows the tournament, as
   the tournaments by account do (`TournamentsByAccount.feature`): a name, a
   start, a country or a sport changed is changed in its row.
 
@@ -25,12 +25,12 @@ Feature: Finding a website's tournaments by when they were played and when they 
   streams in any order: a competition's games projected before the
   tournament that has it are still its games once the tournament is.
 
-  When a game was added is when the event adding it happened. An archived game
-  counts for nothing, as it does everywhere games are counted, and nor do the
-  games of an archived competition, since what is archived is set aside. A
-  game restored counts again from when it was added, not from when it was
-  restored: restoring it puts back what was there. Correcting a game changes
-  its scores and not when it was added.
+  When a game last changed is when the last event about it happened: it was
+  added, corrected, moved, withdrawn, archived or restored. A tournament is
+  played when a game in it has changed. An archived game counts for nothing,
+  as it does everywhere games are counted, and nor do the games of an archived
+  competition, since what is archived is set aside. A game restored or
+  corrected counts from then, since that is when it last changed.
 
   An archived tournament is set aside rather than gone (`archive.feature`),
   but it is not one a reader is sent to, so it is found by none of the three
@@ -38,7 +38,7 @@ Feature: Finding a website's tournaments by when they were played and when they 
 
   How long ago is lately, and how far ahead is about to start, are the
   application's to say. The read model is asked for the tournaments with a
-  game added since a moment, and for those starting from one day to another,
+  game changed since a moment, and for those starting from one day to another,
   and answers exactly that.
 
   The projection is safe to run twice, as rebuilding the read model does.
@@ -138,7 +138,7 @@ Feature: Finding a website's tournaments by when they were played and when they 
       When the tournaments played since "2026-09-25T10:00:00Z" are looked for
       Then "Spring Open" is held as last played at "2026-09-29T10:00:00Z"
 
-    Scenario: A game restored counts from when it was added
+    Scenario: A game restored counts from when it was restored
       Given a tournament "Spring Open" to start on "2026-09-28"
       And "Spring Open" is created by the account for "organiser@example.com"
       And the block "Block A" is added to "Spring Open"
@@ -146,16 +146,16 @@ Feature: Finding a website's tournaments by when they were played and when they 
       And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is archived
       And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is restored at "2026-10-01T10:00:00Z"
       When the tournaments played since "2026-09-25T10:00:00Z" are looked for
-      Then "Spring Open" is held as last played at "2026-09-30T10:00:00Z"
+      Then "Spring Open" is held as last played at "2026-10-01T10:00:00Z"
 
-    Scenario: A game corrected counts from when it was added
+    Scenario: A game corrected counts from when it was corrected
       Given a tournament "Spring Open" to start on "2026-09-28"
       And "Spring Open" is created by the account for "organiser@example.com"
       And the block "Block A" is added to "Spring Open"
       And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
       And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is corrected at "2026-10-01T10:00:00Z"
       When the tournaments played since "2026-09-25T10:00:00Z" are looked for
-      Then "Spring Open" is held as last played at "2026-09-30T10:00:00Z"
+      Then "Spring Open" is held as last played at "2026-10-01T10:00:00Z"
 
     Scenario: The games of an archived competition do not count
       Given a tournament "Spring Open" to start on "2026-09-28"
@@ -681,6 +681,115 @@ Feature: Finding a website's tournaments by when they were played and when they 
       When the tournaments of every website are looked for
       Then "Spring Open" is not found
 
+  Rule: When a tournament, a competition and a game last changed is held
+
+    A row says when it last changed, which is when the last event that changed
+    it happened, and never when the row was written, so that making the read
+    model again from the events gives the same moments. The API asks them
+    (`tournament.feature`, `games.feature`) and so asks the events nothing.
+
+    A game has changed when an event about it was kept: added, corrected,
+    moved, withdrawn, archived or restored. A competition has changed when
+    anything was kept of its own events, or of its tournament's that are about
+    it, and when its tournament's days, address or players change, since what
+    is told of every competition says them. A tournament has changed when
+    anything was kept of its own events or of any of its competitions'.
+
+    Scenario: A tournament created is held as last changed when it was created
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      Then the tournament "Spring Open" is held as last changed at "2026-09-26T10:00:00Z"
+
+    Scenario: A competition added is held as last changed when it was added
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      Then the competition "Block A" of "Spring Open" is held as last changed at "2026-09-26T10:00:00Z"
+
+    Scenario: A game added is held as last changed when it was added
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      Then the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-09-30T10:00:00Z"
+
+    Scenario: A game added changes its competition
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      Then the competition "Block A" of "Spring Open" is held as last changed at "2026-09-30T10:00:00Z"
+
+    Scenario: A game added changes its tournament
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      Then the tournament "Spring Open" is held as last changed at "2026-09-30T10:00:00Z"
+
+    Scenario: A game corrected is held as last changed when it was corrected
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is corrected at "2026-10-02T10:00:00Z"
+      Then the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-10-02T10:00:00Z"
+
+    Scenario: A game restored is held as last changed when it was restored
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is archived
+      And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is restored at "2026-10-03T10:00:00Z"
+      Then the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-10-03T10:00:00Z"
+
+    Scenario: A change that happened before the last does not move it back
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is archived
+      Then the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-09-30T10:00:00Z"
+
+    Scenario: A game added changes the competition it is in and no other
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And the block "Block B" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      Then the competition "Block B" of "Spring Open" is held as last changed at "2026-09-26T10:00:00Z"
+
+    Scenario: A game added does not change another game
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      And a game is added to "Block A" of "Spring Open" at "2026-10-02T10:00:00Z"
+      Then the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-09-30T10:00:00Z"
+      And the competition "Block A" of "Spring Open" is held as last changed at "2026-10-02T10:00:00Z"
+
+    Scenario: A tournament renamed is held as last changed when it was renamed
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is renamed "Autumn Open" at "2026-10-05T10:00:00Z"
+      Then the tournament "Autumn Open" is held as last changed at "2026-10-05T10:00:00Z"
+
+    Scenario: A tournament renamed changes what is told of its competitions
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And "Spring Open" is renamed "Autumn Open" at "2026-10-05T10:00:00Z"
+      Then the competition "Block A" of "Spring Open" is held as last changed at "2026-10-05T10:00:00Z"
+
+    Scenario: A tournament renamed does not change a game
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      And "Spring Open" is renamed "Autumn Open" at "2026-10-05T10:00:00Z"
+      Then the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-09-30T10:00:00Z"
+
   Rule: Projecting the same events again changes nothing
 
     Scenario: A tournament's creation projected twice is one tournament
@@ -708,6 +817,15 @@ Feature: Finding a website's tournaments by when they were played and when they 
       When the events of "Block A" of "Spring Open" are projected again
       And the tournaments played since "2026-09-25T10:00:00Z" are looked for
       Then "Spring Open" is not found
+
+    Scenario: A game projected twice leaves when it last changed where it was
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      When the events of "Block A" of "Spring Open" are projected again
+      Then the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-09-30T10:00:00Z"
+      And the tournament "Spring Open" is held as last changed at "2026-09-30T10:00:00Z"
 
   Rule: The read model is rebuilt from the events alone
 
@@ -743,6 +861,41 @@ Feature: Finding a website's tournaments by when they were played and when they 
       And the tournaments played since "2026-09-25T10:00:00Z" are looked for
       Then it is rebuilt without failing
       And "Spring Open" is found
+
+    Scenario: A rebuild holds when each last changed as the projection did
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      When the read model is rebuilt from the events
+      Then it is rebuilt without failing
+      And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-09-30T10:00:00Z"
+      And the competition "Block A" of "Spring Open" is held as last changed at "2026-09-30T10:00:00Z"
+      And the tournament "Spring Open" is held as last changed at "2026-09-30T10:00:00Z"
+
+    Scenario: A competition's change rebuilt before its tournament still reaches the tournament
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      And the competitions' streams are to be rebuilt before the tournament's
+      When the read model is rebuilt from the events
+      Then it is rebuilt without failing
+      And the competition "Block A" of "Spring Open" is held as last changed at "2026-09-30T10:00:00Z"
+      And the tournament "Spring Open" is held as last changed at "2026-09-30T10:00:00Z"
+
+    Scenario: A tournament renamed later is held as last changed then once rebuilt
+      Given a tournament "Spring Open" to start on "2026-09-28"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the block "Block A" is added to "Spring Open"
+      And a game is added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z"
+      And "Spring Open" is renamed "Autumn Open" at "2026-10-05T10:00:00Z"
+      And the competitions' streams are to be rebuilt before the tournament's
+      When the read model is rebuilt from the events
+      Then it is rebuilt without failing
+      And the tournament "Autumn Open" is held as last changed at "2026-10-05T10:00:00Z"
+      And the competition "Block A" of "Spring Open" is held as last changed at "2026-10-05T10:00:00Z"
+      And the game added to "Block A" of "Spring Open" at "2026-09-30T10:00:00Z" is held as last changed at "2026-09-30T10:00:00Z"
 
     Scenario: An archived tournament rebuilt is not found
       Given a tournament "Spring Open" to start on "2026-10-10"

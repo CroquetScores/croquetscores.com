@@ -317,6 +317,7 @@ export const update = (
   tournament: Tournament,
   changed: Partial<TournamentRequest>,
   by: AccountId,
+  moment: ReadOnlyDate = at,
 ): void => {
   tournament.update(
     detailsFrom({
@@ -334,7 +335,7 @@ export const update = (
     }),
     () => false,
     by,
-    at,
+    moment,
   );
 };
 
@@ -343,9 +344,10 @@ export const updated = async (
   world: SpecWorld,
   name: string,
   changed: Partial<TournamentRequest>,
+  moment: ReadOnlyDate = at,
 ): Promise<void> => {
   await doneTo(world, name, (tournament, by) => {
-    update(tournament, changed, by);
+    update(tournament, changed, by, moment);
   });
 };
 
@@ -355,6 +357,24 @@ Given(
     await updated(this, name, { name: renamed });
     const { byName } = scenarioOf(this);
     byName.set(renamed, tournamentNamed(this, name));
+  },
+);
+
+Given(
+  "{string} is renamed {string} at {string}",
+  async function (
+    this: SpecWorld,
+    name: string,
+    renamed: string,
+    moment: string,
+  ) {
+    await updated(
+      this,
+      name,
+      { name: renamed },
+      ReadOnlyDate.from(new Date(moment)),
+    );
+    scenarioOf(this).byName.set(renamed, tournamentNamed(this, name));
   },
 );
 

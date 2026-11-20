@@ -35,12 +35,18 @@ export interface TournamentFingerprint {
   readonly fingerprint: string;
 }
 
+/** When a tournament last changed, and each of its competitions. */
+export interface ChangesOfTournament {
+  readonly tournament: ReadOnlyDate;
+  readonly competitions: ReadonlyMap<string, ReadOnlyDate>;
+}
+
 /** A tournament, and when anything was last kept of it or of any of its competitions. */
 export interface TournamentChanged extends TournamentOfWebsite {
   readonly changedAt: ReadOnlyDate;
 }
 
-/** A tournament played lately, and when the last game in use was added to it. */
+/** A tournament played lately, and when a game in use was last changed in it. */
 export interface TournamentPlayed extends TournamentOfWebsite {
   readonly lastPlayed: ReadOnlyDate;
 }
@@ -53,7 +59,7 @@ export interface TournamentPlayed extends TournamentOfWebsite {
  */
 export interface TournamentsByWebsite {
   /**
-   * Those on `website` the filter lets through with a game in use added at
+   * Those on `website` the filter lets through with a game in use last changed at
    * `since` or after: the one played most lately first, and those last played
    * at the same moment by name.
    */
@@ -77,18 +83,19 @@ export interface TournamentsByWebsite {
   ): Promise<readonly TournamentOfWebsite[]>;
 
   /**
-   * When the newest event of each of the streams `streams` happened, for those
-   * that have any.
+   * When the tournament `tournament` last changed, and each of its
+   * competitions, archived or not, by their ids; nothing where there is no
+   * such tournament. The tournament has changed when any of them has.
    */
-  changedAtOfStreams(
-    streams: readonly string[],
-  ): Promise<ReadonlyMap<string, ReadOnlyDate>>;
+  changesOfTournament(
+    tournament: string,
+  ): Promise<ChangesOfTournament | undefined>;
 
   /**
    * When each game of the competition `competition` was last changed: added,
    * corrected, moved, withdrawn, archived or restored, by the id of the game.
    */
-  changedAtOfGames(
+  changesOfGames(
     competition: string,
   ): Promise<ReadonlyMap<string, ReadOnlyDate>>;
 

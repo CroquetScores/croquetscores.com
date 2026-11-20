@@ -36,7 +36,7 @@ export class GamesForAppsHandler extends QueryHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly changes: Pick<
       TournamentsByWebsite,
-      "changedAtOfStreams" | "changedAtOfGames"
+      "changesOfTournament" | "changesOfGames"
     >,
     private readonly blocks: PublicBlockOfTournamentHandler,
     private readonly swisses: PublicSwissOfTournamentHandler,
@@ -57,9 +57,9 @@ export class GamesForAppsHandler extends QueryHandler<
     );
     const address = tournament.address.toString();
     const slug = reference.slug.toString();
-    // A game not found among the events has not been changed since the
-    // competition was, which is no earlier than it truly was.
-    const changes = await this.changes.changedAtOfGames(head.id);
+    // A game with no change held has not been changed since the competition
+    // was, which is no earlier than it truly was.
+    const changes = await this.changes.changesOfGames(head.id);
     const changedAtOf = (game: string): ReadOnlyDate =>
       changes.get(game) ?? head.changedAt;
 

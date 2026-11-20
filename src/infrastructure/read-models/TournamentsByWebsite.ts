@@ -1,5 +1,6 @@
 import type { Projection } from "../../application/common/Projection.js";
 import type {
+  ChangesOfTournament,
   TournamentChanged,
   TournamentFingerprint,
   TournamentOfWebsite,
@@ -8,7 +9,11 @@ import type {
 } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
 import { CompetitionGameAdded } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
+import { CompetitionGameCorrected } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
+import { CompetitionGameMoved } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
+import { CompetitionGameWithdrawalReversed } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawalReversed.js";
+import { CompetitionGameWithdrawn } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawn.js";
 import type { Sport } from "../../domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFilter } from "../../domain/aggregates/tournaments/value-objects/TournamentFilter.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
@@ -60,6 +65,18 @@ const narrowedBy = (
   }
   return { where: conditions.join(" "), values };
 };
+
+// Every kind of event about one game, each of which says which.
+const isAboutAGame = (
+  event: DomainEvent,
+): event is DomainEvent & { readonly gameId: string } =>
+  event instanceof CompetitionGameAdded ||
+  event instanceof CompetitionGameArchived ||
+  event instanceof CompetitionGameCorrected ||
+  event instanceof CompetitionGameMoved ||
+  event instanceof CompetitionGameRestored ||
+  event instanceof CompetitionGameWithdrawalReversed ||
+  event instanceof CompetitionGameWithdrawn;
 
 const listed = (row: Row): TournamentOfWebsite => ({
   id: row.tournament_id,
@@ -127,7 +144,7 @@ export class TournamentsByWebsite implements Projection, Asked {
     const { rows } = await this.unitOfWork
       .connection()
       .query<Row & { last_played: Date }>(
-        `select ${COLUMNS}, max(g.added_at) as last_played
+        `select ${COLUMNS}, max(g.changed_at) as last_played
            from tournaments t
            join competitions c
              on c.tournament_id = t.tournament_id and not c.archived
@@ -135,7 +152,7 @@ export class TournamentsByWebsite implements Projection, Asked {
              on g.competition_id = c.competition_id and not g.archived
           where t.website = $1 and not t.archived ${narrowed.where}
           group by t.tournament_id
-         having max(g.added_at) >= $2
+         having max(g.changed_at) >= $2
           order by last_played desc, t.name`,
         [website.host, since.toISOString(), ...narrowed.values],
       );
@@ -163,11 +180,9 @@ export class TournamentsByWebsite implements Projection, Asked {
     return rows.map(listed);
   }
 
-  // When each last changed is when the newest event of its own stream, or of
-  // any of its competitions' streams, happened: events are only appended, so
-  // the newest is the latest change. It is read from the events and not kept
-  // beside the tournament, so that it is right for every tournament already
-  // kept, without the read model being made again.
+  // When each last changed is kept in the tournaments table, with the greater
+  // of its own events and its competitions', so that it is asked of the read
+  // model and never of the events.
   async startingBetweenWithChange(
     website: Website,
     first: string,
@@ -178,22 +193,8 @@ export class TournamentsByWebsite implements Projection, Asked {
     const { rows } = await this.unitOfWork
       .connection()
       .query<Row & { changed_at: Date }>(
-        `select ${COLUMNS}, changed.at as changed_at
+        `select ${COLUMNS}, t.changed_at
            from tournaments t
-           cross join lateral (
-             select max(newest.at) as at
-               from (select t.tournament_id as stream_id
-                      union all
-                     select c.competition_id
-                       from competitions c
-                      where c.tournament_id = t.tournament_id) streams
-               cross join lateral (
-                 select (e.data ->> 'occurredAt')::timestamptz as at
-                   from events e
-                  where e.stream_id = streams.stream_id
-                  order by e.version desc
-                  limit 1) newest
-           ) changed
           where t.website = $1 and not t.archived
             and t.starts between $2 and $3 ${narrowed.where}
           order by t.starts, t.name, t.tournament_id`,
@@ -205,43 +206,46 @@ export class TournamentsByWebsite implements Projection, Asked {
     }));
   }
 
-  async changedAtOfStreams(
-    streams: readonly string[],
-  ): Promise<ReadonlyMap<string, ReadOnlyDate>> {
+  async changesOfTournament(
+    tournament: string,
+  ): Promise<ChangesOfTournament | undefined> {
     const { rows } = await this.unitOfWork
       .connection()
-      .query<{ stream_id: string; at: Date }>(
-        `select s.stream_id, newest.at
-           from unnest($1::text[]) as s(stream_id)
-           cross join lateral (
-             select (e.data ->> 'occurredAt')::timestamptz as at
-               from events e
-              where e.stream_id = s.stream_id
-              order by e.version desc
-              limit 1) newest`,
-        [streams],
+      .query<{ competition_id: string | null; at: Date }>(
+        `select null as competition_id, t.changed_at as at
+           from tournaments t where t.tournament_id = $1
+          union all
+         select c.competition_id, c.changed_at
+           from competitions c where c.tournament_id = $1`,
+        [tournament],
       );
-    return new Map(
-      rows.map((row) => [row.stream_id, ReadOnlyDate.from(row.at)]),
-    );
+    const own = rows.find((row) => row.competition_id === null);
+    if (own === undefined) return undefined;
+    return {
+      tournament: ReadOnlyDate.from(own.at),
+      competitions: new Map(
+        rows.flatMap((row) =>
+          row.competition_id === null
+            ? []
+            : [[row.competition_id, ReadOnlyDate.from(row.at)] as const],
+        ),
+      ),
+    };
   }
 
-  // Every event about a game says which game, so a game was last changed when
-  // the newest of them happened. Read from the events, as a tournament's is.
-  async changedAtOfGames(
+  async changesOfGames(
     competition: string,
   ): Promise<ReadonlyMap<string, ReadOnlyDate>> {
     const { rows } = await this.unitOfWork
       .connection()
-      .query<{ game_id: string; at: Date }>(
-        `select e.data ->> 'gameId' as game_id,
-                max((e.data ->> 'occurredAt')::timestamptz) as at
-           from events e
-          where e.stream_id = $1 and e.data ? 'gameId'
-          group by 1`,
+      .query<{ game_id: string; changed_at: Date }>(
+        `select game_id, changed_at from tournaments_by_website_games
+          where competition_id = $1`,
         [competition],
       );
-    return new Map(rows.map((row) => [row.game_id, ReadOnlyDate.from(row.at)]));
+    return new Map(
+      rows.map((row) => [row.game_id, ReadOnlyDate.from(row.changed_at)]),
+    );
   }
 
   async withSports(): Promise<readonly TournamentOfWebsite[]> {
@@ -332,20 +336,30 @@ export class TournamentsByWebsite implements Projection, Asked {
   async #project(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
     if (event instanceof CompetitionGameAdded) {
-      // When it was added is kept as it was first projected, and so is
-      // whether it is archived, since a game is added once and projecting it
-      // again is not adding it again.
+      // Whether it is archived is kept as it was first projected, since a game
+      // is added once and projecting it again is not adding it again.
       await connection.query(
         `insert into tournaments_by_website_games
-           (competition_id, game_id, added_at)
+           (competition_id, game_id, changed_at)
          values ($1, $2, $3)
-         on conflict (competition_id, game_id) do nothing`,
+         on conflict (competition_id, game_id) do update
+           set changed_at = greatest(tournaments_by_website_games.changed_at,
+                                     excluded.changed_at)`,
         [stream, event.gameId, event.occurredAt.toISOString()],
       );
     } else if (event instanceof CompetitionGameArchived) {
       await this.#gameArchived(stream, event.gameId, true);
     } else if (event instanceof CompetitionGameRestored) {
       await this.#gameArchived(stream, event.gameId, false);
+    }
+    // Every event about a game, whatever it did, is the game's last change.
+    if (isAboutAGame(event)) {
+      await connection.query(
+        `update tournaments_by_website_games
+            set changed_at = greatest(changed_at, $3)
+          where competition_id = $1 and game_id = $2`,
+        [stream, event.gameId, event.occurredAt.toISOString()],
+      );
     }
   }
 

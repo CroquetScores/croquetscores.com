@@ -35,9 +35,6 @@ export interface CompetitionFound {
   readonly head: CompetitionHead;
 }
 
-export const later = (one: ReadOnlyDate, other: ReadOnlyDate): ReadOnlyDate =>
-  other.toDate() > one.toDate() ? other : one;
-
 /**
  * The competition `competition` of the tournament `tournament`, both by their
  * ids, of the website being read, or refused as `operation`'s
@@ -46,14 +43,12 @@ export const later = (one: ReadOnlyDate, other: ReadOnlyDate): ReadOnlyDate =>
  * finer answer, and so is an archived tournament or competition, and a
  * competition of another tournament.
  *
- * It has changed when something was done in it or when its tournament
- * changed, as a tournament's answer says (`TournamentForApps`): a competition
- * has an event stream of its own only once something is done in it, and what
- * makes it and names it is said in its tournament's.
+ * Its `changedAt` is the read model's: when something was done in it, or its
+ * tournament's events said something that changes what is told of it.
  */
 export const competitionFoundFor = async (
   tournaments: AggregateRepository<Tournament, TournamentId>,
-  changes: Pick<TournamentsByWebsite, "changedAtOfStreams">,
+  changes: Pick<TournamentsByWebsite, "changesOfTournament">,
   website: string,
   tournamentId: string,
   competitionId: string,
@@ -84,13 +79,9 @@ export const competitionFoundFor = async (
       "There is no such competition.",
     );
   }
-  const changedAt = await changes.changedAtOfStreams([
-    tournament.id.value,
-    found.reference.id.value,
-  ]);
-  const ofTheTournament = changedAt.get(tournament.id.value);
-  if (ofTheTournament === undefined) {
-    throw new Error(`Nothing was kept of ${tournament.id.value}.`);
+  const changed = await changes.changesOfTournament(tournament.id.value);
+  if (changed === undefined) {
+    throw new Error(`Nothing is kept of ${tournament.id.value}.`);
   }
   return {
     tournament,
@@ -100,10 +91,9 @@ export const competitionFoundFor = async (
       id: found.reference.id.value,
       name: found.reference.name.toString(),
       kind: found.shape.kind,
-      changedAt: later(
-        ofTheTournament,
-        changedAt.get(found.reference.id.value) ?? ofTheTournament,
-      ),
+      changedAt:
+        changed.competitions.get(found.reference.id.value) ??
+        changed.tournament,
     },
   };
 };

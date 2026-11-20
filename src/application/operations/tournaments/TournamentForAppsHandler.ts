@@ -5,7 +5,6 @@ import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
-import { later } from "./competitionForApps.js";
 import {
   TournamentOperationRefused,
   tournamentFor,
@@ -34,7 +33,7 @@ export class TournamentForAppsHandler extends QueryHandler<
 
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly changes: Pick<TournamentsByWebsite, "changedAtOfStreams">,
+    private readonly changes: Pick<TournamentsByWebsite, "changesOfTournament">,
   ) {
     super();
   }
@@ -60,21 +59,10 @@ export class TournamentForAppsHandler extends QueryHandler<
     const inUse = tournament.competitions.filter(
       ({ reference }) => !reference.archived,
     );
-    const changedAt = await this.changes.changedAtOfStreams([
-      tournament.id.value,
-      // Every competition's, archived or not, as the list's date is: one
-      // archived has gone from the answer, which is a change of it.
-      ...tournament.competitions.map(({ reference }) => reference.id.value),
-    ]);
-    const ofTheTournament = changedAt.get(tournament.id.value);
-    if (ofTheTournament === undefined) {
-      throw new Error(`Nothing was kept of ${tournament.id.value}.`);
+    const changed = await this.changes.changesOfTournament(tournament.id.value);
+    if (changed === undefined) {
+      throw new Error(`Nothing is kept of ${tournament.id.value}.`);
     }
-    // A competition has a stream of its own only once something is done in
-    // it, such as a player entered, and what makes it, names it and renames it
-    // is said in the tournament's. So it has changed when either has, which is
-    // never earlier than it truly did, and an app that asks again because of
-    // it is only asking once more than it had to.
     const competitions: CompetitionForApps[] = inUse.map(
       ({ reference, shape }) => ({
         id: reference.id.value,
@@ -82,17 +70,9 @@ export class TournamentForAppsHandler extends QueryHandler<
         kind: shape.kind,
         // A test has its own part of the tournament's address, as its page does.
         address: `${tournament.address.toString()}/${shape.kind === "test" ? "tests" : "competitions"}/${reference.slug.toString()}`,
-        changedAt: later(
-          ofTheTournament,
-          changedAt.get(reference.id.value) ?? ofTheTournament,
-        ),
+        changedAt:
+          changed.competitions.get(reference.id.value) ?? changed.tournament,
       }),
-    );
-    // The tournament has changed when it or any of its competitions has.
-    const latest = tournament.competitions.reduce(
-      (soFar, { reference }) =>
-        later(soFar, changedAt.get(reference.id.value) ?? soFar),
-      ofTheTournament,
     );
 
     return {
@@ -106,7 +86,7 @@ export class TournamentForAppsHandler extends QueryHandler<
       address: tournament.address.toString(),
       national: tournament.national,
       international: tournament.international,
-      changedAt: latest,
+      changedAt: changed.tournament,
       competitions,
       players: tournament.players
         .filter((player) => !player.archived)
