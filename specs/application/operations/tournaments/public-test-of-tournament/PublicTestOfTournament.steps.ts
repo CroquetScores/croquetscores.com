@@ -182,6 +182,13 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) game of the test answered was won by a player flying the flag "(.*)"$/,
+  function (this: SpecWorld, which: string, flag: string) {
+    assert.equal(answered(this).games[placeOf(which)]?.winner.flag, flag);
+  },
+);
+
+Then(
   /^the (first|second|third) game of the test answered was added at "(.*)"$/,
   function (this: SpecWorld, which: string, at: string) {
     // As a moment, since a scenario writes it without the milliseconds.

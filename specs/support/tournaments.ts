@@ -74,6 +74,13 @@ export interface TournamentsInHand {
   kept(): Promise<number>;
 
   /**
+   * Takes the events of every tournament and competition out of the event
+   * store, leaving the read models as they are, so that what is asked after
+   * is shown to need none of them. Only a scenario's own store is touched.
+   */
+  withoutEvents(): Promise<void>;
+
+  /**
    * The id of the account for `address`, or nothing where there is none.
    * Asked of whatever made the scenario's accounts, which is registering for
    * an application scenario and the site itself for a browser scenario.

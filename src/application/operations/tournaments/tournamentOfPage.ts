@@ -2,6 +2,7 @@
 // the aggregates share `tournamentForReaders.ts`: the tournament found by the
 // address a reader's browser names, and the competition found by its slug.
 import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import { TournamentFormat } from "../../../domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import type {
@@ -74,6 +75,22 @@ export const competitionOfPage = async (
     throw new TournamentOperationRefused(refusals.notOfKind, refusals.sentence);
   }
   return found;
+};
+
+/**
+ * The format of `tournament`. A tournament whose format was not kept, as one
+ * is before the read models are made again, is not guessed at: a page that
+ * counts by it would answer wrongly, so it is refused.
+ */
+export const formatOfPage = (
+  tournament: TournamentOfPage,
+): TournamentFormat => {
+  if (tournament.format === undefined) {
+    throw new Error(
+      `The tournament ${tournament.id} has no format kept: the read models are to be made again.`,
+    );
+  }
+  return TournamentFormat.from(tournament.format);
 };
 
 /** Each note of the tournament with when it last changed, the most recent first. */

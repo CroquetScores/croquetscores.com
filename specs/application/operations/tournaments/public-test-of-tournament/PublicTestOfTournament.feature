@@ -77,6 +77,7 @@ Feature: A test of a tournament played by teams, for anybody to read
     And the tournament is to be played in the format "Teams"
     And "organiser@example.com" has created the tournament "Spring Tests"
     And the team is to be known for short as "AUS"
+    And the team is to fly the flag "au"
     And "organiser@example.com" has added the team "Australia" to "Spring Tests"
     And the team is to be known for short as "ENG"
     And "organiser@example.com" has added the team "England" to "Spring Tests"
@@ -265,6 +266,15 @@ Feature: A test of a tournament played by teams, for anybody to read
       When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
       Then the first game of the test answered was added at "2026-10-03T10:00:00Z"
 
+    Scenario: A game changed later is still answered with when it was added
+      Given the moment "2026-10-03T10:00:00Z"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And the moment "2026-10-03T12:00:00Z"
+      And "organiser@example.com" has archived the score of "Pat Player" beating "Kim Keeper" in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has restored the score of "Pat Player" beating "Kim Keeper" in "AUS v ENG" of "Spring Tests"
+      When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game of the test answered was added at "2026-10-03T10:00:00Z"
+
   Rule: Only a test of a tournament a reader is sent to is answered
 
     Scenario: A slug no competition has is refused
@@ -286,3 +296,20 @@ Feature: A test of a tournament played by teams, for anybody to read
       Given "organiser@example.com" has archived the tournament "Spring Tests"
       When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
       Then it is refused with "PublicTestOfTournament.NoSuchTournament"
+
+  Rule: The test is answered from the read models alone
+
+    The read models keep what a test's page shows, so asking for it reads none
+    of the tournament's or the competition's events. Taking the events away
+    and asking again shows that nothing here still reads them.
+
+    Scenario: A test with a game played is answered with no events kept
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And the events of the tournaments and the competitions are no longer kept
+      When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game of the test answered was won by "Pat Player"
+
+    Scenario: A game's winner is answered flying their team's flag
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game of the test answered was won by a player flying the flag "au"

@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import type {
   CompetitionOfPage,
   PlayerOfPage,
+  TeamsToStand,
   TournamentOfPage,
 } from "../../../../src/application/operations/tournaments/tournamentPages.js";
 import { CompetitionId } from "../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
@@ -17,6 +18,7 @@ import {
   doneTo,
   toBeChanged,
   tournamentNamed,
+  update,
 } from "../../support/tournamentReadModels.js";
 import { unitOfWorkOf } from "../../support/transactions.js";
 import {
@@ -33,6 +35,7 @@ interface Read {
   competition?: CompetitionOfPage | undefined;
   asked: boolean;
   players?: readonly PlayerOfPage[];
+  teams?: TeamsToStand | undefined;
 }
 
 const reads = new WeakMap<SpecWorld, Read>();
@@ -122,6 +125,60 @@ When(
     const pages = pagesOf(this);
     await this.asARequest(async () => {
       readOf(this).tournament = await pages.tournament(id);
+    });
+  },
+);
+
+Given(
+  "{string} is to be played by teams",
+  function (this: SpecWorld, name: string) {
+    toBeChanged(this, name, { format: "Teams" });
+  },
+);
+
+// As the read models are before they are made again after an upgrade.
+Given(
+  "the format of {string} is not kept",
+  async function (this: SpecWorld, name: string) {
+    const id = tournamentNamed(this, name).value;
+    await this.asARequest(() =>
+      unitOfWorkOf(this)
+        .connection()
+        .query(
+          `update tournaments set format = null where tournament_id = $1`,
+          [id],
+        ),
+    );
+  },
+);
+
+Given(
+  "the level tests of {string} are drawn",
+  async function (this: SpecWorld, tournament: string) {
+    await doneTo(this, tournament, (each, by) => {
+      update(each, { levelTestsDrawn: true }, by);
+    });
+  },
+);
+
+Given(
+  "the team {string} of {string} is set aside",
+  async function (this: SpecWorld, team: string, tournament: string) {
+    await doneTo(this, tournament, (each, by) => {
+      const found = each.teams.find((one) => one.name.toString() === team);
+      assert.ok(found !== undefined, `${team} is not a team of ${tournament}.`);
+      each.archiveTeam(found.id, by, at);
+    });
+  },
+);
+
+When(
+  "the teams of {string} are read back to be stood",
+  async function (this: SpecWorld, tournament: string) {
+    const id = tournamentNamed(this, tournament).value;
+    const pages = pagesOf(this);
+    await this.asARequest(async () => {
+      readOf(this).teams = await pages.teamsToStand(id);
     });
   },
 );
@@ -261,3 +318,94 @@ Then(
     assert.equal(playerRead(this, name).withdrawn, true);
   },
 );
+
+Then(
+  "the tournament's page is played in the format {string}",
+  function (this: SpecWorld, format: string) {
+    assert.equal(tournamentRead(this).format, format);
+  },
+);
+
+Then(
+  /^the tournament's page (draws|does not draw) a test level on matches$/,
+  function (this: SpecWorld, which: string) {
+    assert.equal(tournamentRead(this).levelTestsDrawn, which === "draws");
+  },
+);
+
+Then(
+  "the competition found is a test between {string} and {string}",
+  async function (this: SpecWorld, first: string, second: string) {
+    const teams = competitionRead(this).teams;
+    assert.ok(teams !== undefined, "The competition has no teams.");
+    const pages = pagesOf(this);
+    await this.asARequest(async () => {
+      assert.equal((await pages.team(teams.first))?.name, first);
+      assert.equal((await pages.team(teams.second))?.name, second);
+    });
+  },
+);
+
+const teamsRead = (world: SpecWorld): TeamsToStand => {
+  const { teams } = readOf(world);
+  assert.ok(teams !== undefined, "No teams were read back.");
+  return teams;
+};
+
+const teamToStand = (world: SpecWorld, name: string) => {
+  const team = teamsRead(world).teams.find((each) => each.name === name);
+  assert.ok(team !== undefined, `${name} is not read back.`);
+  return team;
+};
+
+Then(/^the teams to stand are (.+)$/, function (this: SpecWorld, said: string) {
+  assert.deepEqual(
+    teamsRead(this).teams.map((each) => each.name),
+    quoted(said),
+  );
+});
+
+Then(
+  "the team {string} to stand is archived",
+  function (this: SpecWorld, name: string) {
+    assert.equal(teamToStand(this, name).archived, true);
+  },
+);
+
+Then(
+  "the team {string} to stand is known for short as {string}",
+  function (this: SpecWorld, name: string, shortName: string) {
+    assert.equal(teamToStand(this, name).shortName, shortName);
+  },
+);
+
+Then(
+  "the team player {string} to stand plays for {string}",
+  function (this: SpecWorld, player: string, team: string) {
+    const kept = teamsRead(this);
+    // A team player is named in the scenario as they were made, in the test.
+    const playerId = [...ownScenarioOf(this).entries].find(([label]) =>
+      label.startsWith(`${player} in the test of `),
+    )?.[1];
+    assert.ok(playerId !== undefined, `${player} was not made.`);
+    assert.equal(kept.teamOf.get(playerId.value), teamToStand(this, team).id);
+  },
+);
+
+Then(
+  /^the first test to stand has (\d+) games?$/,
+  function (this: SpecWorld, games: number) {
+    assert.equal(teamsRead(this).tests[0]?.games.length, Number(games));
+  },
+);
+
+Then(
+  "the first test to stand is expected to have {int} matches",
+  function (this: SpecWorld, matches: number) {
+    assert.equal(teamsRead(this).tests[0]?.expectedMatches, matches);
+  },
+);
+
+Then("the tournament's page has no format", function (this: SpecWorld) {
+  assert.equal(tournamentRead(this).format, undefined);
+});

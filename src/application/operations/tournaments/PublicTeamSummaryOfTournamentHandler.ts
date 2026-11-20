@@ -1,27 +1,29 @@
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import { Website } from "../../../domain/common/Website.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
-import type { Competitions } from "../competitions/competitionOperations.js";
 import {
   PublicTeamSummaryOfTournament,
   type TeamSummaryToRead,
 } from "./PublicTeamSummaryOfTournament.js";
 import { standingsOf } from "./teamStandings.js";
-import {
-  competitionsInUse,
-  tournamentForReaders,
-  managerNotesChangedOf,
-  type TournamentCommentaries,
-} from "./tournamentForReaders.js";
+import type { TournamentCommentaries } from "./tournamentForReaders.js";
 import {
   type TournamentAddresses,
   TournamentOperationRefused,
 } from "./tournamentOperations.js";
+import {
+  formatOfPage,
+  managerNotesChangedFor,
+  tournamentOfPage,
+} from "./tournamentOfPage.js";
+import type { TournamentPages } from "./tournamentPages.js";
 
+/**
+ * A tournament's team summary, read of the read models alone: the tournament
+ * and its tests (`TournamentPages`), counted when it is asked for from the
+ * games they keep, since a summary is counted from every test in use at once.
+ */
 export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
   PublicTeamSummaryOfTournament,
   TeamSummaryToRead
@@ -30,9 +32,8 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
     PublicTeamSummaryOfTournament;
 
   constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly competitions: Competitions,
     private readonly addresses: TournamentAddresses,
+    private readonly pages: TournamentPages,
     private readonly notes: TournamentManagerNotes,
     private readonly changes: TournamentCommentaries,
   ) {
@@ -42,33 +43,35 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
   async handle(
     query: PublicTeamSummaryOfTournament,
   ): Promise<TeamSummaryToRead> {
-    const tournament = await tournamentForReaders(
-      this.tournaments,
+    const tournament = await tournamentOfPage(
       this.addresses,
-      Website.from(query.website),
+      this.pages,
+      query.website,
       query.address,
       "PublicTeamSummaryOfTournament",
     );
-    if (!tournament.format.isTeamFormat) {
+    if (!formatOfPage(tournament).isTeamFormat) {
       throw new TournamentOperationRefused(
         "PublicTeamSummaryOfTournament.NotPlayedByTeams",
         "The tournament is not played by teams.",
       );
     }
 
-    const { teams, bestOfMoreThanOne, ranked, showsNets } = await standingsOf(
+    const { teams, bestOfMoreThanOne, ranked, showsNets } = standingsOf(
       tournament,
-      this.competitions,
+      await this.pages.teamsToStand(tournament.id),
       () => true,
     );
     return {
-      name: tournament.name.toString(),
-      subtitle: tournament.subtitle?.markdown,
-      commentariesChanged: await this.changes.of(tournament.id),
-      managerNotes: await managerNotesChangedOf(this.notes, tournament),
-      address: tournament.address.toString(),
+      name: tournament.name,
+      subtitle: tournament.subtitle,
+      commentariesChanged: await this.changes.of(
+        TournamentId.from(tournament.id),
+      ),
+      managerNotes: await managerNotesChangedFor(this.notes, tournament),
+      address: tournament.address,
       playedByTeams: true,
-      competitions: competitionsInUse(tournament),
+      competitions: tournament.competitions,
       teams,
       bestOfMoreThanOne,
       ranked,

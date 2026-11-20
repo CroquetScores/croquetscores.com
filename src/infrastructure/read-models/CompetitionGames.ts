@@ -115,9 +115,10 @@ export class CompetitionGames implements Projection, Asked {
       archived: boolean;
       withdrawn: boolean;
       changed_at: Date;
+      added_at: Date | null;
     }>(
       `select game_id, winner_id, winner_score, loser_id, loser_score, drawn,
-              archived, withdrawn, changed_at
+              archived, withdrawn, changed_at, added_at
          from competition_games
         where competition_id = $1
         order by position`,
@@ -159,14 +160,19 @@ export class CompetitionGames implements Projection, Asked {
       player_id: string;
       name: string;
       team_id: string | null;
+      team_name: string | null;
+      team_flag: string | null;
     }>(
-      `select e.entry_id as id, p.player_id, p.name, null as team_id
+      `select e.entry_id as id, p.player_id, p.name, null as team_id,
+              null as team_name, null as team_flag
          from competition_entries e
          join tournament_players p on p.player_id = e.tournament_player_id
         where e.competition_id = $1
         union all
-       select t.player_id as id, t.player_id, t.name, t.team_id
+       select t.player_id as id, t.player_id, t.name, t.team_id,
+              f.name as team_name, f.flag as team_flag
          from tournament_team_players t
+         join tournament_teams f on f.team_id = t.team_id
         where t.team_id in ($2, $3)`,
       [competition, kept?.first_team_id ?? null, kept?.second_team_id ?? null],
     );
@@ -185,6 +191,8 @@ export class CompetitionGames implements Projection, Asked {
           row.changed_at === null
             ? undefined
             : ReadOnlyDate.from(row.changed_at),
+        addedAt:
+          row.added_at === null ? undefined : ReadOnlyDate.from(row.added_at),
       })),
       entries: entries.rows.map((row): EntryKept => ({
         id: row.entry_id,
@@ -209,6 +217,8 @@ export class CompetitionGames implements Projection, Asked {
             playerId: row.player_id,
             name: row.name,
             team: row.team_id ?? undefined,
+            teamName: row.team_name ?? undefined,
+            teamFlag: row.team_flag ?? undefined,
           },
         ]),
       ),
@@ -363,15 +373,16 @@ export class CompetitionGames implements Projection, Asked {
       await connection.query(
         `insert into competition_games
            (game_id, competition_id, position, winner_id, winner_score,
-            loser_id, loser_score, drawn, changed_at)
+            loser_id, loser_score, drawn, changed_at, added_at)
          values ($1, $2,
                  (select coalesce(max(position), 0) + 1
                     from competition_games where competition_id = $2),
-                 $3, $4, $5, $6, $7, $8)
+                 $3, $4, $5, $6, $7, $8, $8)
          -- Adding it again must not undo a correction made since.
          on conflict (game_id) do update
            set changed_at = greatest(competition_games.changed_at,
-                                     excluded.changed_at)`,
+                                     excluded.changed_at),
+               added_at = excluded.added_at`,
         [
           event.gameId,
           stream,

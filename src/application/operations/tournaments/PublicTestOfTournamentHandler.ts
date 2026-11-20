@@ -1,33 +1,35 @@
-import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
-import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import { Website } from "../../../domain/common/Website.js";
-import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { NOBODY_IN_GAME } from "./GamesOfTournament.js";
+import type { CompetitionGames, GameKept } from "./competitionGames.js";
+import { NOBODY_IN_GAME, type PlayerInGame } from "./GamesOfTournament.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
-import {
-  type Competitions,
-  competitionOf,
-} from "../competitions/competitionOperations.js";
 import type { WhichSide } from "./PublicKnockoutOfTournament.js";
 import {
   type MatchOfTest,
   PublicTestOfTournament,
   type TestToRead,
 } from "./PublicTestOfTournament.js";
+import type { TournamentCommentaries } from "./tournamentForReaders.js";
 import {
-  competitionOfKindForReaders,
-  competitionsInUse,
-  playersOf,
-  tournamentForReaders,
-  managerNotesChangedOf,
-  type TournamentCommentaries,
-} from "./tournamentForReaders.js";
+  competitionOfPage,
+  managerNotesChangedFor,
+  tournamentOfPage,
+} from "./tournamentOfPage.js";
+import type { TournamentPages } from "./tournamentPages.js";
 import { outcomeOfMatch } from "./outcomeOfMatch.js";
 import { type TournamentAddresses } from "./tournamentOperations.js";
 
+// The points of a score as it was typed, which are the digits it begins with.
+const pointsOf = (typed: string): number => Score.kept(typed, false).points;
+
+/**
+ * A test's page, read of the read models alone: the tournament and the test's
+ * rules and teams (`TournamentPages`) and its games and who played them
+ * (`CompetitionGames`). Its matches are worked out here from the games, since
+ * each depends on the games before it.
+ */
 export class PublicTestOfTournamentHandler extends QueryHandler<
   PublicTestOfTournament,
   TestToRead
@@ -36,9 +38,9 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
     PublicTestOfTournament;
 
   constructor(
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly competitions: Competitions,
     private readonly addresses: TournamentAddresses,
+    private readonly pages: TournamentPages,
+    private readonly games: CompetitionGames,
     private readonly notes: TournamentManagerNotes,
     private readonly changes: TournamentCommentaries,
   ) {
@@ -46,14 +48,15 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
   }
 
   async handle(query: PublicTestOfTournament): Promise<TestToRead> {
-    const tournament = await tournamentForReaders(
-      this.tournaments,
+    const tournament = await tournamentOfPage(
       this.addresses,
-      Website.from(query.website),
+      this.pages,
+      query.website,
       query.address,
       "PublicTestOfTournament",
     );
-    const { reference, shape } = competitionOfKindForReaders(
+    const test = await competitionOfPage(
+      this.pages,
       tournament,
       query.slug,
       "test",
@@ -63,39 +66,53 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
         sentence: "The competition is not a test.",
       },
     );
-    const competition = await competitionOf(this.competitions, reference.id);
-    const games = competition.games.filter((game) => !game.archived);
-    const first = shape.firstTeam.value;
-
-    // The team each team player plays for, archived players among them, since
-    // a game an archived player played still counts for their team.
-    const teamOf = new Map<string, string>();
-    for (const team of tournament.teams) {
-      for (const player of team.players) {
-        teamOf.set(player.id.value, team.id.value);
-      }
+    const gamesKept = await this.games.gamesKept(test.id);
+    const games = gamesKept.games.filter((game) => !game.archived);
+    // A test's teams and rules are kept with it, so one without is one the
+    // read models were made before they were kept.
+    if (test.teams === undefined || test.bestOf === undefined) {
+      throw new Error(
+        `The test ${test.id} has no teams or rules kept: the read models are to be made again.`,
+      );
     }
-    const shown = playersOf(tournament);
-    const nameless = NOBODY_IN_GAME;
-    const nameOf = (player: string): string =>
-      (shown.get(player) ?? nameless).name;
-    const idOf = (player: string): string =>
-      (shown.get(player) ?? nameless).playerId;
+    const first = test.teams.first;
+    const bestOf = test.bestOf;
+
+    // A team player is known by their team: its name stands for what they
+    // represent and its flag is theirs.
+    const shown = (player: string): PlayerInGame => {
+      const who = gamesKept.who.get(player);
+      return who === undefined
+        ? NOBODY_IN_GAME
+        : {
+            playerId: who.playerId,
+            name: who.name,
+            representing: who.teamName,
+            handicap: undefined,
+            flag: who.teamFlag,
+          };
+    };
+    // Players of either team, archived ones among them, since a game an
+    // archived player played still counts for their team.
+    const isFirst = (player: string): boolean =>
+      gamesKept.who.get(player)?.team === first;
     // A team by its names, as they are now.
-    const namesOf = (team: string): { name: string; shortName: string } => {
-      const found = tournament.teams.find((each) => each.id.value === team);
+    const namesOf = async (
+      team: string,
+    ): Promise<{ name: string; shortName: string }> => {
+      const found = await this.pages.team(team);
       return {
-        name: found?.name.toString() ?? "",
-        shortName: found?.shortName.toString() ?? "",
+        name: found?.name ?? "",
+        shortName: found?.shortName ?? "",
       };
     };
 
     const matches = matchesOf(
       games,
-      (player) => teamOf.get(player) === first,
-      nameOf,
-      idOf,
-      shape.bestOf.games,
+      isFirst,
+      (player) => shown(player).name,
+      (player) => shown(player).playerId,
+      bestOf,
     );
     // A match counts for the team whose player won it, once it is decided,
     // its first side always being the first team's.
@@ -106,38 +123,43 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
       second: { matches: won(1), games: 0, hoops: 0 },
     };
     for (const game of games) {
-      const winnerFirst = teamOf.get(game.winner.value) === first;
+      const winnerFirst = isFirst(game.winner);
       const winners = winnerFirst ? tally.first : tally.second;
       const losers = winnerFirst ? tally.second : tally.first;
-      winners.hoops += game.winnerScore.points;
-      losers.hoops += game.loserScore.points;
+      winners.hoops += pointsOf(game.winnerScore);
+      losers.hoops += pointsOf(game.loserScore);
       if (!game.drawn) winners.games += 1;
     }
 
     return {
-      name: tournament.name.toString(),
-      subtitle: tournament.subtitle?.markdown,
-      commentariesChanged: await this.changes.of(tournament.id),
-      managerNotes: await managerNotesChangedOf(this.notes, tournament),
-      address: tournament.address.toString(),
+      name: tournament.name,
+      subtitle: tournament.subtitle,
+      commentariesChanged: await this.changes.of(
+        TournamentId.from(tournament.id),
+      ),
+      managerNotes: await managerNotesChangedFor(this.notes, tournament),
+      address: tournament.address,
       playedByTeams: true,
-      competitions: competitionsInUse(tournament),
+      competitions: tournament.competitions,
       test: {
         teams: [
-          { ...namesOf(first), ...tally.first },
-          { ...namesOf(shape.secondTeam.value), ...tally.second },
+          { ...(await namesOf(first)), ...tally.first },
+          { ...(await namesOf(test.teams.second)), ...tally.second },
         ],
-        bestOf: shape.bestOf.games,
+        bestOf,
       },
       matches,
       games: games.map((game) => ({
-        id: game.id.value,
-        winner: shown.get(game.winner.value) ?? nameless,
-        winnerScore: game.winnerScore.toString(),
-        loser: shown.get(game.loser.value) ?? nameless,
-        loserScore: game.loserScore.toString(),
+        id: game.id,
+        winner: shown(game.winner),
+        winnerScore: game.winnerScore,
+        loser: shown(game.loser),
+        loserScore: game.loserScore,
         drawn: game.drawn,
-        addedAt: game.addedAt,
+        // When it was added, which a correction does not move, as the order
+        // of play is told by it. A game kept before that was held is told by
+        // when it last changed, as a block's games are.
+        addedAt: game.addedAt ?? game.changedAt,
       })),
     };
   }
@@ -150,15 +172,18 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
 // decides it before it refuses another game of it, and won by the side that
 // has won more of it; level, it is shared, and won by neither.
 const matchesOf = (
-  games: readonly Game[],
+  games: readonly GameKept[],
   isFirst: (player: string) => boolean,
   nameOf: (player: string) => string,
   idOf: (player: string) => string,
   bestOf: number,
 ): MatchOfTest[] => {
-  const byPair = new Map<string, { sides: [string, string]; games: Game[] }>();
+  const byPair = new Map<
+    string,
+    { sides: [string, string]; games: GameKept[] }
+  >();
   for (const game of games) {
-    const players = [game.winner.value, game.loser.value];
+    const players = [game.winner, game.loser];
     const [one = "", other = ""] = isFirst(players[0] ?? "")
       ? players
       : [players[1], players[0]];
@@ -179,13 +204,10 @@ const matchesOf = (
       sides: [nameOf(sides[0]), nameOf(sides[1])],
       playerIds: [idOf(sides[0]), idOf(sides[1])],
       games: played.map((game) => {
-        const winner = sideOf(game.winner.value);
-        const scores = [
-          game.winnerScore.toString(),
-          game.loserScore.toString(),
-        ];
+        const winner = sideOf(game.winner);
+        const scores = [game.winnerScore, game.loserScore];
         return {
-          id: game.id.value,
+          id: game.id,
           scores:
             winner === 0 ? [scores[0]!, scores[1]!] : [scores[1]!, scores[0]!],
           winner: game.drawn ? undefined : winner,
