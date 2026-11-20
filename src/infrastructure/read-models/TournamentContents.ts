@@ -299,8 +299,15 @@ export class TournamentContents implements Projection, Asked {
 
   // Each written so that writing it twice leaves what writing it once did,
   // which is what makes projecting the same events again change nothing.
+  // The moment of the event being projected, which is the moment of every
+  // row it changes: the `occurredAt` of the last event that changed a row, and
+  // never when it was written, so that a rebuild gives what the live
+  // projection did.
+  #at = "";
+
   async #project(stream: string, event: DomainEvent): Promise<void> {
     if (!stream.startsWith("tournament/")) return;
+    this.#at = event.occurredAt.toISOString();
     await this.#write(stream, event);
     await this.#rulesWritten(event);
     // What a block is played as changes its places, which are kept
@@ -313,7 +320,11 @@ export class TournamentContents implements Projection, Asked {
       event instanceof SwissAdded ||
       event instanceof SwissUpdated
     ) {
-      await standCompetition(this.unitOfWork.connection(), event.competitionId);
+      await standCompetition(
+        this.unitOfWork.connection(),
+        event.competitionId,
+        this.#at,
+      );
     }
   }
 
@@ -388,10 +399,11 @@ export class TournamentContents implements Projection, Asked {
       await connection.query(
         `insert into tournament_players
            (player_id, tournament_id, name, world_ranking_name, handicap,
-            representing, flag, slug)
-         values ($1, $2, $3, $4, $5, $6, $7, $8)
+            representing, flag, slug, changed_at)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
          on conflict (player_id) do update
-           set name = excluded.name,
+           set changed_at = excluded.changed_at,
+               name = excluded.name,
                world_ranking_name = excluded.world_ranking_name,
                handicap = excluded.handicap,
                representing = excluded.representing,
@@ -407,6 +419,7 @@ export class TournamentContents implements Projection, Asked {
           player.flag === undefined ? null : String(player.flag),
           // Only said when the player is added: updating keeps it.
           event instanceof TournamentPlayerAdded ? event.slug : null,
+          this.#at,
         ],
       );
     } else if (event instanceof TournamentPlayerArchived) {
@@ -419,24 +432,27 @@ export class TournamentContents implements Projection, Asked {
       const team = teamOf(event);
       await connection.query(
         `insert into tournament_teams
-           (team_id, tournament_id, name, short_name, position)
-         values ($1, $2, $3, $4, $5)
+           (team_id, tournament_id, name, short_name, position, changed_at)
+         values ($1, $2, $3, $4, $5, $6)
          on conflict (team_id) do update
-           set name = excluded.name, short_name = excluded.short_name`,
+           set name = excluded.name, short_name = excluded.short_name,
+               changed_at = excluded.changed_at`,
         [
           event.teamId,
           stream,
           team.name.toString(),
           team.shortName.toString(),
           event instanceof TeamAdded ? event.order : ORDER_STEP,
+          this.#at,
         ],
       );
       if (event instanceof TeamUpdated) await this.#renameTestsOf(event.teamId);
     } else if (event instanceof TeamArchived) {
       await connection.query(
-        `update tournament_teams set archived = true, position = $2
+        `update tournament_teams
+            set archived = true, position = $2, changed_at = $3
           where team_id = $1`,
-        [event.teamId, event.order],
+        [event.teamId, event.order, this.#at],
       );
     } else if (event instanceof TeamRestored) {
       await this.#setArchived("tournament_teams", event.teamId, false);
@@ -453,11 +469,12 @@ export class TournamentContents implements Projection, Asked {
       await connection.query(
         `insert into tournament_team_players
            (player_id, team_id, tournament_id, name, world_ranking_name,
-            position)
-         values ($1, $2, $3, $4, $5, $6)
+            position, changed_at)
+         values ($1, $2, $3, $4, $5, $6, $7)
          on conflict (player_id) do update
            set name = excluded.name,
-               world_ranking_name = excluded.world_ranking_name`,
+               world_ranking_name = excluded.world_ranking_name,
+               changed_at = excluded.changed_at`,
         [
           event.playerId,
           event.teamId,
@@ -465,13 +482,15 @@ export class TournamentContents implements Projection, Asked {
           name,
           player.worldRankingName?.toString() ?? name,
           event instanceof TeamPlayerAdded ? event.order : ORDER_STEP,
+          this.#at,
         ],
       );
     } else if (event instanceof TeamPlayerArchived) {
       await connection.query(
-        `update tournament_team_players set archived = true, position = $2
+        `update tournament_team_players
+            set archived = true, position = $2, changed_at = $3
           where player_id = $1`,
-        [event.playerId, event.order],
+        [event.playerId, event.order, this.#at],
       );
     } else if (event instanceof TeamPlayerRestored) {
       await this.#setArchived("tournament_team_players", event.playerId, false);
@@ -649,10 +668,10 @@ export class TournamentContents implements Projection, Asked {
     const key = table === "tournament_teams" ? "team_id" : "player_id";
     await this.unitOfWork
       .connection()
-      .query(`update ${table} set archived = $2 where ${key} = $1`, [
-        id,
-        archived,
-      ]);
+      .query(
+        `update ${table} set archived = $2, changed_at = $3 where ${key} = $1`,
+        [id, archived, this.#at],
+      );
   }
 
   async #setPosition(
@@ -664,12 +683,15 @@ export class TournamentContents implements Projection, Asked {
       ? "team_id"
       : "player_id",
   ): Promise<void> {
+    // The table of competitions keeps its moment in `Tournaments`, which
+    // moves it for every event of the tournament.
+    const moment = table === "competitions" ? "" : ", changed_at = $3";
     await this.unitOfWork
       .connection()
-      .query(`update ${table} set position = $2 where ${key} = $1`, [
-        id,
-        position,
-      ]);
+      .query(
+        `update ${table} set position = $2${moment} where ${key} = $1`,
+        table === "competitions" ? [id, position] : [id, position, this.#at],
+      );
   }
 
   // Every one is given the place its place in the list says, a step apart.

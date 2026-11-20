@@ -81,10 +81,7 @@ export class CompetitionGames implements Projection, Asked {
     _firstEvent: number,
     events: readonly DomainEvent[],
   ): Promise<void> {
-    await this.#projectAll(
-      stream.value,
-      events.map((event) => event),
-    );
+    await this.#projectAll(stream.value, events);
   }
 
   /** Empties its tables, so that every stream can be handed to it again. */
@@ -228,8 +225,13 @@ export class CompetitionGames implements Projection, Asked {
   ): Promise<void> {
     if (!stream.startsWith("competition/")) return;
     for (const event of events) await this.#write(stream, event);
-    if (events.some(changesStandings)) {
-      await standCompetition(this.unitOfWork.connection(), stream);
+    const [last] = events.filter(changesStandings).slice(-1);
+    if (last !== undefined) {
+      await standCompetition(
+        this.unitOfWork.connection(),
+        stream,
+        last.occurredAt.toISOString(),
+      );
     }
   }
 
@@ -237,36 +239,42 @@ export class CompetitionGames implements Projection, Asked {
   // which is what makes projecting the same events again change nothing.
   async #write(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
+    // The moment of every row this event changes: the `occurredAt` of the last
+    // event that changed it, and never when it was written.
+    const at = event.occurredAt.toISOString();
 
     // Its players and byes --------------------------------------------------
     if (event instanceof CompetitionPlayerEntered) {
       if (event.playerId === bye) {
         await connection.query(
-          `insert into competition_byes (competition_id, position)
-           values ($1, $2) on conflict do nothing`,
-          [stream, event.order],
+          `insert into competition_byes (competition_id, position, changed_at)
+           values ($1, $2, $3) on conflict do nothing`,
+          [stream, event.order, at],
         );
       } else {
         await connection.query(
           `insert into competition_entries
-             (entry_id, competition_id, tournament_player_id, position)
-           values ($1, $2, $3, $4)
+             (entry_id, competition_id, tournament_player_id, position,
+              changed_at)
+           values ($1, $2, $3, $4, $5)
            on conflict (entry_id) do update
              set tournament_player_id = excluded.tournament_player_id,
-                 position = excluded.position`,
-          [event.playerId, stream, event.tournamentPlayerId, event.order],
+                 position = excluded.position,
+                 changed_at = excluded.changed_at`,
+          [event.playerId, stream, event.tournamentPlayerId, event.order, at],
         );
       }
     } else if (event instanceof CompetitionPlayerMoved) {
       await connection.query(
-        `update competition_entries set position = $2 where entry_id = $1`,
-        [event.playerId, event.order],
+        `update competition_entries set position = $2, changed_at = $3
+          where entry_id = $1`,
+        [event.playerId, event.order, at],
       );
     } else if (event instanceof CompetitionByeMoved) {
       await connection.query(
-        `update competition_byes set position = $3
+        `update competition_byes set position = $3, changed_at = $4
           where competition_id = $1 and position = $2`,
-        [stream, event.fromOrder, event.order],
+        [stream, event.fromOrder, event.order, at],
       );
     } else if (event instanceof CompetitionByeRemoved) {
       await connection.query(
@@ -283,8 +291,9 @@ export class CompetitionGames implements Projection, Asked {
         if (id === bye) byes.push(order);
         else {
           await connection.query(
-            `update competition_entries set position = $2 where entry_id = $1`,
-            [id, order],
+            `update competition_entries set position = $2, changed_at = $3
+              where entry_id = $1`,
+            [id, order, at],
           );
         }
       }
@@ -294,22 +303,23 @@ export class CompetitionGames implements Projection, Asked {
       );
       for (const order of byes) {
         await connection.query(
-          `insert into competition_byes (competition_id, position)
-           values ($1, $2)`,
-          [stream, order],
+          `insert into competition_byes (competition_id, position, changed_at)
+           values ($1, $2, $3)`,
+          [stream, order, at],
         );
       }
     } else if (event instanceof CompetitionPlayerWithdrawn) {
       await connection.query(
-        `update competition_entries set withdrawn = true, position = $2
+        `update competition_entries
+            set withdrawn = true, position = $2, changed_at = $3
           where entry_id = $1`,
-        [event.playerId, event.order],
+        [event.playerId, event.order, at],
       );
     } else if (event instanceof CompetitionPlayerWithdrawalReversed) {
       await connection.query(
-        `update competition_entries set withdrawn = false
+        `update competition_entries set withdrawn = false, changed_at = $2
           where entry_id = $1`,
-        [event.playerId],
+        [event.playerId, at],
       );
     } else if (event instanceof CompetitionPlayerCarryForwardChanged) {
       // Every count the event says, and nothing where it says none, since it
@@ -319,7 +329,8 @@ export class CompetitionGames implements Projection, Asked {
         `update competition_entries
             set carry_match_wins = $2, carry_match_losses = $3,
                 carry_game_wins = $4, carry_game_losses = $5,
-                carry_hoops_for = $6, carry_hoops_against = $7
+                carry_hoops_for = $6, carry_hoops_against = $7,
+                changed_at = $8
           where entry_id = $1`,
         [
           event.playerId,
@@ -329,6 +340,7 @@ export class CompetitionGames implements Projection, Asked {
           counts.gameLosses ?? null,
           counts.hoopsFor ?? null,
           counts.hoopsAgainst ?? null,
+          at,
         ],
       );
     } else if (event instanceof CompetitionPlayerRemoved) {

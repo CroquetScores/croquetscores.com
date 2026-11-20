@@ -42,10 +42,14 @@ const nothingKept = async (
  *
  * Done afresh each time, from the rows as they are, so that it does not matter
  * which stream a rebuild reads first, and doing it twice does what once did.
+ * `at` is the `occurredAt` of the last event that could change them: a line
+ * that comes out as it was is kept as it was, with its moment, so that a
+ * moment moves only when an event changes that line.
  */
 export const standCompetition = async (
   connection: PoolClient,
   competition: string,
+  at: string,
 ): Promise<void> => {
   const shape = await connection.query<{
     kind: string | null;
@@ -138,6 +142,42 @@ export const standCompetition = async (
     stood = standSwiss(toStand, played);
   }
 
+  const before = await connection.query<{
+    entry_id: string;
+    rank: number;
+    played: number;
+    won: number;
+    lost: number | null;
+    games_won: number | null;
+    net_games: number | null;
+    net_hoops: number;
+    withdrawn: boolean;
+    place: number | null;
+    shared: boolean;
+    changed_at: Date | null;
+  }>(
+    `select entry_id, rank, played, won, lost, games_won, net_games, net_hoops,
+            withdrawn, place, shared, changed_at
+       from competition_standings where competition_id = $1`,
+    [competition],
+  );
+  const was = new Map(before.rows.map((each) => [each.entry_id, each]));
+  const momentOf = (each: StandingsToKeep["standings"][number]): string => {
+    const old = was.get(each.entryId);
+    const same =
+      old !== undefined &&
+      old.rank === each.rank &&
+      old.played === each.played &&
+      old.won === each.won &&
+      old.lost === (each.lost ?? null) &&
+      old.games_won === (each.gamesWon ?? null) &&
+      old.net_games === (each.netGames ?? null) &&
+      old.net_hoops === each.netHoops &&
+      old.withdrawn === each.withdrawn &&
+      old.place === (each.place ?? null) &&
+      old.shared === each.shared;
+    return same && old.changed_at !== null ? old.changed_at.toISOString() : at;
+  };
   await connection.query(
     `delete from competition_standings where competition_id = $1`,
     [competition],
@@ -148,14 +188,14 @@ export const standCompetition = async (
     await connection.query(
       `insert into competition_standings
          (entry_id, competition_id, rank, played, won, lost, games_won,
-          net_games, net_hoops, withdrawn, place, shared)
+          net_games, net_hoops, withdrawn, place, shared, changed_at)
        select entry_id, $1, rank, played, won, lost, games_won, net_games,
-              net_hoops, withdrawn, place, shared
+              net_hoops, withdrawn, place, shared, changed_at
          from unnest($2::text[], $3::int[], $4::int[], $5::int[], $6::int[],
                      $7::int[], $8::int[], $9::int[], $10::boolean[],
-                     $11::int[], $12::boolean[])
+                     $11::int[], $12::boolean[], $13::timestamptz[])
               as t(entry_id, rank, played, won, lost, games_won, net_games,
-                   net_hoops, withdrawn, place, shared)`,
+                   net_hoops, withdrawn, place, shared, changed_at)`,
       [
         competition,
         lines.map((each) => each.entryId),
@@ -169,6 +209,7 @@ export const standCompetition = async (
         lines.map((each) => each.withdrawn),
         lines.map((each) => each.place ?? null),
         lines.map((each) => each.shared),
+        lines.map(momentOf),
       ],
     );
   }

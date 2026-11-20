@@ -252,16 +252,31 @@ export class TournamentsByAccount implements Projection, Asked {
   // has a part in one.
   async #project(tournament: string, event: DomainEvent): Promise<void> {
     if (event instanceof TournamentCreated) {
-      await this.#takesPart(tournament, event.createdBy.value, "manager");
+      await this.#takesPart(
+        tournament,
+        event.createdBy.value,
+        "manager",
+        event.occurredAt,
+      );
     } else if (event instanceof ManagerAdded) {
       // A scorer made a manager stops being a scorer, as the tournament has
       // it, and nothing records that separately: so this takes the place of
       // whatever part the account had.
-      await this.#takesPart(tournament, event.account, "manager");
+      await this.#takesPart(
+        tournament,
+        event.account,
+        "manager",
+        event.occurredAt,
+      );
     } else if (event instanceof ManagerRemoved) {
       await this.#takesNoPart(tournament, event.account, "manager");
     } else if (event instanceof ScorerAdded) {
-      await this.#takesPart(tournament, event.account, "scorer");
+      await this.#takesPart(
+        tournament,
+        event.account,
+        "scorer",
+        event.occurredAt,
+      );
     } else if (event instanceof ScorerRemoved) {
       await this.#takesNoPart(tournament, event.account, "scorer");
     }
@@ -271,12 +286,22 @@ export class TournamentsByAccount implements Projection, Asked {
     tournament: string,
     account: string,
     part: "manager" | "scorer",
+    at: { toISOString(): string },
   ): Promise<void> {
     await this.unitOfWork.connection().query(
-      `insert into tournaments_by_account (tournament_id, account_id, part)
-       values ($1, $2, $3)
-       on conflict (tournament_id, account_id) do update set part = excluded.part`,
-      [tournament, account, part],
+      `insert into tournaments_by_account
+         (tournament_id, account_id, part, changed_at)
+       values ($1, $2, $3, $4)
+       -- Only a change of part is a change of the row.
+       on conflict (tournament_id, account_id) do update
+         set part = excluded.part,
+             changed_at = case
+               when tournaments_by_account.part <> excluded.part
+                 then excluded.changed_at
+               else coalesce(tournaments_by_account.changed_at,
+                             excluded.changed_at)
+             end`,
+      [tournament, account, part, at.toISOString()],
     );
   }
 

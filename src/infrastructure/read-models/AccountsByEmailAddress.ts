@@ -204,7 +204,19 @@ export class AccountsByEmailAddress implements Projection {
     let forgotten = false;
     let confirmed = false;
     let movedTo: string | undefined;
+    // When the last of the events that changed the row was, which is what the
+    // row's moment is, so that a rebuild gives what the live projection did.
+    let changedAt: string | undefined;
     for (const { event } of events) {
+      if (
+        event instanceof AccountRegistered ||
+        event instanceof AccountBroughtOver ||
+        event instanceof EmailAddressChanged ||
+        event instanceof EmailAddressConfirmed ||
+        event instanceof AccountForgotten
+      ) {
+        changedAt = event.occurredAt.toISOString();
+      }
       if (event instanceof AccountForgotten) forgotten = true;
       if (
         event instanceof EmailAddressConfirmed ||
@@ -225,10 +237,16 @@ export class AccountsByEmailAddress implements Projection {
       }
       await this.unitOfWork.connection().query(
         `insert into accounts_by_email_address
-           (account_id, email_address_hash, forgotten, confirmed)
-         values ($1, $2, $3, $4)
+           (account_id, email_address_hash, forgotten, confirmed, changed_at)
+         values ($1, $2, $3, $4, $5)
          on conflict (account_id) do nothing`,
-        [stream, movedTo ?? event.emailAddressHash, forgotten, confirmed],
+        [
+          stream,
+          movedTo ?? event.emailAddressHash,
+          forgotten,
+          confirmed,
+          changedAt,
+        ],
       );
     }
   }
@@ -246,10 +264,19 @@ export class AccountsByEmailAddress implements Projection {
         // Brought over is confirmed, as every account on the old site was.
         await connection.query(
           `insert into accounts_by_email_address
-             (account_id, email_address_hash, confirmed)
-           values ($1, $2, $3)
-           on conflict (account_id) do nothing`,
-          [stream, event.emailAddressHash, event instanceof AccountBroughtOver],
+             (account_id, email_address_hash, confirmed, changed_at)
+           values ($1, $2, $3, $4)
+           -- A row reserved before the event is projected has no moment yet,
+           -- and the event gives it its own.
+           on conflict (account_id) do update
+             set changed_at = coalesce(accounts_by_email_address.changed_at,
+                                       excluded.changed_at)`,
+          [
+            stream,
+            event.emailAddressHash,
+            event instanceof AccountBroughtOver,
+            event.occurredAt.toISOString(),
+          ],
         );
       } catch (failure) {
         if (isTheAddressTaken(failure)) {
@@ -266,9 +293,10 @@ export class AccountsByEmailAddress implements Projection {
       // move and a registering sent at once giving one address to two.
       try {
         await connection.query(
-          `update accounts_by_email_address set email_address_hash = $2
+          `update accounts_by_email_address
+              set email_address_hash = $2, changed_at = $3
             where account_id = $1`,
-          [stream, event.emailAddressHash],
+          [stream, event.emailAddressHash, event.occurredAt.toISOString()],
         );
       } catch (failure) {
         if (isTheAddressTaken(failure)) {
@@ -281,15 +309,17 @@ export class AccountsByEmailAddress implements Projection {
       }
     } else if (event instanceof EmailAddressConfirmed) {
       await connection.query(
-        `update accounts_by_email_address set confirmed = true
+        `update accounts_by_email_address
+            set confirmed = true, changed_at = $2
           where account_id = $1`,
-        [stream],
+        [stream, event.occurredAt.toISOString()],
       );
     } else if (event instanceof AccountForgotten) {
       await connection.query(
-        `update accounts_by_email_address set forgotten = true
+        `update accounts_by_email_address
+            set forgotten = true, changed_at = $2
           where account_id = $1`,
-        [stream],
+        [stream, event.occurredAt.toISOString()],
       );
     }
   }

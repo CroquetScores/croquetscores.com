@@ -37,10 +37,10 @@ export class AccountsByRole implements Projection, Finding {
     for (const event of events) {
       if (event instanceof RoleAdded) {
         await connection.query(
-          `insert into accounts_by_role (account_id, role)
-           values ($1, $2)
+          `insert into accounts_by_role (account_id, role, changed_at)
+           values ($1, $2, $3)
            on conflict do nothing`,
-          [stream, event.role],
+          [stream, event.role, event.occurredAt.toISOString()],
         );
       } else if (event instanceof RoleRemoved) {
         await connection.query(

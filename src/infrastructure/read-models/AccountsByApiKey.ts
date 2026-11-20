@@ -38,10 +38,11 @@ export class AccountsByApiKey implements Projection, FindsApiKeys {
     for (const event of events) {
       if (event instanceof ApiKeyCreated) {
         await connection.query(
-          `insert into accounts_by_api_key (key_hash, key_id, account_id)
-           values ($1, $2, $3)
+          `insert into accounts_by_api_key
+             (key_hash, key_id, account_id, changed_at)
+           values ($1, $2, $3, $4)
            on conflict (key_hash) do nothing`,
-          [event.keyHash, event.keyId, stream],
+          [event.keyHash, event.keyId, stream, event.occurredAt.toISOString()],
         );
       } else if (event instanceof ApiKeyRevoked) {
         await connection.query(

@@ -144,7 +144,16 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
           ? await this.standings.standingsKept(reference.id.value)
           : undefined;
       const winnerOfBlock = (): string => {
-        const [first] = kept?.standings ?? [];
+        // An entry whose tournament player is not known is left out, as the
+        // block's page leaves it out, so the two name the same winner.
+        const [first] = (kept?.standings ?? []).filter((each) => {
+          const entered = competition.players.find(
+            (player) => player.id.value === each.entryId,
+          );
+          return (
+            entered !== undefined && known.has(entered.tournamentPlayerId.value)
+          );
+        });
         return first?.place === 1 && !first.shared ? nameOf(first.entryId) : "";
       };
       const results: ResultOfRanking[] = [];

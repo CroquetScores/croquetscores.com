@@ -42,11 +42,13 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
       // at once could each have decided without seeing the other, is refused
       // by the key, and the whole append with it.
       await connection.query(
-        `insert into tournaments_by_address (address, tournament_id)
-         values ($1, $2)
+        `insert into tournaments_by_address
+           (address, tournament_id, changed_at)
+         values ($1, $2, $3)
+         -- Said again, the address is held as it was, so its moment is too.
          on conflict (address) do update set address = excluded.address
            where tournaments_by_address.tournament_id = excluded.tournament_id`,
-        [event.address, stream],
+        [event.address, stream, event.occurredAt.toISOString()],
       );
       const { rows } = await connection.query<{ tournament_id: string }>(
         `select tournament_id from tournaments_by_address where address = $1`,

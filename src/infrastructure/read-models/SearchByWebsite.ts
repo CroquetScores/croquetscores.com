@@ -351,17 +351,19 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       // held once, for every read model (Tournaments.feature).
       await connection.query(
         `insert into search_by_website_tournament_names
-           (tournament_id, folded_name)
-         values ($1, $2)
+           (tournament_id, folded_name, changed_at)
+         values ($1, $2, $3)
          on conflict (tournament_id) do update
-           set folded_name = excluded.folded_name`,
-        [stream, foldedForSearch(event.name)],
+           set folded_name = excluded.folded_name,
+               changed_at = excluded.changed_at`,
+        [stream, foldedForSearch(event.name), event.occurredAt.toISOString()],
       );
     } else if (event instanceof TournamentUpdated) {
       await connection.query(
-        `update search_by_website_tournament_names set folded_name = $2
+        `update search_by_website_tournament_names
+            set folded_name = $2, changed_at = $3
           where tournament_id = $1`,
-        [stream, foldedForSearch(event.name)],
+        [stream, foldedForSearch(event.name), event.occurredAt.toISOString()],
       );
     } else if (
       event instanceof BlockAdded ||
@@ -372,16 +374,17 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       // with the competition (Tournaments.feature).
       await connection.query(
         `insert into search_by_website_competitions
-           (competition_id, name, folded_name, slug)
-         values ($1, $2, $3, $4)
+           (competition_id, name, folded_name, slug, changed_at)
+         values ($1, $2, $3, $4, $5)
          on conflict (competition_id) do update
            set name = excluded.name, folded_name = excluded.folded_name,
-               slug = excluded.slug`,
+               slug = excluded.slug, changed_at = excluded.changed_at`,
         [
           event.competitionId,
           event.name,
           foldedForSearch(event.name),
           event.slug,
+          event.occurredAt.toISOString(),
         ],
       );
     } else if (
@@ -391,9 +394,14 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     ) {
       await connection.query(
         `update search_by_website_competitions
-            set name = $2, folded_name = $3
+            set name = $2, folded_name = $3, changed_at = $4
           where competition_id = $1`,
-        [event.competitionId, event.name, foldedForSearch(event.name)],
+        [
+          event.competitionId,
+          event.name,
+          foldedForSearch(event.name),
+          event.occurredAt.toISOString(),
+        ],
       );
     } else if (
       event instanceof CompetitionArchived &&
@@ -404,28 +412,38 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       // archived, but found by this name after.
       await connection.query(
         `update search_by_website_competitions
-            set name = $2, folded_name = $3
+            set name = $2, folded_name = $3, changed_at = $4
           where competition_id = $1`,
-        [event.competitionId, event.name, foldedForSearch(event.name)],
+        [
+          event.competitionId,
+          event.name,
+          foldedForSearch(event.name),
+          event.occurredAt.toISOString(),
+        ],
       );
     } else if (event instanceof TeamAdded) {
       // Kept as it is, since a team added is not one archived again by
       // projecting its adding a second time.
       await connection.query(
-        `insert into search_by_website_teams (team_id) values ($1)
+        `insert into search_by_website_teams (team_id, changed_at)
+         values ($1, $2)
          on conflict (team_id) do nothing`,
-        [event.teamId],
+        [event.teamId, event.occurredAt.toISOString()],
       );
     } else if (event instanceof TeamArchived) {
-      await this.#archived("search_by_website_teams", "team_id", [
-        event.teamId,
-        true,
-      ]);
+      await this.#archived(
+        "search_by_website_teams",
+        "team_id",
+        [event.teamId, true],
+        event.occurredAt.toISOString(),
+      );
     } else if (event instanceof TeamRestored) {
-      await this.#archived("search_by_website_teams", "team_id", [
-        event.teamId,
-        false,
-      ]);
+      await this.#archived(
+        "search_by_website_teams",
+        "team_id",
+        [event.teamId, false],
+        event.occurredAt.toISOString(),
+      );
     } else if (event instanceof TeamPlayerAdded) {
       await this.#playerKept(
         stream,
@@ -435,6 +453,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         event.teamId,
         event.slug,
         undefined,
+        event.occurredAt.toISOString(),
       );
     } else if (event instanceof TournamentPlayerAdded) {
       await this.#playerKept(
@@ -445,6 +464,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         undefined,
         event.slug,
         event.representing,
+        event.occurredAt.toISOString(),
       );
     } else if (
       event instanceof TournamentPlayerUpdated ||
@@ -460,23 +480,28 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         event instanceof TournamentPlayerUpdated
           ? event.representing
           : undefined,
+        event.occurredAt.toISOString(),
       );
     } else if (
       event instanceof TournamentPlayerArchived ||
       event instanceof TeamPlayerArchived
     ) {
-      await this.#archived("search_by_website_players", "player_id", [
-        event.playerId,
-        true,
-      ]);
+      await this.#archived(
+        "search_by_website_players",
+        "player_id",
+        [event.playerId, true],
+        event.occurredAt.toISOString(),
+      );
     } else if (
       event instanceof TournamentPlayerRestored ||
       event instanceof TeamPlayerRestored
     ) {
-      await this.#archived("search_by_website_players", "player_id", [
-        event.playerId,
-        false,
-      ]);
+      await this.#archived(
+        "search_by_website_players",
+        "player_id",
+        [event.playerId, false],
+        event.occurredAt.toISOString(),
+      );
     }
   }
 
@@ -490,6 +515,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     team: string | undefined,
     slug: string | undefined,
     representing: string | undefined,
+    at: string,
   ): Promise<void> {
     // A blank one is none, as the domain reads it.
     const known =
@@ -499,14 +525,15 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     await this.unitOfWork.connection().query(
       `insert into search_by_website_players
          (player_id, tournament_id, team_id, name, world_ranking_name,
-          folded_name, person, slug, representing)
-       values ($1, $2, $7, $3, $4, $5, $6, $8, $9)
+          folded_name, person, slug, representing, changed_at)
+       values ($1, $2, $7, $3, $4, $5, $6, $8, $9, $10)
        on conflict (player_id) do update
          set name = excluded.name,
              world_ranking_name = excluded.world_ranking_name,
              folded_name = excluded.folded_name,
              person = excluded.person,
              representing = excluded.representing,
+             changed_at = excluded.changed_at,
              -- A player keeps the slug they were given when their name is
              -- corrected, which an update does not say.
              slug = case when excluded.slug <> '' then excluded.slug
@@ -523,6 +550,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         representing === undefined || representing.trim() === ""
           ? null
           : representing.trim(),
+        at,
       ],
     );
   }
@@ -557,12 +585,13 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     table: string,
     key: string,
     [id, archived]: readonly [string, boolean],
+    at: string,
   ): Promise<void> {
     await this.unitOfWork
       .connection()
-      .query(`update ${table} set archived = $2 where ${key} = $1`, [
-        id,
-        archived,
-      ]);
+      .query(
+        `update ${table} set archived = $2, changed_at = $3 where ${key} = $1`,
+        [id, archived, at],
+      );
   }
 }
