@@ -1,6 +1,6 @@
 // "npm run db:restore -- <database name> <dump file>". Makes a database of
-// that name on the Postgres DATABASE_URL names, gives it the website's tables,
-// and puts into them the data of a file the backup (npm run db:backup) wrote
+// that name on the Postgres DATABASE_URL names and puts into it a file the
+// backup (npm run db:backup) wrote, without making any tables of its own
 // (restoreCli.feature). Refuses a name that is already a database. Run under
 // tsx, as the package script does, since the application is TypeScript.
 import {

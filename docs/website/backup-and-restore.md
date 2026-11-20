@@ -194,8 +194,8 @@ What you need: a file of the folder (the newest, unless it is the newest that is
    for example `npm run db:restore -- croquetscores-restore C:\DatabaseBackups\CroquetScores.Postgres\2026-10-15-21-40-20.dump`. It
 
    - makes the database on the Postgres `DATABASE_URL` names, as the user and with the password that gives, and **refuses, and does nothing, if a database of that name is already there**: it only ever makes one;
-   - gives it the website's tables, by running the migrations, since the file holds the data of two tables and not the tables of the rest of the website;
-   - has `pg_restore` put the file's data into them, finding it beside the `pg_dump` that `PG_DUMP_PATH` names, or by the name `pg_restore` where that is blank;
+   - makes no tables of its own and runs no migrations: the database comes to hold the two tables in the file, `events` and `account_keys`, and nothing else;
+   - has `pg_restore` put those tables and their data into it, finding it beside the `pg_dump` that `PG_DUMP_PATH` names, or by the name `pg_restore` where that is blank;
    - and if any of that fails, **drops the database it made** and says why, so that the same name can be tried again. It never drops one it did not make.
 
    `DATABASE_URL` is only where the Postgres is: the database it names is not touched.

@@ -1,7 +1,6 @@
 import { stat } from "node:fs/promises";
 import type { Pool } from "pg";
 
-import { migrate } from "../database/migrate.js";
 import { createPool } from "../database/pool.js";
 import { pgRestoreProgramFor } from "./pgRestore.js";
 import { withoutAddress } from "./withoutAddress.js";
@@ -28,9 +27,9 @@ export interface RestoreSettings {
 export interface RestoreWorld {
   readonly settings: RestoreSettings;
   /**
-   * Puts the data of `file` into the database at `address`, which has the
-   * website's tables. Throws, with what went wrong as its message, where it
-   * could not (pgRestore.feature).
+   * Puts the tables and data of `file` into the empty database at `address`.
+   * Throws, with what went wrong as its message, where it could not
+   * (pgRestore.feature).
    */
   readonly restore: (request: {
     readonly address: string;
@@ -65,9 +64,9 @@ const withDatabase = (address: string, database: string): string => {
 
 /**
  * The script's work, with the arguments as the command line gives them
- * (restoreCli.feature): makes a database of the name, gives it the website's
- * tables, and puts the file's data into them. Never into a database that was
- * there, and where it fails the one it made is dropped.
+ * (restoreCli.feature): makes a database of the name and puts the file into
+ * it. Never into a database that was there, and where it fails the one it
+ * made is dropped.
  */
 export const runRestore = async (
   args: readonly string[],
@@ -97,7 +96,6 @@ export const runRestore = async (
   }
 
   let server: Pool | undefined;
-  let made: Pool | undefined;
   let created = false;
   try {
     // The server's own database, which is there whatever else is, since the
@@ -119,13 +117,8 @@ export const runRestore = async (
     say(`Database '${name}' was created`);
     const address = withDatabase(databaseUrl, name);
 
-    made = createPool(address);
-    const applied = await migrate(made);
-    say(`The tables were made: ${String(applied.length)} migrations.`);
-    // Let go of it before pg_restore connects, and so that it can be dropped.
-    await made.end();
-    made = undefined;
-
+    // No tables are made here: pg_restore makes the file's two, and a schema
+    // made here as well could only disagree with the one the file carries.
     // Said before it begins, since the import is the part that takes a while,
     // and a script that is silent that long cannot be told from one that has
     // stopped. By the file's own name, and not the whole of where it is.
@@ -147,10 +140,6 @@ export const runRestore = async (
     );
     if (created && server !== undefined) {
       try {
-        if (made !== undefined) {
-          await made.end();
-          made = undefined;
-        }
         // Only the one it made, which it knows it did since it found none of
         // the name before it began.
         await server.query(`drop database if exists "${name}" with (force)`);
@@ -163,7 +152,6 @@ export const runRestore = async (
     }
     return { exitCode: 1 };
   } finally {
-    await made?.end().catch(() => undefined);
     await server?.end().catch(() => undefined);
   }
 };
