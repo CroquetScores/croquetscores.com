@@ -24,6 +24,7 @@ const READ_MODEL_TABLES = [
   "competition_byes",
   "competition_games",
   "competition_standings",
+  "competition_standings_kept",
   "manager_notes_by_tournament",
   "commentaries_by_tournament",
   "commentary_comments",

@@ -88,7 +88,7 @@ export class CompetitionGames implements Projection, Asked {
   async clear(): Promise<void> {
     await this.unitOfWork.connection().query(
       `truncate competition_entries, competition_byes, competition_games,
-                  competition_standings`,
+                  competition_standings, competition_standings_kept`,
     );
   }
 

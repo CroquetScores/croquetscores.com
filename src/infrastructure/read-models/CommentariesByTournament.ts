@@ -130,7 +130,8 @@ export class CommentariesByTournament
           -- stream a rebuild took first.
           and not exists (
                 select 1 from accounts_by_email_address a
-                 where a.account_id = c.writer_id and a.forgotten)
+                 where a.account_id = c.writer_id
+                   and a.email_address_hash is null)
         order by started_at desc, commentary_id`,
       [tournament.value],
     );
@@ -192,10 +193,10 @@ export class CommentariesByTournament
     const comments = await connection.query<{
       comment_id: string;
       text: string;
-      written_at: Date;
-      last_edited_at: Date | null;
+      created_at: Date;
+      changed_at: Date;
     }>(
-      `select comment_id, text, written_at, last_edited_at
+      `select comment_id, text, created_at, changed_at
          from commentary_comments
         where commentary_id = $1
         order by position`,
@@ -209,11 +210,13 @@ export class CommentariesByTournament
       comments: comments.rows.map((comment) => ({
         id: comment.comment_id,
         text: comment.text,
-        writtenAt: ReadOnlyDate.from(comment.written_at),
+        writtenAt: ReadOnlyDate.from(comment.created_at),
+        // A comment changes only by being edited, so one that has changed
+        // since it was made was edited then.
         lastEditedAt:
-          comment.last_edited_at === null
-            ? undefined
-            : ReadOnlyDate.from(comment.last_edited_at),
+          comment.changed_at > comment.created_at
+            ? ReadOnlyDate.from(comment.changed_at)
+            : undefined,
       })),
     };
   }
@@ -304,7 +307,7 @@ export class CommentariesByTournament
     if (event instanceof CommentaryCommentAdded) {
       await connection.query(
         `insert into commentary_comments
-                (commentary_id, comment_id, text, written_at, changed_at)
+                (commentary_id, comment_id, text, created_at, changed_at)
          values ($1, $2, $3, $4, $4)
          on conflict (commentary_id, comment_id) do nothing`,
         [stream, event.commentId, event.text, event.occurredAt.toDate()],
@@ -312,7 +315,7 @@ export class CommentariesByTournament
     } else if (event instanceof CommentaryCommentEdited) {
       await connection.query(
         `update commentary_comments
-            set text = $3, last_edited_at = $4, changed_at = $4
+            set text = $3, changed_at = $4
           where commentary_id = $1 and comment_id = $2`,
         [stream, event.commentId, event.text, event.occurredAt.toDate()],
       );

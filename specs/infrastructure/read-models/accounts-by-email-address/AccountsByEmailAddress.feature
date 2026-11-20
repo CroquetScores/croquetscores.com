@@ -13,16 +13,15 @@ Feature: Finding an account by its email address
   without the key: a plain hash of an address can be matched by hashing
   guesses, and would tell them which addresses have accounts.
 
-  An account that is forgotten keeps its row, marked as forgotten when its
-  forgetting is projected, and a row so marked is never found: the account is
+  An account that is forgotten keeps its row, with no address once its
+  forgetting is projected, and a row with none is never found: the account is
   not to be found by its old address, and the address is free to be
   registered again as a new account, with a row of its own. No row is ever
-  deleted.
+  deleted, and nothing in the table says that an account is forgotten but its
+  having no address: that it was is the account's key's to say.
 
-  An address has one account at a time. Forgotten accounts keep their rows, so
-  the table cannot hold each hash once; it holds each hash once among the rows
-  not marked forgotten, and a second is refused with
-  `AccountsByEmailAddress.AddressTaken`. That is what stops two registrations
+  An address has one account at a time: the table holds each hash once, and a
+  second is refused with `AccountsByEmailAddress.AddressTaken`. That is what stops two registrations
   of one new address, sent at the same moment, from each looking, finding
   nothing, and each making an account: the projection runs in the transaction
   of the append that registers, so the second append is refused with it, and
@@ -32,11 +31,11 @@ Feature: Finding an account by its email address
   that says so, beside the address encrypted with the account's own key. The
   projection takes it from there rather than making it, so that rebuilding
   the read model needs no account's key: a forgotten account's key is gone,
-  and its address can no longer be read to be hashed. The cost is that the
-  hash outlives forgetting, in the table and in the event, so whoever holds
-  the site's hash key and guesses a forgotten account's address can tell that
-  it was that account's. That is accepted: it tells them an address they
-  already had, and nothing else about the person.
+  and its address can no longer be read to be hashed. The hash outlives
+  forgetting in the event, so whoever holds the site's hash key and guesses a
+  forgotten account's address can tell from the events that it was that
+  account's. That is accepted: it tells them an address they already had, and
+  nothing else about the person. The table gives it up with the account.
 
   Rebuilding is a deliberate act rather than a background one, and an
   infrastructure task rather than an application one, as SETUP.md §5 says of
@@ -123,6 +122,11 @@ Feature: Finding an account by its email address
       Given an account for "someone@example.com" is registered
       When the account for "someone@example.com" is forgotten
       Then the read model holds 1 row
+
+    Scenario: A forgotten account's row holds no address
+      Given an account for "someone@example.com" is registered
+      When the account for "someone@example.com" is forgotten
+      Then the read model holds no address hash
 
     Scenario: The address of a forgotten account finds the new account registered with it
       Given an account for "someone@example.com" is registered

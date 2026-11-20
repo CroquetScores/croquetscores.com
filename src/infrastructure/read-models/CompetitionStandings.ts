@@ -26,8 +26,7 @@ const nothingKept = async (
     [competition],
   );
   await connection.query(
-    `update competitions set level_on_matches_won = false
-      where competition_id = $1`,
+    `delete from competition_standings_kept where competition_id = $1`,
     [competition],
   );
 };
@@ -215,10 +214,20 @@ export const standCompetition = async (
       ],
     );
   }
+  // Its moment moves only when what it says does, as a line's does.
   await connection.query(
-    `update competitions set level_on_matches_won = $2
-      where competition_id = $1`,
-    [competition, stood.levelOnMatchesWon],
+    `insert into competition_standings_kept
+       (competition_id, level_on_matches_won, changed_at)
+     values ($1, $2, $3)
+     on conflict (competition_id) do update
+       set level_on_matches_won = excluded.level_on_matches_won,
+           changed_at = case
+             when competition_standings_kept.level_on_matches_won
+                    = excluded.level_on_matches_won
+                  and competition_standings_kept.changed_at is not null
+             then competition_standings_kept.changed_at
+             else excluded.changed_at end`,
+    [competition, stood.levelOnMatchesWon, at],
   );
 };
 
@@ -256,7 +265,8 @@ export class CompetitionStandings implements Asked {
       [competition],
     );
     const level = await connection.query<{ level_on_matches_won: boolean }>(
-      `select level_on_matches_won from competitions where competition_id = $1`,
+      `select level_on_matches_won from competition_standings_kept
+        where competition_id = $1`,
       [competition],
     );
     return {

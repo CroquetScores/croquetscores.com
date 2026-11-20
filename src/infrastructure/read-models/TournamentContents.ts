@@ -200,9 +200,10 @@ export class TournamentContents implements Projection, Asked {
       name: string;
       world_ranking_name: string;
     }>(
-      `select player_id, team_id, name, world_ranking_name
-         from tournament_team_players
-        where tournament_id = $1 and not archived`,
+      `select p.player_id, p.team_id, p.name, p.world_ranking_name
+         from tournament_team_players p
+         join tournament_teams t on t.team_id = p.team_id
+        where t.tournament_id = $1 and not p.archived`,
       [tournament],
     );
 
@@ -351,6 +352,7 @@ export class TournamentContents implements Projection, Asked {
       [
         event.competitionId,
         event.maximumHoops ?? null,
+        // Said as none is not said at all: the column is null for both.
         event.maximumHoops !== undefined,
         event.advantage ?? false,
       ],
@@ -472,9 +474,9 @@ export class TournamentContents implements Projection, Asked {
       const name = player.name.toString();
       await connection.query(
         `insert into tournament_team_players
-           (player_id, team_id, tournament_id, name, world_ranking_name,
+           (player_id, team_id, name, world_ranking_name,
             position, changed_at, slug)
-         values ($1, $2, $3, $4, $5, $6, $7, $8)
+         values ($1, $2, $3, $4, $5, $6, $7)
          on conflict (player_id) do update
            set name = excluded.name,
                world_ranking_name = excluded.world_ranking_name,
@@ -483,7 +485,6 @@ export class TournamentContents implements Projection, Asked {
         [
           event.playerId,
           event.teamId,
-          stream,
           name,
           player.worldRankingName?.toString() ?? name,
           event instanceof TeamPlayerAdded ? event.order : ORDER_STEP,

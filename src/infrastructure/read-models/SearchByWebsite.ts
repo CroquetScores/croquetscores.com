@@ -229,17 +229,17 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       // most come first, and those used as often in the alphabetical order of
       // their keys, which does not depend on the capitals that happen to win.
       `with counted as (
-         select normalize(lower(c.name), NFC) as key, c.name, count(*) as used
+         select normalize(lower(k.name), NFC) as key, k.name, count(*) as used
            from search_by_website_competitions c
            join competitions k on k.competition_id = c.competition_id
            join tournaments t on t.tournament_id = k.tournament_id
           where t.website = $1 and not t.archived and not k.archived
-            and normalize(lower(c.name), NFC) not in (
-              select normalize(lower(c2.name), NFC)
+            and normalize(lower(k.name), NFC) not in (
+              select normalize(lower(k2.name), NFC)
                 from search_by_website_competitions c2
                 join competitions k2 on k2.competition_id = c2.competition_id
                where k2.tournament_id = $2 and not k2.archived)
-          group by 1, c.name)
+          group by 1, k.name)
        select (array_agg(name order by used desc, name))[1] as name
          from counted
         group by key
@@ -264,7 +264,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       sport: string | null;
       country: string | null;
     }>(
-      `select c.name, c.slug, t.name as tournament_name,
+      `select k.name, k.slug, t.name as tournament_name,
               t.address as tournament_address,
               to_char(t.starts, 'YYYY-MM-DD') as starts,
               to_char(t.finishes, 'YYYY-MM-DD') as finishes, t.sport,
@@ -274,7 +274,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
          join tournaments t on t.tournament_id = k.tournament_id
         where t.website = $1 and not t.archived and not k.archived
           and c.folded_name like all($2)
-        order by starts_with(c.folded_name, $4) desc, c.folded_name, c.name,
+        order by starts_with(c.folded_name, $4) desc, c.folded_name, k.name,
                  c.competition_id
         limit $3`,
       [website.host, patterns(words), most + 1, beginning(words)],
@@ -371,16 +371,14 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       // with the competition (Tournaments.feature).
       await connection.query(
         `insert into search_by_website_competitions
-           (competition_id, name, folded_name, slug, changed_at)
-         values ($1, $2, $3, $4, $5)
+           (competition_id, folded_name, changed_at)
+         values ($1, $2, $3)
          on conflict (competition_id) do update
-           set name = excluded.name, folded_name = excluded.folded_name,
-               slug = excluded.slug, changed_at = excluded.changed_at`,
+           set folded_name = excluded.folded_name,
+               changed_at = excluded.changed_at`,
         [
           event.competitionId,
-          event.name,
           foldedForSearch(event.name),
-          event.slug,
           event.occurredAt.toISOString(),
         ],
       );
@@ -391,11 +389,10 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     ) {
       await connection.query(
         `update search_by_website_competitions
-            set name = $2, folded_name = $3, changed_at = $4
+            set folded_name = $2, changed_at = $3
           where competition_id = $1`,
         [
           event.competitionId,
-          event.name,
           foldedForSearch(event.name),
           event.occurredAt.toISOString(),
         ],
@@ -409,11 +406,10 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       // archived, but found by this name after.
       await connection.query(
         `update search_by_website_competitions
-            set name = $2, folded_name = $3, changed_at = $4
+            set folded_name = $2, changed_at = $3
           where competition_id = $1`,
         [
           event.competitionId,
-          event.name,
           foldedForSearch(event.name),
           event.occurredAt.toISOString(),
         ],

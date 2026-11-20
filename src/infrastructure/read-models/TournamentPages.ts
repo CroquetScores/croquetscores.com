@@ -179,8 +179,9 @@ export class TournamentPages implements Asked {
       player_id: string;
       team_id: string;
     }>(
-      `select player_id, team_id from tournament_team_players
-        where tournament_id = $1`,
+      `select p.player_id, p.team_id from tournament_team_players p
+         join tournament_teams t on t.team_id = p.team_id
+        where t.tournament_id = $1`,
       [tournament],
     );
     const tests = await connection.query<{
@@ -355,9 +356,11 @@ export class TournamentPages implements Asked {
       slug: string | null;
       archived: boolean;
     }>(
-      `select player_id, team_id, name, slug, archived
-         from tournament_team_players where tournament_id = $1
-        order by position`,
+      `select p.player_id, p.team_id, p.name, p.slug, p.archived
+         from tournament_team_players p
+         join tournament_teams t on t.team_id = p.team_id
+        where t.tournament_id = $1
+        order by p.position`,
       [tournament],
     );
     return {

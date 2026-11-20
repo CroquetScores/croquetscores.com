@@ -51,8 +51,9 @@ export class TournamentRankings implements Asked {
       `select player_id, world_ranking_name from tournament_players
         where tournament_id = $1
        union all
-       select player_id, world_ranking_name from tournament_team_players
-        where tournament_id = $1`,
+       select p.player_id, p.world_ranking_name from tournament_team_players p
+         join tournament_teams t on t.team_id = p.team_id
+        where t.tournament_id = $1`,
       [id],
     );
     return {

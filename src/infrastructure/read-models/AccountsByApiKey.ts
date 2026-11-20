@@ -59,15 +59,14 @@ export class AccountsByApiKey implements Projection, FindsApiKeys {
         const scope = ApiKeyScope.from(event.scope);
         await connection.query(
           `insert into accounts_by_api_key
-             (key_hash, key_id, account_id, may_read, may_write, tournament,
+             (key_hash, key_id, account_id, may_write, tournament,
               per_minute, per_day, changed_at)
-           values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+           values ($1, $2, $3, $4, $5, $6, $7, $8)
            on conflict (key_hash) do nothing`,
           [
             event.keyHash,
             event.keyId,
             stream,
-            scope.mayRead,
             scope.mayWrite,
             event.tournament ?? null,
             event.perMinute,
@@ -125,13 +124,12 @@ export class AccountsByApiKey implements Projection, FindsApiKeys {
     const { rows } = await this.unitOfWork.connection().query<{
       account_id: string;
       key_id: string;
-      may_read: boolean;
       may_write: boolean;
       tournament: string | null;
       per_minute: number;
       per_day: number;
     }>(
-      `select account_id, key_id, may_read, may_write, tournament,
+      `select account_id, key_id, may_write, tournament,
               per_minute, per_day
          from accounts_by_api_key
         where key_hash = $1`,
@@ -143,7 +141,8 @@ export class AccountsByApiKey implements Projection, FindsApiKeys {
       : {
           account: AccountId.from(row.account_id),
           keyId: row.key_id,
-          mayRead: row.may_read,
+          // Every key may read (ApiKeyScope.mayRead).
+          mayRead: true,
           mayWrite: row.may_write,
           tournament: row.tournament ?? undefined,
           perMinute: row.per_minute,
