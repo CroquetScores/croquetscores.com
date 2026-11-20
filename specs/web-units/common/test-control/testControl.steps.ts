@@ -11,6 +11,7 @@ import {
   type Application,
 } from "../../../../src/web/server.js";
 import { oldSiteSaltForScenarios } from "../../support/accounts.js";
+import { accessFileOf } from "../../support/application.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 // What each scenario has asked for, and what came of it.
@@ -48,6 +49,9 @@ const start = async (world: SpecWorld): Promise<void> => {
     ...process.env,
     DATABASE_URL: control.databaseUrl ?? scratch,
     TEST_CONTROL_TOKEN: control.token ?? "",
+    // The scenario's own, so that a switch left in the repository's folder by
+    // a site somebody ran there does not answer for it.
+    DATABASE_ACCESS_FILE: accessFileOf(world),
     OLD_SITE_PASSWORD_SALT: oldSiteSaltForScenarios,
   });
   const application = await buildApplication(config, {
