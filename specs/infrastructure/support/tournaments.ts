@@ -172,6 +172,9 @@ import { Commentary } from "../../../src/domain/aggregates/tournaments/commentar
 import { ManagerNote } from "../../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import { Tournaments } from "../../../src/infrastructure/read-models/Tournaments.js";
 import { CompetitionGames } from "../../../src/infrastructure/read-models/CompetitionGames.js";
+import { CompetitionStandings } from "../../../src/infrastructure/read-models/CompetitionStandings.js";
+import { TournamentPages } from "../../../src/infrastructure/read-models/TournamentPages.js";
+import { TournamentContents } from "../../../src/infrastructure/read-models/TournamentContents.js";
 import { TournamentsByAccount } from "../../../src/infrastructure/read-models/TournamentsByAccount.js";
 import { ManagerNotesByTournament } from "../../../src/infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../../../src/infrastructure/read-models/CommentariesByTournament.js";
@@ -196,6 +199,9 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   const held = new Tournaments(unitOfWork);
   const byWebsite = new TournamentsByWebsite(unitOfWork);
   const byGames = new CompetitionGames(unitOfWork);
+  const byContents = new TournamentContents(unitOfWork);
+  const standings = new CompetitionStandings(unitOfWork);
+  const pages = new TournamentPages(unitOfWork);
   const byAccount = new TournamentsByAccount(unitOfWork);
   const bySearch = new SearchByWebsite(unitOfWork);
   const byNotes = new ManagerNotesByTournament(unitOfWork);
@@ -203,6 +209,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   const store = new ProjectingEventStore(accounts.store, [
     byAddress,
     held,
+    byContents,
     byGames,
     byAccount,
     bySearch,
@@ -468,9 +475,10 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   );
   mediator.handleQuery(
     new PublicBlockOfTournamentHandler(
-      tournaments,
-      competitions,
       byAddress,
+      pages,
+      byGames,
+      standings,
       byNotes,
       byCommentaries,
     ),
@@ -485,13 +493,19 @@ const standUpTheTournaments = function (this: SpecWorld): void {
     ),
   );
   mediator.handleQuery(
-    new PublicRankingsOfTournamentHandler(tournaments, competitions, byAddress),
-  );
-  mediator.handleQuery(
-    new PublicSwissOfTournamentHandler(
+    new PublicRankingsOfTournamentHandler(
       tournaments,
       competitions,
       byAddress,
+      standings,
+    ),
+  );
+  mediator.handleQuery(
+    new PublicSwissOfTournamentHandler(
+      byAddress,
+      pages,
+      byGames,
+      standings,
       byNotes,
       byCommentaries,
     ),

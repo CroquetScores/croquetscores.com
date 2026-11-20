@@ -159,6 +159,13 @@ const anyPlay = (
       (matchesWon + matchesLost > 0 || netGames !== 0 || netHoops !== 0),
   );
 
+/** What a block's tie break tells players level on the share apart by, in the order it looks. */
+export const tellsApartByOf = (
+  tieBreak: TieBreak,
+  bestOf: number,
+): readonly TellsApartBy[] =>
+  stepsFor(tieBreak, [], bestOf).map(({ by }) => by);
+
 /**
  * `players`, in the block's order, placed. They are first placed by the share
  * of their decided matches that they have won, and those level on that are

@@ -293,6 +293,8 @@ import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js"
 import { Tournaments } from "../infrastructure/read-models/Tournaments.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { CompetitionGames } from "../infrastructure/read-models/CompetitionGames.js";
+import { CompetitionStandings } from "../infrastructure/read-models/CompetitionStandings.js";
+import { TournamentPages } from "../infrastructure/read-models/TournamentPages.js";
 import { TournamentContents } from "../infrastructure/read-models/TournamentContents.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
@@ -1016,6 +1018,8 @@ export const buildApplication = async (
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
   const tournamentContents = new TournamentContents(unitOfWork);
   const competitionGames = new CompetitionGames(unitOfWork);
+  const competitionStandings = new CompetitionStandings(unitOfWork);
+  const tournamentPages = new TournamentPages(unitOfWork);
   const searchByWebsite = new SearchByWebsite(unitOfWork);
   const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
@@ -1588,9 +1592,10 @@ export const buildApplication = async (
     ),
   );
   const publicBlocks = new PublicBlockOfTournamentHandler(
-    tournaments,
-    competitions,
     tournamentsByAddress,
+    tournamentPages,
+    competitionGames,
+    competitionStandings,
     managerNotesByTournament,
     commentariesByTournament,
   );
@@ -1600,6 +1605,7 @@ export const buildApplication = async (
       tournaments,
       competitions,
       tournamentsByAddress,
+      competitionStandings,
     ),
   );
   const publicKnockouts = new PublicKnockoutOfTournamentHandler(
@@ -1611,9 +1617,10 @@ export const buildApplication = async (
   );
   mediator.handleQuery(publicKnockouts);
   const publicSwisses = new PublicSwissOfTournamentHandler(
-    tournaments,
-    competitions,
     tournamentsByAddress,
+    tournamentPages,
+    competitionGames,
+    competitionStandings,
     managerNotesByTournament,
     commentariesByTournament,
   );
@@ -1651,8 +1658,7 @@ export const buildApplication = async (
     new StandingsForAppsHandler(
       tournaments,
       tournamentsByWebsite,
-      publicBlocks,
-      publicSwisses,
+      competitionStandings,
     ),
   );
   mediator.handleQuery(

@@ -1,4 +1,4 @@
-import { standingsOfBlock } from "./standingsOfBlock.js";
+import type { CompetitionStandings } from "./competitionStandings.js";
 import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
@@ -35,6 +35,7 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly competitions: Competitions,
     private readonly addresses: TournamentAddresses,
+    private readonly standings: CompetitionStandings,
   ) {
     super();
   }
@@ -136,22 +137,15 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
         ],
       });
       // The player a block places first where only one is, and nobody where
-      // players cannot be told apart for first, as the block's page does.
-      const winnerOfBlock = (
-        block: Extract<typeof shape, { readonly kind: "block" }>,
-      ): string => {
-        const { placed } = standingsOfBlock(
-          tournament,
-          competition,
-          reference.id,
-          block,
-        );
-        const [first] = placed.ranked;
-        const placing =
-          first === undefined ? undefined : placed.placings.get(first);
-        return first !== undefined && placing?.place === 1 && !placing.shared
-          ? nameOf(first)
-          : "";
+      // players cannot be told apart for first, as the block's page does, which
+      // reads the same standings.
+      const kept =
+        shape.kind === "block"
+          ? await this.standings.standingsKept(reference.id.value)
+          : undefined;
+      const winnerOfBlock = (): string => {
+        const [first] = kept?.standings ?? [];
+        return first?.place === 1 && !first.shared ? nameOf(first.entryId) : "";
       };
       const results: ResultOfRanking[] = [];
       if (shape.kind === "knockout") {
@@ -211,7 +205,7 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
         competitions.push({
           name: reference.name.toString(),
           results,
-          winner: shape.kind === "block" ? winnerOfBlock(shape) : undefined,
+          winner: shape.kind === "block" ? winnerOfBlock() : undefined,
         });
       }
     }
