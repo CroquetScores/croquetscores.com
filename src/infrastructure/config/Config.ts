@@ -59,6 +59,11 @@ export interface Config {
   // memory, there being nowhere else to count it when the database is the
   // thing that is down.
   readonly databaseUnreachableEmailIntervalMinutes: number;
+  // The least severe line the site writes to its log. Warn unless told
+  // otherwise, since the log is read for what went wrong and a line for every
+  // request buried it; the specs that read what the site says of a request
+  // tell it info.
+  readonly logLevel: LogLevel;
   // Where the switch that turns the site's database access off for maintenance
   // is kept, which is a file because the database cannot say whether it may be
   // asked (FileDatabaseAccess.feature). Relative to where the site is run.
@@ -417,6 +422,25 @@ const readWorldRankingAddresses = (
   return { ac, gc };
 };
 
+const logLevels = ["trace", "debug", "info", "warn", "error", "fatal"] as const;
+export type LogLevel = (typeof logLevels)[number];
+
+// Capitals are let through, since a level is written either way, and anything
+// that is not one is refused and not read as the nearest, because a site
+// left logging nothing for a misspelling would be silent about what went wrong.
+const readLogLevel = (env: NodeJS.ProcessEnv, problems: string[]): LogLevel => {
+  const raw = (env["LOG_LEVEL"]?.trim() ?? "").toLowerCase();
+  if (raw === "") return "warn";
+  const found = logLevels.find((level) => level === raw);
+  if (found === undefined) {
+    problems.push(
+      `LOG_LEVEL must be one of ${logLevels.join(", ")}, not ${JSON.stringify(env["LOG_LEVEL"]?.trim())}.`,
+    );
+    return "warn";
+  }
+  return found;
+};
+
 const readWorldRankingWait = (
   env: NodeJS.ProcessEnv,
   problems: string[],
@@ -509,6 +533,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const emergencyContactEmailAddresses = readEmergencyContacts(env, problems);
   const worldRankingAddresses = readWorldRankingAddresses(env, problems);
   const worldRankingWaitMilliseconds = readWorldRankingWait(env, problems);
+  const logLevel = readLogLevel(env, problems);
   const databaseUnreachableEmailIntervalMinutes =
     readDatabaseUnreachableEmailIntervalMinutes(env, problems);
   // Refused rather than ignored: a token left in the settings of a real site
@@ -544,6 +569,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     administratorEmailAddress: env["ADMINISTRATOR_EMAIL_ADDRESS"]!.trim(),
     emergencyContactEmailAddresses,
     databaseUnreachableEmailIntervalMinutes,
+    logLevel,
     databaseAccessFile:
       env["DATABASE_ACCESS_FILE"]?.trim() || ".database-access",
     trustedProxies,

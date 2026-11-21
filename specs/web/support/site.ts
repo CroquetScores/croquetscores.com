@@ -143,6 +143,9 @@ const start = async (): Promise<RunningSite> => {
     // The browser reaches the site on 127.0.0.1, which is trusted to say
     // which website it addressed, as something in front of the site would.
     TRUSTED_PROXY: "127.0.0.1",
+    // Said at information, which a site is not by default, because scenarios
+    // read what the log says of each request and of a refusal.
+    LOG_LEVEL: "info",
     ADMINISTRATOR_EMAIL_ADDRESS: "administrator@example.com",
     ADMINISTRATOR_EMAIL_FROM_NAME: "The administrator",
     SESSION_COOKIE_SECRET: secret(),

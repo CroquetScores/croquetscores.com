@@ -44,39 +44,48 @@ const keptOf = (world: SpecWorld): Kept => {
   return found;
 };
 
-Given("a server log kept in the database", function (this: SpecWorld) {
-  const file: string[] = [];
-  const said: string[] = [];
-  const state: Kept = {
-    file,
-    said,
-    failing: false,
-    failingRemoval: false,
-    raised: undefined,
-    read: [],
-    removed: 0,
-    stream: new ServerLogStream({
-      file: { write: (line) => file.push(line) },
-      database: {
-        query: ((text: string, values?: unknown[]) => {
-          if (
-            state.failing ||
-            (state.failingRemoval && text.startsWith("delete"))
-          ) {
-            return Promise.reject(new Error("The database is away."));
-          }
-          return this.database.query(text, values);
-        }) as typeof this.database.query,
-      },
-      now: () => {
-        assert.ok(this.moment !== undefined, "No moment has been named.");
-        return this.moment;
-      },
-      complain: (text) => said.push(text),
-    }),
-  };
-  kept.set(this, state);
-});
+Given(
+  /^a server log kept in the database(?: from the severity (\w+))?$/,
+  function (this: SpecWorld, from: string | null) {
+    const keepFrom = from === null ? undefined : levelOf[from as Severity];
+    assert.ok(
+      from === null || keepFrom !== undefined,
+      `There is no severity called ${String(from)}.`,
+    );
+    const file: string[] = [];
+    const said: string[] = [];
+    const state: Kept = {
+      file,
+      said,
+      failing: false,
+      failingRemoval: false,
+      raised: undefined,
+      read: [],
+      removed: 0,
+      stream: new ServerLogStream({
+        file: { write: (line) => file.push(line) },
+        database: {
+          query: ((text: string, values?: unknown[]) => {
+            if (
+              state.failing ||
+              (state.failingRemoval && text.startsWith("delete"))
+            ) {
+              return Promise.reject(new Error("The database is away."));
+            }
+            return this.database.query(text, values);
+          }) as typeof this.database.query,
+        },
+        now: () => {
+          assert.ok(this.moment !== undefined, "No moment has been named.");
+          return this.moment;
+        },
+        complain: (text) => said.push(text),
+        ...(keepFrom === undefined ? {} : { keepFrom }),
+      }),
+    };
+    kept.set(this, state);
+  },
+);
 
 Given("the database cannot be written to", function (this: SpecWorld) {
   keptOf(this).failing = true;

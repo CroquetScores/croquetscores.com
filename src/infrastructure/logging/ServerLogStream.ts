@@ -25,6 +25,12 @@ export interface ServerLogStreamOptions {
   readonly database: Pick<Pool, "query">;
   /** Where the time comes from, which decides when old entries are removed. */
   readonly now: () => Date;
+  /**
+   * The level below which a line is not kept, though the file still has it.
+   * Left out, every line is kept. The site gives Warn, since the table is
+   * read for what went wrong and a line for every request would fill it.
+   */
+  readonly keepFrom?: number;
   /** Where a failure to keep the log is said. Standard error, left out. */
   readonly complain?: (text: string) => void;
 }
@@ -46,6 +52,11 @@ const withoutSecrets = (text: string): string =>
 interface Row {
   readonly writtenAt: Date;
   readonly level: number;
+  // Less severe than the stream is asked to keep. Never so for a line that
+  // does not say how severe it is: it is read as information, and a stack
+  // trace written by something other than the logger is more likely a failure
+  // than chatter, so it is kept.
+  readonly notWanted: boolean;
   readonly message: string;
   readonly details: string;
 }
@@ -72,7 +83,9 @@ export class ServerLogStream {
       return;
     }
     try {
-      this.waiting.push(this.rowOf(line));
+      const row = this.rowOf(line);
+      if (row.notWanted) return;
+      this.waiting.push(row);
     } catch (failure) {
       // Never let keeping a copy stop the logger.
       this.complain(failure);
@@ -159,8 +172,8 @@ export class ServerLogStream {
     const fields = isLine
       ? (parsed as Record<string, unknown>)
       : { line: text };
-    const level =
-      typeof fields["level"] === "number" ? fields["level"] : levelOf.Info;
+    const said = fields["level"];
+    const level = typeof said === "number" ? said : levelOf.Info;
     const time = fields["time"];
     const written = typeof time === "number" ? new Date(time) : undefined;
     const message = isLine
@@ -174,6 +187,8 @@ export class ServerLogStream {
           ? written
           : this.options.now(),
       level,
+      notWanted:
+        typeof said === "number" && said < (this.options.keepFrom ?? 0),
       message: withoutSecrets(message),
       // Cleaned value by value, as they are written, and not as the finished
       // text: a backslash before the characters u0000 is a backslash and

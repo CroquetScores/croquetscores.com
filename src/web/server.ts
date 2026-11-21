@@ -966,9 +966,15 @@ export const buildApplication = async (
     file: process.stdout,
     database: pool,
     now: clock,
+    keepFrom: levelOf.Warn,
   });
   const server = Fastify({
-    logger: withRequestsLogged(options.logger ?? { stream: serverLogStream }),
+    // A logger a scenario gives is its own, level and all, so LOG_LEVEL is for
+    // the site's alone; the startup line is information and so is not written
+    // by default, which is what asking for warnings and worse means.
+    logger: withRequestsLogged(
+      options.logger ?? { stream: serverLogStream, level: config.logLevel },
+    ),
     // An admin address with a malformed escape, as "%E0%A4%A", is refused by
     // the router before any handler is asked, with a 400 that is no page of
     // the admin's. It is the admin's to say there is no such document, as it

@@ -157,6 +157,13 @@ Given(
   },
 );
 
+Given(
+  "the site is told to log at the level {string}",
+  function (this: SpecWorld, level: string) {
+    startingOf(this).settings["LOG_LEVEL"] = level;
+  },
+);
+
 const configOf = (world: SpecWorld): Config => {
   const { config, refusal } = startingOf(world);
   assert.ok(
@@ -165,6 +172,13 @@ const configOf = (world: SpecWorld): Config => {
   );
   return config;
 };
+
+Then(
+  "the site logs at the level {string}",
+  function (this: SpecWorld, level: string) {
+    assert.equal(configOf(this).logLevel, level);
+  },
+);
 
 Then(
   "the Association Croquet list is read from {string}",
