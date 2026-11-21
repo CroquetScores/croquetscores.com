@@ -12,6 +12,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { Pool, PoolClient } from "pg";
 import { Refused } from "../../domain/common/Refused.js";
 import { DatabaseUnreachable } from "../../application/common/DatabaseUnreachable.js";
+import { BatchingConnection } from "./BatchingConnection.js";
 import { isUnreachable } from "./unreachable.js";
 
 /** Every reason asking for a connection can be refused. */
@@ -44,6 +45,50 @@ export class UnitOfWork {
       );
     }
     return connection;
+  }
+
+  // The batching connection each connection handed to `work` is, so that a
+  // write that must change one row is told to it and not to the connection.
+  private readonly batching = new WeakMap<PoolClient, BatchingConnection>();
+
+  /**
+   * Runs `work` with its writes kept back and sent together, as one message
+   * where there are many, which is what makes a rebuild of every read model
+   * something that finishes (BatchingConnection.feature). A read, or a write
+   * that answers with rows, sends what was kept back first, and so does the end
+   * of the work: what the work wrote is in the transaction before it is
+   * committed, and a write that failed fails the work. Refused with
+   * `UnitOfWork.NothingUnderway` where no request is being served.
+   */
+  async batchingWrites<TResult>(
+    work: () => Promise<TResult>,
+  ): Promise<TResult> {
+    const batching = new BatchingConnection(this.connection());
+    this.batching.set(batching.connection, batching);
+    const answer = await this.underway.run(batching.connection, work);
+    await batching.flush();
+    return answer;
+  }
+
+  /**
+   * Writes with `sql` and `values`, which is to change exactly one row, and
+   * fails with `failure` when it does not. Where writes are being kept back
+   * that is found out when they are sent, and where they are not it is found out
+   * at once.
+   */
+  async writeToOneRow(
+    sql: string,
+    values: readonly unknown[],
+    failure: () => Error,
+  ): Promise<void> {
+    const connection = this.connection();
+    const batching = this.batching.get(connection);
+    if (batching !== undefined) {
+      await batching.expectingOneRow(sql, values, failure);
+      return;
+    }
+    const { rowCount } = await connection.query(sql, [...values]);
+    if (rowCount !== 1) throw failure();
   }
 
   /** Whether a request is being served on this connection already. */

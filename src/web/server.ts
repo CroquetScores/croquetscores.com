@@ -840,6 +840,8 @@ interface RebuildableReadModel {
     stream: string,
     events: readonly StoredEvent[],
   ): Promise<void>;
+  /** What is left to do once every stream has been handed over, where there is any. */
+  finishRebuild?(): Promise<void>;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -1084,26 +1086,51 @@ export const buildApplication = async (
   // models. One transaction, so that a rebuild that fails leaves every read
   // model as it was, and one that is running is not seen half done.
   //
-  // A stream at a time, read when its turn comes and handed to every read
-  // model, so that how far it has got is a thing that can be said, and so that
+  // A few streams are read at a time and each handed to every read model in
+  // turn, so that how far it has got is a thing that can be said, and so that
   // the whole of the event store is never held at once.
+  const STREAMS_TO_A_READ = 100;
+  // The tables are made empty and filled in this one transaction, so Postgres
+  // has been told nothing of how big they are and plans every statement for
+  // tables that are almost empty: a few thousand streams in, it is scanning
+  // hundreds of thousands of rows to find a few, once for each event. Told of
+  // what has been written, it uses the indexes. A table's own statistics are
+  // read by the same transaction that gathers them.
+  const STREAMS_TO_AN_ANALYSIS = 5000;
   const rebuildInside = async (progress?: RebuildProgress): Promise<number> => {
     const streams = await keptEvents.streamIds();
     progress?.streams(streams.length);
     for (const readModel of readModels) await readModel.clear();
     let events = 0;
-    for (const [index, stream] of streams.entries()) {
-      const kept = await keptEvents.readStream(stream);
-      for (const readModel of readModels) {
-        await readModel.rebuildFromStream(stream, kept);
+    let completed = 0;
+    for (let from = 0; from < streams.length; from += STREAMS_TO_A_READ) {
+      const these = streams.slice(from, from + STREAMS_TO_A_READ);
+      const read = await keptEvents.readStreams(these);
+      for (const stream of these) {
+        const kept = read.get(stream) ?? [];
+        for (const readModel of readModels) {
+          await readModel.rebuildFromStream(stream, kept);
+        }
+        events += kept.length;
+        completed += 1;
+        await progress?.streamDone(completed);
       }
-      events += kept.length;
-      await progress?.streamDone(index + 1);
+      if (
+        Math.floor(completed / STREAMS_TO_AN_ANALYSIS) >
+        Math.floor((completed - these.length) / STREAMS_TO_AN_ANALYSIS)
+      ) {
+        await unitOfWork.connection().query("analyze");
+      }
     }
+    for (const readModel of readModels) await readModel.finishRebuild?.();
     return events;
   };
+  // Its writes kept back and sent together, since what a rebuild costs is the
+  // asking and not the writing (BatchingConnection.feature).
   const rebuildReadModels = (progress?: RebuildProgress): Promise<number> =>
-    unitOfWork.inTransaction(() => rebuildInside(progress));
+    unitOfWork.inTransaction(() =>
+      unitOfWork.batchingWrites(() => rebuildInside(progress)),
+    );
 
   // Emails are written from the site's catalogues, with links made from the
   // address of the website each is for and never a request's host, and written

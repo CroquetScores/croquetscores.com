@@ -29,7 +29,7 @@ import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
-import { standCompetition } from "./CompetitionStandings.js";
+import { standCompetition, standingsToMakeOf } from "./CompetitionStandings.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 const bye = CompetitionPlayerId.bye().value;
@@ -100,6 +100,17 @@ export class CompetitionGames implements Projection, Asked {
     await this.#projectAll(
       stream,
       events.map(({ event }) => event),
+      true,
+    );
+  }
+
+  /**
+   * Makes the standings every stream said were to be made, once they are all
+   * handed over (`StandingsToMake`).
+   */
+  async finishRebuild(): Promise<void> {
+    await standingsToMakeOf(this.unitOfWork).makeAll(
+      this.unitOfWork.connection(),
     );
   }
 
@@ -232,11 +243,17 @@ export class CompetitionGames implements Projection, Asked {
   async #projectAll(
     stream: string,
     events: readonly DomainEvent[],
+    rebuilding = false,
   ): Promise<void> {
     if (!stream.startsWith("competition/")) return;
     for (const event of events) await this.#write(stream, event);
     const [last] = events.filter(changesStandings).slice(-1);
-    if (last !== undefined) {
+    if (last !== undefined && rebuilding) {
+      standingsToMakeOf(this.unitOfWork).note(
+        stream,
+        last.occurredAt.toISOString(),
+      );
+    } else if (last !== undefined) {
       await standCompetition(
         this.unitOfWork.connection(),
         stream,

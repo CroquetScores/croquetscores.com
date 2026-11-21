@@ -50,7 +50,7 @@ import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
-import { standCompetition } from "./CompetitionStandings.js";
+import { standCompetition, standingsToMakeOf } from "./CompetitionStandings.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 // In the order a reader looks for a name in a list, capitals or none.
@@ -120,8 +120,27 @@ export class TournamentContents implements Projection, Asked {
     stream: string,
     events: readonly StoredEvent[],
   ): Promise<void> {
-    for (const { event } of events) await this.#project(stream, event);
+    // The standings are noted and not worked out for each, to be made once
+    // when every stream is in (`finishRebuild`).
+    this.#rebuilding = true;
+    try {
+      for (const { event } of events) await this.#project(stream, event);
+    } finally {
+      this.#rebuilding = false;
+    }
   }
+
+  /**
+   * Makes the standings every stream said were to be made, once they are all
+   * handed over (`StandingsToMake`).
+   */
+  async finishRebuild(): Promise<void> {
+    await standingsToMakeOf(this.unitOfWork).makeAll(
+      this.unitOfWork.connection(),
+    );
+  }
+
+  #rebuilding = false;
 
   async tournament(
     website: string,
@@ -317,11 +336,15 @@ export class TournamentContents implements Projection, Asked {
       event instanceof SwissAdded ||
       event instanceof SwissUpdated
     ) {
-      await standCompetition(
-        this.unitOfWork.connection(),
-        event.competitionId,
-        this.#at,
-      );
+      if (this.#rebuilding) {
+        standingsToMakeOf(this.unitOfWork).note(event.competitionId, this.#at);
+      } else {
+        await standCompetition(
+          this.unitOfWork.connection(),
+          event.competitionId,
+          this.#at,
+        );
+      }
     }
   }
 
@@ -634,14 +657,14 @@ export class TournamentContents implements Projection, Asked {
     sql: string,
     values: readonly unknown[],
   ): Promise<void> {
-    const { rowCount } = await this.unitOfWork
-      .connection()
-      .query(sql, [...values]);
-    if (rowCount !== 1) {
-      throw new Error(
-        "A competition has no row to write to: TournamentContents is projected after Tournaments.",
-      );
-    }
+    await this.unitOfWork.writeToOneRow(
+      sql,
+      values,
+      () =>
+        new Error(
+          "A competition has no row to write to: TournamentContents is projected after Tournaments.",
+        ),
+    );
   }
 
   // The tables and columns named here are this class's own, never a reader's.
