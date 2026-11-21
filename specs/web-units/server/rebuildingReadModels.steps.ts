@@ -14,6 +14,7 @@ const READ_MODEL_TABLES = [
   "accounts_by_google_account",
   "accounts_by_role",
   "tournaments_by_address",
+  "tournament_years",
   "tournaments",
   "competitions",
   "tournaments_by_account",

@@ -29,7 +29,7 @@ interface Asked {
 
 // Whole numbers as digits and nothing else, so that "2e3", "0x10" and " 7 " are
 // not read as numbers an app never meant.
-const wholeNumber = /^-?\d+$/;
+export const wholeNumber = /^-?\d+$/;
 
 // Every refusal of what was asked, written once: the code the application
 // refuses it as, and what the API answers. A number too large to be counted is
@@ -89,7 +89,7 @@ const refusedAsked = (
 // server's own and would mean something different where the site is run
 // elsewhere. A day there is not, such as the 30th of February, is not a
 // moment, which a date that is only parsed would quietly move to March.
-const momentOf = (written: string): ReadOnlyDate | undefined => {
+export const momentOf = (written: string): ReadOnlyDate | undefined => {
   const parts =
     /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/i.exec(
       written,

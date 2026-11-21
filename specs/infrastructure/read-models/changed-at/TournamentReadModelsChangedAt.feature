@@ -119,3 +119,38 @@ Feature: The tournaments' read models keep when each row last changed
     Scenario: A rebuild gives the standings the moment of the last event
       When the read model is rebuilt from the events
       Then the standing row of "Sam Someone" was last changed at "2026-09-26T10:00:00Z"
+
+  Rule: The year a tournament was in before is kept, and is the same however the read models are made again
+
+    The addresses a tournament has had cannot say it, since one it moves back
+    to is held from the moment it was first given, so the years are kept
+    beside them (`changedYear.feature` says what is made of them).
+
+    Scenario: A tournament that has not moved has no year before
+      Then the years of "Spring Open" are 2026 and no year before
+
+    Scenario: A tournament moved to another year says the year it was in
+      Given "Spring Open" is updated to start on "2027-03-01"
+      Then the years of "Spring Open" are 2027 and before that 2026
+
+    Scenario: A tournament moved within its year has no year before
+      Given "Spring Open" is updated to start on "2026-11-01"
+      Then the years of "Spring Open" are 2026 and no year before
+
+    Scenario: A tournament moved and moved back says the year it was moved back from
+      Given "Spring Open" is updated to start on "2027-03-01"
+      And "Spring Open" is updated to start on "2026-10-03"
+      Then the years of "Spring Open" are 2026 and before that 2027
+
+    Scenario: A rebuild keeps the years of a tournament moved and moved back
+      Given "Spring Open" is updated to start on "2027-03-01"
+      And "Spring Open" is updated to start on "2026-10-03"
+      When the read model is rebuilt from the events
+      Then it is rebuilt without failing
+      And the years of "Spring Open" are 2026 and before that 2027
+
+    Scenario: A rebuild keeps the year of a tournament moved once
+      Given "Spring Open" is updated to start on "2027-03-01"
+      When the read model is rebuilt from the events
+      Then it is rebuilt without failing
+      And the years of "Spring Open" are 2027 and before that 2026
