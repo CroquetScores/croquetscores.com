@@ -15,7 +15,7 @@ import fastifyStatic from "@fastify/static";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { Pool } from "pg";
+import type { Pool, PoolClient } from "pg";
 
 import { AggregateRepository } from "../application/common/AggregateRepository.js";
 import { Mediator } from "../application/common/Mediator.js";
@@ -834,6 +834,22 @@ export interface ApplicationOptions {
  * and then handed each stream, whole, one at a time (rebuildReadModels.feature).
  * Which stream comes first says nothing, so it has to work whichever it is.
  */
+// The tables a rebuild does not fill, which analysing would only cost time on.
+const notMadeAgain: readonly string[] = [
+  "events",
+  "account_keys",
+  "schema_migrations",
+  "sessions",
+  "email_queue",
+  "emails_written",
+  "handled_requests",
+  "failed_sign_ins",
+  "password_reset_askings",
+  "server_log",
+  "ac_world_ranking_players",
+  "gc_world_ranking_players",
+];
+
 interface RebuildableReadModel {
   clear(): Promise<void>;
   rebuildFromStream(
@@ -1097,6 +1113,25 @@ export const buildApplication = async (
   // what has been written, it uses the indexes. A table's own statistics are
   // read by the same transaction that gathers them.
   const STREAMS_TO_AN_ANALYSIS = 5000;
+  // What is analysed is every table but the few that are not made again, so that
+  // a table added later is analysed until it is named here, which costs a
+  // little time and nothing else, where one left out would be planned for as if
+  // it were empty. The events are not read model, and are analysed by the
+  // database as they are written.
+  const analyseWhatIsFilled = async (connection: PoolClient): Promise<void> => {
+    const { rows } = await connection.query<{ tablename: string }>(
+      `select tablename from pg_tables
+        where schemaname = 'public'
+          and tablename <> all($1)
+          and tablename not like 'import%'
+          and tablename not like 'help%'`,
+      [[...notMadeAgain]],
+    );
+    if (rows.length === 0) return;
+    await connection.query(
+      `analyze ${rows.map((row) => `"${row.tablename}"`).join(", ")}`,
+    );
+  };
   const rebuildInside = async (progress?: RebuildProgress): Promise<number> => {
     const streams = await keptEvents.streamIds();
     progress?.streams(streams.length);
@@ -1119,7 +1154,7 @@ export const buildApplication = async (
         Math.floor(completed / STREAMS_TO_AN_ANALYSIS) >
         Math.floor((completed - these.length) / STREAMS_TO_AN_ANALYSIS)
       ) {
-        await unitOfWork.connection().query("analyze");
+        await analyseWhatIsFilled(unitOfWork.connection());
       }
     }
     for (const readModel of readModels) await readModel.finishRebuild?.();

@@ -86,6 +86,7 @@ export class CompetitionGames implements Projection, Asked {
 
   /** Empties its tables, so that every stream can be handed to it again. */
   async clear(): Promise<void> {
+    standingsToMakeOf(this.unitOfWork).forget();
     await this.unitOfWork.connection().query(
       `truncate competition_entries, competition_byes, competition_games,
                   competition_standings, competition_standings_kept`,

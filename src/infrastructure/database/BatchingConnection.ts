@@ -26,16 +26,23 @@ const MOST_CHARACTERS = 4 * 1024 * 1024;
 const isAWrite = /^\s*(insert|update|delete)\b/i;
 const answersWithRows = /\breturning\b/i;
 
-/** What a value is, written into a statement as Postgres reads it. */
+/**
+ * What a value is, written into a statement as Postgres reads it.
+ *
+ * A number and a boolean are written as text in quotation marks, as a bound
+ * parameter is sent: a value Postgres has not been told the type of takes the
+ * one the place it is in asks for, so that it is read as a number beside a
+ * number and as text beside text, and nothing is read differently for being
+ * written in. It also puts no minus sign against whatever is before it.
+ */
 const literalOf = (connection: PoolClient, value: unknown): string => {
   if (value === null || value === undefined) return "null";
-  if (typeof value === "boolean") return value ? "true" : "false";
-  if (typeof value === "number" || typeof value === "bigint") {
-    // Text, which Postgres reads as the number the column or cast says, so that
-    // a value that is no number (NaN) is said so and not made into something.
-    return Number.isFinite(Number(value))
-      ? String(value)
-      : connection.escapeLiteral(String(value));
+  if (
+    typeof value === "boolean" ||
+    typeof value === "number" ||
+    typeof value === "bigint"
+  ) {
+    return connection.escapeLiteral(String(value));
   }
   if (typeof value === "string") return connection.escapeLiteral(value);
   if (value instanceof Date)
@@ -70,17 +77,87 @@ const arrayOf = (list: readonly unknown[]): string =>
     })
     .join(",")}}`;
 
-/** A statement with each place for a value written as the value. */
+const aPlace = /\$(\d+)/y;
+const aDollarQuote = /\$[A-Za-z_]*\$/y;
+
+/**
+ * A statement with each place for a value written as the value. A `$1` inside a
+ * quotation, a quoted name, a comment or a dollar quote is the words it is, and
+ * is left as it is; a place for a value that was not given is refused here,
+ * where Postgres would have refused it, and not sent as nothing.
+ */
 export const withValuesWritten = (
   connection: PoolClient,
   text: string,
   values: readonly unknown[],
-): string =>
-  // Once, over the statement as it was given, so that a value that looks like a
-  // place for one is not read as it.
-  text.replace(/\$(\d+)/g, (_place, index: string) =>
-    literalOf(connection, values[Number(index) - 1]),
-  );
+): string => {
+  let written = "";
+  let at = 0;
+  const copyTo = (end: number): void => {
+    written += text.slice(at, end);
+    at = end;
+  };
+  while (at < text.length) {
+    const here = text[at];
+    const next = text[at + 1];
+    if (here === "-" && next === "-") {
+      const end = text.indexOf("\n", at);
+      copyTo(end < 0 ? text.length : end);
+    } else if (here === "/" && next === "*") {
+      let depth = 1;
+      let end = at + 2;
+      while (end < text.length && depth > 0) {
+        if (text[end] === "/" && text[end + 1] === "*") {
+          depth += 1;
+          end += 2;
+        } else if (text[end] === "*" && text[end + 1] === "/") {
+          depth -= 1;
+          end += 2;
+        } else {
+          end += 1;
+        }
+      }
+      copyTo(end);
+    } else if (here === "'" || here === '"') {
+      // A quotation ends at the next mark that is not doubled, and in one
+      // written with an E before it, at the next that has no backslash before it.
+      const escaping = here === "'" && /[eE]/.test(text[at - 1] ?? "");
+      let end = at + 1;
+      while (end < text.length) {
+        if (escaping && text[end] === "\\") end += 2;
+        else if (text[end] === here && text[end + 1] === here) end += 2;
+        else if (text[end] === here) break;
+        else end += 1;
+      }
+      copyTo(end + 1);
+    } else if (here === "$") {
+      aPlace.lastIndex = at;
+      const place = aPlace.exec(text);
+      if (place !== null) {
+        const index = Number(place[1]);
+        if (index < 1 || index > values.length) {
+          throw new Error(
+            `A statement names a place for value ${String(index)} and was given ${String(values.length)}: ${text.slice(0, 200)}`,
+          );
+        }
+        written += literalOf(connection, values[index - 1]);
+        at += place[0].length;
+      } else {
+        aDollarQuote.lastIndex = at;
+        const tag = aDollarQuote.exec(text);
+        if (tag === null) {
+          copyTo(at + 1);
+        } else {
+          const close = text.indexOf(tag[0], at + tag[0].length);
+          copyTo(close < 0 ? text.length : close + tag[0].length);
+        }
+      }
+    } else {
+      copyTo(at + 1);
+    }
+  }
+  return written;
+};
 
 interface Expectation {
   /** Which of the statements sent, from the first, is meant to change one row. */
@@ -135,7 +212,9 @@ export class BatchingConnection {
   }
 
   async #keep(statement: string): Promise<void> {
-    this.#kept.push(statement);
+    // Without a semicolon at the end, which the joining supplies, so that each
+    // statement is one and the answers come back in the order they were kept.
+    this.#kept.push(statement.replace(/[\s;]+$/, ""));
     this.#characters += statement.length;
     if (
       this.#kept.length >= MOST_WRITES ||
@@ -170,9 +249,13 @@ export class BatchingConnection {
     // More than one statement to a message is answered with one answer for each.
     // The break before each semicolon is so that a statement that ends in a
     // comment does not take it into the comment.
-    const answered: unknown = await this.#connection.query(
-      statements.join("\n;\n"),
-    );
+    const joined = statements.join("\n;\n");
+    let answered: unknown;
+    try {
+      answered = await this.#connection.query(joined);
+    } catch (failure) {
+      throw namedAfter(failure, statements);
+    }
     const answers = (Array.isArray(answered) ? answered : [answered]) as {
       rowCount: number | null;
     }[];
@@ -181,3 +264,24 @@ export class BatchingConnection {
     }
   }
 }
+
+// A failure of the message as a whole says where in it, and so which of the
+// statements it was, which is what the one who made the write has to be told.
+const namedAfter = (
+  failure: unknown,
+  statements: readonly string[],
+): unknown => {
+  const position = Number((failure as { position?: unknown } | null)?.position);
+  if (!(failure instanceof Error) || !Number.isInteger(position))
+    return failure;
+  let from = 0;
+  for (const statement of statements) {
+    const to = from + statement.length + "\n;\n".length;
+    if (position - 1 < to) {
+      failure.message += ` In the statement: ${statement.slice(0, 300)}`;
+      return failure;
+    }
+    from = to;
+  }
+  return failure;
+};

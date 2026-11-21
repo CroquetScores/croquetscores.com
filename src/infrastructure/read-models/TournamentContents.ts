@@ -108,6 +108,7 @@ export class TournamentContents implements Projection, Asked {
    * which empties that table and is cleared in the same rebuild.
    */
   async clear(): Promise<void> {
+    standingsToMakeOf(this.unitOfWork).forget();
     await this.unitOfWork
       .connection()
       .query(

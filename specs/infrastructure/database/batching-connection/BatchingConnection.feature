@@ -93,6 +93,16 @@ Feature: Writes made while batching are sent together
       When the number 42 is written while batching
       Then the number kept is 42
 
+    Scenario: A negative number written straight after a minus
+      When the number 10 less -5 is written while batching
+      Then the number kept is 15
+
+    Scenario: A number compared with text as it is when it is not batched
+      When the text "5" is written while batching
+      And the text "5" is deleted by the number 5 while batching
+      Then the work did not fail
+      And no value is kept
+
     Scenario: A moment
       When the moment "2026-09-26T10:00:00.123Z" is written while batching
       Then the moment kept is "2026-09-26T10:00:00.123Z"
@@ -113,12 +123,26 @@ Feature: Writes made while batching are sent together
       When the value "twice" is written as both its name and its text while batching
       Then the values kept are "twice"
 
+  Rule: What is a place for a value is only what is outside quotations and comments
+
+    Scenario: A place for a value inside a quotation or a comment is left as it is
+      When the text "!" is written after a quotation holding a place for a value while batching
+      Then the text kept is "costs $1!"
+
+    Scenario: A place for a value that was not given fails the work
+      When a write naming a second value is given one while batching
+      Then the work failed
+
   Rule: A write that fails fails the work
 
     Scenario: A write that breaks a rule fails the work
       When the value "first" is written while batching
       And the value "first" is written again while batching
       Then the work failed
+
+    Scenario: A failure names the write that caused it
+      When a write naming a column there is not, "nme", is written while batching
+      Then the work failed naming "values ('x')"
 
     Scenario: What the work did is rolled back
       When the value "first" is written while batching
@@ -129,6 +153,12 @@ Feature: Writes made while batching are sent together
 
     Scenario: A write that changes one row is let by
       When the value "first" is written while batching
+      And the value "first" is changed to "second" expecting one row while batching
+      Then the work did not fail
+
+    Scenario: A write that ends in a semicolon does not move which row is expected
+      When the value "first" is written while batching
+      And a write that ends in a semicolon is written while batching
       And the value "first" is changed to "second" expecting one row while batching
       Then the work did not fail
 

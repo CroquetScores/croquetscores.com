@@ -289,6 +289,11 @@ export class StandingsToMake {
     if (noted === undefined || at > noted) this.#at.set(competition, at);
   }
 
+  /** Forgets what was noted, as a rebuild that did not finish leaves it. */
+  forget(): void {
+    this.#at.clear();
+  }
+
   /** Makes every standing noted, and forgets them. */
   async makeAll(connection: PoolClient): Promise<void> {
     const noted = new Map(this.#at);

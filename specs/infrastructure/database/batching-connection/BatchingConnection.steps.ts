@@ -290,6 +290,74 @@ When(
   },
 );
 
+When(
+  "the number {int} less {int} is written while batching",
+  function (this: SpecWorld, ten: number, less: number) {
+    // Written with the minus straight against the place for the value.
+    doing(this, true, () =>
+      write(
+        this,
+        `insert into batched_values (name, number_value) values ('v', ${String(ten)}-$1)`,
+        [less],
+      ),
+    );
+  },
+);
+
+When(
+  "the text {string} is deleted by the number {int} while batching",
+  function (this: SpecWorld, _text: string, number: number) {
+    doing(this, true, () =>
+      write(this, "delete from batched_values where text_value = $1", [number]),
+    );
+  },
+);
+
+When(
+  "the text {string} is written after a quotation holding a place for a value while batching",
+  function (this: SpecWorld, text: string) {
+    doing(this, true, () =>
+      write(
+        this,
+        `insert into batched_values (name, text_value)
+         values ('v', 'costs $1' || $1) -- $2 is no place for a value`,
+        [text],
+      ),
+    );
+  },
+);
+
+When(
+  "a write naming a second value is given one while batching",
+  function (this: SpecWorld) {
+    doing(this, true, () =>
+      write(
+        this,
+        "insert into batched_values (name, text_value) values ($1, $2)",
+        ["only one"],
+      ),
+    );
+  },
+);
+
+When(
+  "a write naming a column there is not, {string}, is written while batching",
+  function (this: SpecWorld, column: string) {
+    doing(this, true, () =>
+      write(this, `insert into batched_values (${column}) values ($1)`, ["x"]),
+    );
+  },
+);
+
+When(
+  "a write that ends in a semicolon is written while batching",
+  function (this: SpecWorld) {
+    doing(this, true, () =>
+      write(this, "delete from batched_values where name = 'nobody';", []),
+    );
+  },
+);
+
 // Writing a row that must be changed ------------------------------------------
 
 When(
@@ -441,6 +509,17 @@ Then(
     const scene = await done(this);
     assert.ok(
       scene.failure instanceof Error && scene.failure.message === message,
+      `It failed with ${String(scene.failure)}.`,
+    );
+  },
+);
+
+Then(
+  "the work failed naming {string}",
+  async function (this: SpecWorld, words: string) {
+    const scene = await done(this);
+    assert.ok(
+      scene.failure instanceof Error && scene.failure.message.includes(words),
       `It failed with ${String(scene.failure)}.`,
     );
   },

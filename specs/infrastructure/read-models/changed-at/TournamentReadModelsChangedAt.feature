@@ -15,6 +15,14 @@ Feature: The tournaments' read models keep when each row last changed
   theirs under the same name (`ManagerNotesByTournament.feature`,
   `CommentariesByTournament.feature`).
 
+  The one place a rebuild cannot give what the live projection did is a block's
+  and a Swiss's standings. A line moves only when an event changes that line,
+  which is told by working the standings out again after each event, and a
+  rebuild works them out once, when every stream is in. So after a rebuild each
+  line of a competition's standings, and the competition's own row beside them,
+  has the moment of the last event that could change the competition's
+  standings, and a line that last changed before it is later than it was.
+
   Everything is done at 2026-09-26T10:00:00Z unless a scenario says when.
 
   Background:
