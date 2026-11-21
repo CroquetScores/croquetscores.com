@@ -78,6 +78,10 @@ Feature: An app reads the standings of a block or a Swiss
       When the standings of "Block A" in "Spring Open" are read with that key
       Then the standing of "Sam Someone" says their net hoops are 9
 
+    Scenario: A player carries a mark of their standing
+      When the standings of "Block A" in "Spring Open" are read with that key
+      Then the standing of "Sam Someone" says a mark of itself
+
     Scenario: A player is named by the id the tournament keeps them by
       When the standings of "Block A" in "Spring Open" are read with that key
       Then the standing of "Sam Someone" names them by the id the tournament keeps them by

@@ -386,6 +386,13 @@ standingSays("their net games are", "netGames");
 standingSays("their net hoops are", "netHoops");
 
 Then(
+  "the standing of {string} says a mark of itself",
+  function (this: WebWorld, name: string) {
+    assert.match(String(standingOf(this, name)["etag"]), /^"[^"]+"$/);
+  },
+);
+
+Then(
   "the standing of {string} says they have withdrawn",
   function (this: WebWorld, name: string) {
     assert.equal(standingOf(this, name)["withdrawn"], true);
@@ -519,6 +526,13 @@ for (const side of ["winner", "loser"] as const) {
     },
   );
 }
+
+Then(
+  "the game of {string} beating {string} says a mark of itself",
+  function (this: WebWorld, winner: string, loser: string) {
+    assert.match(String(gameOf(this, winner, loser)["etag"]), /^"[^"]+"$/);
+  },
+);
 
 const gameSays = (said: string, field: string, value: unknown): void => {
   Then(

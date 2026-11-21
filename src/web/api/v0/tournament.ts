@@ -8,7 +8,7 @@ import { TournamentOperationRefused } from "../../../application/operations/tour
 import { TournamentForApps } from "../../../application/operations/tournaments/TournamentForApps.js";
 import { websiteOf } from "../../common/site.js";
 import { refuseKey } from "./apiKey.js";
-import { sendConditionally } from "./conditional.js";
+import { marked, sendConditionally } from "./conditional.js";
 import { refusal } from "./errors.js";
 import { competitionHref, tournamentHref, uriOf } from "./hrefs.js";
 import { callerOf } from "./rateLimit.js";
@@ -54,21 +54,25 @@ export const tournamentOfApps: FastifyPluginAsync = (server) => {
             national: read.national,
             international: read.international,
             changedAt: read.changedAt.toISOString(),
-            competitions: read.competitions.map((each) => ({
-              id: each.id,
-              name: each.name,
-              kind: each.kind,
-              uri: uriOf(each.address),
-              href: competitionHref(read.id, each.id),
-              changedAt: each.changedAt.toISOString(),
-            })),
-            players: read.players.map((each) => ({
-              id: each.id,
-              name: each.name,
-              worldRankingName: each.worldRankingName,
-              handicap: each.handicap ?? null,
-              representing: each.representing ?? null,
-            })),
+            competitions: read.competitions.map((each) =>
+              marked({
+                id: each.id,
+                name: each.name,
+                kind: each.kind,
+                uri: uriOf(each.address),
+                href: competitionHref(read.id, each.id),
+                changedAt: each.changedAt.toISOString(),
+              }),
+            ),
+            players: read.players.map((each) =>
+              marked({
+                id: each.id,
+                name: each.name,
+                worldRankingName: each.worldRankingName,
+                handicap: each.handicap ?? null,
+                representing: each.representing ?? null,
+              }),
+            ),
             teams: read.teams,
           },
           read.changedAt,

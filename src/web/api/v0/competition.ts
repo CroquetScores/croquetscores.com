@@ -24,7 +24,7 @@ import {
 import { TournamentOperationRefused } from "../../../application/operations/tournaments/tournamentOperations.js";
 import { websiteOf } from "../../common/site.js";
 import { refuseKey } from "./apiKey.js";
-import { sendConditionally } from "./conditional.js";
+import { marked, sendConditionally } from "./conditional.js";
 import { refusal } from "./errors.js";
 import { competitionHref, gamesHref, standingsHref, uriOf } from "./hrefs.js";
 import { callerOf } from "./rateLimit.js";
@@ -63,32 +63,35 @@ const headOf = (head: CompetitionHead, named: Named) => ({
   changedAt: head.changedAt.toISOString(),
 });
 
-const gameOf = (game: GameForApps) => ({
-  id: game.id,
-  winner: game.winner,
-  loser: game.loser,
-  drawn: game.drawn,
-  withdrawn: game.withdrawn,
-  round: game.round ?? null,
-  changedAt: game.changedAt.toISOString(),
-});
+const gameOf = (game: GameForApps) =>
+  marked({
+    id: game.id,
+    winner: game.winner,
+    loser: game.loser,
+    drawn: game.drawn,
+    withdrawn: game.withdrawn,
+    round: game.round ?? null,
+    changedAt: game.changedAt.toISOString(),
+  });
 
 const standingsSaid = (read: StandingsToTell, named: Named) => ({
   competition: headOf(read.competition, named),
-  standings: read.standings.map((each) => ({
-    playerId: each.playerId,
-    name: each.name,
-    withdrawn: each.withdrawn,
-    played: each.played,
-    won: each.won,
-    // Only a block has these, and a Swiss says nothing of them.
-    ...(each.lost === undefined ? {} : { lost: each.lost }),
-    ...(each.gamesWon === undefined ? {} : { gamesWon: each.gamesWon }),
-    ...(each.netGames === undefined ? {} : { netGames: each.netGames }),
-    netHoops: each.netHoops,
-    position: each.position ?? null,
-    shared: each.shared,
-  })),
+  standings: read.standings.map((each) =>
+    marked({
+      playerId: each.playerId,
+      name: each.name,
+      withdrawn: each.withdrawn,
+      played: each.played,
+      won: each.won,
+      // Only a block has these, and a Swiss says nothing of them.
+      ...(each.lost === undefined ? {} : { lost: each.lost }),
+      ...(each.gamesWon === undefined ? {} : { gamesWon: each.gamesWon }),
+      ...(each.netGames === undefined ? {} : { netGames: each.netGames }),
+      netHoops: each.netHoops,
+      position: each.position ?? null,
+      shared: each.shared,
+    }),
+  ),
 });
 
 const gamesSaid = (read: GamesToTell, named: Named) =>

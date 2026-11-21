@@ -231,6 +231,43 @@ fieldIs("region", "its region is");
 fieldIs("sport", "its sport is");
 fieldIs("changedAt", "it last changed at");
 
+const marksKept = new WeakMap<WebWorld, Map<string, unknown>>();
+
+Then(
+  "the tournament {string} says a mark of itself",
+  function (this: WebWorld, name: string) {
+    assert.match(String(namedInList(this, name)["etag"]), /^"[^"]+"$/);
+  },
+);
+
+Given(
+  "the mark of the tournament {string} is kept",
+  function (this: WebWorld, name: string) {
+    const kept = marksKept.get(this) ?? new Map<string, unknown>();
+    kept.set(name, namedInList(this, name)["etag"]);
+    marksKept.set(this, kept);
+  },
+);
+
+Then(
+  "the tournament {string} says the mark it said before",
+  function (this: WebWorld, name: string) {
+    assert.equal(
+      namedInList(this, name)["etag"],
+      marksKept.get(this)?.get(name),
+    );
+  },
+);
+
+Then(
+  "the tournament {string} says another mark than it said before",
+  function (this: WebWorld, name: string) {
+    const before = marksKept.get(this)?.get(name);
+    assert.ok(before !== undefined, "No mark was kept.");
+    assert.notEqual(namedInList(this, name)["etag"], before);
+  },
+);
+
 Then(
   "the tournament {string} says where the API tells of it",
   function (this: WebWorld, name: string) {

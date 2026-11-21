@@ -52,6 +52,10 @@ Feature: An app reads the games of a competition
       When the games of "Block A" in "Spring Open" are read with that key
       Then the game of "Sam Someone" beating "Alex Another" says its id
 
+    Scenario: A game carries a mark of itself
+      When the games of "Block A" in "Spring Open" are read with that key
+      Then the game of "Sam Someone" beating "Alex Another" says a mark of itself
+
     Scenario: A game says the winner's score
       When the games of "Block A" in "Spring Open" are read with that key
       Then the game of "Sam Someone" beating "Alex Another" says the winner scored "26"
