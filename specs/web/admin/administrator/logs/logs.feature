@@ -69,13 +69,13 @@ Feature: The page where an administrator reads the server's log
     Scenario: An entry says when it was written
       Given the log has an entry "Broken" written at "2026-10-09T09:00:00Z"
       When the page at "/admin/administrator/logs" is opened
-      Then the first entry was written at "2026-10-09T09:00:00Z"
+      Then the entry "Broken" was written at "2026-10-09T09:00:00Z"
 
     Scenario: The newest entry is first
       Given the log has an entry "Earlier" written at "2026-10-09T09:00:00Z"
       And the log has an entry "Later" written at "2026-10-09T09:30:00Z"
       When the page at "/admin/administrator/logs" is opened
-      Then the first entry says "Later"
+      Then the entry "Later" comes before the entry "Earlier"
 
     Scenario: An entry opens to show the rest of what it carried
       Given the log has an entry "Unhandled error" with the reference "9f1c"
