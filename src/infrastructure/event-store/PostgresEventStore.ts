@@ -168,6 +168,47 @@ export class PostgresEventStore implements EventStore {
   }
 
   /**
+   * The events of each of `streamIds`, each stream's in the order they were
+   * kept, read in one asking. What rebuilding the read models reads a stream at
+   * a time with, a handful of streams to the asking rather than one, since what
+   * it costs to ask is more than what it costs to read a stream is long.
+   */
+  async readStreams(
+    streamIds: readonly string[],
+  ): Promise<ReadonlyMap<string, readonly StoredEvent[]>> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<KeptEvent & { stream_id: string; version: number }>(
+        `select stream_id, version, name, data
+           from events
+          where stream_id = any($1)
+          order by stream_id, version`,
+        [[...streamIds]],
+      );
+    const byStream = new Map<string, typeof rows>();
+    for (const row of rows) {
+      const kept = byStream.get(row.stream_id);
+      if (kept === undefined) byStream.set(row.stream_id, [row]);
+      else kept.push(row);
+    }
+    const read = new Map<string, readonly StoredEvent[]>();
+    // In the order asked, whether or not a stream has any events.
+    for (const stream of streamIds) {
+      const group = byStream.get(stream) ?? [];
+      const opened = await this.sealing.openAll(stream, group);
+      read.set(
+        stream,
+        opened.map((kept, index) => ({
+          stream,
+          version: (group[index] as { version: number }).version,
+          event: this.readBack(kept),
+        })),
+      );
+    }
+    return read;
+  }
+
+  /**
    * Every event kept, stream by stream and each stream in order, as rebuilding
    * a read model from the beginning reads them.
    *

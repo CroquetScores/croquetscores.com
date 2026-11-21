@@ -66,6 +66,10 @@ class EveryTournamentReadModel implements TournamentReadModel {
     for (const each of this.#models)
       await each.rebuildFromStream(stream, events);
   }
+
+  async finishRebuild(): Promise<void> {
+    for (const each of this.#models) await each.finishRebuild?.();
+  }
 }
 
 Given("every read model of tournaments", function (this: SpecWorld) {

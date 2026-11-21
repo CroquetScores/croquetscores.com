@@ -7,6 +7,8 @@ export interface Rebuildable {
     stream: string,
     events: readonly StoredEvent[],
   ): Promise<void>;
+  /** What is left to do once every stream has been handed over, where there is any. */
+  finishRebuild?(): Promise<void>;
 }
 
 /**
@@ -30,4 +32,5 @@ export const rebuildFromEvents = async (
   for (const [stream, kept] of byStream) {
     await readModel.rebuildFromStream(stream, kept);
   }
+  await readModel.finishRebuild?.();
 };
