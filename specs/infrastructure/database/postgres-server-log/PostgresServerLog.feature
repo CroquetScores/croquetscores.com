@@ -79,7 +79,9 @@ Feature: The server's log, kept in the database for an administrator to read
     comes to the log for (`logs.feature`). A line for every request the site is
     asked for would fill the table with what nobody reads and push out, at
     seven days, the lines that matter. The file still has every line the
-    logger writes, whatever it was told to keep.
+    logger writes, whatever it was told to keep. A line that does not say how
+    severe it is, such as a stack trace written by something other than the
+    logger, is kept, since it is more likely to be a failure than chatter.
 
     Scenario: A line less severe than the site keeps is not kept
       Given a server log kept in the database from the severity Warn
@@ -96,6 +98,12 @@ Feature: The server's log, kept in the database for an administrator to read
     Scenario: A line more severe than the site keeps is kept
       Given a server log kept in the database from the severity Warn
       When the server logs "Broken" at the severity Error
+      And the log is flushed
+      Then 1 entry is kept
+
+    Scenario: A line that says nothing of its severity is kept
+      Given a server log kept in the database from the severity Warn
+      When the server writes "not a log line at all" to its log
       And the log is flushed
       Then 1 entry is kept
 

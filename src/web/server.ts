@@ -969,6 +969,9 @@ export const buildApplication = async (
     keepFrom: levelOf.Warn,
   });
   const server = Fastify({
+    // A logger a scenario gives is its own, level and all, so LOG_LEVEL is for
+    // the site's alone; the startup line is information and so is not written
+    // by default, which is what asking for warnings and worse means.
     logger: withRequestsLogged(
       options.logger ?? { stream: serverLogStream, level: config.logLevel },
     ),
