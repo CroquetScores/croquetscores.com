@@ -13,6 +13,15 @@
 -- use it.
 --
 -- Nothing in an event is changed: an index is read from them.
+--
+-- It is built over the whole of events, which holds back appends for as long
+-- as that takes, since the runner applies a migration in a transaction and an
+-- index cannot then be made concurrently. To avoid that on a large table, make
+-- it first by hand, outside one, with the same name, and this finds it there:
+--
+--   create index concurrently events_by_tournament_of_stream
+--       on events ((data ->> 'tournamentId'))
+--    where stream_id like 'commentary/%' or stream_id like 'manager-note/%';
 
 create index if not exists events_by_tournament_of_stream
     on events ((data ->> 'tournamentId'))

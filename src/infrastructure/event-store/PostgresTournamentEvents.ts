@@ -15,6 +15,11 @@ import type { UnitOfWork } from "../database/UnitOfWork.js";
  * are asked of the events, so that nothing here depends on a read model being
  * up to date, or being there to be rebuilt. Ordered by the number the database
  * gave each event as it was kept, which is the order across every stream.
+ *
+ * The streams are worked out first and the events read from each by its key.
+ * Asked as one condition on the events, with the streams as subqueries joined
+ * by or, the planner read every event there is in the order of their numbers
+ * and kept the ones that matched, which took most of a second.
  */
 export class PostgresTournamentEvents implements TournamentEvents {
   constructor(private readonly unitOfWork: UnitOfWork) {}
@@ -25,20 +30,22 @@ export class PostgresTournamentEvents implements TournamentEvents {
       name: string;
       data: Record<string, unknown>;
     }>(
-      `select e.stream_id, e.name, e.data
-         from events e
-        where e.stream_id = $1
-           or e.stream_id in (
-                select distinct t.data ->> 'competitionId'
-                  from events t
-                 where t.stream_id = $1
-                   and t.data ->> 'competitionId' is not null)
-           or e.stream_id in (
-                select distinct n.stream_id
-                  from events n
-                 where n.data ->> 'tournamentId' = $1
-                   and (n.stream_id like 'commentary/%'
-                     or n.stream_id like 'manager-note/%'))
+      `with streams as (
+         select $1::text as stream_id
+         union
+         select t.data ->> 'competitionId'
+           from events t
+          where t.stream_id = $1
+            and t.data ->> 'competitionId' is not null
+         union
+         select n.stream_id
+           from events n
+          where n.data ->> 'tournamentId' = $1
+            and (n.stream_id like 'commentary/%'
+              or n.stream_id like 'manager-note/%'))
+       select e.stream_id, e.name, e.data
+         from streams s
+         join events e on e.stream_id = s.stream_id
         order by e.id`,
       [tournament.value],
     );
