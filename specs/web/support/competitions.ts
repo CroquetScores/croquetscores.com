@@ -4,7 +4,7 @@
 // each, which is all that is kept; the rest is what the pages say.
 import { Given } from "@cucumber/cucumber";
 
-import { call } from "./control.js";
+import { aSecondAfterSettingUp, call } from "./control.js";
 import type { WebWorld } from "./world.js";
 
 const refused = async (what: string, answer: Response): Promise<never> => {
@@ -910,6 +910,7 @@ Given(
       commentary: commentaryIn(this, tournament, title),
       comment: commentIn(this, tournament, title, text),
       text: lines(to),
+      at: aSecondAfterSettingUp(),
     });
     this.comments.set(
       within(within(tournament, title), to),

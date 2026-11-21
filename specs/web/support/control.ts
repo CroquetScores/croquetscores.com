@@ -15,6 +15,15 @@ export const settingUpAt = (moment: string): void => {
   setUpAt = moment;
 };
 
+/**
+ * A second after what is set up is said to have been done. A comment edited at
+ * the very moment it was written reads as never edited, since the site keeps
+ * only when it last changed, so an edit the scenario sets up is made after the
+ * comment as an edit in life always is.
+ */
+export const aSecondAfterSettingUp = (): string =>
+  new Date(Date.parse(setUpAt) + 1000).toISOString();
+
 /** The next scenario sets up as if it were the usual moment again. */
 export const settingUpAtTheUsualMoment = (): void => {
   setUpAt = usualMoment;
