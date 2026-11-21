@@ -11,6 +11,7 @@ import { NotableTournament } from "./administrator/notable-tournament/notableTou
 import { ImportErrors } from "./administrator/import-errors/importErrors.js";
 import { ImportWorldRankingPlayers } from "./administrator/import-world-ranking-players/importWorldRankingPlayers.js";
 import { NewTournament } from "./tournaments/new/new.js";
+import { Events } from "./{year}/{sport}/{slug}/events/events.js";
 import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
 import { ViewCompetition } from "./{year}/{sport}/{slug}/competitions/{competition-slug}/view/view.js";
 import { ViewTournament } from "./{year}/{sport}/{slug}/view/view.js";
@@ -194,6 +195,16 @@ export const App = (): React.JSX.Element => {
   )?.[1];
   if (editing !== undefined) {
     return <EditTournament key={path} address={editing} />;
+  }
+
+  // A tournament's address and then events, as /admin/2026/ac/spring-open/events,
+  // is where an administrator reads what was kept of it. Only an administrator
+  // is sent the page (server.ts), and the API refuses anybody else the events.
+  const events = /^\/admin\/([1-9]\d{3}\/[^/]+\/[^/]+)\/events\/?$/.exec(
+    path,
+  )?.[1];
+  if (events !== undefined) {
+    return <Events key={path} address={events} />;
   }
 
   // A competition's address beneath its tournament's, as

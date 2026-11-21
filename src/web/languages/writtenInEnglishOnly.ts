@@ -45,6 +45,11 @@ const administratorsPages: readonly string[] = [
   "admin.administrator.sections.apiKeys",
   "ApiKeyLimits.",
   "ChangeApiKeyLimits.",
+  // The page where the events kept of a tournament are read, which only an
+  // administrator reads.
+  "admin.events.",
+  "admin.hover.events.",
+  "EventsOfTournament.",
 ];
 
 /** Whether the catalogue entry `key` is one written in English only. */

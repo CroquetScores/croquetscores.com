@@ -8,15 +8,18 @@ Feature: A tournament's events, in the admin
   (`EventsOfTournament.feature` says which events, and in what order).
 
   It is headed by the tournament's name and lists the events oldest first, one
-  to a row: the kind of event it is, when it happened, and the stream it was
-  kept in, with everything else it carried beneath, which a row is pressed to
+  to a row: when it happened, the kind of event it is, and the stream it was
+  kept in (which is named by the id of what it was kept of), in that order
+  across the row, or one above the next on a phone, with everything else it
+  carried beneath, which a row is pressed to
   open and show and pressed again to close, since there are a great many
   events and most of what they carry is not what is looked for.
 
-  Nobody but an administrator reads it. Anybody else, whether signed in or
-  not, is told the page is not found, as they are of every page of the
-  administrator's (`administrator.feature`), so that the page is not said to
-  be there to a reader who may not see it.
+  Nobody but an administrator reads it. Anybody else who is signed in is told
+  the page is not found, as they are of every page of the administrator's
+  (`administrator.feature`), so that the page is not said to be there to a
+  reader who may not see it. A reader not signed in is sent to sign in first,
+  since they may be an administrator who has not said so yet.
 
   Background:
     Given a viewport 375 pixels wide
@@ -62,6 +65,17 @@ Feature: A tournament's events, in the admin
       When the events of "Spring Open" are opened
       Then an event says "commentary-started"
 
+  Rule: An event is one row of when, what and where
+
+    Scenario: On a desktop the three are side by side, the moment first
+      Given a viewport 1200 pixels wide
+      When the events of "Spring Open" are opened
+      Then the first event's moment, kind and stream are in that order along one row
+
+    Scenario: On a phone the three are one above the next, the moment first
+      When the events of "Spring Open" are opened
+      Then the first event's moment, kind and stream are in that order down the page
+
   Rule: An event is pressed to show what it carried
 
     Scenario: What an event carried is not shown to begin with
@@ -81,19 +95,22 @@ Feature: A tournament's events, in the admin
 
   Rule: Only an administrator reads the page
 
+    A reader who is not signed in is sent to sign in first, as they are from
+    every page of the admin, and is brought back to this one once they have.
+
     Scenario: A manager of the tournament is told the page is not found
       Given the reader has signed in as "organiser@example.com" with the password "correct horse battery staple"
-      When the events of "Spring Open" are opened
-      Then the page says it is not found
+      When the page at "/admin/2026/ac/spring-open/events" is opened
+      Then the page is not found
 
-    Scenario: A reader who is not signed in is told the page is not found
+    Scenario: A reader who is not signed in is sent to sign in
       Given the reader has signed out
-      When the events of "Spring Open" are opened
-      Then the page says it is not found
+      When the page at "/admin/2026/ac/spring-open/events" is opened
+      Then the sign in page is shown
 
-    Scenario: A tournament there is not is told the page is not found
+    Scenario: A tournament there is not is refused as such
       When the page at "/admin/2026/ac/no-such-tournament/events" is opened
-      Then the page says it is not found
+      Then the page is refused with "EventsOfTournament.NoSuchTournament"
 
   Rule: The page goes back to the tournaments
 

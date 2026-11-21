@@ -70,6 +70,8 @@ import { CreateTournamentHandler } from "../../../src/application/operations/tou
 import { CreateTournamentValidator } from "../../../src/application/operations/tournaments/CreateTournamentValidator.js";
 import { RemoveManagerHandler } from "../../../src/application/operations/tournaments/RemoveManagerHandler.js";
 import { CompetitionsOfTournamentHandler } from "../../../src/application/operations/tournaments/CompetitionsOfTournamentHandler.js";
+import { EventsOfTournamentHandler } from "../../../src/application/operations/tournaments/EventsOfTournamentHandler.js";
+import { PostgresTournamentEvents } from "../../../src/infrastructure/event-store/PostgresTournamentEvents.js";
 import { IdentifyApiKeyHandler } from "../../../src/application/operations/accounts/IdentifyApiKeyHandler.js";
 import { WhatAKeyMayDoInTournamentHandler } from "../../../src/application/operations/tournaments/WhatAKeyMayDoInTournamentHandler.js";
 import { CryptoApiKeys } from "../../../src/infrastructure/identity/CryptoApiKeys.js";
@@ -404,6 +406,14 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both, games));
+  mediator.handleQuery(
+    new EventsOfTournamentHandler(
+      tournaments,
+      byAddress,
+      accountRepository,
+      new PostgresTournamentEvents(unitOfWork),
+    ),
+  );
   mediator.handleQuery(new TeamsOfTournamentHandler(...both));
   mediator.handleQuery(new PlayersOfTeamHandler(...both, games));
   mediator.handleQuery(new PlayersOfTestHandler(...both));

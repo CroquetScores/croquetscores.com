@@ -593,6 +593,13 @@ export const english: Language = {
     "admin.tournaments.archived": "Archived",
     "admin.tournaments.manage": "Manage",
     "admin.tournaments.edit": "Edit",
+    // The administrator's, beside a tournament in the list, to read the events
+    // kept of it (events.feature). In English alone (writtenInEnglishOnly.ts).
+    "admin.events.open": "Events",
+    "admin.events.back": "Back to the tournaments",
+    "admin.events.otherwise": "The events of this tournament cannot be read.",
+    "admin.events.none": "No events",
+    "EventsOfTournament.NoSuchTournament": "There is no such tournament.",
     "admin.tournaments.archive": "Archive",
     "admin.tournaments.restore": "Restore",
     "admin.tournaments.scores": "Scores",
@@ -944,6 +951,8 @@ export const english: Language = {
     "admin.hover.tournaments.manage":
       "Manage this tournament's players, teams, competitions and scores",
     "admin.hover.tournaments.edit": "Change this tournament's details",
+    "admin.hover.events.open": "Read every event kept of this tournament",
+    "admin.hover.events.back": "Go back to the list of tournaments",
     "admin.hover.tournaments.scores": "Enter this tournament's scores",
     "admin.hover.tournaments.players": "Look after this tournament's players",
     "admin.hover.competitions.view":

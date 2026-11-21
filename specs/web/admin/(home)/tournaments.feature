@@ -248,7 +248,7 @@ Feature: The admin lists the reader's tournaments
       Given "organiser@example.com" has been given the role "Administrator"
       And "organiser@example.com" has created the tournament "Spring Open"
       When the admin is opened
-      And Events is pressed for the tournament "Spring Open"
+      And "Events" is pressed for the tournament "Spring Open"
       Then the page is the events of "Spring Open"
 
     Scenario: A manager who is not an administrator is not offered the events

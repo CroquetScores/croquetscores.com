@@ -1,0 +1,46 @@
+.events {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.event {
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+/* As tall as a thumb, one row of three: when it happened, the kind of event,
+   and the stream it was kept in. On a phone there is not the width for the
+   three side by side, so they are one above the next in the same order. */
+.event summary {
+  display: grid;
+  gap: var(--space-1) var(--space-3);
+  min-height: 44px;
+  padding-block: var(--space-3);
+  cursor: pointer;
+}
+
+@media (min-width: 700px) {
+  .event summary {
+    grid-template-columns: max-content max-content minmax(0, 1fr);
+    align-items: baseline;
+  }
+}
+
+.event-kind {
+  font-weight: 600;
+}
+
+.event-happened,
+.event-stream {
+  color: var(--ink-muted);
+}
+
+.event-carried {
+  margin: 0;
+  padding-block: var(--space-3);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono, monospace);
+}
