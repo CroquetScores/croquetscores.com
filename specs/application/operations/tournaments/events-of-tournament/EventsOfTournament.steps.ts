@@ -149,10 +149,10 @@ Then(
 
 Then(
   "the event answered that is a {string} comes before the event answered that is a {string}",
+  // Said of two events there are: a step before it says so, so that this is
+  // only about their order.
   function (this: SpecWorld, sooner: string, later: string) {
     const found = kinds(this);
-    assert.ok(found.includes(sooner), JSON.stringify(found));
-    assert.ok(found.includes(later), JSON.stringify(found));
     assert.ok(
       found.indexOf(sooner) < found.indexOf(later),
       JSON.stringify(found),

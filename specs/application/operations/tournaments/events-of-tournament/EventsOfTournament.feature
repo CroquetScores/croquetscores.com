@@ -73,7 +73,6 @@ Feature: The events of a tournament, as an administrator reads them
       When the reader signed in to the account for "admin@example.com" reads the events of "Spring Open"
       Then the event answered that is a "competition-player-entered" was kept in the competition's stream
 
-
     Scenario: A commentary's events are answered
       Given "organiser@example.com" has started the commentary "Day one" on "Spring Open"
       When the reader signed in to the account for "admin@example.com" reads the events of "Spring Open"
@@ -99,7 +98,9 @@ Feature: The events of a tournament, as an administrator reads them
       Given "organiser@example.com" has started the commentary "Day one" on "Spring Open"
       And "organiser@example.com" has archived the tournament "Spring Open"
       When the reader signed in to the account for "admin@example.com" reads the events of "Spring Open"
-      Then the event answered that is a "commentary-started" comes before the event answered that is a "tournament-archived"
+      Then an event answered is a "commentary-started"
+      And an event answered is a "tournament-archived"
+      And the event answered that is a "commentary-started" comes before the event answered that is a "tournament-archived"
 
   Rule: Another tournament's events are not answered
 

@@ -174,27 +174,57 @@ const drawn = async (world: WebWorld) => {
   };
 };
 
+// One claim to a step, so that a failure says which of them was wrong.
 Then(
-  "the first event's moment, kind and stream are in that order along one row",
+  "the first event's moment is before its kind",
+  async function (this: WebWorld) {
+    await eventually(async () => {
+      const { moment, kind } = await drawn(this);
+      assert.ok(moment.x < kind.x, "The moment is not before the kind.");
+    });
+  },
+);
+
+Then(
+  "the first event's kind is before its stream",
+  async function (this: WebWorld) {
+    await eventually(async () => {
+      const { kind, stream } = await drawn(this);
+      assert.ok(kind.x < stream.x, "The kind is not before the stream.");
+    });
+  },
+);
+
+Then(
+  "the first event's moment, kind and stream are on one row",
   async function (this: WebWorld) {
     await eventually(async () => {
       const { moment, kind, stream } = await drawn(this);
-      assert.ok(moment.x < kind.x && kind.x < stream.x, "Not in order.");
       assert.ok(
         Math.abs(moment.y - kind.y) < moment.height &&
           Math.abs(kind.y - stream.y) < kind.height,
-        "Not on one row.",
+        "They are not on one row.",
       );
     });
   },
 );
 
 Then(
-  "the first event's moment, kind and stream are in that order down the page",
+  "the first event's moment is above its kind",
   async function (this: WebWorld) {
     await eventually(async () => {
-      const { moment, kind, stream } = await drawn(this);
-      assert.ok(moment.y < kind.y && kind.y < stream.y, "Not in order.");
+      const { moment, kind } = await drawn(this);
+      assert.ok(moment.y < kind.y, "The moment is not above the kind.");
+    });
+  },
+);
+
+Then(
+  "the first event's kind is above its stream",
+  async function (this: WebWorld) {
+    await eventually(async () => {
+      const { kind, stream } = await drawn(this);
+      assert.ok(kind.y < stream.y, "The kind is not above the stream.");
     });
   },
 );

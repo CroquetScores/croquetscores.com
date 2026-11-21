@@ -70,11 +70,14 @@ Feature: A tournament's events, in the admin
     Scenario: On a desktop the three are side by side, the moment first
       Given a viewport 1200 pixels wide
       When the events of "Spring Open" are opened
-      Then the first event's moment, kind and stream are in that order along one row
+      Then the first event's moment is before its kind
+      And the first event's kind is before its stream
+      And the first event's moment, kind and stream are on one row
 
     Scenario: On a phone the three are one above the next, the moment first
       When the events of "Spring Open" are opened
-      Then the first event's moment, kind and stream are in that order down the page
+      Then the first event's moment is above its kind
+      And the first event's kind is above its stream
 
   Rule: An event is pressed to show what it carried
 
