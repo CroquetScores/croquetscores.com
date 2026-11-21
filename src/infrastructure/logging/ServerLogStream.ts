@@ -25,6 +25,12 @@ export interface ServerLogStreamOptions {
   readonly database: Pick<Pool, "query">;
   /** Where the time comes from, which decides when old entries are removed. */
   readonly now: () => Date;
+  /**
+   * The level below which a line is not kept, though the file still has it.
+   * Left out, every line is kept. The site gives Warn, since the table is
+   * read for what went wrong and a line for every request would fill it.
+   */
+  readonly keepFrom?: number;
   /** Where a failure to keep the log is said. Standard error, left out. */
   readonly complain?: (text: string) => void;
 }
@@ -72,7 +78,9 @@ export class ServerLogStream {
       return;
     }
     try {
-      this.waiting.push(this.rowOf(line));
+      const row = this.rowOf(line);
+      if (row.level < (this.options.keepFrom ?? 0)) return;
+      this.waiting.push(row);
     } catch (failure) {
       // Never let keeping a copy stop the logger.
       this.complain(failure);

@@ -966,6 +966,7 @@ export const buildApplication = async (
     file: process.stdout,
     database: pool,
     now: clock,
+    keepFrom: levelOf.Warn,
   });
   const server = Fastify({
     logger: withRequestsLogged(

@@ -73,6 +73,37 @@ Feature: The server's log, kept in the database for an administrator to read
       And the log is flushed
       Then the newest entry says "not a log line at all"
 
+  Rule: Only the lines the site is asked to keep are kept
+
+    The site keeps a copy from Warn upwards, which is what an administrator
+    comes to the log for (`logs.feature`). A line for every request the site is
+    asked for would fill the table with what nobody reads and push out, at
+    seven days, the lines that matter. The file still has every line the
+    logger writes, whatever it was told to keep.
+
+    Scenario: A line less severe than the site keeps is not kept
+      Given a server log kept in the database from the severity Warn
+      When the server logs "Server listening" at the severity Info
+      And the log is flushed
+      Then 0 entries are kept
+
+    Scenario: A line of exactly the severity the site keeps is kept
+      Given a server log kept in the database from the severity Warn
+      When the server logs "Slow" at the severity Warn
+      And the log is flushed
+      Then 1 entry is kept
+
+    Scenario: A line more severe than the site keeps is kept
+      Given a server log kept in the database from the severity Warn
+      When the server logs "Broken" at the severity Error
+      And the log is flushed
+      Then 1 entry is kept
+
+    Scenario: A line not kept is still written to the file
+      Given a server log kept in the database from the severity Warn
+      When the server logs "Server listening" at the severity Info
+      Then the file has received the line as it was written
+
   Rule: A link a reader was sent is not kept
 
     A link in an email carries a signature that lets whoever holds it set a
