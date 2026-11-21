@@ -968,7 +968,9 @@ export const buildApplication = async (
     now: clock,
   });
   const server = Fastify({
-    logger: withRequestsLogged(options.logger ?? { stream: serverLogStream }),
+    logger: withRequestsLogged(
+      options.logger ?? { stream: serverLogStream, level: config.logLevel },
+    ),
     // An admin address with a malformed escape, as "%E0%A4%A", is refused by
     // the router before any handler is asked, with a 400 that is no page of
     // the admin's. It is the admin's to say there is no such document, as it

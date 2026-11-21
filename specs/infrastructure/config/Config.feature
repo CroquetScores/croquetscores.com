@@ -133,6 +133,37 @@ Feature: The settings the site is started with
       When the settings are loaded
       Then the world rankings are waited for 1500 milliseconds
 
+  Rule: The site logs warnings and what is worse unless it is told to log more
+
+    The log is read by an administrator for what went wrong
+    (`logs.feature`), and a line for every request the site is asked for
+    buried it. A site is told to log more by `LOG_LEVEL`, which is how the
+    specs that read what the site says of a request have it say so.
+
+    Scenario: A site told nothing logs warnings and what is worse
+      Given the administrator's email address is "administrator@example.com"
+      When the settings are loaded
+      Then the site logs at the level "warn"
+
+    Scenario: A site told to log information logs it
+      Given the administrator's email address is "administrator@example.com"
+      And the site is told to log at the level "info"
+      When the settings are loaded
+      Then the site logs at the level "info"
+
+    Scenario: A site told a level in capitals logs at that level
+      Given the administrator's email address is "administrator@example.com"
+      And the site is told to log at the level "DEBUG"
+      When the settings are loaded
+      Then the site logs at the level "debug"
+
+    Scenario: A site told a level there is none of does not start
+      Given the administrator's email address is "administrator@example.com"
+      And the site is told to log at the level "chatty"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "LOG_LEVEL"
+
   Rule: Where Google answers can be set only for a site that has the test control
 
     Scenario: A site told where Google is, with the test control, answers there
