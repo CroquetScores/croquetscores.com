@@ -126,11 +126,10 @@ Then(
 Then(
   "the first section is in the test locale",
   async function (this: WebWorld) {
-    const [first] = await labels(this);
-    assert.ok(
-      first !== undefined && isMarked(first),
-      `The first section is ${JSON.stringify(first)}.`,
-    );
+    // Settled like the other steps about the bar: the sections can arrive
+    // after the bar does, and a label read the moment the bar is there can be
+    // none yet.
+    await settles(this, ([first]) => first !== undefined && isMarked(first));
   },
 );
 

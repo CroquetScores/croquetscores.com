@@ -107,15 +107,46 @@ Then(
   },
 );
 
+// Found by what it says and not by where it comes: the site writes entries of
+// its own at the moment it is run, which are newer than any a scenario gives a
+// past moment, and so can come before it when the machine is busy.
+const entrySaying = (world: WebWorld, said: string): Locator =>
+  entries(world).filter({
+    has: world.browserPage
+      .locator(".log-entry-message")
+      .getByText(said, { exact: true }),
+  });
+
 Then(
-  "the first entry was written at {string}",
-  async function (this: WebWorld, moment: string) {
+  "the entry {string} was written at {string}",
+  async function (this: WebWorld, said: string, moment: string) {
     await eventually(async () => {
       assert.equal(
-        await first(this)
+        await entrySaying(this, said)
+          .first()
           .locator("time.log-entry-written")
           .getAttribute("datetime", { timeout: 100 }),
         new Date(moment).toISOString(),
+      );
+    });
+  },
+);
+
+Then(
+  "the entry {string} comes before the entry {string}",
+  async function (this: WebWorld, sooner: string, later: string) {
+    await eventually(async () => {
+      const messages = await entries(this)
+        .locator(".log-entry-message")
+        .allInnerTexts();
+      const at = (said: string): number => messages.indexOf(said);
+      assert.ok(
+        at(sooner) >= 0,
+        `The entries say ${JSON.stringify(messages)}.`,
+      );
+      assert.ok(
+        at(sooner) < at(later),
+        `The entries say ${JSON.stringify(messages)}.`,
       );
     });
   },
