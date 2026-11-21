@@ -22,6 +22,7 @@ import { TournamentArchived } from "../../domain/aggregates/tournaments/events/T
 import { TournamentCreated } from "../../domain/aggregates/tournaments/events/TournamentCreated.js";
 import { TournamentRestored } from "../../domain/aggregates/tournaments/events/TournamentRestored.js";
 import { TournamentUpdated } from "../../domain/aggregates/tournaments/events/TournamentUpdated.js";
+import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
@@ -234,9 +235,9 @@ export class Tournaments implements Projection {
         ],
       );
     } else if (event instanceof TournamentArchived) {
-      await this.#tournamentArchived(tournament, true);
+      await this.#tournamentArchived(tournament, true, event.occurredAt);
     } else if (event instanceof TournamentRestored) {
-      await this.#tournamentArchived(tournament, false);
+      await this.#tournamentArchived(tournament, false, event.occurredAt);
     } else if (
       event instanceof BlockAdded ||
       event instanceof KnockoutAdded ||
@@ -286,13 +287,15 @@ export class Tournaments implements Projection {
   async #tournamentArchived(
     tournament: string,
     archived: boolean,
+    at: ReadOnlyDate,
   ): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(`update tournaments set archived = $2 where tournament_id = $1`, [
-        tournament,
-        archived,
-      ]);
+    await this.unitOfWork.connection().query(
+      `update tournaments
+          set archived = $2,
+              archived_at = case when $2 then $3::timestamptz end
+        where tournament_id = $1`,
+      [tournament, archived, at.toISOString()],
+    );
   }
 
   async #competitionArchived(

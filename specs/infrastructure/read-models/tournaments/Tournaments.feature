@@ -169,6 +169,33 @@ Feature: The tournaments and competitions that every read model of tournaments i
       When the tournaments are read back
       Then the tournament "Spring Open" is held as not archived
 
+  Rule: An archived tournament is held with the moment it was archived
+
+    The moment is what the API says of an archived tournament
+    (`archived.feature`). A tournament restored has none, so that one archived
+    again says when it was archived last.
+
+    Scenario: A tournament archived is held with the moment it was archived
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is archived
+      When the tournaments are read back
+      Then the tournament "Spring Open" is held as archived at "2026-09-26T10:00:00Z"
+
+    Scenario: A tournament not archived is held with no moment
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments are read back
+      Then the tournament "Spring Open" is held as archived at no moment
+
+    Scenario: A tournament restored is held with no moment
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is archived
+      And "Spring Open" is restored
+      When the tournaments are read back
+      Then the tournament "Spring Open" is held as archived at no moment
+
   Rule: A competition is held with the tournament it is in
 
     Scenario: A competition added is held
@@ -291,6 +318,15 @@ Feature: The tournaments and competitions that every read model of tournaments i
       And the tournaments are read back
       Then it is rebuilt without failing
       And the tournament "Autumn Open" is held as archived
+
+    Scenario: A tournament rebuilt keeps the moment it was archived
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is archived
+      When the read model is rebuilt from the events
+      And the tournaments are read back
+      Then it is rebuilt without failing
+      And the tournament "Spring Open" is held as archived at "2026-09-26T10:00:00Z"
 
     Scenario: A competition rebuilt keeps what it is now
       Given a tournament "Spring Open" to start on "2026-10-03"

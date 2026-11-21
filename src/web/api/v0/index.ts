@@ -16,6 +16,7 @@ import {
 } from "./rateLimit.js";
 import { competitionOfApps } from "./competition.js";
 import { tournamentOfApps } from "./tournament.js";
+import { archivedTournamentsOfApps } from "./archived.js";
 import { tournamentsChangedYearOfApps } from "./changedYear.js";
 import { tournamentsOfApps } from "./tournaments.js";
 
@@ -79,6 +80,7 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
 
       await day.register(tournamentsOfApps);
       await day.register(tournamentsChangedYearOfApps);
+      await day.register(archivedTournamentsOfApps);
       await day.register(tournamentOfApps);
       await day.register(competitionOfApps);
 
