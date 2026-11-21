@@ -73,7 +73,7 @@ export const tournamentOfApps: FastifyPluginAsync = (server) => {
                 representing: each.representing ?? null,
               }),
             ),
-            teams: read.teams,
+            teams: read.teams.map((each) => marked(each)),
           },
           read.changedAt,
         );

@@ -573,6 +573,13 @@ const matchBetween = (world: WebWorld, one: string, other: string): Said => {
 };
 
 Then(
+  "the match between {string} and {string} says a mark of itself",
+  function (this: WebWorld, one: string, other: string) {
+    assert.match(String(matchBetween(this, one, other)["etag"]), /^"[^"]+"$/);
+  },
+);
+
+Then(
   "the answer lists a match between {string} and {string}",
   function (this: WebWorld, one: string, other: string) {
     matchBetween(this, one, other);

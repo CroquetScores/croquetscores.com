@@ -98,10 +98,12 @@ const gamesSaid = (read: GamesToTell, named: Named) =>
   "matches" in read
     ? {
         competition: headOf(read.competition, named),
-        matches: read.matches.map((match) => ({
-          players: match.players,
-          games: match.games.map(gameOf),
-        })),
+        matches: read.matches.map((match) =>
+          marked({
+            players: match.players,
+            games: match.games.map(gameOf),
+          }),
+        ),
       }
     : {
         competition: headOf(read.competition, named),

@@ -19,8 +19,9 @@ Feature: An app lists a year's tournaments
   `Last-Modified`, and the same question asked again with what they said is
   answered `304` and no more. Each tournament carries an `etag` of its own too,
   made of what it says, so that an app that is told a list has changed can tell
-  which of the tournaments in it did, without comparing them field by field. An app that reads a year again asks only for what
-  changed since the last time, with `changedSince`.
+  which of the tournaments in it did, without comparing them field by field.
+  An app that reads a year again asks only for what changed since the last
+  time, with `changedSince`.
 
   A year has several hundred tournaments at most, so an answer is a page of at
   most 100, with the way to the next.

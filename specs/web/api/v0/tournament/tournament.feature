@@ -18,8 +18,8 @@ Feature: An app reads a tournament, its competitions and its players
   the site's word for a match between two teams. A tournament played by teams
   says its teams, each with its players, and has no players of its own.
 
-  Each competition and each player carries an `etag` of its own, made of what
-  it says (`tournaments.feature`).
+  Each competition, each player and each team carries an `etag` of its own,
+  made of what it says (`tournaments.feature`).
 
   The site keeps no venue for a tournament, so none is said.
 
@@ -224,6 +224,15 @@ Feature: An app reads a tournament, its competitions and its players
       And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
       When the tournament "Spring Tests" is read with that key
       Then the tournament read lists the team "Australia" with the player "Pat Player"
+
+  Rule: A team carries a mark
+
+    Scenario: A team carries a mark of itself
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      When the tournament "Spring Tests" is read with that key
+      Then the team "Australia" says a mark of itself
 
   Rule: A tournament there is not is answered not found
 
