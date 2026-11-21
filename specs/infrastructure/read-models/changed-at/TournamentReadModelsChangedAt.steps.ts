@@ -222,3 +222,35 @@ Then(
     );
   },
 );
+
+const yearsOf = async (
+  world: SpecWorld,
+  name: string,
+): Promise<{ year: number; previous: number | null }> => {
+  const { rows } = await world.asARequest(() =>
+    unitOfWorkOf(world)
+      .connection()
+      .query<{ year: number; previous_year: number | null }>(
+        `select year, previous_year from tournament_years
+          where tournament_id = $1`,
+        [tournamentNamed(world, name).value],
+      ),
+  );
+  const [first] = rows;
+  assert.ok(first !== undefined, `The years table has no row for ${name}.`);
+  return { year: first.year, previous: first.previous_year };
+};
+
+Then(
+  "the years of {string} are {int} and no year before",
+  async function (this: SpecWorld, name: string, year: number) {
+    assert.deepEqual(await yearsOf(this, name), { year, previous: null });
+  },
+);
+
+Then(
+  "the years of {string} are {int} and before that {int}",
+  async function (this: SpecWorld, name: string, year: number, before: number) {
+    assert.deepEqual(await yearsOf(this, name), { year, previous: before });
+  },
+);

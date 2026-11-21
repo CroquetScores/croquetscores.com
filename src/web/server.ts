@@ -167,6 +167,7 @@ import { CompetitionOfTournamentForAppsHandler } from "../application/operations
 import { GamesForAppsHandler } from "../application/operations/tournaments/GamesForAppsHandler.js";
 import { StandingsForAppsHandler } from "../application/operations/tournaments/StandingsForAppsHandler.js";
 import { TournamentForAppsHandler } from "../application/operations/tournaments/TournamentForAppsHandler.js";
+import { TournamentsChangedYearHandler } from "../application/operations/tournaments/TournamentsChangedYearHandler.js";
 import { TournamentsForAppsHandler } from "../application/operations/tournaments/TournamentsForAppsHandler.js";
 import { TournamentsInYearHandler } from "../application/operations/tournaments/TournamentsInYearHandler.js";
 import { GamesOfTournamentHandler } from "../application/operations/tournaments/GamesOfTournamentHandler.js";
@@ -299,6 +300,7 @@ import { CompetitionStandings } from "../infrastructure/read-models/CompetitionS
 import { TournamentPages } from "../infrastructure/read-models/TournamentPages.js";
 import { TournamentRankings } from "../infrastructure/read-models/TournamentRankings.js";
 import { TournamentContents } from "../infrastructure/read-models/TournamentContents.js";
+import { TournamentYearChanges } from "../infrastructure/read-models/TournamentYearChanges.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
 import { CompetitionNamesOfWebsiteHandler } from "../application/operations/tournaments/CompetitionNamesOfWebsiteHandler.js";
@@ -1632,6 +1634,9 @@ export const buildApplication = async (
   mediator.handleQuery(new TournamentYearsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsForAppsHandler(tournamentsByWebsite));
+  mediator.handleQuery(
+    new TournamentsChangedYearHandler(new TournamentYearChanges(unitOfWork)),
+  );
   mediator.handleQuery(new TournamentForAppsHandler(tournamentContents));
   mediator.handleQuery(new TournamentsInDaysHandler(tournamentsByWebsite));
   mediator.handleQuery(new SearchHandler(searchByWebsite));
