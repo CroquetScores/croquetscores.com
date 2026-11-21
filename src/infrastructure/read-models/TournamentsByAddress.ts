@@ -17,8 +17,18 @@ interface Years {
   readonly at: string;
 }
 
-// An address begins with its year.
-const yearOf = (address: string): number => Number(address.slice(0, 4));
+// The year a tournament starts in, which is the year the list of a year finds
+// it in and the year the tournaments table holds it under (its start is the
+// date the table keeps). Said loudly where it is not one, since a year that is
+// not a number would otherwise fail the append at the insert with no word of
+// which tournament it was.
+const yearOf = (starts: string): number => {
+  const year = Number(starts.slice(0, 4));
+  if (!Number.isInteger(year)) {
+    throw new Error(`The start ${starts} does not begin with a year.`);
+  }
+  return year;
+};
 
 /**
  * Every address a tournament has ever been found at, kept in step with every
@@ -80,7 +90,7 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
       ) {
         continue;
       }
-      const year = yearOf(event.address);
+      const year = yearOf(event.starts);
       const at = event.occurredAt.toISOString();
       if (now === undefined) now = { year, previous: undefined, at };
       else if (year !== now.year) {

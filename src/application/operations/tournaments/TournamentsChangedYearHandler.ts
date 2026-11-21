@@ -20,7 +20,9 @@ export class TournamentsChangedYearHandler extends QueryHandler<
   }
 
   // Paged here and not by the database, as the list of a year's is, since the
-  // total and the date of the list both need every one that matches.
+  // total and the date of the list both need every one that matches. Only a
+  // tournament that has been moved to another year is a row, which is few
+  // beside the tournaments there are, and each row is three numbers and an id.
   async handle(
     query: TournamentsChangedYear,
   ): Promise<TournamentsChangedYearPage> {

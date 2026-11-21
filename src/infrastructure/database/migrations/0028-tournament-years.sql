@@ -8,6 +8,11 @@
 -- first held and so say nothing of the order a tournament moved between them
 -- when it moved back to one.
 --
+-- A tournament that is already kept is given the year it is in, and no year
+-- before, so that one moved before the read models are made again is listed
+-- from the move after this one. What it was in before is had by making them
+-- again.
+--
 -- `changed_at` is the moment it came into the year it is in, or the moment it
 -- was created where it has not moved.
 create table tournament_years (
@@ -16,3 +21,8 @@ create table tournament_years (
     previous_year integer,
     changed_at    timestamptz not null
 );
+
+insert into tournament_years (tournament_id, year, previous_year, changed_at)
+select tournament_id, extract(year from starts)::int, null,
+       coalesce(changed_at, now())
+  from tournaments;
