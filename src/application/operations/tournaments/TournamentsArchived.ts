@@ -3,7 +3,7 @@ import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { Website } from "../../../domain/common/Website.js";
 import { Query } from "../../common/Query.js";
 
-/** Every reason asking for the tournaments whose year changed can be refused where it is asked. */
+/** Every reason asking for the archived tournaments can be refused where it is asked. */
 export type TournamentsArchivedRefusedCode =
   | "TournamentsArchived.NotText"
   | "TournamentsArchived.PageNotWhole"
@@ -21,16 +21,25 @@ export interface TournamentArchived {
 /** The tournaments of a website that are archived, as the read model keeps them. */
 export interface ArchivedTournaments {
   /**
-   * Those on `website` that are archived, after `since` where that is given,
-   * the first archived first.
+   * `count` of those on `website` that are archived, after `since` where that
+   * is given, the first archived first, from the `skip`th; and how many there
+   * are in all and when the latest was archived, whichever part is asked for.
+   * Done by the database, since a site can have many tournaments archived and
+   * anybody may ask.
    */
   archivedSince(
     website: Website,
     since: ReadOnlyDate | undefined,
-  ): Promise<readonly TournamentArchived[]>;
+    skip: number,
+    count: number,
+  ): Promise<{
+    readonly tournaments: readonly TournamentArchived[];
+    readonly total: number;
+    readonly latest: ReadOnlyDate | undefined;
+  }>;
 }
 
-/** One page of the tournaments whose year changed, and what an app needs to ask for the next. */
+/** One page of the archived tournaments, and what an app needs to ask for the next. */
 export interface TournamentsArchivedPage {
   readonly tournaments: readonly TournamentArchived[];
   /** How many there are in all, on every page. */

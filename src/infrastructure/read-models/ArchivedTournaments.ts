@@ -17,20 +17,49 @@ export class ArchivedTournaments implements ArchivedTournamentsAsked {
   async archivedSince(
     website: Website,
     since: ReadOnlyDate | undefined,
-  ): Promise<readonly TournamentArchived[]> {
-    const { rows } = await this.unitOfWork
-      .connection()
-      .query<{ tournament_id: string; archived_at: Date }>(
-        `select tournament_id, archived_at
-           from tournaments
-          where website = $1 and archived and archived_at is not null
-            and ($2::timestamptz is null or archived_at > $2::timestamptz)
-          order by archived_at, tournament_id`,
-        [website.host, since?.toISOString() ?? null],
-      );
-    return rows.map((row) => ({
-      tournamentId: row.tournament_id,
-      archivedAt: ReadOnlyDate.from(row.archived_at),
-    }));
+    skip: number,
+    count: number,
+  ): Promise<{
+    readonly tournaments: readonly TournamentArchived[];
+    readonly total: number;
+    readonly latest: ReadOnlyDate | undefined;
+  }> {
+    const connection = this.unitOfWork.connection();
+    const asked = [website.host, since?.toISOString() ?? null];
+    const where = `website = $1 and archived and archived_at is not null
+            and ($2::timestamptz is null or archived_at > $2::timestamptz)`;
+    // Counted apart from the page, so that a page past the last still says how
+    // many there are and when the latest was.
+    const { rows: counted } = await connection.query<{
+      total: string;
+      latest: Date | null;
+    }>(
+      `select count(*) as total, max(archived_at) as latest
+         from tournaments where ${where}`,
+      asked,
+    );
+    const { rows } = await connection.query<{
+      tournament_id: string;
+      archived_at: Date;
+    }>(
+      `select tournament_id, archived_at
+         from tournaments
+        where ${where}
+        order by archived_at, tournament_id
+        limit $3 offset $4`,
+      [...asked, count, skip],
+    );
+    const latest = counted[0]?.latest;
+    return {
+      tournaments: rows.map((row) => ({
+        tournamentId: row.tournament_id,
+        archivedAt: ReadOnlyDate.from(row.archived_at),
+      })),
+      total: Number(counted[0]?.total ?? 0),
+      latest:
+        latest === null || latest === undefined
+          ? undefined
+          : ReadOnlyDate.from(latest),
+    };
   }
 }
