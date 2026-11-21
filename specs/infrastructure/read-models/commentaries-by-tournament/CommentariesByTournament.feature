@@ -31,9 +31,10 @@ Feature: Finding a tournament's commentaries without reading them
   anywhere a reader looks, so it is not found among a tournament's
   commentaries and is never news. Its title and slug stay taken, so that a
   link kept to it never leads to somebody else's words
-  (`StartCommentary.feature`). The read model hears of the forgetting from
-  the account's own stream, which a rebuild may take before the
-  commentary's.
+  (`StartCommentary.feature`). Whether the writer was forgotten is asked of
+  the accounts' read model (`AccountsByEmailAddress.feature`) when the
+  commentaries are looked for, and not kept here, so that no order a rebuild
+  takes the streams in can lose it.
 
   A tournament with no commentaries is answered with none, and another
   tournament's are not among them. The projection is safe to run twice, as
@@ -234,22 +235,6 @@ Feature: Finding a tournament's commentaries without reading them
       When the commentary of "Autumn Open" at "day-one" is read
       Then no commentary is read
 
-  Rule: A commentary kept before comments were is not read
-
-    Scenario: A commentary kept before comments were is refused until the read model is rebuilt
-      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
-      And the commentary was kept before comments were
-      When the commentary of "Spring Open" at "day-one" is read
-      Then the commentary is refused as not kept yet
-
-    Scenario: A commentary kept before comments were is read once the read model is rebuilt
-      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
-      And the comment "Sam is two hoops up" is added to "Day one"
-      And the commentary was kept before comments were
-      When the read model is rebuilt from the events
-      And the commentary of "Spring Open" at "day-one" is read
-      Then the first comment read says "Sam is two hoops up"
-
   Rule: The titles and slugs a tournament's commentaries have taken are found
 
     Scenario: A commentary's title is taken
@@ -294,10 +279,9 @@ Feature: Finding a tournament's commentaries without reading them
       When the commentaries of "Spring Open" are looked for
       Then the commentary "Day two" is found
 
-    Scenario: A forgetting rebuilt before the commentary's start still counts
+    Scenario: A forgetting is still counted after the commentaries are made again
       Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
       And the account "account/123e4567-e89b-42d3-a456-426614174000" is forgotten
-      And the accounts' streams are to be rebuilt before the commentaries'
       When the read model is rebuilt from the events
       And the commentaries of "Spring Open" are looked for
       Then no commentaries are found

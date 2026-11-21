@@ -59,20 +59,20 @@ export class ManagerNotesByTournament
       note_id: string;
       title: string;
       slug: string;
-      written_at: Date;
+      created_at: Date;
       changed_at: Date;
     }>(
-      `select note_id, title, slug, written_at, changed_at
+      `select note_id, title, slug, created_at, changed_at
          from manager_notes_by_tournament
         where tournament_id = $1 and not deleted
-        order by written_at desc, note_id desc`,
+        order by created_at desc, note_id desc`,
       [tournament.value],
     );
     return rows.map((row) => ({
       id: row.note_id,
       title: row.title,
       slug: row.slug,
-      writtenAt: ReadOnlyDate.from(row.written_at),
+      writtenAt: ReadOnlyDate.from(row.created_at),
       changedAt: ReadOnlyDate.from(row.changed_at),
     }));
   }
@@ -86,12 +86,10 @@ export class ManagerNotesByTournament
       title: string;
       slug: string;
       description: string | null;
-      written_at: Date;
-      last_edited_at: Date | null;
+      created_at: Date;
       changed_at: Date;
     }>(
-      `select note_id, title, slug, description, written_at, last_edited_at,
-              changed_at
+      `select note_id, title, slug, description, created_at, changed_at
          from manager_notes_by_tournament
         where tournament_id = $1 and slug = $2 and not deleted`,
       [tournament.value, slug],
@@ -110,11 +108,14 @@ export class ManagerNotesByTournament
       title: row.title,
       slug: row.slug,
       description: row.description,
-      writtenAt: ReadOnlyDate.from(row.written_at),
+      writtenAt: ReadOnlyDate.from(row.created_at),
+      // A note changes only by being edited, so one that has changed since it
+      // was made was edited then. One edited at the very moment it was made
+      // reads as never edited, which a clock that moves does not let happen.
       lastEditedAt:
-        row.last_edited_at === null
-          ? undefined
-          : ReadOnlyDate.from(row.last_edited_at),
+        row.changed_at > row.created_at
+          ? ReadOnlyDate.from(row.changed_at)
+          : undefined,
       changedAt: ReadOnlyDate.from(row.changed_at),
     };
   }
@@ -144,7 +145,7 @@ export class ManagerNotesByTournament
       const at = event.occurredAt.toDate();
       await connection.query(
         `insert into manager_notes_by_tournament
-                (note_id, tournament_id, title, slug, description, written_at,
+                (note_id, tournament_id, title, slug, description, created_at,
                  changed_at)
          values ($1, $2, $3, $4, $5, $6, $6)
          on conflict (note_id) do nothing`,
@@ -160,8 +161,7 @@ export class ManagerNotesByTournament
     } else if (event instanceof ManagerNoteEdited) {
       await connection.query(
         `update manager_notes_by_tournament
-            set title = $2, description = $3, last_edited_at = $4,
-                changed_at = $4
+            set title = $2, description = $3, changed_at = $4
           where note_id = $1`,
         [stream, event.title, event.description, event.occurredAt.toDate()],
       );

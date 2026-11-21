@@ -76,12 +76,6 @@ const teamOf = (event: TeamAdded | TeamUpdated) =>
 const teamPlayerOf = (event: TeamPlayerAdded | TeamPlayerUpdated) =>
   TeamPlayer.from(TeamPlayerId.from(event.playerId), event, anywhere);
 
-// What a test is called, as the tournament calls it: its two teams' short
-// names, kept as the teams' are now.
-const testNameOf = `(select f.short_name from tournament_teams f where f.team_id = $2)
-                    || ' v ' ||
-                    (select s.short_name from tournament_teams s where s.team_id = $3)`;
-
 /**
  * What is in each tournament: its players, its teams and their players, and
  * what each of its competitions is called and is, kept as the tournament's
@@ -166,10 +160,11 @@ export class TournamentContents implements Projection, Asked {
       slug: string;
       changed_at: Date;
     }>(
-      `select competition_id, name, kind, slug, changed_at
-         from competitions
-        where tournament_id = $1 and not archived and kind is not null
-        order by position, competition_id`,
+      `select c.competition_id, n.name, c.kind, c.slug, c.changed_at
+         from competitions c
+         join competition_names n on n.competition_id = c.competition_id
+        where c.tournament_id = $1 and not c.archived and c.kind is not null
+        order by c.position, c.competition_id`,
       [tournament],
     );
     const players = await connection.query<{
@@ -200,9 +195,10 @@ export class TournamentContents implements Projection, Asked {
       name: string;
       world_ranking_name: string;
     }>(
-      `select player_id, team_id, name, world_ranking_name
-         from tournament_team_players
-        where tournament_id = $1 and not archived`,
+      `select p.player_id, p.team_id, p.name, p.world_ranking_name
+         from tournament_team_players p
+         join tournament_teams t on t.team_id = p.team_id
+        where t.tournament_id = $1 and not p.archived`,
       [tournament],
     );
 
@@ -265,11 +261,12 @@ export class TournamentContents implements Projection, Asked {
       archived: boolean | null;
       changed_at: Date | null;
     }>(
-      `select t.address, c.competition_id, c.name, c.kind, c.slug, c.archived,
+      `select t.address, c.competition_id, n.name, c.kind, c.slug, c.archived,
               c.changed_at
          from tournaments t
          left join competitions c
            on c.competition_id = $3 and c.tournament_id = t.tournament_id
+         left join competition_names n on n.competition_id = c.competition_id
         where t.tournament_id = $1 and t.website = $2 and not t.archived`,
       [tournament, website, competition],
     );
@@ -351,6 +348,7 @@ export class TournamentContents implements Projection, Asked {
       [
         event.competitionId,
         event.maximumHoops ?? null,
+        // Said as none is not said at all: the column is null for both.
         event.maximumHoops !== undefined,
         event.advantage ?? false,
       ],
@@ -370,13 +368,8 @@ export class TournamentContents implements Projection, Asked {
       const group =
         event.group === undefined ? undefined : TestGroup.from(event.group);
       await this.#competitionWritten(
-        `update competitions set group_name = $2, group_slug = $3
-          where competition_id = $1`,
-        [
-          event.competitionId,
-          group?.toString() ?? null,
-          group?.slug?.toString() ?? null,
-        ],
+        `update competitions set group_name = $2 where competition_id = $1`,
+        [event.competitionId, group?.toString() ?? null],
       );
     }
   }
@@ -455,7 +448,6 @@ export class TournamentContents implements Projection, Asked {
           team.flag === undefined ? null : String(team.flag),
         ],
       );
-      if (event instanceof TeamUpdated) await this.#renameTestsOf(event.teamId);
     } else if (event instanceof TeamArchived) {
       await connection.query(
         `update tournament_teams
@@ -477,9 +469,9 @@ export class TournamentContents implements Projection, Asked {
       const name = player.name.toString();
       await connection.query(
         `insert into tournament_team_players
-           (player_id, team_id, tournament_id, name, world_ranking_name,
+           (player_id, team_id, name, world_ranking_name,
             position, changed_at, slug)
-         values ($1, $2, $3, $4, $5, $6, $7, $8)
+         values ($1, $2, $3, $4, $5, $6, $7)
          on conflict (player_id) do update
            set name = excluded.name,
                world_ranking_name = excluded.world_ranking_name,
@@ -488,7 +480,6 @@ export class TournamentContents implements Projection, Asked {
         [
           event.playerId,
           event.teamId,
-          stream,
           name,
           player.worldRankingName?.toString() ?? name,
           event instanceof TeamPlayerAdded ? event.order : ORDER_STEP,
@@ -562,7 +553,7 @@ export class TournamentContents implements Projection, Asked {
     } else if (event instanceof TestAdded) {
       await this.#competitionWritten(
         `update competitions
-            set name = ${testNameOf}, kind = 'test', slug = $4, position = $5,
+            set name = null, kind = 'test', slug = $4, position = $5,
                 first_team_id = $2, second_team_id = $3
           where competition_id = $1`,
         [
@@ -599,7 +590,7 @@ export class TournamentContents implements Projection, Asked {
     } else if (event instanceof TestUpdated) {
       await this.#competitionWritten(
         `update competitions
-            set name = ${testNameOf}, first_team_id = $2, second_team_id = $3
+            set first_team_id = $2, second_team_id = $3
           where competition_id = $1`,
         [event.competitionId, event.firstTeamId, event.secondTeamId],
       );
@@ -651,23 +642,6 @@ export class TournamentContents implements Projection, Asked {
         "A competition has no row to write to: TournamentContents is projected after Tournaments.",
       );
     }
-  }
-
-  // A team called by another short name gives every test it is in another
-  // name with it, as the tournament's own events do: the tests not archived,
-  // which keep their slugs.
-  async #renameTestsOf(team: string): Promise<void> {
-    await this.unitOfWork.connection().query(
-      `update competitions c
-          set name = (select f.short_name from tournament_teams f
-                       where f.team_id = c.first_team_id)
-                     || ' v ' ||
-                     (select s.short_name from tournament_teams s
-                       where s.team_id = c.second_team_id)
-        where c.kind = 'test' and not c.archived
-          and (c.first_team_id = $1 or c.second_team_id = $1)`,
-      [team],
-    );
   }
 
   // The tables and columns named here are this class's own, never a reader's.

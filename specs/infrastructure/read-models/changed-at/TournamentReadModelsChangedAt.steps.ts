@@ -159,11 +159,17 @@ const rows = {
     of: "tournament",
   },
   "search competition": {
-    sql: `select changed_at from search_by_website_competitions where name = $1`,
+    // The name is the competition's, which the search no longer keeps.
+    sql: `select s.changed_at from search_by_website_competitions s
+             join competitions c on c.competition_id = s.competition_id
+            where c.name = $1`,
     of: "name",
   },
   "search player": {
-    sql: `select changed_at from search_by_website_players where name = $1`,
+    // The name is the tournament's player's, which the search no longer keeps.
+    sql: `select s.changed_at from search_by_website_players s
+             join tournament_players p on p.player_id = s.player_id
+            where p.name = $1`,
     of: "name",
   },
   "tournament player": {

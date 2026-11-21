@@ -37,10 +37,11 @@ export class TournamentRankings implements Asked {
       world_rankings: boolean;
       changed_at: Date;
     }>(
-      `select competition_id, name, kind, world_rankings, changed_at
-         from competitions
-        where tournament_id = $1 and not archived and kind is not null
-        order by position, competition_id`,
+      `select c.competition_id, n.name, c.kind, c.world_rankings, c.changed_at
+         from competitions c
+         join competition_names n on n.competition_id = c.competition_id
+        where c.tournament_id = $1 and not c.archived and c.kind is not null
+        order by c.position, c.competition_id`,
       [id],
     );
     // An archived player is named too, since a game they played still is.
@@ -51,8 +52,9 @@ export class TournamentRankings implements Asked {
       `select player_id, world_ranking_name from tournament_players
         where tournament_id = $1
        union all
-       select player_id, world_ranking_name from tournament_team_players
-        where tournament_id = $1`,
+       select p.player_id, p.world_ranking_name from tournament_team_players p
+         join tournament_teams t on t.team_id = p.team_id
+        where t.tournament_id = $1`,
       [id],
     );
     return {

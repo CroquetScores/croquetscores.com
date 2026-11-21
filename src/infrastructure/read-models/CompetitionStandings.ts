@@ -20,12 +20,13 @@ const nothingKept = async (
   competition: string,
 ): Promise<void> => {
   await connection.query(
-    `delete from competition_standings where competition_id = $1`,
+    `delete from competition_standings
+      where entry_id in (select entry_id from competition_entries
+                          where competition_id = $1)`,
     [competition],
   );
   await connection.query(
-    `update competitions set level_on_matches_won = false
-      where competition_id = $1`,
+    `delete from competition_standings_kept where competition_id = $1`,
     [competition],
   );
 };
@@ -147,18 +148,18 @@ export const standCompetition = async (
     rank: number;
     played: number;
     won: number;
-    lost: number | null;
     games_won: number | null;
     net_games: number | null;
     net_hoops: number;
-    withdrawn: boolean;
     place: number | null;
     shared: boolean;
     changed_at: Date | null;
   }>(
-    `select entry_id, rank, played, won, lost, games_won, net_games, net_hoops,
-            withdrawn, place, shared, changed_at
-       from competition_standings where competition_id = $1`,
+    `select s.entry_id, s.rank, s.played, s.won, s.games_won,
+            s.net_games, s.net_hoops, s.place, s.shared, s.changed_at
+       from competition_standings s
+       join competition_entries e on e.entry_id = s.entry_id
+      where e.competition_id = $1`,
     [competition],
   );
   const was = new Map(before.rows.map((each) => [each.entry_id, each]));
@@ -169,17 +170,17 @@ export const standCompetition = async (
       old.rank === each.rank &&
       old.played === each.played &&
       old.won === each.won &&
-      old.lost === (each.lost ?? null) &&
       old.games_won === (each.gamesWon ?? null) &&
       old.net_games === (each.netGames ?? null) &&
       old.net_hoops === each.netHoops &&
-      old.withdrawn === each.withdrawn &&
       old.place === (each.place ?? null) &&
       old.shared === each.shared;
     return same && old.changed_at !== null ? old.changed_at.toISOString() : at;
   };
   await connection.query(
-    `delete from competition_standings where competition_id = $1`,
+    `delete from competition_standings
+      where entry_id in (select entry_id from competition_entries
+                          where competition_id = $1)`,
     [competition],
   );
   // All of the lines in one statement, since a block has a line a player.
@@ -187,36 +188,43 @@ export const standCompetition = async (
   if (lines.length > 0) {
     await connection.query(
       `insert into competition_standings
-         (entry_id, competition_id, rank, played, won, lost, games_won,
-          net_games, net_hoops, withdrawn, place, shared, changed_at)
-       select entry_id, $1, rank, played, won, lost, games_won, net_games,
-              net_hoops, withdrawn, place, shared, changed_at
-         from unnest($2::text[], $3::int[], $4::int[], $5::int[], $6::int[],
-                     $7::int[], $8::int[], $9::int[], $10::boolean[],
-                     $11::int[], $12::boolean[], $13::timestamptz[])
-              as t(entry_id, rank, played, won, lost, games_won, net_games,
-                   net_hoops, withdrawn, place, shared, changed_at)`,
+         (entry_id, rank, played, won, games_won, net_games, net_hoops,
+          place, shared, changed_at)
+       select entry_id, rank, played, won, games_won, net_games,
+              net_hoops, place, shared, changed_at
+         from unnest($1::text[], $2::int[], $3::int[], $4::int[], $5::int[],
+                     $6::int[], $7::int[], $8::int[], $9::boolean[],
+                     $10::timestamptz[])
+              as t(entry_id, rank, played, won, games_won, net_games,
+                   net_hoops, place, shared, changed_at)`,
       [
-        competition,
         lines.map((each) => each.entryId),
         lines.map((each) => each.rank),
         lines.map((each) => each.played),
         lines.map((each) => each.won),
-        lines.map((each) => each.lost ?? null),
         lines.map((each) => each.gamesWon ?? null),
         lines.map((each) => each.netGames ?? null),
         lines.map((each) => each.netHoops),
-        lines.map((each) => each.withdrawn),
         lines.map((each) => each.place ?? null),
         lines.map((each) => each.shared),
         lines.map(momentOf),
       ],
     );
   }
+  // Its moment moves only when what it says does, as a line's does.
   await connection.query(
-    `update competitions set level_on_matches_won = $2
-      where competition_id = $1`,
-    [competition, stood.levelOnMatchesWon],
+    `insert into competition_standings_kept
+       (competition_id, level_on_matches_won, changed_at)
+     values ($1, $2, $3)
+     on conflict (competition_id) do update
+       set level_on_matches_won = excluded.level_on_matches_won,
+           changed_at = case
+             when competition_standings_kept.level_on_matches_won
+                    = excluded.level_on_matches_won
+                  and competition_standings_kept.changed_at is not null
+             then competition_standings_kept.changed_at
+             else excluded.changed_at end`,
+    [competition, stood.levelOnMatchesWon, at],
   );
 };
 
@@ -236,7 +244,7 @@ export class CompetitionStandings implements Asked {
       rank: number;
       played: number;
       won: number;
-      lost: number | null;
+      kind: string;
       games_won: number | null;
       net_games: number | null;
       net_hoops: number;
@@ -245,16 +253,18 @@ export class CompetitionStandings implements Asked {
       shared: boolean;
     }>(
       `select s.entry_id, e.tournament_player_id, s.rank, s.played, s.won,
-              s.lost, s.games_won, s.net_games, s.net_hoops, s.withdrawn, s.place,
+              c.kind, s.games_won, s.net_games, s.net_hoops, e.withdrawn, s.place,
               s.shared
          from competition_standings s
          join competition_entries e on e.entry_id = s.entry_id
-        where s.competition_id = $1
+         join competitions c on c.competition_id = e.competition_id
+        where e.competition_id = $1
         order by s.rank`,
       [competition],
     );
     const level = await connection.query<{ level_on_matches_won: boolean }>(
-      `select level_on_matches_won from competitions where competition_id = $1`,
+      `select level_on_matches_won from competition_standings_kept
+        where competition_id = $1`,
       [competition],
     );
     return {
@@ -265,7 +275,9 @@ export class CompetitionStandings implements Asked {
         rank: each.rank,
         played: each.played,
         won: each.won,
-        lost: each.lost ?? undefined,
+        // Every match a block's player played they won or lost, and a Swiss
+        // says nothing of matches lost.
+        lost: each.kind === "block" ? each.played - each.won : undefined,
         gamesWon: each.games_won ?? undefined,
         netGames: each.net_games ?? undefined,
         netHoops: each.net_hoops,

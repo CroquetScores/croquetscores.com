@@ -11,6 +11,7 @@ import type {
   TournamentPages as Asked,
 } from "../../application/operations/tournaments/tournamentPages.js";
 import type { CompetitionOfTournament } from "../../application/operations/tournaments/tournamentForReaders.js";
+import { TestGroup } from "../../domain/aggregates/tournaments/value-objects/TestGroup.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 
 /**
@@ -20,6 +21,17 @@ import type { UnitOfWork } from "../database/UnitOfWork.js";
  * asks what `Tournaments` and `TournamentContents` keep, in the request that
  * asks it (`TournamentPages.feature`).
  */
+// A test's group as its page says it, with the slug the page is found at made
+// of its name, and so never kept beside it to disagree. A name with nothing in
+// it to make a slug from has no group page, and says none.
+const groupOf = (
+  name: string | null,
+): { group?: { name: string; slug: string } } => {
+  if (name === null) return {};
+  const slug = TestGroup.from(name)?.slug?.toString();
+  return slug === undefined ? {} : { group: { name, slug } };
+};
+
 export class TournamentPages implements Asked {
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
@@ -58,13 +70,13 @@ export class TournamentPages implements Asked {
       first_short_name: string | null;
       second_short_name: string | null;
       group_name: string | null;
-      group_slug: string | null;
     }>(
-      `select c.competition_id, c.name, c.kind, c.slug,
+      `select c.competition_id, n.name, c.kind, c.slug,
               f.short_name as first_short_name,
               s.short_name as second_short_name,
-              c.group_name, c.group_slug
+              c.group_name
          from competitions c
+         join competition_names n on n.competition_id = c.competition_id
          left join tournament_teams f on f.team_id = c.first_team_id
          left join tournament_teams s on s.team_id = c.second_team_id
         where c.tournament_id = $1 and not c.archived and c.kind is not null
@@ -97,9 +109,7 @@ export class TournamentPages implements Asked {
             first: each.first_short_name ?? "",
             second: each.second_short_name ?? "",
           },
-          ...(each.group_name === null || each.group_slug === null
-            ? {}
-            : { group: { name: each.group_name, slug: each.group_slug } }),
+          ...groupOf(each.group_name),
         };
       }),
     };
@@ -122,12 +132,13 @@ export class TournamentPages implements Asked {
       first_team_id: string | null;
       second_team_id: string | null;
     }>(
-      `select competition_id, name, kind, best_of, rounds, tie_break,
-              maximum_hoops, maximum_hoops_said, advantage, first_team_id,
-              second_team_id
-         from competitions
-        where tournament_id = $1 and slug = $2 and not archived
-          and kind is not null`,
+      `select c.competition_id, n.name, c.kind, c.best_of, c.rounds,
+              c.tie_break, c.maximum_hoops, c.maximum_hoops_said, c.advantage,
+              c.first_team_id, c.second_team_id
+         from competitions c
+         join competition_names n on n.competition_id = c.competition_id
+        where c.tournament_id = $1 and c.slug = $2 and not c.archived
+          and c.kind is not null`,
       [tournament, slug],
     );
     const [row] = found.rows;
@@ -170,8 +181,9 @@ export class TournamentPages implements Asked {
       player_id: string;
       team_id: string;
     }>(
-      `select player_id, team_id from tournament_team_players
-        where tournament_id = $1`,
+      `select p.player_id, p.team_id from tournament_team_players p
+         join tournament_teams t on t.team_id = p.team_id
+        where t.tournament_id = $1`,
       [tournament],
     );
     const tests = await connection.query<{
@@ -180,10 +192,10 @@ export class TournamentPages implements Asked {
       second_team_id: string;
       best_of: number | null;
       expected_matches: number | null;
-      group_slug: string | null;
+      group_name: string | null;
     }>(
       `select competition_id, first_team_id, second_team_id, best_of,
-              expected_matches, group_slug
+              expected_matches, group_name
          from competitions
         where tournament_id = $1 and kind = 'test' and not archived
         order by position`,
@@ -235,7 +247,7 @@ export class TournamentPages implements Asked {
           secondTeam: row.second_team_id,
           bestOf: row.best_of,
           expectedMatches: row.expected_matches,
-          group: row.group_slug ?? undefined,
+          group: groupOf(row.group_name).group?.slug,
           games: gamesOf.get(row.competition_id) ?? [],
         };
       }),
@@ -346,9 +358,11 @@ export class TournamentPages implements Asked {
       slug: string | null;
       archived: boolean;
     }>(
-      `select player_id, team_id, name, slug, archived
-         from tournament_team_players where tournament_id = $1
-        order by position`,
+      `select p.player_id, p.team_id, p.name, p.slug, p.archived
+         from tournament_team_players p
+         join tournament_teams t on t.team_id = p.team_id
+        where t.tournament_id = $1
+        order by p.position`,
       [tournament],
     );
     return {

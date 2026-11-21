@@ -9,6 +9,7 @@ import type {
 } from "../../../../src/application/operations/tournaments/tournamentForReaders.js";
 import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import { AccountForgotten } from "../../../../src/domain/aggregates/accounts/events/AccountForgotten.js";
+import { AccountRegistered } from "../../../../src/domain/aggregates/accounts/events/AccountRegistered.js";
 import { nameAccountEvents } from "../../../../src/domain/aggregates/accounts/events/accountEvents.js";
 import { CommentaryCommentAdded } from "../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryCommentAdded.js";
 import { CommentaryCommentDeleted } from "../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryCommentDeleted.js";
@@ -23,10 +24,8 @@ import type { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
 import { EventRegistry } from "../../../../src/domain/common/EventRegistry.js";
 import type { Id } from "../../../../src/domain/common/Id.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
-import {
-  PostgresEventStore,
-  type StoredEvent,
-} from "../../../../src/infrastructure/event-store/PostgresEventStore.js";
+import { PostgresEventStore } from "../../../../src/infrastructure/event-store/PostgresEventStore.js";
+import { AccountsByEmailAddress } from "../../../../src/infrastructure/read-models/AccountsByEmailAddress.js";
 import { CommentariesByTournament } from "../../../../src/infrastructure/read-models/CommentariesByTournament.js";
 import { ProjectingEventStore } from "../../../../src/application/common/ProjectingEventStore.js";
 import { rebuildFromEvents } from "../../support/rebuild.js";
@@ -51,9 +50,7 @@ interface Scenario {
   readonly comments: Map<string, CommentId>;
   // How many events each stream holds, for the next append to expect.
   readonly versions: Map<string, number>;
-  // Which kind of stream a rebuild takes first, where the scenario says, and
-  // whether it takes the commentaries' streams the latest started first.
-  first: "account/" | undefined;
+  // Whether a rebuild takes the commentaries' streams the latest started first.
   latestFirst: boolean;
   // The commentaries' streams, in the order they were started.
   readonly started: string[];
@@ -121,12 +118,18 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
   const scenario: Scenario = {
     readModel,
     store,
-    projecting: new ProjectingEventStore(store, [readModel]),
+    // The accounts' read model beside it, since whether a writer was forgotten
+    // is asked of that and not kept by the commentaries.
+    projecting: new ProjectingEventStore(store, [
+      readModel,
+      new AccountsByEmailAddress(unitOfWork, {
+        hash: (address) => address.comparable,
+      }),
+    ]),
     tournaments: new Map(),
     commentaries: new Map(),
     comments: new Map(),
     versions: new Map(),
-    first: undefined,
     latestFirst: false,
     started: [],
     found: [],
@@ -149,17 +152,7 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
             (one, other) => startedAt(other.stream) - startedAt(one.stream),
           )
         : read;
-      const isFirst = ({ stream }: StoredEvent): boolean =>
-        scenario.first !== undefined && stream.startsWith(scenario.first);
-      await rebuildFromEvents(
-        readModel,
-        scenario.first === undefined
-          ? events
-          : [
-              ...events.filter(isFirst),
-              ...events.filter((each) => !isFirst(each)),
-            ],
-      );
+      await rebuildFromEvents(readModel, events);
     }),
   );
 });
@@ -270,6 +263,20 @@ Given(
   "the account {string} is forgotten",
   async function (this: SpecWorld, account: string) {
     const id = AccountId.from(account);
+    // An account is forgotten after it was registered, which the accounts'
+    // read model needs to have heard of to say so.
+    if (!scenarioOf(this).versions.has(id.value)) {
+      await appended(
+        this,
+        id,
+        new AccountRegistered(
+          `${id.value}@example.com`,
+          `${id.value}@example.com`,
+          id,
+          now(this),
+        ),
+      );
+    }
     await appended(this, id, new AccountForgotten(id, now(this)));
   },
 );
@@ -285,30 +292,10 @@ Given(
   },
 );
 
-// As a commentary was kept before its comments were: the flag the migration
-// added, unset.
-Given(
-  "the commentary was kept before comments were",
-  async function (this: SpecWorld) {
-    await this.asARequest(() =>
-      unitOfWorkOf(this)
-        .connection()
-        .query(`update commentaries_by_tournament set comments_kept = false`),
-    );
-  },
-);
-
 Given(
   "the commentaries' streams are to be rebuilt the latest started first",
   function (this: SpecWorld) {
     scenarioOf(this).latestFirst = true;
-  },
-);
-
-Given(
-  "the accounts' streams are to be rebuilt before the commentaries'",
-  function (this: SpecWorld) {
-    scenarioOf(this).first = "account/";
   },
 );
 
@@ -520,14 +507,6 @@ Then(
     assert.equal(readCommentary(this).writer, writer);
   },
 );
-
-Then("the commentary is refused as not kept yet", function (this: SpecWorld) {
-  const { refusal } = scenarioOf(this);
-  assert.ok(
-    refusal instanceof Error && refusal.message.includes("not kept yet"),
-    "The commentary was not refused.",
-  );
-});
 
 Then("no commentary is read", function (this: SpecWorld) {
   assert.equal(scenarioOf(this).read, undefined);

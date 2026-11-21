@@ -97,9 +97,9 @@ export class AccountsByEmailAddress implements Projection {
    * insert does nothing when the row is already there, and rebuilding from the
    * events writes it again from what the registering event carries.
    *
-   * The unique key it is asked about is the partial one: an address held by an
-   * account that has been forgotten is held by nobody, and reserving it again
-   * is how that address comes to have an account once more.
+   * The unique key it is asked about is on the address: an account that has
+   * been forgotten holds none, so reserving its old address again is how that
+   * address comes to have an account once more.
    */
   async reserve(address: EmailAddress, account: AccountId): Promise<AccountId> {
     const { rows } = await this.unitOfWork
@@ -107,7 +107,7 @@ export class AccountsByEmailAddress implements Projection {
       .query<{ account_id: string }>(
         `insert into accounts_by_email_address (account_id, email_address_hash)
          values ($1, $2)
-         on conflict (email_address_hash) where not forgotten
+         on conflict (email_address_hash)
            do update set email_address_hash = excluded.email_address_hash
          returning account_id`,
         [account.value, this.hasher.hash(address)],
@@ -160,7 +160,7 @@ export class AccountsByEmailAddress implements Projection {
       .query<{ account_id: string; confirmed: boolean }>(
         `select account_id, confirmed
            from accounts_by_email_address
-          where email_address_hash = $1 and not forgotten`,
+          where email_address_hash = $1`,
         [this.hasher.hash(address)],
       );
     const row = rows[0];
@@ -237,13 +237,13 @@ export class AccountsByEmailAddress implements Projection {
       }
       await this.unitOfWork.connection().query(
         `insert into accounts_by_email_address
-           (account_id, email_address_hash, forgotten, confirmed, changed_at)
-         values ($1, $2, $3, $4, $5)
+           (account_id, email_address_hash, confirmed, changed_at)
+         values ($1, $2, $3, $4)
          on conflict (account_id) do nothing`,
         [
           stream,
-          movedTo ?? event.emailAddressHash,
-          forgotten,
+          // A forgotten account holds no address.
+          forgotten ? null : (movedTo ?? event.emailAddressHash),
           confirmed,
           changedAt,
         ],
@@ -317,7 +317,7 @@ export class AccountsByEmailAddress implements Projection {
     } else if (event instanceof AccountForgotten) {
       await connection.query(
         `update accounts_by_email_address
-            set forgotten = true, changed_at = $2
+            set email_address_hash = null, changed_at = $2
           where account_id = $1`,
         [stream, event.occurredAt.toISOString()],
       );

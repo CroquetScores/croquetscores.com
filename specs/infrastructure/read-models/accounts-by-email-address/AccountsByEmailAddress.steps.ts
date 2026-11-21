@@ -65,6 +65,14 @@ Then(
   },
 );
 
+Then("the read model holds no address hash", async function (this: SpecWorld) {
+  const { rows } = await this.database.query<{ held: string }>(
+    `select count(*) as held from accounts_by_email_address
+      where email_address_hash is not null`,
+  );
+  assert.equal(rows[0]?.held, "0");
+});
+
 Then(
   "no row of the read model contains {string}",
   async function (this: SpecWorld, words: string) {

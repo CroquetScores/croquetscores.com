@@ -5,7 +5,6 @@ import type {
   CommentaryRead,
   TournamentCommentaries,
 } from "../../application/operations/tournaments/tournamentForReaders.js";
-import { AccountForgotten } from "../../domain/aggregates/accounts/events/AccountForgotten.js";
 import { CommentaryCommentAdded } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentAdded.js";
 import { CommentaryCommentDeleted } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentDeleted.js";
 import { CommentaryCommentEdited } from "../../domain/aggregates/tournaments/commentaries/events/CommentaryCommentEdited.js";
@@ -52,11 +51,9 @@ export class CommentariesByTournament
 
   /** Empties its tables, so that every stream can be handed to it again. */
   async clear(): Promise<void> {
-    await this.unitOfWork.connection().query(
-      `truncate commentaries_by_tournament,
-                  commentaries_by_tournament_forgotten,
-                  commentary_comments`,
-    );
+    await this.unitOfWork
+      .connection()
+      .query(`truncate commentaries_by_tournament, commentary_comments`);
   }
 
   /**
@@ -77,7 +74,6 @@ export class CommentariesByTournament
   ): Promise<void> {
     const connection = this.unitOfWork.connection();
     let row: Row | undefined;
-    let forgotten = false;
     for (const { event } of events) {
       if (event instanceof CommentaryStarted) {
         if (row !== undefined) continue;
@@ -98,8 +94,6 @@ export class CommentariesByTournament
       ) {
         const at = event.occurredAt.toDate();
         if (row !== undefined && at > row.changedAt) row.changedAt = at;
-      } else if (event instanceof AccountForgotten) {
-        forgotten = true;
       }
       // A comment's row is its own, so it can be written as its event comes.
       await this.#projectComment(stream, event);
@@ -108,8 +102,8 @@ export class CommentariesByTournament
       await connection.query(
         `insert into commentaries_by_tournament
                 (commentary_id, tournament_id, title, slug, writer_id,
-                 started_at, changed_at, comments_kept)
-         values ($1, $2, $3, $4, $5, $6, $7, true)`,
+                 started_at, changed_at)
+         values ($1, $2, $3, $4, $5, $6, $7)`,
         [
           stream,
           row.tournamentId,
@@ -119,13 +113,6 @@ export class CommentariesByTournament
           row.startedAt,
           row.changedAt,
         ],
-      );
-    }
-    if (forgotten) {
-      await connection.query(
-        `insert into commentaries_by_tournament_forgotten (account_id)
-         values ($1)`,
-        [stream],
       );
     }
   }
@@ -138,9 +125,17 @@ export class CommentariesByTournament
       `select commentary_id, changed_at
          from commentaries_by_tournament c
         where tournament_id = $1
+          -- The writer's account as the accounts' read model has it, so that
+          -- the commentary is not found once it is forgotten, whichever
+          -- stream a rebuild took first. A forgotten account is the one row
+          -- there that holds no address (AccountsByEmailAddress), and the
+          -- rows are written in the transaction of the append, so this is
+          -- never behind. Joined to account_keys instead it would read a
+          -- table that is not a read model and cannot be made again.
           and not exists (
-                select 1 from commentaries_by_tournament_forgotten f
-                 where f.account_id = c.writer_id)
+                select 1 from accounts_by_email_address a
+                 where a.account_id = c.writer_id
+                   and a.email_address_hash is null)
         order by started_at desc, commentary_id`,
       [tournament.value],
     );
@@ -183,29 +178,21 @@ export class CommentariesByTournament
       title: string;
       slug: string;
       writer_id: string;
-      comments_kept: boolean;
     }>(
-      `select commentary_id, title, slug, writer_id, comments_kept
+      `select commentary_id, title, slug, writer_id
          from commentaries_by_tournament
         where tournament_id = $1 and slug = $2`,
       [tournament.value, slug],
     );
     const [row] = found.rows;
     if (row === undefined) return undefined;
-    // Kept before comments were: none found would look like none written, so
-    // the page is refused instead.
-    if (!row.comments_kept) {
-      throw new Error(
-        "The commentaries' comments are not kept yet: the read models are to be made again.",
-      );
-    }
     const comments = await connection.query<{
       comment_id: string;
       text: string;
-      written_at: Date;
-      last_edited_at: Date | null;
+      created_at: Date;
+      changed_at: Date;
     }>(
-      `select comment_id, text, written_at, last_edited_at
+      `select comment_id, text, created_at, changed_at
          from commentary_comments
         where commentary_id = $1
         order by position`,
@@ -219,11 +206,15 @@ export class CommentariesByTournament
       comments: comments.rows.map((comment) => ({
         id: comment.comment_id,
         text: comment.text,
-        writtenAt: ReadOnlyDate.from(comment.written_at),
+        writtenAt: ReadOnlyDate.from(comment.created_at),
+        // A comment changes only by being edited, so one that has changed
+        // since it was made was edited then. One edited at the very moment it
+        // was made reads as never edited, which a clock that moves does not
+        // let happen.
         lastEditedAt:
-          comment.last_edited_at === null
-            ? undefined
-            : ReadOnlyDate.from(comment.last_edited_at),
+          comment.changed_at > comment.created_at
+            ? ReadOnlyDate.from(comment.changed_at)
+            : undefined,
       })),
     };
   }
@@ -280,8 +271,8 @@ export class CommentariesByTournament
       await connection.query(
         `insert into commentaries_by_tournament
                 (commentary_id, tournament_id, title, slug, writer_id,
-                 started_at, changed_at, comments_kept)
-         values ($1, $2, $3, $4, $5, $6, $6, true)
+                 started_at, changed_at)
+         values ($1, $2, $3, $4, $5, $6, $6)
          on conflict (commentary_id) do nothing`,
         [stream, event.tournamentId, event.title, event.slug, event.writer, at],
       );
@@ -301,12 +292,6 @@ export class CommentariesByTournament
           where commentary_id = $1`,
         [stream, event.occurredAt.toDate()],
       );
-    } else if (event instanceof AccountForgotten) {
-      await connection.query(
-        `insert into commentaries_by_tournament_forgotten (account_id)
-         values ($1) on conflict (account_id) do nothing`,
-        [stream],
-      );
     }
   }
 
@@ -320,7 +305,7 @@ export class CommentariesByTournament
     if (event instanceof CommentaryCommentAdded) {
       await connection.query(
         `insert into commentary_comments
-                (commentary_id, comment_id, text, written_at, changed_at)
+                (commentary_id, comment_id, text, created_at, changed_at)
          values ($1, $2, $3, $4, $4)
          on conflict (commentary_id, comment_id) do nothing`,
         [stream, event.commentId, event.text, event.occurredAt.toDate()],
@@ -328,7 +313,7 @@ export class CommentariesByTournament
     } else if (event instanceof CommentaryCommentEdited) {
       await connection.query(
         `update commentary_comments
-            set text = $3, last_edited_at = $4, changed_at = $4
+            set text = $3, changed_at = $4
           where commentary_id = $1 and comment_id = $2`,
         [stream, event.commentId, event.text, event.occurredAt.toDate()],
       );
