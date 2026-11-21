@@ -18,6 +18,9 @@ Feature: An app reads a tournament, its competitions and its players
   the site's word for a match between two teams. A tournament played by teams
   says its teams, each with its players, and has no players of its own.
 
+  Each competition, each player and each team carries an `etag` of its own,
+  made of what it says (`tournaments.feature`).
+
   The site keeps no venue for a tournament, so none is said.
 
   The conventions are those of the list. A caller with no key is answered as a
@@ -159,6 +162,11 @@ Feature: An app reads a tournament, its competitions and its players
       When the tournament "Spring Open" is read with that key
       Then the tournament read says it last changed at "2026-10-05T10:00:00.000Z"
 
+    Scenario: A competition carries a mark of itself
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the tournament "Spring Open" is read with that key
+      Then the competition "Block A" says a mark of itself
+
     Scenario: A tournament with no competitions lists none
       When the tournament "Spring Open" is read with that key
       Then the tournament read lists no competitions
@@ -198,6 +206,11 @@ Feature: An app reads a tournament, its competitions and its players
       When the tournament "Spring Open" is read with that key
       Then the player "Sam Someone" says they have no handicap
 
+    Scenario: A player carries a mark of themselves
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the tournament "Spring Open" is read with that key
+      Then the player "Sam Someone" says a mark of themselves
+
     Scenario: A player archived is not listed
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
@@ -211,6 +224,15 @@ Feature: An app reads a tournament, its competitions and its players
       And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
       When the tournament "Spring Tests" is read with that key
       Then the tournament read lists the team "Australia" with the player "Pat Player"
+
+  Rule: A team carries a mark
+
+    Scenario: A team carries a mark of itself
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      When the tournament "Spring Tests" is read with that key
+      Then the team "Australia" says a mark of itself
 
   Rule: A tournament there is not is answered not found
 

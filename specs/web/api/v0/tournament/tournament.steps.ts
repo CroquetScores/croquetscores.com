@@ -235,6 +235,30 @@ Then(
   },
 );
 
+Then(
+  "the competition {string} says a mark of itself",
+  function (this: WebWorld, name: string) {
+    assert.match(
+      String(namedIn(this, "competitions", name)["etag"]),
+      /^"[^"]+"$/,
+    );
+  },
+);
+
+Then(
+  "the team {string} says a mark of itself",
+  function (this: WebWorld, name: string) {
+    assert.match(String(namedIn(this, "teams", name)["etag"]), /^"[^"]+"$/);
+  },
+);
+
+Then(
+  "the player {string} says a mark of themselves",
+  function (this: WebWorld, name: string) {
+    assert.match(String(namedIn(this, "players", name)["etag"]), /^"[^"]+"$/);
+  },
+);
+
 Then("the tournament read lists no competitions", function (this: WebWorld) {
   assert.deepEqual(listed(this, "competitions"), []);
 });

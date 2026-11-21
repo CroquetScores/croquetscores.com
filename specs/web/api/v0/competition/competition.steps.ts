@@ -386,6 +386,13 @@ standingSays("their net games are", "netGames");
 standingSays("their net hoops are", "netHoops");
 
 Then(
+  "the standing of {string} says a mark of itself",
+  function (this: WebWorld, name: string) {
+    assert.match(String(standingOf(this, name)["etag"]), /^"[^"]+"$/);
+  },
+);
+
+Then(
   "the standing of {string} says they have withdrawn",
   function (this: WebWorld, name: string) {
     assert.equal(standingOf(this, name)["withdrawn"], true);
@@ -520,6 +527,13 @@ for (const side of ["winner", "loser"] as const) {
   );
 }
 
+Then(
+  "the game of {string} beating {string} says a mark of itself",
+  function (this: WebWorld, winner: string, loser: string) {
+    assert.match(String(gameOf(this, winner, loser)["etag"]), /^"[^"]+"$/);
+  },
+);
+
 const gameSays = (said: string, field: string, value: unknown): void => {
   Then(
     `the game of {string} beating {string} says it was ${said}`,
@@ -557,6 +571,13 @@ const matchBetween = (world: WebWorld, one: string, other: string): Said => {
   assert.ok(found !== undefined, `No match between ${one} and ${other}.`);
   return found;
 };
+
+Then(
+  "the match between {string} and {string} says a mark of itself",
+  function (this: WebWorld, one: string, other: string) {
+    assert.match(String(matchBetween(this, one, other)["etag"]), /^"[^"]+"$/);
+  },
+);
 
 Then(
   "the answer lists a match between {string} and {string}",

@@ -17,8 +17,11 @@ Feature: An app lists a year's tournaments
   since the site cannot know, so an app keeps what it was told as long as it
   likes and asks again. It asks cheaply: every answer carries an `ETag` and a
   `Last-Modified`, and the same question asked again with what they said is
-  answered `304` and no more. An app that reads a year again asks only for what
-  changed since the last time, with `changedSince`.
+  answered `304` and no more. Each tournament carries an `etag` of its own too,
+  made of what it says, so that an app that is told a list has changed can tell
+  which of the tournaments in it did, without comparing them field by field.
+  An app that reads a year again asks only for what changed since the last
+  time, with `changedSince`.
 
   A year has several hundred tournaments at most, so an answer is a page of at
   most 100, with the way to the next.
@@ -276,6 +279,28 @@ Feature: An app lists a year's tournaments
       When the tournaments of 2026 are asked again with that key and the mark it gave
       Then the API answers 200
       And the tournament "Spring Open" says it is national
+
+    Scenario: A tournament carries a mark of itself
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments of 2026 are asked with that key
+      Then the tournament "Spring Open" says a mark of itself
+
+    Scenario: A tournament that did not change keeps its mark
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has created the tournament "Autumn Open" starting at "2026-04-04T00:00:00Z" in the sport "ac"
+      And the tournaments of 2026 are asked with that key
+      And the mark of the tournament "Spring Open" is kept
+      And the tournament "Autumn Open" is national
+      When the tournaments of 2026 are asked with that key
+      Then the tournament "Spring Open" says the mark it said before
+
+    Scenario: A tournament that changed says another mark
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournaments of 2026 are asked with that key
+      And the mark of the tournament "Spring Open" is kept
+      And the tournament "Spring Open" is national
+      When the tournaments of 2026 are asked with that key
+      Then the tournament "Spring Open" says another mark than it said before
 
     Scenario: A year of no tournaments has no date to give
       When the tournaments of 2026 are asked with that key

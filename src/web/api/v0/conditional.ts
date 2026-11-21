@@ -12,6 +12,19 @@ import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 const markOf = (said: string): string =>
   `"${createHash("sha256").update(said).digest("base64url").slice(0, 27)}"`;
 
+/**
+ * A row with the mark of what it says added as `etag`, the same kind of mark an
+ * answer carries in its header. It is made of the row alone, so that a row an
+ * app already has is told apart from one that changed without the app
+ * comparing them field by field, whichever answer or page the row came in.
+ */
+export const marked = <Row extends object>(
+  row: Row,
+): Row & { readonly etag: string } => ({
+  ...row,
+  etag: markOf(JSON.stringify(row)),
+});
+
 // Whether the app already has this answer, by the mark it sent, which is
 // asked before the date: a mark is exact where a date is only to the second.
 const alreadyHas = (

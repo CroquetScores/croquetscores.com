@@ -13,7 +13,7 @@ import { ValidationError } from "../../../domain/common/validation/ValidationErr
 import { Sport } from "../../../domain/aggregates/tournaments/value-objects/Sport.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { websiteOf } from "../../common/site.js";
-import { sendConditionally } from "./conditional.js";
+import { marked, sendConditionally } from "./conditional.js";
 import { tournamentHref, uriOf } from "./hrefs.js";
 import { refusal } from "./errors.js";
 import { refuseKey } from "./apiKey.js";
@@ -109,20 +109,22 @@ const momentOf = (written: string): ReadOnlyDate | undefined => {
 };
 
 const said = (page: TournamentsForAppsPage): Record<string, unknown> => ({
-  tournaments: page.tournaments.map((each) => ({
-    id: each.id,
-    name: each.name,
-    starts: each.starts,
-    finishes: each.finishes,
-    country: each.country,
-    region: each.region ?? null,
-    sport: each.sport,
-    uri: uriOf(each.address),
-    href: tournamentHref(each.id),
-    national: each.national,
-    international: each.international,
-    changedAt: each.changedAt.toISOString(),
-  })),
+  tournaments: page.tournaments.map((each) =>
+    marked({
+      id: each.id,
+      name: each.name,
+      starts: each.starts,
+      finishes: each.finishes,
+      country: each.country,
+      region: each.region ?? null,
+      sport: each.sport,
+      uri: uriOf(each.address),
+      href: tournamentHref(each.id),
+      national: each.national,
+      international: each.international,
+      changedAt: each.changedAt.toISOString(),
+    }),
+  ),
   total: page.total,
   page: page.page,
   pageSize: page.pageSize,
