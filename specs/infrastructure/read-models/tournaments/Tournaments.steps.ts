@@ -31,6 +31,7 @@ interface TournamentRow {
   region: string | null;
   sport: string;
   archived: boolean;
+  archived_at: Date | null;
   national: boolean;
   international: boolean;
 }
@@ -187,8 +188,8 @@ When("the tournaments are read back", async function (this: SpecWorld) {
       `select tournament_id, website, name,
               to_char(starts, 'YYYY-MM-DD') as starts,
               to_char(finishes, 'YYYY-MM-DD') as finishes,
-              address, country, region, sport, archived, national,
-              international
+              address, country, region, sport, archived, archived_at,
+              national, international
          from tournaments
         order by name`,
     );
@@ -253,6 +254,23 @@ Then(
   "the tournament {string} is held as archived",
   function (this: SpecWorld, name: string) {
     assert.equal(tournamentCalled(this, name).archived, true);
+  },
+);
+
+Then(
+  "the tournament {string} is held as archived at {string}",
+  function (this: SpecWorld, name: string, moment: string) {
+    assert.equal(
+      tournamentCalled(this, name).archived_at?.toISOString(),
+      new Date(moment).toISOString(),
+    );
+  },
+);
+
+Then(
+  "the tournament {string} is held as archived at no moment",
+  function (this: SpecWorld, name: string) {
+    assert.equal(tournamentCalled(this, name).archived_at, null);
   },
 );
 
