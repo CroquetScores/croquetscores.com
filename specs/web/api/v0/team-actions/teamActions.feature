@@ -49,3 +49,32 @@ Feature: A tournament's teams are moved, archived and restored through the API
       Given the caller is signed in as "organiser@example.com"
       When the team "Kent" of "Spring Open" is moved up at the address it was at
       Then the API answers 404
+
+  Rule: A team is moved down a place
+
+    Scenario: A manager moves a team down
+      Given the caller is signed in as "organiser@example.com"
+      When the team "Hampshire" of "Spring Open" is moved down
+      Then the API answers 204
+
+    Scenario: A team moved down is listed after the one they passed
+      Given the caller is signed in as "organiser@example.com"
+      And the team "Hampshire" of "Spring Open" is moved down
+      When the teams of "Spring Open" are listed to the caller
+      Then the first team the site lists is "Kent"
+
+    Scenario: A reader who is not signed in may not do it
+      When the team "Hampshire" of "Spring Open" is moved down
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not do it
+      Given the caller is signed in as "stranger@example.com"
+      When the team "Hampshire" of "Spring Open" is moved down
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the team "Hampshire" of "Spring Open" is moved down at the address it was at
+      Then the API answers 404
