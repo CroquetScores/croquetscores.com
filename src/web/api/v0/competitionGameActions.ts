@@ -13,7 +13,7 @@ import { writerOf } from "./writer.js";
 export const competitionGameActionsOfApps: FastifyPluginAsync = (server) => {
   // A test's score moved a place, up or down, by the part of its id after
   // "game/".
-  for (const direction of ["up"] as const) {
+  for (const direction of ["up", "down"] as const) {
     server.post<{ Params: { id: string; competition: string; game: string } }>(
       `/tournaments/:id/competitions/:competition/games/:game/${direction}`,
       async (request, reply) => {
