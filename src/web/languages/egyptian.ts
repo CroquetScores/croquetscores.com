@@ -118,8 +118,7 @@ export const egyptian: Language = {
     "newConfirmationLink.sent.title": "شوف الإيميل بتاعك",
     "newConfirmationLink.sent.explanation":
       "رابط جديد في الطريق. افتحه عشان تأكّد عنوان الإيميل بتاعك. لو ما وصلش حاجة في خلال كام دقيقة، بص في فولدر الرسائل المزعجة (سبام).",
-    "newConfirmationLink.alreadyConfirmed.title":
-      "عنوان الإيميل ده اتأكّد فعلاً",
+    "newConfirmationLink.alreadyConfirmed.title": "عنوان الإيميل ده اتأكّد فعلاً",
     "newConfirmationLink.alreadyConfirmed.explanation":
       "مفيش حاجة تانية تتأكّد. سجّل الدخول بكلمة السر اللي كتبتها وانت بتأكّده.",
     "newConfirmationLink.noLongerWorks.title": "الرابط ده مبقاش شغّال",
@@ -305,8 +304,7 @@ export const egyptian: Language = {
     "confirmEmailAddress.noLongerWorks.title": "الرابط ده مبقاش شغّال",
     "confirmEmailAddress.noLongerWorks.explanation":
       "اتأكّد إنك فتحت الرابط كله اللي في الإيميل، من غير ما يكون ناقص حاجة من آخره. لو لسه مش شغّال، سجّل من الأول وهيتبعتلك رابط جديد.",
-    "confirmEmailAddress.alreadyConfirmed.title":
-      "عنوان الإيميل ده اتأكّد فعلاً",
+    "confirmEmailAddress.alreadyConfirmed.title": "عنوان الإيميل ده اتأكّد فعلاً",
     "confirmEmailAddress.alreadyConfirmed.explanation":
       "مفيش حاجة تانية تعملها. سجّل الدخول بكلمة السر اللي كتبتها وانت بتأكّده.",
 
@@ -350,12 +348,12 @@ export const egyptian: Language = {
     "errors.maintenance": "الموقع واقف للصيانة.",
     "errors.maintenanceMinutes": "متوقّع يرجع بعد {minutes} دقيقة.",
     "errors.maintenanceMinute": "متوقّع يرجع بعد دقيقة.",
-    "errors.maintenanceLonger":
-      "الموضوع واخد وقت أطول من المتوقّع وهيرجع قريب.",
+    "errors.maintenanceLonger": "الموضوع واخد وقت أطول من المتوقّع وهيرجع قريب.",
 
     // The home page's two lists.
     "home.recentResults": "آخر النتايج",
     "home.recentResults.none": "ما اتضافتش أي لعبة في آخر سبعة أيام.",
+    "home.visitedTournaments": "بطولاتك الأخيرة",
     "home.upcomingTournaments": "البطولات الجاية",
     "home.upcomingTournaments.none": "مفيش بطولات بتبدأ في الستين يوم الجايين.",
     "home.allTournaments": "كل البطولات في {year}",

@@ -391,6 +391,7 @@ export const german: Language = {
     "home.recentResults": "Neueste Ergebnisse",
     "home.recentResults.none":
       "In den letzten sieben Tagen wurden keine Spiele hinzugefügt.",
+    "home.visitedTournaments": "Zuletzt besuchte Turniere",
     "home.upcomingTournaments": "Kommende Turniere",
     "home.upcomingTournaments.none":
       "In den nächsten sechzig Tagen beginnen keine Turniere.",

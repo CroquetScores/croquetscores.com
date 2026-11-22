@@ -164,6 +164,7 @@ import { TournamentYearsOfAccountHandler } from "../application/operations/tourn
 import { RecentResultsHandler } from "../application/operations/tournaments/RecentResultsHandler.js";
 import { UpcomingTournamentsHandler } from "../application/operations/tournaments/UpcomingTournamentsHandler.js";
 import { TournamentYearsHandler } from "../application/operations/tournaments/TournamentYearsHandler.js";
+import { TournamentsAtAddressesHandler } from "../application/operations/tournaments/TournamentsAtAddressesHandler.js";
 import { TournamentsInDaysHandler } from "../application/operations/tournaments/TournamentsInDaysHandler.js";
 import { CompetitionOfTournamentForAppsHandler } from "../application/operations/tournaments/CompetitionOfTournamentForAppsHandler.js";
 import { GamesForAppsHandler } from "../application/operations/tournaments/GamesForAppsHandler.js";
@@ -1653,6 +1654,7 @@ export const buildApplication = async (
   mediator.handleQuery(new RecentResultsHandler(tournamentsByWebsite));
   mediator.handleQuery(new UpcomingTournamentsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentYearsHandler(tournamentsByWebsite));
+  mediator.handleQuery(new TournamentsAtAddressesHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsForAppsHandler(tournamentsByWebsite));
   mediator.handleQuery(

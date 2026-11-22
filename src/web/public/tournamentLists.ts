@@ -376,6 +376,12 @@ export interface Listing {
    */
   readonly idStart?: string;
   /**
+   * Whether the list is in the order it was given and is not one to sort, as
+   * the tournaments a reader visited are, latest first. It has no column
+   * headings to press and no way back to a usual order.
+   */
+  readonly unsorted?: boolean;
+  /**
    * The id of what already names it, where the page does and the list is not
    * to head itself with a second heading, as a month's table is not.
    */
@@ -392,12 +398,22 @@ export const table = (
   const { say } = speaking;
   // What the address says, then what the device remembers, then the order the
   // list begins in.
-  const remembered = sortingRead(asked.remembered[listing.table]);
-  const sorting =
-    sortingRead(asked.sorting[listing.table]) ??
-    remembered ??
-    listing.sortedAtFirst;
+  const unsorted = listing.unsorted === true;
+  const remembered = unsorted
+    ? undefined
+    : sortingRead(asked.remembered[listing.table]);
+  const sorting = unsorted
+    ? undefined
+    : (sortingRead(asked.sorting[listing.table]) ??
+      remembered ??
+      listing.sortedAtFirst);
   const heading = (column: Column): string => {
+    // Said in words and not pressed, since the list is in the order it was
+    // given. The headings are still drawn, as they are what the columns'
+    // widths and colours are set on.
+    if (unsorted) {
+      return `                <th scope="col">${escape(say(columnWords[column]))}</th>`;
+    }
     const marked = sorting?.column === column ? sorting.order : undefined;
     // "keep" is what tells the server the reader pressed it, and not that a
     // link to the page was followed (rememberedSorting.ts).

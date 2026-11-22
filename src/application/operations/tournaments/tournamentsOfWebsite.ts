@@ -121,6 +121,17 @@ export interface TournamentsByWebsite {
    */
   fingerprintsOf(website: Website): Promise<readonly TournamentFingerprint[]>;
 
+  /**
+   * The tournaments on `website`, none archived, that are found at `addresses`
+   * now, each as "2026/ac/spring-open", in the order the addresses are given.
+   * An address no such tournament is found at is left out, as is one a
+   * tournament has moved on from.
+   */
+  atAddresses(
+    website: Website,
+    addresses: readonly string[],
+  ): Promise<readonly TournamentOfWebsite[]>;
+
   /** What the tournaments on `website` are called, each name once, in order, none archived. */
   namesOf(website: Website): Promise<readonly string[]>;
 

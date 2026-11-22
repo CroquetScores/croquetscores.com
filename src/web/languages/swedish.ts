@@ -376,6 +376,7 @@ export const swedish: Language = {
     "home.recentResults": "Senaste resultat",
     "home.recentResults.none":
       "Inga partier har lagts till de senaste sju dagarna.",
+    "home.visitedTournaments": "Dina senaste turneringar",
     "home.upcomingTournaments": "Kommande turneringar",
     "home.upcomingTournaments.none":
       "Inga turneringar startar de närmaste sextio dagarna.",

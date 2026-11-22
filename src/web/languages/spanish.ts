@@ -385,6 +385,7 @@ export const spanish: Language = {
     "home.recentResults": "Resultados recientes",
     "home.recentResults.none":
       "No se ha añadido ninguna partida en los últimos siete días.",
+    "home.visitedTournaments": "Tus torneos recientes",
     "home.upcomingTournaments": "Próximos torneos",
     "home.upcomingTournaments.none":
       "Ningún torneo empieza en los próximos sesenta días.",

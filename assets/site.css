@@ -2293,19 +2293,28 @@ main {
    two tables, the recent results above the upcoming tournaments, are the same
    for the same reason, and so are alike in how they are drawn, as a year's
    are. */
-:is(.year-month-body, .home-lists) .tournament-list table {
+:is(.year-month-body, .home-lists, .home-visited) .tournament-list table {
   table-layout: fixed;
 }
 
-:is(.year-month-body, .home-lists) .tournament-list thead th:first-child {
+:is(.year-month-body, .home-lists, .home-visited)
+  .tournament-list
+  thead
+  th:first-child {
   width: 10em;
 }
 
-:is(.year-month-body, .home-lists) .tournament-list thead .tournament-sport {
+:is(.year-month-body, .home-lists, .home-visited)
+  .tournament-list
+  thead
+  .tournament-sport {
   width: 4rem;
 }
 
-:is(.year-month-body, .home-lists) .tournament-list thead .tournament-flag {
+:is(.year-month-body, .home-lists, .home-visited)
+  .tournament-list
+  thead
+  .tournament-flag {
   width: 3.75rem;
 }
 

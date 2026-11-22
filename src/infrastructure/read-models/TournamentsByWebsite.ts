@@ -190,6 +190,25 @@ export class TournamentsByWebsite implements Asked {
     return rows.map(listed);
   }
 
+  // Asked for in the order the addresses are given, which `unnest ... with
+  // ordinality` keeps, since the order a device remembers them in is the order
+  // they are shown in.
+  async atAddresses(
+    website: Website,
+    addresses: readonly string[],
+  ): Promise<readonly TournamentOfWebsite[]> {
+    if (addresses.length === 0) return [];
+    const { rows } = await this.unitOfWork.connection().query<Row>(
+      `select ${COLUMNS}
+         from unnest($2::text[]) with ordinality as asked(address, place)
+         join tournaments t on t.address = asked.address
+        where t.website = $1 and not t.archived
+        order by asked.place`,
+      [website.host, addresses],
+    );
+    return rows.map(listed);
+  }
+
   async addressesOf(website: Website): Promise<readonly string[]> {
     const { rows } = await this.unitOfWork
       .connection()

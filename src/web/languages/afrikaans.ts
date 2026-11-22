@@ -383,6 +383,7 @@ export const afrikaans: Language = {
     "home.recentResults": "Onlangse uitslae",
     "home.recentResults.none":
       "Geen wedstryde is in die afgelope sewe dae bygevoeg nie.",
+    "home.visitedTournaments": "Jou onlangse toernooie",
     "home.upcomingTournaments": "Komende toernooie",
     "home.upcomingTournaments.none":
       "Geen toernooie begin in die volgende sestig dae nie.",
