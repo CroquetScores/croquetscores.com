@@ -29,7 +29,6 @@ import { CompetitionsOfTournament } from "../../../application/operations/tourna
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
-import { MoveGame } from "../../../application/operations/competitions/MoveGame.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
 import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
 import { ReverseGameWithdrawal } from "../../../application/operations/competitions/ReverseGameWithdrawal.js";
@@ -528,29 +527,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply.header("cache-control", "no-store").send({ games });
     },
   );
-
-  // A test's score moved a place, up or down, by the part of its id after
-  // "game/".
-  for (const direction of ["down"] as const) {
-    server.post<{ Params: { id: string; competition: string; game: string } }>(
-      `/tournaments/:id/competitions/:competition/games/:game/${direction}`,
-      async (request, reply) => {
-        const reader = signedInOrRefused(request, reply);
-        if (reader === undefined) return reply;
-        await request.server.mediator.send(
-          new MoveGame(
-            reader.value,
-            `tournament/${request.params.id}`,
-            `competition/${request.params.competition}`,
-            `game/${request.params.game}`,
-            direction,
-            request.requestedAt,
-          ),
-        );
-        return reply.code(204).header("cache-control", "no-store").send();
-      },
-    );
-  }
 
   // A game's score archived or restored, withdrawn or its withdrawal
   // reversed, by the part of its id after "game/". Unwithdraw, as a player's
