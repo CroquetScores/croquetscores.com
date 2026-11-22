@@ -22,17 +22,20 @@ When(
   },
 );
 
-When("a tournament with a malformed id is archived", async function (this: WebWorld) {
-  await told(this, "POST", "/api/v0/tournaments/not-a-tournament/archive");
-});
+When(
+  "a tournament with a malformed id is archived",
+  async function (this: WebWorld) {
+    await told(this, "POST", "/api/v0/tournaments/not-a-tournament/archive");
+  },
+);
 
 When(
-  "the tournament {string} is archived at the address it was at",
-  async function (this: WebWorld, name: string) {
+  /^the tournament "([^"]*)" is (archived|restored) at the address it was at$/,
+  async function (this: WebWorld, name: string, done: string) {
     await told(
       this,
       "POST",
-      `/api/site/tournaments/${bare(this, name)}/archive`,
+      `/api/site/tournaments/${bare(this, name)}/${done === "archived" ? "archive" : "restore"}`,
     );
   },
 );
