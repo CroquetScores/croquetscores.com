@@ -10,7 +10,7 @@ import { MoveCompetition } from "../../../application/operations/tournaments/Mov
 import { writerOf } from "./writer.js";
 
 export const competitionActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const action of ["up"] as const) {
+  for (const action of ["up", "down"] as const) {
     server.post<{ Params: { id: string; competition: string } }>(
       `/tournaments/:id/competitions/:competition/${action}`,
       async (request, reply) => {
