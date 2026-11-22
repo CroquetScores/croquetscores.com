@@ -31,6 +31,7 @@ import { tournamentPeopleOfApps } from "./tournamentPeople.js";
 import { managerNotesOfApps } from "./managerNotes.js";
 import { tournamentTeamsOfApps } from "./tournamentTeams.js";
 import { tournamentTestsOfApps } from "./tournamentTests.js";
+import { teamPlayerActionsOfApps } from "./teamPlayerActions.js";
 import { teamActionsOfApps } from "./teamActions.js";
 import { tournamentPlayerActionsOfApps } from "./tournamentPlayerActions.js";
 
@@ -114,6 +115,7 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
       await day.register(managerNotesOfApps);
       await day.register(tournamentTeamsOfApps);
       await day.register(tournamentTestsOfApps, { advantageGolfCroquet });
+      await day.register(teamPlayerActionsOfApps);
       await day.register(teamActionsOfApps);
       await day.register(tournamentPlayerActionsOfApps);
 
