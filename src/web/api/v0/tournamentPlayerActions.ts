@@ -6,10 +6,11 @@ import type { FastifyPluginAsync } from "fastify";
 
 import { ArchivePlayer } from "../../../application/operations/tournaments/ArchivePlayer.js";
 import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
+import { RestorePlayer } from "../../../application/operations/tournaments/RestorePlayer.js";
 import { writerOf } from "./writer.js";
 
 export const tournamentPlayerActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const action of ["up", "down", "archive"] as const) {
+  for (const action of ["up", "down", "archive", "restore"] as const) {
     server.post<{ Params: { id: string; player: string } }>(
       `/tournaments/:id/players/:player/${action}`,
       async (request, reply) => {
@@ -25,7 +26,9 @@ export const tournamentPlayerActionsOfApps: FastifyPluginAsync = (server) => {
         await request.server.mediator.send(
           action === "archive"
             ? new ArchivePlayer(...asked, at)
-            : new MovePlayer(...asked, action, at),
+            : action === "restore"
+              ? new RestorePlayer(...asked, at)
+              : new MovePlayer(...asked, action, at),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },

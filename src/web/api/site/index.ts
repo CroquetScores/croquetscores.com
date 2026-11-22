@@ -39,7 +39,6 @@ import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer
 import { AddPair } from "../../../application/operations/tournaments/AddPair.js";
 import { AddPlayers } from "../../../application/operations/tournaments/AddPlayers.js";
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
-import { RestorePlayer } from "../../../application/operations/tournaments/RestorePlayer.js";
 import { UpdatePlayer } from "../../../application/operations/tournaments/UpdatePlayer.js";
 import { DeleteManagerNote } from "../../../application/operations/tournaments/DeleteManagerNote.js";
 import { EditManagerNote } from "../../../application/operations/tournaments/EditManagerNote.js";
@@ -1087,25 +1086,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
-
-  // A player moved a place, archived or restored.
-  for (const action of ["restore"] as const) {
-    server.post<{ Params: { id: string; player: string } }>(
-      `/tournaments/:id/players/:player/${action}`,
-      async (request, reply) => {
-        const reader = signedInOrRefused(request, reply);
-        if (reader === undefined) return reply;
-        const asked = [
-          reader.value,
-          `tournament/${request.params.id}`,
-          `tournament-player/${request.params.player}`,
-        ] as const;
-        const at = request.requestedAt;
-        await request.server.mediator.send(new RestorePlayer(...asked, at));
-        return reply.code(204).header("cache-control", "no-store").send();
-      },
-    );
-  }
 
   // A tournament's notes, as its manager lists them, the newest first, each
   // without what it says, which a list has no use for.
