@@ -79,9 +79,12 @@ export const PlayersTab = ({
   ): Promise<void> => {
     setActing(true);
     try {
-      await fetch(`${at}/${idInAddress(player.id)}/${action}`, {
-        method: "POST",
-      });
+      await fetch(
+        `${action === "down" || action === "archive" || action === "restore" ? at : at.replace("/api/site/", "/api/v0/")}/${idInAddress(player.id)}/${action}`,
+        {
+          method: "POST",
+        },
+      );
     } catch {
       // A request that never arrived is said by the list asked for again.
     } finally {

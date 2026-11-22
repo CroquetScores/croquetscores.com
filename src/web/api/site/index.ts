@@ -1091,21 +1091,24 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   );
 
   // A player moved a place, archived or restored.
-  for (const action of ["up", "down", "archive", "restore"] as const) {
+  for (const action of ["down", "archive", "restore"] as const) {
     server.post<{ Params: { id: string; player: string } }>(
       `/tournaments/:id/players/:player/${action}`,
       async (request, reply) => {
         const reader = signedInOrRefused(request, reply);
         if (reader === undefined) return reply;
-        const tournament = `tournament/${request.params.id}`;
-        const player = `tournament-player/${request.params.player}`;
+        const asked = [
+          reader.value,
+          `tournament/${request.params.id}`,
+          `tournament-player/${request.params.player}`,
+        ] as const;
         const at = request.requestedAt;
         await request.server.mediator.send(
           action === "archive"
-            ? new ArchivePlayer(reader.value, tournament, player, at)
+            ? new ArchivePlayer(...asked, at)
             : action === "restore"
-              ? new RestorePlayer(reader.value, tournament, player, at)
-              : new MovePlayer(reader.value, tournament, player, action, at),
+              ? new RestorePlayer(...asked, at)
+              : new MovePlayer(...asked, action, at),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
