@@ -551,6 +551,7 @@ export const spanish: Language = {
     "knockout.round.quarters": "Cuartos de final",
     "knockout.round.number": "Ronda {number}",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "Al mejor de {count}",
     // A Swiss's table: what each player has played and won, and their results.
     "swiss.games": "Partidas",
     "swiss.wins": "Victorias",

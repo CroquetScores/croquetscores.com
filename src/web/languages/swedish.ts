@@ -541,6 +541,7 @@ export const swedish: Language = {
     "knockout.round.quarters": "Kvartsfinaler",
     "knockout.round.number": "Rond {number}",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "Bäst av {count}",
     // En schweizertabell: vad varje spelare har spelat och vunnit, och deras
     // resultat.
     "swiss.games": "Partier",

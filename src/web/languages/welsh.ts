@@ -527,6 +527,7 @@ export const welsh: Language = {
     "knockout.round.quarters": "Rowndiau wyth olaf",
     "knockout.round.number": "Rownd {number}",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "Yr orau o {count}",
     // A Swiss's table.
     "swiss.games": "Gemau unigol",
     "swiss.wins": "Buddugoliaethau",

@@ -85,6 +85,37 @@ Feature: A knockout's summary lists its matches round by round
       When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
       Then the second round in the summary is beneath the first
 
+  Rule: Each round says what its matches are the best of, beneath its name
+
+    The grid says it in a row above its rounds (`knockout.feature`). Here each
+    round is a list of its own, so it is said once for each, beneath the
+    round's name and above its matches, begun where the names beneath it
+    begin.
+
+    Scenario: The first round says what its matches are the best of
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then the best of in the first round in the summary is "Best of 3"
+
+    Scenario: The final says what its match is the best of
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Finals" of "Spring Open"
+      And "Pat Fourth" has beaten "Chris Third" 26 to 17 in "Finals" of "Spring Open"
+      And "Pat Fourth" has beaten "Chris Third" 26 to 3 in "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then the best of in the second round in the summary is "Best of 1"
+
+    Scenario: The best of is beneath its round's name
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then the best of in the first round in the summary is beneath the round's name
+
+    Scenario: The best of is above its round's first match
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then the best of in the first round in the summary is above its first match
+
+    Scenario: The best of is aligned with the names of its round
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then the best of in the first round in the summary is aligned with the names beneath it
+
   Rule: A round lists its matches in the order of the draw, each its two sides
 
     Scenario: The first match is the first two places

@@ -1,5 +1,11 @@
 # What's new for Tournament Managers
 
+## Released 2026-11-22
+
+### What the public sees
+
+- **A knockout says what each round's matches are the best of.** Above each round of a knockout's grid, and beneath each round's name in its summary, it now says "Best of 3", or whatever you chose for that round, so that nobody has to count the score cells to learn it. See [What the public sees](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Released 2026-11-15
 
 ### The tournament

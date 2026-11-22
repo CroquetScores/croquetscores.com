@@ -540,6 +540,7 @@ export const norwegian: Language = {
     "knockout.round.quarters": "Kvartfinaler",
     "knockout.round.number": "Runde {number}",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "Best av {count}",
     // En sveitsisk tabell: hva hver spiller har spilt og vunnet, og
     // resultatene deres.
     "swiss.games": "Partier",

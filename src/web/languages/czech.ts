@@ -538,6 +538,7 @@ export const czech: Language = {
     "knockout.round.quarters": "Čtvrtfinále",
     "knockout.round.number": "{number}. kolo",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "Nejvýše {count} her",
     // Tabulka švýcarského systému: co každý hráč odehrál a vyhrál a jeho
     // výsledky.
     "swiss.games": "Hry",
