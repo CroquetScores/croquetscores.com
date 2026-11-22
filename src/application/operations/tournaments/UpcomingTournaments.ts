@@ -12,9 +12,9 @@ export type UpcomingTournamentsRefusedCode =
   "UpcomingTournaments.NotText" | "UpcomingTournaments.AtNotAMoment";
 
 /**
- * The tournaments of the website being read that start from the day of `at`,
- * the moment the reader asked, to sixty days after it, narrowed by what the
- * reader `chose`. For anybody, so it names nobody.
+ * The tournaments of the website being read that are being played on the day
+ * of `at`, the moment the reader asked, or start from it to sixty days after
+ * it, narrowed by what the reader `chose`. For anybody, so it names nobody.
  */
 export class UpcomingTournaments extends Query<readonly TournamentOfWebsite[]> {
   constructor(

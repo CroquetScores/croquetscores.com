@@ -1,10 +1,11 @@
 @postgres
 Feature: The tournaments about to start
 
-  The home page lists the tournaments that start from today to sixty days
-  from today, the soonest first (`home.feature`). The application answers
-  them: each with its name, its dates, the country it is played in, and where
-  it is found, as recent results are (`RecentResults.feature`).
+  The home page lists the tournaments that are being played today, and those
+  that start from tomorrow to sixty days from today, the soonest started
+  first (`home.feature`). The application answers them: each with its name,
+  its dates, the country it is played in, and where it is found, as recent
+  results are (`RecentResults.feature`).
 
   A tournament's days are kept as days, with no time of day and no time zone
   of their own, so today is the day of the moment the reader asked, in UTC,
@@ -13,9 +14,12 @@ Feature: The tournaments about to start
   moment is handed down from the edge with the question, since nothing below
   the web layer reads a clock.
 
-  A tournament that started yesterday and is still being played is not
-  about to start. A reader following it finds it among the recent results
-  once a game is added to it.
+  A tournament that started before today and has not yet finished is still
+  answered, since a reader looking for what is on today wants it as much as
+  one that starts today. It is answered on its finishing day too, and not the
+  day after. It was once left to the recent results, which only list it once
+  a game is added to it, so a tournament nobody had yet scored was listed
+  nowhere on the days it was played (issue 744).
 
   Tournaments starting on the same day are answered by name, so that the
   order does not change from one visit to the next. An archived tournament is
@@ -41,7 +45,7 @@ Feature: The tournaments about to start
     And the tournament is to be played in the country "nz"
     And the tournament is to be played in the region "can"
 
-  Rule: A tournament starting from today to sixty days from today is answered
+  Rule: A tournament being played today, or starting within sixty days from today, is answered
 
     Scenario: A tournament starting today is answered
       Given the tournament is to start at "2026-10-02T00:00:00Z"
@@ -67,9 +71,23 @@ Feature: The tournaments about to start
       When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
       Then "Spring Open" is not answered
 
-    Scenario: A tournament that started yesterday is not answered
+    Scenario: A tournament that started yesterday and finishes later is answered
       Given the tournament is to start at "2026-10-01T00:00:00Z"
       And the tournament is to finish at "2026-10-04T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
+      Then "Spring Open" is answered
+
+    Scenario: A tournament finishing today is answered
+      Given the tournament is to start at "2026-09-30T00:00:00Z"
+      And the tournament is to finish at "2026-10-02T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
+      Then "Spring Open" is answered
+
+    Scenario: A tournament that finished yesterday is not answered
+      Given the tournament is to start at "2026-09-29T00:00:00Z"
+      And the tournament is to finish at "2026-10-01T00:00:00Z"
       And "organiser@example.com" has created the tournament "Spring Open"
       When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
       Then "Spring Open" is not answered
@@ -82,8 +100,9 @@ Feature: The tournaments about to start
       When the upcoming tournaments are asked for at "2026-10-02T23:59:00Z"
       Then "Spring Open" is answered
 
-    Scenario: Just after midnight in UTC, a tournament that started the day before is not answered
-      Given the tournament is to start at "2026-10-01T00:00:00Z"
+    Scenario: Just after midnight in UTC, a tournament that finished the day before is not answered
+      Given the tournament is to start at "2026-09-30T00:00:00Z"
+      And the tournament is to finish at "2026-10-01T00:00:00Z"
       And "organiser@example.com" has created the tournament "Spring Open"
       When the upcoming tournaments are asked for at "2026-10-02T00:01:00Z"
       Then "Spring Open" is not answered
@@ -105,7 +124,17 @@ Feature: The tournaments about to start
       When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
       Then "Spring Open" is answered
 
-  Rule: The tournament starting soonest comes first
+  Rule: The tournament that started or starts soonest comes first
+
+    Scenario: A tournament under way is before one yet to start
+      Given the tournament is to start at "2026-10-10T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament is to start at "2026-10-01T00:00:00Z"
+      And the tournament is to finish at "2026-10-04T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
+      Then the first tournament answered is "Spring Open"
+      And the second tournament answered is "Autumn Open"
 
     Scenario: The tournament starting soonest is first
       Given the tournament is to start at "2026-11-07T00:00:00Z"

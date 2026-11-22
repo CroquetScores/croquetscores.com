@@ -621,6 +621,24 @@ When(
 );
 
 When(
+  "the tournaments under way or starting from {string} to {string} are looked for",
+  async function (this: SpecWorld, first: string, last: string) {
+    const website = Website.from("croquetscores.com");
+    looked(
+      this,
+      await this.asARequest(() =>
+        readModelOf(this).underwayOrStartingBetween(
+          website,
+          first,
+          last,
+          filterOf(this, website),
+        ),
+      ),
+    );
+  },
+);
+
+When(
   "the tournaments starting on {string} from {string} to {string} are looked for",
   async function (
     this: SpecWorld,
