@@ -38,7 +38,6 @@ import { PlayersOfCompetition } from "../../../application/operations/competitio
 import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
 import { AddPair } from "../../../application/operations/tournaments/AddPair.js";
 import { AddPlayers } from "../../../application/operations/tournaments/AddPlayers.js";
-import { ArchivePlayer } from "../../../application/operations/tournaments/ArchivePlayer.js";
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
 import { RestorePlayer } from "../../../application/operations/tournaments/RestorePlayer.js";
 import { UpdatePlayer } from "../../../application/operations/tournaments/UpdatePlayer.js";
@@ -1090,7 +1089,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   );
 
   // A player moved a place, archived or restored.
-  for (const action of ["archive", "restore"] as const) {
+  for (const action of ["restore"] as const) {
     server.post<{ Params: { id: string; player: string } }>(
       `/tournaments/:id/players/:player/${action}`,
       async (request, reply) => {
@@ -1102,11 +1101,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
           `tournament-player/${request.params.player}`,
         ] as const;
         const at = request.requestedAt;
-        await request.server.mediator.send(
-          action === "archive"
-            ? new ArchivePlayer(...asked, at)
-            : new RestorePlayer(...asked, at),
-        );
+        await request.server.mediator.send(new RestorePlayer(...asked, at));
         return reply.code(204).header("cache-control", "no-store").send();
       },
     );
