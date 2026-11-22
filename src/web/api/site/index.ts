@@ -32,7 +32,6 @@ import { AddGame } from "../../../application/operations/competitions/AddGame.js
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
 import { CorrectGame } from "../../../application/operations/competitions/CorrectGame.js";
-import { EnterPlayer } from "../../../application/operations/competitions/EnterPlayer.js";
 import { EnterPlayers } from "../../../application/operations/competitions/EnterPlayers.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { MoveCompetitionPlayer } from "../../../application/operations/competitions/MoveCompetitionPlayer.js";
@@ -491,29 +490,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         flag: flag === undefined ? undefined : flagAsSeen(request, flag),
       }));
       return reply.header("cache-control", "no-store").send({ players });
-    },
-  );
-
-  // One of the tournament's players entered, by the part of their id after
-  // "tournament-player/", and answered with their id in the competition.
-  server.post<{ Params: { id: string; competition: string } }>(
-    "/tournaments/:id/competitions/:competition/players",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      const entered = await request.server.mediator.send(
-        new EnterPlayer(
-          reader.value,
-          `tournament/${request.params.id}`,
-          `competition/${request.params.competition}`,
-          `tournament-player/${textOf(request.body, "player")}`,
-          request.requestedAt,
-        ),
-      );
-      return reply
-        .code(201)
-        .header("cache-control", "no-store")
-        .send({ id: entered });
     },
   );
 
