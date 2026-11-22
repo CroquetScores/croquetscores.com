@@ -621,8 +621,13 @@ When(
 );
 
 When(
-  "the tournaments under way or starting from {string} to {string} are looked for",
-  async function (this: SpecWorld, first: string, last: string) {
+  "the tournaments under way or starting from {string} to {string}, started from {string}, are looked for",
+  async function (
+    this: SpecWorld,
+    first: string,
+    last: string,
+    startedFrom: string,
+  ) {
     const website = Website.from("croquetscores.com");
     looked(
       this,
@@ -631,6 +636,7 @@ When(
           website,
           first,
           last,
+          startedFrom,
           filterOf(this, website),
         ),
       ),
