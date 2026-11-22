@@ -21,15 +21,21 @@ import { tournamentsChangedYearOfApps } from "./changedYear.js";
 import { tournamentsOfApps } from "./tournaments.js";
 import { createTournamentOfApps } from "./createTournament.js";
 import { tournamentActionsOfApps } from "./tournamentActions.js";
+import { addCompetitionOfApps } from "./addCompetition.js";
 
 export interface ApiV0Options {
   /** What a caller with no key may ask in a day, counted by address. */
   readonly requestsADayWithNoKey?: number;
+  /** Whether croquetscores.com offers Advantage Golf Croquet (the setting). */
+  readonly advantageGolfCroquet?: boolean;
 }
 
 export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
   server,
-  { requestsADayWithNoKey = requestsADayWithNoKeyUsually },
+  {
+    requestsADayWithNoKey = requestsADayWithNoKeyUsually,
+    advantageGolfCroquet = false,
+  },
 ) => {
   findingCallers(server);
 
@@ -87,6 +93,7 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
       await day.register(competitionOfApps);
       await day.register(createTournamentOfApps);
       await day.register(tournamentActionsOfApps);
+      await day.register(addCompetitionOfApps, { advantageGolfCroquet });
 
       // An address nothing is at is counted as any other request is, so that
       // asking for what is not there is no way round the allowance.

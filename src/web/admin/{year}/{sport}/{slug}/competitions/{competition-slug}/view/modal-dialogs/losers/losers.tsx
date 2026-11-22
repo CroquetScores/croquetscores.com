@@ -84,7 +84,7 @@ export const LosersDialog = (props: Props): React.JSX.Element => {
     setSending(true);
     try {
       const response = await fetch(
-        `/api/site/tournaments/${idInAddress(tournament)}/competitions`,
+        `/api/v0/tournaments/${idInAddress(tournament)}/competitions`,
         {
           method: "POST",
           headers: {
@@ -105,12 +105,13 @@ export const LosersDialog = (props: Props): React.JSX.Element => {
         return;
       }
       const answer = (await response.json()) as {
+        code?: string;
         error?: string;
         broken?: { code: string }[];
       };
       setRefused(
         answer.broken?.map(({ code }) => refusal(code)) ?? [
-          refusal(answer.error ?? "Unknown"),
+          refusal(answer.code ?? answer.error ?? "Unknown"),
         ],
       );
     } catch {

@@ -17,19 +17,13 @@ import {
   optionalTextOf,
   numberOf,
   numbersOf,
-  losersOf,
   countOf,
   typedOf,
-  yesOrNoOf,
   rulesOf,
   gamePlayerOf,
   tournamentFrom,
 } from "../../common/requestBody.js";
 
-import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
-import { AddKnockout } from "../../../application/operations/tournaments/AddKnockout.js";
-import { AddLosersKnockout } from "../../../application/operations/tournaments/AddLosersKnockout.js";
-import { AddSwiss } from "../../../application/operations/tournaments/AddSwiss.js";
 import { UpdateBlock } from "../../../application/operations/tournaments/UpdateBlock.js";
 import { UpdateKnockout } from "../../../application/operations/tournaments/UpdateKnockout.js";
 import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateSwiss.js";
@@ -128,8 +122,8 @@ import { speakingOf } from "../../common/language.js";
 import { isAdministrator, readerOf } from "../../common/reader.js";
 import { CompetitionNamesOfWebsite } from "../../../application/operations/tournaments/CompetitionNamesOfWebsite.js";
 import { TournamentNamesOfWebsite } from "../../../application/operations/tournaments/TournamentNamesOfWebsite.js";
-import { servedAsOf, websiteOf } from "../../common/site.js";
-import { advantageGolfCroquetIsOffered } from "../../common/advantageGolfCroquet.js";
+import { websiteOf } from "../../common/site.js";
+import { advantageOffered } from "../../common/advantageOffered.js";
 
 // A year as an address writes one: four digits, the first not a nought.
 const aYear = /^[1-9]\d{3}$/;
@@ -178,34 +172,8 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
 ) => {
   server.get("/health", () => ({ status: "ok" }));
 
-  // By the address it was served as and not the website it is for, since
-  // development is for croquetscores.com and is told apart from it here: it
-  // offers what is being worked on (advantageGolfCroquet.feature).
-  const offeredTo = (request: FastifyRequest): boolean =>
-    advantageGolfCroquetIsOffered(servedAsOf(request), advantageGolfCroquet);
-
-  // Whether a request would make a competition Advantage where Advantage is
-  // not offered, which is refused. Leaving one as it is, or switching it off,
-  // is not: a site that offered Advantage and no longer does still has its
-  // Advantage competitions, and the dialog that changes one says what it is as
-  // it says its other rules, so refusing that would leave a manager unable to
-  // rename a competition they had already made. A competition not being
-  // changed, as one being added is not, is not Advantage yet
-  // (advantage.feature).
-  const makesAdvantageNotOffered = async (
-    request: FastifyRequest,
-    reader: AccountId,
-    tournament: string,
-    competition: string | undefined,
-  ): Promise<boolean> => {
-    if (yesOrNoOf(request.body, "advantage") !== true) return false;
-    if (offeredTo(request)) return false;
-    if (competition === undefined) return true;
-    const listed = await request.server.mediator.query(
-      new CompetitionsOfTournament(reader.value, tournament),
-    );
-    return listed.find(({ id }) => id === competition)?.advantage !== true;
-  };
+  const { offeredTo, makesAdvantageNotOffered } =
+    advantageOffered(advantageGolfCroquet);
   const refusedAsNotOffered = (reply: FastifyReply): FastifyReply =>
     reply
       .code(422)
@@ -444,74 +412,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         ),
       );
       return reply.header("cache-control", "no-store").send({ names });
-    },
-  );
-
-  // A competition added, as the competition dialog sends it: its kind, its
-  // name, and the shape its kind has. Answered with its id.
-  server.post<{ Params: { id: string } }>(
-    "/tournaments/:id/competitions",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      const tournament = `tournament/${request.params.id}`;
-      const body = request.body;
-      const name = textOf(body, "name");
-      const at = request.requestedAt;
-      const kind = textOf(body, "kind");
-      if (
-        kind !== "losers-knockout" &&
-        (await makesAdvantageNotOffered(request, reader, tournament, undefined))
-      ) {
-        return refusedAsNotOffered(reply);
-      }
-      const added = await request.server.mediator.send(
-        // The knockout whose losers it takes is named by its bare id, as the
-        // competitions of a tournament are everywhere in this API.
-        kind === "losers-knockout"
-          ? new AddLosersKnockout(
-              reader.value,
-              tournament,
-              name,
-              `competition/${textOf(body, "from")}`,
-              numberOf(body, "round"),
-              at,
-            )
-          : kind === "knockout"
-            ? new AddKnockout(
-                reader.value,
-                tournament,
-                name,
-                numberOf(body, "places"),
-                numbersOf(body, "rounds"),
-                at,
-                rulesOf(body),
-                losersOf(body),
-              )
-            : kind === "swiss"
-              ? new AddSwiss(
-                  reader.value,
-                  tournament,
-                  name,
-                  numberOf(body, "bestOf"),
-                  at,
-                  rulesOf(body),
-                )
-              : new AddBlock(
-                  reader.value,
-                  tournament,
-                  name,
-                  numberOf(body, "bestOf"),
-                  numberOf(body, "rounds"),
-                  at,
-                  rulesOf(body),
-                  optionalTextOf(body, "tieBreak"),
-                ),
-      );
-      return reply
-        .code(201)
-        .header("cache-control", "no-store")
-        .send({ id: added.value });
     },
   );
 

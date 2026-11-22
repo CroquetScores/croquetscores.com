@@ -2120,7 +2120,10 @@ export const buildApplication = async (
     done(null, payload);
   });
   await registerQuestionLimit(server);
-  await server.register(apiV0, { prefix: "/api/v0" });
+  await server.register(apiV0, {
+    prefix: "/api/v0",
+    advantageGolfCroquet: config.advantageGolfCroquet,
+  });
   await server.register(apiSite, {
     prefix: "/api/site",
     assets,
