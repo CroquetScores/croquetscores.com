@@ -57,7 +57,7 @@ export const DeleteTournamentDialog = ({
     setRefused(undefined);
     try {
       const response = await fetch(
-        `/api/site/tournaments/${idInAddress(tournament)}/delete`,
+        `/api/v0/tournaments/${idInAddress(tournament)}/delete`,
         {
           method: "POST",
           headers: { "content-type": "application/json" },

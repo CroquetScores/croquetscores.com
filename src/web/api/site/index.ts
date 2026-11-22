@@ -33,7 +33,6 @@ import { AddSwiss } from "../../../application/operations/tournaments/AddSwiss.j
 import { UpdateBlock } from "../../../application/operations/tournaments/UpdateBlock.js";
 import { UpdateKnockout } from "../../../application/operations/tournaments/UpdateKnockout.js";
 import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateSwiss.js";
-import { DeleteTournament } from "../../../application/operations/tournaments/DeleteTournament.js";
 import { ArchiveCompetition } from "../../../application/operations/tournaments/ArchiveCompetition.js";
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
@@ -410,29 +409,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply
         .header("cache-control", "no-store")
         .send({ address: after.address });
-    },
-  );
-
-  // A test tournament deleted, as an administrator judges it: its managers
-  // told what was written, and the tournament archived where `archive` is
-  // true. Only the administrator's words are taken from the body, and the
-  // tournament is the address's.
-  server.post<{ Params: { id: string } }>(
-    "/tournaments/:id/delete",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      const body = request.body as Record<string, unknown> | null;
-      await request.server.mediator.send(
-        new DeleteTournament(
-          reader.value,
-          `tournament/${request.params.id}`,
-          textOf(body, "message"),
-          body?.["archive"] === true,
-          request.requestedAt,
-        ),
-      );
-      return reply.code(204).header("cache-control", "no-store").send();
     },
   );
 

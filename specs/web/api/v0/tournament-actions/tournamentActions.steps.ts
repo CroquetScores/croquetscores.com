@@ -62,3 +62,33 @@ When(
 Then("the tournament read says it is not national", function (this: WebWorld) {
   assert.equal(answered(this).body["national"], false);
 });
+
+When(
+  /^the tournament "([^"]*)" is deleted with the words "([^"]*)" and (archived|not archived)$/,
+  async function (
+    this: WebWorld,
+    name: string,
+    message: string,
+    archived: string,
+  ) {
+    await told(this, "POST", addressOf(this, name, "delete"), {
+      message,
+      archive: archived === "archived",
+    });
+  },
+);
+
+When(
+  "the tournament {string} is deleted at the address it was at",
+  async function (this: WebWorld, name: string) {
+    await told(
+      this,
+      "POST",
+      `/api/site/tournaments/${bare(this, name)}/delete`,
+      {
+        message: "This was a test.",
+        archive: true,
+      },
+    );
+  },
+);
