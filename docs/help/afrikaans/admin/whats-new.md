@@ -1,5 +1,29 @@
 # Wat is nuut vir toernooibestuurders
 
+## Vrygestel 2026-11-22
+
+### Die toernooi
+
+- **Nieu-Seeland se kroketstreke kan gekies word.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury en die ander streke waarin Nieu-Seeland se nasionale toernooie verdeel word, is as die streek van 'n toernooi gelys, langs die provinsies.
+
+- **Die e-pos oor 'n nasionale of internasionale status wat verwyder is, sê dit.** Wanneer die administrateur die status van 'n toernooi af wegneem, sê die e-pos aan sy bestuurders nou dat dit verwyder is, en vra jou om te sê hoekom jy nie saamstem nie, as jy nie saamstem nie. Dit gee die Australian Open as voorbeeld van 'n nasionale geleentheid, en die WCF Association Croquet Singles as 'n internasionale een.
+
+### Spelers
+
+- **'n Wêreldranglysnaam wat die wêreldranglys nie ken nie, volg 'n gekorrigeerde naam.** As jy 'n naam reggemaak het, het die **Wêreldranglys-spelernaam** soos dit was gebly, so 'n speler wat as "aaa" bygevoeg en na "Tim Murphy" reggemaak is, was steeds in die ranglys as "aaa" bekend. Waar die ranglys nie die naam ken waarmee die speler oopgemaak is nie, word dit nou die gekorrigeerde naam terwyl jy dit tik, totdat jy self in die wêreldranglysnaam tik. 'n Naam wat die ranglys ken, wat deur die regmerkie daarnaas gewys word, bly.
+
+- **'n Voorgee word as die getal gewys wat dit is.** Die lys spelers wys "4" vir 'n voorgee wat jy as "4.0" getik het en "4" vir "+4". 'n Voorgee met 'n breuk, soos "-1.5", word gewys soos dit is. Jy kan dit steeds met 'n teken of 'n punt tik.
+
+### Toepassings
+
+- **'n Toepassing kan jou toernooie uit die werf se API lees.** Die werf het 'n openbare API (kyk **Hulp vir toepassingontwikkelaars**), wat vir eers net lees. Jy kan 'n sleutel onder **API-sleutels** in jou rekening maak om 'n toepassing 'n eie kwota te gee: dit kan gemaak word om net te lees, of om te lees en te skryf, dit kan tot een toernooi beperk word, en jy kan dit te eniger tyd herroep. Hou 'n sleutel so geheim soos 'n wagwoord.
+
+### Wat die publiek sien
+
+- **Die komende toernooie op die tuisblad sluit 'n toernooi in wat in die laaste twee dae begin het.** 'n Toernooi word gelys van sestig dae voordat dit begin tot die dag waarop dit eindig, maar een wat meer as twee dae gelede begin het, word uitgelaat. Dus kan dit op die dae waarop dit gespeel word gevind word voordat iemand 'n spel daarin aangeteken het, en ná die eerste twee dae is dit by die onlangse uitslae sodra 'n spel bygevoeg is.
+
+- **'n Uitklopkompetisie sê waarvan elke ronde se wedstryde die beste is.** Bo elke ronde van 'n uitklopkompetisie se rooster, en onder elke ronde se naam in die opsomming, staan nou "Beste van 3", of wat jy vir daardie ronde gekies het, sodat niemand die tellingblokkies hoef te tel om dit te weet nie. Kyk [Wat die publiek sien](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Vrygestel 2026-11-15
 
 ### Die toernooi

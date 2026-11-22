@@ -1,5 +1,33 @@
 # Was ist neu
 
+## Veröffentlicht am 22.11.2026
+
+- **Die Startseite merkt sich die Turniere, die Sie zuletzt angesehen haben.** Wenn Sie ein Turnier öffnen, steht es unter **Zuletzt besuchte Turniere** an erster Stelle, zwischen dem Filter und den neuesten Ergebnissen, bis zu fünf, damit Sie zu denen zurückkehren können, die Sie verfolgen, ohne sie in den Listen zu suchen. Sie werden auf Ihrem eigenen Gerät gespeichert, in einem Cookie, das nur die Adressen der Turniere enthält, und die Liste wird gar nicht angezeigt, bis Sie eines geöffnet haben. Die Hilfe sagt, was das Cookie ist.
+
+- **Die kommenden Turniere enthalten auch die, die in den letzten zwei Tagen begonnen haben.** Ein Turnier, das begonnen hat und noch nicht zu Ende ist, wird bis zu dem Tag aufgeführt, an dem es endet, sofern es vor höchstens zwei Tagen begonnen hat, sodass es an den Tagen, an denen gespielt wird, zu finden ist, bevor jemand ein Spiel eingetragen hat. Die, die früher begonnen haben, stehen unter den neuesten Ergebnissen, sobald ein Spiel hinzugefügt wurde.
+
+- **Ein K.-o.-Turnier sagt, über wie viele Spiele die Matches jeder Runde gehen.** Über jeder Runde im Raster eines K.-o.-Turniers und in der Übersicht unter dem Namen jeder Runde steht „Maximal 3 Spiele“ (oder was die Turnierleitung für die Runde gewählt hat).
+
+- **Ein Ergebnis passt in der Übersicht eines K.-o.-Turniers in sein Feld, und ein Name bleibt in der Übersicht eines Blocks zusammen.** Auf einem schmalen Bildschirm lief ein Advantage-Ergebnis, das als „83% (5/6)“ geschrieben wird, aus seinem Feld über die Namen hinaus, und ein Name in der Übersicht eines Blocks konnte nach dem Vornamen umbrechen. Ein Paar bleibt auf jeder Seite des Und-Zeichens zusammen.
+
+- **Sie können die Website auf den Home-Bildschirm Ihres Telefons legen.** Eine Schaltfläche in der Fußzeile bietet es an, wenn Ihr Browser es kann, und **Die Website zum Home-Bildschirm hinzufügen** in der Hilfe sagt, wie, für ein iPhone und für ein Android-Telefon. Croquet Scores und Gateball Scores haben je ein Symbol, damit Sie sie unterscheiden können.
+
+- **Die Croquet-Regionen Neuseelands sind aufgeführt.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury und die anderen Regionen, in die Neuseelands nationale Turniere aufgeteilt sind, können als Region eines Turniers gewählt werden.
+
+### Für App-Entwickler
+
+- **Es gibt eine öffentliche API.** Eine App kann die Turniere eines Jahres lesen, ein Turnier mit seinen Wettbewerben und Spielern, die Spiele und den Stand eines Wettbewerbs, die Turniere, die das Jahr gewechselt haben, und die Turniere, die archiviert wurden, als JSON unter `/api/v0`. Sie ist `v0`, solange sie in Entwicklung ist. Alle dürfen lesen, und eine App, die einen unter **API-Schlüssel** in Ihrem Konto erstellten Schlüssel sendet, hat ein eigenes Kontingent, zunächst 60 Anfragen pro Minute und 10.000 pro Tag. Eine App ohne Schlüssel teilt sich ein Kontingent nach ihrer Adresse, 10 pro Minute und 500 pro Tag.
+
+- **Ein Schlüssel lässt eine App für Sie handeln, ohne Ihr Passwort.** Erstellen Sie in Ihrem Konto einen Schlüssel, sagen Sie, wofür er ist, und widerrufen Sie ihn, wenn er nicht mehr verwendet werden soll. Ein Schlüssel kann nur zum Lesen oder zum Lesen und Schreiben erstellt werden und kann auf ein Turnier beschränkt werden. Die API liest vorerst nur. Nur ein Hash des Schlüssels wird gespeichert, sodass der Schlüssel einmal angezeigt wird, wenn Sie ihn erstellen.
+
+- **Einer Antwort können Felder ohne neue Version hinzugefügt werden.** Eine App muss ein Feld ignorieren, das sie nicht kennt. Eine Änderung, die eine App zerbrechen würde, wird als neue Version neben der alten gemacht, sodass eine App, die für `v1` geschrieben wurde, weiterläuft, wenn `v2` erscheint. **Hilfe für App-Entwickler** und **Die Endpunkte der API** in der Hilfe sagen, was jede Adresse annimmt und antwortet, in jeder Sprache.
+
+- **Eine Vorgabe in der API ist eine Zahl.** Sie ist `4.5` und nicht `"4.5"`, und `null`, wo ein Spieler keine hat.
+
+### Weltranglistenbeauftragte
+
+- **Eine zweite Tabelle der Golf-Croquet-Spiele hat den Tag, an dem jedes Spiel eingetragen wurde.** Hängen Sie `rankings2` an die Adresse, wo `rankings` steht, und Spalte I nennt den Tag, an dem jedes Spiel eingetragen wurde, als Excel-Datum, in der Zeit des Ortes, an dem das Turnier gespielt wird. Der Reiter „Ranglisten“ bietet sie als **Spiele für die Weltrangliste mit Spieldatum herunterladen** an. Die erste Tabelle ist, wie sie war, da die Software der Beauftragten sie nach der Position liest.
+
 ## Veröffentlicht am 15.11.2026
 
 - **Ein Doppelpaar ist in der Suche ein einziger Spieler, gleich welcher seiner beiden Spieler zuerst genannt wird.** "Sam Someone & Alex Another" und "Alex Another & Sam Someone" waren zwei Einträge auf der Spielerseite, ebenso "Peter & Rosie Landrebe" und "Rosie & Peter Landrebe". Jetzt sind sie einer, unter einer Adresse, aufgeführt mit dem Namen, den das jüngste Turnier geschrieben hat.

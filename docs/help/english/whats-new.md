@@ -1,5 +1,33 @@
 # What's new
 
+## Released 2026-11-22
+
+- **The home page keeps the tournaments you looked at lately.** Opening a tournament puts it first in **Your Recent Tournaments**, between the filter and the recent results, up to five of them, so that you can go back to the ones you follow without finding them in the lists. It is kept on your own device, in a cookie that holds the addresses of the tournaments and nothing else, and the list is not shown at all until you have opened one. The help says what the cookie is.
+
+- **The upcoming tournaments include the ones that started in the last two days.** A tournament that has started and not finished is listed until the day it finishes, as long as it started no more than two days ago, so on the days it is played it can be found before anybody has scored a game in it. The ones that started longer ago are in the recent results once a game is added.
+
+- **A knockout says what each round's matches are the best of.** Above each round of a knockout's grid, and beneath each round's name in its summary, it says "Best of 3", or whatever the tournament manager chose for that round.
+
+- **A score fits in its box in a knockout's summary, and a name stays together in a block's summary.** On a narrow screen an Advantage score written as "83% (5/6)" ran out of its box over the names, and a name in a block's summary could break after its first name. A pair is kept together on each side of its ampersand.
+
+- **You can put the site on your phone's home screen.** A button in the footer offers it when your browser can, and **Add the site to your home screen** in the help says how, for an iPhone and for an Android phone. Croquet Scores and Gateball Scores have an icon each, so that you can tell them apart.
+
+- **The croquet regions of New Zealand are listed.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury and the others New Zealand's national tournaments are split into can be chosen as the region of a tournament.
+
+### For app developers
+
+- **There is a public API.** An app can read a year's tournaments, a tournament with its competitions and players, a competition's games and standings, the tournaments that have changed year and the tournaments that have been archived, as JSON, at `/api/v0`. It is `v0` while it is in development. Anybody may read, and an app that sends a key made under **API Keys** in your account has an allowance of its own, 60 requests a minute and 10,000 a day to begin with. An app with no key shares an allowance by its address, 10 a minute and 500 a day.
+
+- **A key lets an app act for you without your password.** Make a key in your account, say what it is for, and revoke it when you no longer want it used. A key may be made to read only or to read and write, and may be limited to one tournament. The API only reads for now. Only a hash of the key is kept, so the key is shown once, when you make it.
+
+- **Fields may be added to an answer without a new version.** An app must ignore a field it does not know. A change that would break an app is made as a new version beside the old, so an app written against `v1` keeps working when `v2` arrives. **Help for app developers** and **The API's endpoints** in the help say what each address takes and answers, in every language.
+
+- **A handicap in the API is a number.** It is `4.5` and not `"4.5"`, and `null` where a player has none.
+
+### World ranking officers
+
+- **A second spreadsheet of Golf Croquet games has the day each was entered.** Add `rankings2` to the address, where `rankings` is, and column I says the day each game was entered, as an Excel date, in the time of the place the tournament is played. The Rankings tab offers it as **Download games for world ranking with game date**. The first spreadsheet is as it was, since the officers' software reads it by position.
+
 ## Released 2026-11-15
 
 - **A doubles pair is one player in the search, whichever of its two players is named first.** "Sam Someone & Alex Another" and "Alex Another & Sam Someone" were two entries on the players page, and so were "Peter & Rosie Landrebe" and "Rosie & Peter Landrebe". They are now one, at one address, listed by the name the most recent tournament wrote.

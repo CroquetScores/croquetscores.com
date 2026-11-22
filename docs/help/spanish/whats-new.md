@@ -1,5 +1,33 @@
 # Novedades
 
+## Publicado el 2026-11-22
+
+- **La página de inicio recuerda los torneos que has mirado hace poco.** Al abrir un torneo, pasa a ser el primero en **Tus torneos recientes**, entre el filtro y los resultados recientes, hasta cinco, para que puedas volver a los que sigues sin buscarlos en las listas. Se guardan en tu propio dispositivo, en una cookie que solo contiene las direcciones de los torneos, y la lista no se muestra hasta que hayas abierto uno. La ayuda dice qué es la cookie.
+
+- **Los próximos torneos incluyen los que empezaron en los últimos dos días.** Un torneo que ha empezado y no ha terminado se muestra hasta el día en que termina, siempre que empezara hace dos días como máximo, de modo que en los días en que se juega se puede encontrar antes de que nadie haya anotado una partida en él. Los que empezaron hace más tiempo están en los resultados recientes cuando se añade una partida.
+
+- **Una eliminatoria dice a cuántas partidas son los partidos de cada ronda.** Encima de cada ronda en el cuadro de una eliminatoria, y debajo del nombre de cada ronda en su resumen, aparece "Al mejor de 3", o lo que el gestor del torneo haya elegido para esa ronda.
+
+- **Un resultado cabe en su casilla en el resumen de una eliminatoria, y un nombre se mantiene unido en el resumen de un bloque.** En una pantalla estrecha, un resultado Advantage escrito como "83% (5/6)" se salía de su casilla por encima de los nombres, y un nombre en el resumen de un bloque podía cortarse después del nombre de pila. Una pareja se mantiene unida a cada lado del símbolo &.
+
+- **Puedes poner el sitio en la pantalla de inicio de tu teléfono.** Un botón en el pie de página lo ofrece cuando tu navegador puede, y **Añadir el sitio a tu pantalla de inicio** en la ayuda dice cómo, para un iPhone y para un teléfono Android. Croquet Scores y Gateball Scores tienen cada uno un icono, para que puedas distinguirlos.
+
+- **Se listan las regiones de croquet de Nueva Zelanda.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury y las demás regiones en que se dividen los torneos nacionales de Nueva Zelanda se pueden elegir como la región de un torneo.
+
+### Para desarrolladores de aplicaciones
+
+- **Hay una API pública.** Una aplicación puede leer los torneos de un año, un torneo con sus competiciones y jugadores, las partidas y la clasificación de una competición, los torneos que han cambiado de año y los torneos que se han archivado, como JSON, en `/api/v0`. Es `v0` mientras está en desarrollo. Cualquiera puede leer, y una aplicación que envía una clave creada en **Claves de API** en tu cuenta tiene un límite propio, al principio 60 peticiones por minuto y 10.000 por día. Una aplicación sin clave comparte un límite según su dirección, 10 por minuto y 500 por día.
+
+- **Una clave permite que una aplicación actúe por ti sin tu contraseña.** Crea una clave en tu cuenta, di para qué es y revócala cuando ya no quieras que se use. Una clave se puede crear solo para leer, o para leer y escribir, y se puede limitar a un torneo. Por ahora la API solo lee. Solo se guarda un hash de la clave, así que la clave se muestra una vez, cuando la creas.
+
+- **Se pueden añadir campos a una respuesta sin una versión nueva.** Una aplicación debe ignorar un campo que no conoce. Un cambio que rompería una aplicación se hace como una versión nueva junto a la antigua, de modo que una aplicación escrita para `v1` sigue funcionando cuando llegue `v2`. **Ayuda para desarrolladores de aplicaciones** y **Los puntos de acceso de la API** en la ayuda dicen qué acepta y qué responde cada dirección, en todos los idiomas.
+
+- **Un hándicap en la API es un número.** Es `4.5` y no `"4.5"`, y `null` cuando un jugador no tiene ninguno.
+
+### Responsables del ranking mundial
+
+- **Una segunda hoja de cálculo de partidas de Golf Croquet tiene el día en que se anotó cada una.** Añade `rankings2` a la dirección, donde está `rankings`, y la columna I dice el día en que se anotó cada partida, como una fecha de Excel, en la hora del lugar donde se juega el torneo. La pestaña Rankings la ofrece como **Descargar partidas para el ranking internacional con la fecha de la partida**. La primera hoja es como era, porque el programa de los responsables la lee por posición.
+
 ## Publicado el 2026-11-15
 
 - **Una pareja de dobles es un solo jugador en la búsqueda, sea cual sea de los dos jugadores el que se nombre primero.** "Sam Someone & Alex Another" y "Alex Another & Sam Someone" eran dos entradas en la página de jugadores, y también lo eran "Peter & Rosie Landrebe" y "Rosie & Peter Landrebe". Ahora son una sola, en una sola dirección, listada con el nombre que escribió el torneo más reciente.

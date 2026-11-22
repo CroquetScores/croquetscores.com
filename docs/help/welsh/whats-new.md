@@ -1,5 +1,33 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-22
+
+- **Mae'r hafan yn cofio'r twrnameintiau yr edrychoch arnynt yn ddiweddar.** Pan fyddwch yn agor twrnamaint, mae'n dod yn gyntaf yn **Eich twrnameintiau diweddar**, rhwng yr hidlydd a'r canlyniadau diweddar, hyd at bump ohonynt, fel y gallwch fynd yn ôl at y rhai rydych yn eu dilyn heb chwilio amdanynt yn y rhestrau. Fe'u cedwir ar eich dyfais eich hun, mewn cwci sy'n cynnwys cyfeiriadau'r twrnameintiau a dim byd arall, ac nid yw'r rhestr yn cael ei dangos o gwbl nes eich bod wedi agor un. Mae'r cymorth yn dweud beth yw'r cwci.
+
+- **Mae'r twrnameintiau i ddod yn cynnwys y rhai a ddechreuodd yn y ddau ddiwrnod diwethaf.** Mae twrnamaint sydd wedi dechrau ac heb orffen yn cael ei restru tan y diwrnod y mae'n gorffen, cyhyd â'i fod wedi dechrau ddim mwy na dau ddiwrnod yn ôl, fel y gellir ei ganfod ar y dyddiau y caiff ei chwarae cyn i neb gofnodi gêm ynddo. Mae'r rhai a ddechreuodd ynghynt yn y canlyniadau diweddar unwaith y bydd gêm wedi'i hychwanegu.
+
+- **Mae twrnamaint ag ymadael yn dweud yr orau o faint yw gemau pob rownd.** Uwchben pob rownd yn nhabl twrnamaint ag ymadael, ac o dan enw pob rownd yn ei grynodeb, mae'n dweud "Yr orau o 3", neu'r hyn a ddewisodd rheolwr y twrnamaint ar gyfer y rownd honno.
+
+- **Mae sgôr yn ffitio yn ei flwch yng nghrynodeb twrnamaint ag ymadael, ac mae enw'n aros gyda'i gilydd yng nghrynodeb bloc.** Ar sgrin gul, roedd sgôr Advantage wedi'i hysgrifennu fel "83% (5/6)" yn llifo allan o'i flwch dros yr enwau, a gallai enw yng nghrynodeb bloc dorri ar ôl yr enw cyntaf. Mae pâr yn cael ei gadw gyda'i gilydd ar bob ochr i'r ampersand.
+
+- **Gallwch roi'r safle ar sgrin gartref eich ffôn.** Mae botwm yn y troedyn yn ei gynnig pan fydd eich porwr yn gallu, ac mae **Ychwanegu'r safle at eich sgrin gartref** yn y cymorth yn dweud sut, ar gyfer iPhone ac ar gyfer ffôn Android. Mae gan Croquet Scores a Gateball Scores eicon yr un, fel y gallwch eu hadnabod ar wahân.
+
+- **Mae rhanbarthau croce Seland Newydd wedi'u rhestru.** Gellir dewis Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury a'r rhanbarthau eraill y rhennir twrnameintiau cenedlaethol Seland Newydd iddynt yn rhanbarth twrnamaint.
+
+### I ddatblygwyr apiau
+
+- **Mae API cyhoeddus.** Gall ap ddarllen twrnameintiau blwyddyn, twrnamaint gyda'i gystadlaethau a'i chwaraewyr, gemau a safleoedd cystadleuaeth, y twrnameintiau a newidiodd flwyddyn a'r twrnameintiau a archifwyd, fel JSON, yn `/api/v0`. Mae'n `v0` tra bydd yn cael ei ddatblygu. Gall unrhyw un ddarllen, ac mae gan ap sy'n anfon allwedd a wnaed o dan **Allweddi API** yn eich cyfrif lwfans ei hun, 60 cais y funud a 10,000 y dydd i ddechrau. Mae ap heb allwedd yn rhannu lwfans yn ôl ei gyfeiriad, 10 y funud a 500 y dydd.
+
+- **Mae allwedd yn gadael i ap weithredu drosoch heb eich cyfrinair.** Gwnewch allwedd yn eich cyfrif, dywedwch beth yw ei diben, a'i dirymu pan na fyddwch eisiau iddi gael ei defnyddio mwyach. Gellir gwneud allwedd i ddarllen yn unig neu i ddarllen ac ysgrifennu, a gellir ei chyfyngu i un twrnamaint. Dim ond darllen y mae'r API am y tro. Dim ond hash o'r allwedd a gedwir, felly dangosir yr allwedd unwaith, pan fyddwch yn ei gwneud.
+
+- **Gellir ychwanegu meysydd at ateb heb fersiwn newydd.** Rhaid i ap anwybyddu maes nad yw'n ei adnabod. Gwneir newid a fyddai'n torri ap fel fersiwn newydd wrth ochr yr hen un, fel bod ap a ysgrifennwyd ar gyfer `v1` yn dal i weithio pan ddaw `v2`. Mae **Cymorth i ddatblygwyr apiau** a **Terfynbwyntiau'r API** yn y cymorth yn dweud beth y mae pob cyfeiriad yn ei gymryd ac yn ei ateb, ym mhob iaith.
+
+- **Mae anfantais yn yr API yn rhif.** Mae'n `4.5` ac nid `"4.5"`, ac yn `null` lle nad oes gan chwaraewr un.
+
+### Swyddogion detholion y byd
+
+- **Mae gan ail daenlen o gemau Golf Croquet y diwrnod y cofnodwyd pob un.** Ychwanegwch `rankings2` at y cyfeiriad, lle mae `rankings`, ac mae colofn I yn dweud y diwrnod y cofnodwyd pob gêm, fel dyddiad Excel, yn amser y lle y chwaraeir y twrnamaint. Mae'r tab Detholion yn ei gynnig fel **Lawrlwytho gemau ar gyfer Safle'r Byd gyda dyddiad y gêm**. Mae'r daenlen gyntaf fel yr oedd, gan fod meddalwedd y swyddogion yn ei darllen yn ôl safle.
+
 ## Rhyddhawyd 2026-11-15
 
 - **Mae pâr dyblau yn un chwaraewr yn y chwilio, pa un bynnag o'i ddau chwaraewr a enwir gyntaf.** Roedd "Sam Someone & Alex Another" ac "Alex Another & Sam Someone" yn ddau gofnod ar dudalen y chwaraewyr, felly hefyd "Peter & Rosie Landrebe" a "Rosie & Peter Landrebe". Nawr maen nhw'n un, ar un cyfeiriad, wedi'i restru dan yr enw a ysgrifennodd y twrnamaint diweddaraf.

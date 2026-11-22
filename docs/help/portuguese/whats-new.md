@@ -1,5 +1,33 @@
 # Novidades
 
+## Lançado em 2026-11-22
+
+- **A página inicial guarda os torneios que você viu recentemente.** Ao abrir um torneio, ele passa a ser o primeiro em **Os seus torneios recentes**, entre o filtro e os resultados recentes, até cinco deles, para que você possa voltar aos que acompanha sem procurá-los nas listas. Eles ficam guardados no seu próprio aparelho, num cookie que contém apenas os endereços dos torneios, e a lista nem aparece até você abrir um. A ajuda diz o que é o cookie.
+
+- **Os próximos torneios incluem os que começaram nos últimos dois dias.** Um torneio que já começou e ainda não terminou aparece até o dia em que termina, desde que tenha começado há no máximo dois dias, de modo que nos dias em que é jogado ele pode ser encontrado antes de alguém lançar um jogo nele. Os que começaram há mais tempo ficam nos resultados recentes quando um jogo é acrescentado.
+
+- **Um mata-mata diz de quantos jogos são as partidas de cada rodada.** Acima de cada rodada na grade de um mata-mata, e abaixo do nome de cada rodada no seu resumo, aparece "Melhor de 3", ou o que o organizador do torneio escolheu para essa rodada.
+
+- **Um placar cabe na sua caixa no resumo de um mata-mata, e um nome fica junto no resumo de um bloco.** Numa tela estreita, um placar Advantage escrito como "83% (5/6)" saía da sua caixa por cima dos nomes, e um nome no resumo de um bloco podia quebrar depois do primeiro nome. Uma dupla fica junta de cada lado do "&".
+
+- **Você pode colocar o site no ecrã principal do seu telefone.** Um botão no rodapé oferece isso quando o seu navegador consegue, e **Adicionar o site ao ecrã principal** na ajuda diz como, para um iPhone e para um telefone Android. O Croquet Scores e o Gateball Scores têm um ícone cada, para que você os distinga.
+
+- **As regiões de croquet da Nova Zelândia estão na lista.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury e as outras regiões em que os torneios nacionais da Nova Zelândia se dividem podem ser escolhidas como a região de um torneio.
+
+### Para desenvolvedores de aplicativos
+
+- **Há uma API pública.** Um aplicativo pode ler os torneios de um ano, um torneio com as suas competições e jogadores, os jogos e a classificação de uma competição, os torneios que mudaram de ano e os torneios que foram arquivados, como JSON, em `/api/v0`. Ela é `v0` enquanto está em desenvolvimento. Qualquer pessoa pode ler, e um aplicativo que envia uma chave criada em **Chaves de API** na sua conta tem uma cota própria, de início 60 requisições por minuto e 10.000 por dia. Um aplicativo sem chave divide uma cota pelo seu endereço, 10 por minuto e 500 por dia.
+
+- **Uma chave deixa um aplicativo agir por você sem a sua senha.** Crie uma chave na sua conta, diga para que serve e revogue-a quando não quiser mais que seja usada. Uma chave pode ser criada só para ler, ou para ler e escrever, e pode ser limitada a um torneio. Por enquanto a API só lê. Apenas um hash da chave é guardado, então a chave é mostrada uma vez, quando você a cria.
+
+- **Campos podem ser acrescentados a uma resposta sem uma nova versão.** Um aplicativo deve ignorar um campo que não conhece. Uma mudança que quebraria um aplicativo é feita como uma nova versão ao lado da antiga, de modo que um aplicativo escrito para a `v1` continua funcionando quando a `v2` chegar. **Ajuda para desenvolvedores de aplicativos** e **Os endpoints da API** na ajuda dizem o que cada endereço aceita e responde, em todos os idiomas.
+
+- **Um handicap na API é um número.** É `4.5` e não `"4.5"`, e `null` onde o jogador não tem um.
+
+### Responsáveis pelo ranking mundial
+
+- **Uma segunda planilha de jogos de Golf Croquet tem o dia em que cada um foi lançado.** Acrescente `rankings2` ao endereço, onde está `rankings`, e a coluna I diz o dia em que cada jogo foi lançado, como uma data do Excel, no horário do lugar onde o torneio é jogado. A aba Rankings a oferece como **Baixar jogos para o ranking mundial com a data do jogo**. A primeira planilha continua como era, porque o programa dos responsáveis a lê pela posição.
+
 ## Lançado em 2026-11-15
 
 - **Uma dupla é um único jogador na busca, seja qual for dos dois jogadores o primeiro citado.** "Sam Someone & Alex Another" e "Alex Another & Sam Someone" eram dois registros na página de jogadores, assim como "Peter & Rosie Landrebe" e "Rosie & Peter Landrebe". Agora são um só, em um só endereço, listado com o nome que o torneio mais recente escreveu.

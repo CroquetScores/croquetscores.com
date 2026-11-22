@@ -1,5 +1,29 @@
 # Beth sy'n newydd i Reolwyr Twrnameintiau
 
+## Rhyddhawyd 2026-11-22
+
+### Y twrnamaint
+
+- **Gellir dewis rhanbarthau croce Seland Newydd.** Mae Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury a'r rhanbarthau eraill y rhennir twrnameintiau cenedlaethol Seland Newydd iddynt wedi'u rhestru fel rhanbarth twrnamaint, wrth ochr y taleithiau.
+
+- **Mae'r e-bost am statws cenedlaethol neu ryngwladol a dynnwyd yn dweud hynny.** Pan fydd y gweinyddwr yn tynnu'r statws oddi ar dwrnamaint, mae'r e-bost at ei reolwyr bellach yn dweud ei fod wedi'i dynnu, ac yn gofyn i chi ddweud pam rydych yn anghytuno, os ydych. Mae'n rhoi Australian Open fel enghraifft o ddigwyddiad cenedlaethol, a WCF Association Croquet Singles fel un rhyngwladol.
+
+### Chwaraewyr
+
+- **Mae enw nad yw detholion y byd yn ei adnabod yn dilyn enw wedi'i gywiro.** Pan gywirwyd enw, gadawyd **Enw'r chwaraewr ar restr detholion y byd** fel yr oedd, felly roedd chwaraewr a ychwanegwyd fel "aaa" ac a gywirwyd i "Tim Murphy" yn dal i fod yn hysbys i'r detholion fel "aaa". Lle nad yw'r detholion yn adnabod yr enw yr agorwyd y chwaraewr ag ef, mae bellach yn dod yn yr enw wedi'i gywiro wrth i chi ei deipio, nes i chi deipio yn enw'r detholion eich hun. Mae un y mae'r detholion yn ei adnabod, a ddangosir gan y tic wrth ei ochr, yn cael ei gadw.
+
+- **Dangosir anfantais fel y rhif ydyw.** Mae'r rhestr o chwaraewyr yn dangos "4" ar gyfer anfantais a deipioch fel "4.0" a "4" ar gyfer "+4". Dangosir anfantais â ffracsiwn, fel "-1.5", fel y mae. Gallwch ei theipio â arwydd neu â phwynt o hyd.
+
+### Apiau
+
+- **Gall ap ddarllen eich twrnameintiau o API'r safle.** Mae gan y safle API cyhoeddus (gweler **Cymorth i ddatblygwyr apiau**), sydd ond yn darllen am y tro. Gallwch wneud allwedd o dan **Allweddi API** yn eich cyfrif i roi lwfans ei hun i ap: gellir ei gwneud i ddarllen yn unig, neu i ddarllen ac ysgrifennu, gellir ei chyfyngu i un twrnamaint, a gallwch ei dirymu ar unrhyw adeg. Cadwch allwedd mor gyfrinachol â chyfrinair.
+
+### Beth mae'r cyhoedd yn ei weld
+
+- **Mae'r twrnameintiau i ddod ar yr hafan yn cynnwys twrnamaint a ddechreuodd yn y ddau ddiwrnod diwethaf.** Mae twrnamaint yn cael ei restru o chwe deg diwrnod cyn iddo ddechrau tan y diwrnod y mae'n gorffen, ond mae un a ddechreuodd fwy na dau ddiwrnod yn ôl yn cael ei adael allan. Felly ar y dyddiau y caiff ei chwarae, gellir ei ganfod cyn i neb gofnodi gêm ynddo, ac ar ôl y ddau ddiwrnod cyntaf mae yn y canlyniadau diweddar unwaith y bydd gêm wedi'i hychwanegu.
+
+- **Mae twrnamaint ag ymadael yn dweud yr orau o faint yw gemau pob rownd.** Uwchben pob rownd yn nhabl twrnamaint ag ymadael, ac o dan enw pob rownd yn ei grynodeb, mae bellach yn dweud "Yr orau o 3", neu'r hyn a ddewisoch ar gyfer y rownd honno, fel nad oes rhaid i neb gyfrif y celloedd sgôr i'w ddysgu. Gweler [Beth mae'r cyhoedd yn ei weld](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Rhyddhawyd 2026-11-15
 
 ### Y twrnamaint

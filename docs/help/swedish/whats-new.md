@@ -1,5 +1,33 @@
 # Nytt
 
+## Släppt 2026-11-22
+
+- **Startsidan minns de turneringar du tittade på nyligen.** När du öppnar en turnering hamnar den först under **Dina senaste turneringar**, mellan filtret och de senaste resultaten, upp till fem stycken, så att du kan gå tillbaka till de du följer utan att leta i listorna. Den sparas på din egen enhet, i en kaka som bara innehåller turneringarnas adresser, och listan visas inte alls förrän du har öppnat en turnering. Hjälpen säger vad kakan är.
+
+- **De kommande turneringarna tar med de som började de senaste två dagarna.** En turnering som har börjat men inte slutat visas till och med dagen den slutar, så länge den började för högst två dagar sedan, så att den går att hitta de dagar den spelas innan någon har fört in ett parti i den. De som började för längre sedan finns bland de senaste resultaten när ett parti har lagts till.
+
+- **En utslagning säger vad varje rundas matcher är bäst av.** Ovanför varje runda i en utslagnings schema, och under varje rundas namn i dess sammanställning, står "Bäst av 3", eller vad turneringsarrangören har valt för den rundan.
+
+- **Ett resultat får plats i sin ruta i en utslagnings sammanställning, och ett namn hålls ihop i ett blocks sammanställning.** På en smal skärm rann ett Advantage-resultat skrivet som "83% (5/6)" ut ur sin ruta över namnen, och ett namn i ett blocks sammanställning kunde brytas efter förnamnet. Ett par hålls ihop på var sida om et-tecknet.
+
+- **Du kan lägga webbplatsen på telefonens hemskärm.** En knapp i sidfoten erbjuder det när din webbläsare kan, och **Lägga till webbplatsen på din hemskärm** i hjälpen säger hur, för en iPhone och för en Android-telefon. Croquet Scores och Gateball Scores har var sin ikon, så att du kan skilja dem åt.
+
+- **Nya Zeelands croquetregioner finns med.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury och de övriga regioner som Nya Zeelands nationella turneringar delas in i kan väljas som en turnerings region.
+
+### För apputvecklare
+
+- **Det finns ett öppet API.** En app kan läsa ett års turneringar, en turnering med dess tävlingar och spelare, en tävlings partier och ställning, de turneringar som har bytt år och de turneringar som har arkiverats, som JSON, på `/api/v0`. Det är `v0` så länge det utvecklas. Alla får läsa, och en app som skickar en nyckel som gjorts under **API-nycklar** i ditt konto har en egen kvot, 60 förfrågningar i minuten och 10 000 om dagen till att börja med. En app utan nyckel delar en kvot efter sin adress, 10 i minuten och 500 om dagen.
+
+- **En nyckel låter en app agera för dig utan ditt lösenord.** Skapa en nyckel i ditt konto, säg vad den är till för och återkalla den när du inte längre vill att den används. En nyckel kan skapas för att bara läsa eller för att läsa och skriva, och kan begränsas till en turnering. API:et läser bara tills vidare. Bara en hash av nyckeln sparas, så nyckeln visas en gång, när du skapar den.
+
+- **Fält kan läggas till i ett svar utan en ny version.** En app måste strunta i ett fält den inte känner till. En ändring som skulle bryta en app görs som en ny version vid sidan av den gamla, så att en app skriven mot `v1` fortsätter fungera när `v2` kommer. **Hjälp för apputvecklare** och **API:ets slutpunkter** i hjälpen säger vad varje adress tar och svarar, på alla språk.
+
+- **En handicap i API:et är ett tal.** Det är `4.5` och inte `"4.5"`, och `null` där en spelare inte har någon.
+
+### Rankingansvariga
+
+- **Ett andra kalkylblad med golfcroquetpartier har dagen då varje parti fördes in.** Lägg `rankings2` till adressen, där `rankings` står, så anger kolumn I dagen då varje parti fördes in, som ett Excel-datum, i den tid som gäller på platsen där turneringen spelas. Fliken Rankingar erbjuder det som **Ladda ner partier för världsranking med partidatum**. Det första kalkylbladet är som det var, eftersom de ansvarigas program läser det efter position.
+
 ## Släppt 2026-11-15
 
 - **Ett dubbelpar är en spelare i sökningen, oavsett vilken av de två spelarna som nämns först.** "Sam Someone & Alex Another" och "Alex Another & Sam Someone" var två poster på spelarsidan, och det var "Peter & Rosie Landrebe" och "Rosie & Peter Landrebe" också. Nu är de en, på en adress, uppförda med det namn som den senaste turneringen skrev.

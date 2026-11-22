@@ -1,5 +1,29 @@
 # Novidades para organizadores de torneios
 
+## Lançado em 2026-11-22
+
+### O torneio
+
+- **As regiões de croquet da Nova Zelândia podem ser escolhidas.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury e as outras regiões em que os torneios nacionais da Nova Zelândia se dividem estão na lista como a região de um torneio, ao lado das províncias.
+
+- **O e-mail sobre um status nacional ou internacional que foi removido diz isso.** Quando o administrador tira o status de um torneio, o e-mail para os organizadores agora diz que ele foi removido e pede que você diga por que discorda, se discordar. Ele dá o Australian Open como exemplo de um evento nacional e o WCF Association Croquet Singles como um internacional.
+
+### Jogadores
+
+- **Um nome no ranking mundial que o ranking mundial não conhece acompanha um nome corrigido.** Corrigir um nome deixava o **Nome do jogador no ranking mundial** como estava, então um jogador adicionado como "aaa" e corrigido para "Tim Murphy" continuava conhecido no ranking como "aaa". Onde o ranking não conhece o nome com que o jogador foi aberto, ele agora passa a ser o nome corrigido enquanto você o digita, até você mesmo digitar no nome do ranking mundial. Um que o ranking conhece, mostrado pelo visto ao lado, é mantido.
+
+- **Um handicap é mostrado como o número que é.** A lista de jogadores mostra "4" para um handicap que você digitou como "4.0" e "4" para "+4". Um handicap com fração, como "-1.5", é mostrado como está. Você ainda pode digitá-lo com sinal ou com ponto.
+
+### Aplicativos
+
+- **Um aplicativo pode ler os seus torneios na API do site.** O site tem uma API pública (veja **Ajuda para desenvolvedores de aplicativos**), que por enquanto só lê. Você pode criar uma chave em **Chaves de API** na sua conta para dar a um aplicativo uma cota própria: ela pode ser criada só para ler, ou para ler e escrever, pode ser limitada a um torneio, e você pode revogá-la a qualquer momento. Mantenha uma chave tão secreta quanto uma senha.
+
+### O que o público vê
+
+- **Os próximos torneios na página inicial incluem um torneio que começou nos últimos dois dias.** Um torneio aparece desde sessenta dias antes de começar até o dia em que termina, mas um que começou há mais de dois dias fica de fora. Assim, nos dias em que é jogado, ele pode ser encontrado antes de alguém lançar um jogo nele, e depois dos dois primeiros dias aparece nos resultados recentes quando um jogo é acrescentado.
+
+- **Um mata-mata diz de quantos jogos são as partidas de cada rodada.** Acima de cada rodada na grade de um mata-mata, e abaixo do nome de cada rodada no seu resumo, agora aparece "Melhor de 3", ou o que você escolheu para essa rodada, para que ninguém precise contar as caixas do placar para saber. Veja [O que o público vê](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Lançado em 2026-11-15
 
 ### O torneio

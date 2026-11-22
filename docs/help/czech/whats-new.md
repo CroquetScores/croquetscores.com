@@ -1,5 +1,33 @@
 # Co je nového
 
+## Vydáno 2026-11-22
+
+- **Úvodní stránka si pamatuje turnaje, na které jste se nedávno dívali.** Když otevřete turnaj, objeví se jako první v **Vaše nedávné turnaje**, mezi filtrem a nedávnými výsledky, nejvýše pět, abyste se mohli vrátit k těm, které sledujete, aniž byste je hledali v seznamech. Ukládá se na vašem vlastním zařízení v cookie, která obsahuje jen adresy turnajů, a seznam se nezobrazí vůbec, dokud nějaký turnaj neotevřete. Nápověda říká, co ta cookie je.
+
+- **Připravované turnaje zahrnují i ty, které začaly v posledních dvou dnech.** Turnaj, který začal a neskončil, se uvádí až do dne, kdy končí, pokud začal před nejvýše dvěma dny, takže ho lze ve dnech, kdy se hraje, najít dřív, než do něj někdo zapíše hru. Ty, které začaly dříve, jsou mezi nedávnými výsledky, jakmile se do nich přidá hra.
+
+- **Pavouk říká, na kolik her se hrají zápasy každého kola.** Nad každým kolem v rozpisu pavouka a pod názvem každého kola v jeho přehledu stojí „Nejvýše 3 her“, nebo to, co pro dané kolo zvolil správce turnaje.
+
+- **Skóre se vejde do svého políčka v přehledu pavouka a jméno drží pohromadě v přehledu bloku.** Na úzké obrazovce přetékalo skóre Advantage zapsané jako „83% (5/6)“ ze svého políčka přes jména a jméno v přehledu bloku se mohlo zalomit za křestním jménem. Dvojice drží pohromadě na každé straně svého ampersandu.
+
+- **Web si můžete přidat na plochu telefonu.** Tlačítko v patičce to nabídne, když to váš prohlížeč umí, a **Přidání webu na plochu telefonu** v nápovědě říká jak, pro iPhone i pro telefon s Androidem. Croquet Scores a Gateball Scores mají každý svou ikonu, abyste je od sebe rozeznali.
+
+- **Jsou uvedeny kroketové regiony Nového Zélandu.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury a další regiony, na které se dělí novozélandské národní turnaje, lze zvolit jako region turnaje.
+
+### Pro vývojáře aplikací
+
+- **Existuje veřejné API.** Aplikace může číst turnaje jednoho roku, turnaj s jeho soutěžemi a hráči, hry a pořadí soutěže, turnaje, které změnily rok, a turnaje, které byly archivovány, jako JSON na adrese `/api/v0`. Dokud se vyvíjí, je `v0`. Číst smí kdokoli a aplikace, která posílá klíč vytvořený v části **Klíče API** ve vašem účtu, má vlastní limit, zpočátku 60 požadavků za minutu a 10 000 za den. Aplikace bez klíče sdílí limit podle své adresy, 10 za minutu a 500 za den.
+
+- **Klíč umožní aplikaci jednat za vás bez vašeho hesla.** Vytvořte klíč ve svém účtu, řekněte, k čemu je, a odvolejte ho, až nebudete chtít, aby se používal. Klíč lze vytvořit jen pro čtení, nebo pro čtení i zápis, a lze ho omezit na jeden turnaj. API zatím jen čte. Uchovává se jen otisk (hash) klíče, takže se klíč ukáže jednou, když ho vytvoříte.
+
+- **Do odpovědi mohou přibýt pole bez nové verze.** Aplikace musí ignorovat pole, které nezná. Změna, která by aplikaci rozbila, se provede jako nová verze vedle staré, takže aplikace napsaná pro `v1` funguje dál, i když přijde `v2`. **Nápověda pro vývojáře aplikací** a **Koncové body API** v nápovědě říkají, co která adresa přijímá a odpovídá, ve všech jazycích.
+
+- **Handicap v API je číslo.** Je `4.5` a ne `"4.5"`, a `null`, kde ho hráč nemá.
+
+### Správci světového žebříčku
+
+- **Druhá tabulka her Golf Croquetu má den, kdy byla každá hra zapsána.** Přidejte k adrese `rankings2` tam, kde je `rankings`, a sloupec I říká den, kdy byla každá hra zapsána, jako datum v Excelu, v čase místa, kde se turnaj hraje. Karta Žebříčky ji nabízí jako **Stáhnout hry pro světový žebříček s datem hry**. První tabulka zůstala, jaká byla, protože software správců ji čte podle pozice.
+
 ## Vydáno 2026-11-15
 
 - **Pár ve čtyřhře je ve vyhledávání jeden hráč, ať je jmenován jako první kterýkoli z obou hráčů.** „Sam Someone & Alex Another“ a „Alex Another & Sam Someone“ byly na stránce hráčů dva záznamy, stejně jako „Peter & Rosie Landrebe“ a „Rosie & Peter Landrebe“. Nyní jsou jeden, na jedné adrese, uvedený pod jménem, které napsal nejnovější turnaj.
