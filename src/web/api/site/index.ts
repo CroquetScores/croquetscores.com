@@ -33,7 +33,6 @@ import { ChangeCarryForward } from "../../../application/operations/competitions
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
 import { CorrectGame } from "../../../application/operations/competitions/CorrectGame.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
-import { MoveCompetitionPlayer } from "../../../application/operations/competitions/MoveCompetitionPlayer.js";
 import { MoveGame } from "../../../application/operations/competitions/MoveGame.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
 import { RemovePlayer } from "../../../application/operations/competitions/RemovePlayer.js";
@@ -495,7 +494,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   // A competition's player moved a place, withdrawn, unwithdrawn or removed,
   // by the part of their id after "competition-player/", and a bye by its
   // order as well.
-  for (const action of ["down", "withdraw", "unwithdraw", "remove"] as const) {
+  for (const action of ["withdraw", "unwithdraw", "remove"] as const) {
     server.post<{
       Params: { id: string; competition: string; player: string };
       Querystring: { order?: string };
@@ -519,9 +518,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
             ? new WithdrawPlayer(...asked, at)
             : action === "unwithdraw"
               ? new ReverseWithdrawal(...asked, at)
-              : action === "remove"
-                ? new RemovePlayer(...asked, at, byeOrder)
-                : new MoveCompetitionPlayer(...asked, action, at, byeOrder),
+              : new RemovePlayer(...asked, at, byeOrder),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
