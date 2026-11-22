@@ -27,9 +27,7 @@ import {
 import { UpdateBlock } from "../../../application/operations/tournaments/UpdateBlock.js";
 import { UpdateKnockout } from "../../../application/operations/tournaments/UpdateKnockout.js";
 import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateSwiss.js";
-import { ArchiveCompetition } from "../../../application/operations/tournaments/ArchiveCompetition.js";
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
-import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
 import { AddGame } from "../../../application/operations/competitions/AddGame.js";
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
@@ -474,39 +472,24 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
     },
   );
 
-  // A competition moved a place, archived or restored, named by the part of
-  // its id after "competition/", as the tournament is by its own.
-  for (const action of ["archive", "restore"] as const) {
-    server.post<{ Params: { id: string; competition: string } }>(
-      `/tournaments/:id/competitions/:competition/${action}`,
-      async (request, reply) => {
-        const reader = signedInOrRefused(request, reply);
-        if (reader === undefined) return reply;
-        const tournament = `tournament/${request.params.id}`;
-        const competition = `competition/${request.params.competition}`;
-        const at = request.requestedAt;
-        await request.server.mediator.send(
-          action === "archive"
-            ? new ArchiveCompetition(reader.value, tournament, competition, at)
-            : action === "restore"
-              ? new RestoreCompetition(
-                  reader.value,
-                  tournament,
-                  competition,
-                  at,
-                )
-              : new MoveCompetition(
-                  reader.value,
-                  tournament,
-                  competition,
-                  action,
-                  at,
-                ),
-        );
-        return reply.code(204).header("cache-control", "no-store").send();
-      },
-    );
-  }
+  // A competition restored, named by the part of its id after "competition/",
+  // as the tournament is by its own.
+  server.post<{ Params: { id: string; competition: string } }>(
+    "/tournaments/:id/competitions/:competition/restore",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new RestoreCompetition(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
 
   // A competition's players, as its tournament's managers and scorers list
   // them, each flag as it is seen. The competition is named by the part of
