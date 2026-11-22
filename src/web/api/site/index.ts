@@ -79,7 +79,6 @@ import { TournamentsInUnlistedCountries } from "../../../application/operations/
 import { RepresentingMatching } from "../../../application/operations/tournaments/RepresentingMatching.js";
 import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
-import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
 import { RemoveManager } from "../../../application/operations/tournaments/RemoveManager.js";
 import { RemoveScorer } from "../../../application/operations/tournaments/RemoveScorer.js";
@@ -537,24 +536,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         ),
       );
       return reply.header("cache-control", "no-store").send({ scorers });
-    },
-  );
-
-  // Somebody made a scorer, by their email address.
-  server.post<{ Params: { id: string } }>(
-    "/tournaments/:id/scorers",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      await request.server.mediator.send(
-        new AddScorer(
-          reader.value,
-          `tournament/${request.params.id}`,
-          textOf(request.body, "emailAddress"),
-          request.requestedAt,
-        ),
-      );
-      return reply.code(204).header("cache-control", "no-store").send();
     },
   );
 
