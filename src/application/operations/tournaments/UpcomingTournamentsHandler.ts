@@ -9,7 +9,7 @@ import {
 import { UpcomingTournaments } from "./UpcomingTournaments.js";
 
 // Sixty days from today is the last day a tournament may start on and be
-// answered.
+// answered. A tournament already under way is answered until it finishes.
 const DAYS_AHEAD = 60;
 
 // The day of `moment` in UTC, as a tournament's days are kept, written as the
@@ -36,7 +36,7 @@ export class UpcomingTournamentsHandler extends QueryHandler<
     );
     const last = new Date(today);
     last.setUTCDate(last.getUTCDate() + DAYS_AHEAD);
-    return this.byWebsite.startingBetween(
+    return this.byWebsite.underwayOrStartingBetween(
       website,
       dayOf(new Date(today)),
       dayOf(last),

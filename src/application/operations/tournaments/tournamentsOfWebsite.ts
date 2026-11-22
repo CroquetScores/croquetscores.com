@@ -83,6 +83,19 @@ export interface TournamentsByWebsite {
   ): Promise<readonly TournamentOfWebsite[]>;
 
   /**
+   * Those on `website` the filter lets through that are played on some day
+   * from `first` to `last`, both ends with them: those starting in the days,
+   * and those that started before `first` and finish on or after it. The one
+   * that started first leads, and those starting on the same day by name.
+   */
+  underwayOrStartingBetween(
+    website: Website,
+    first: string,
+    last: string,
+    filter: TournamentFilter,
+  ): Promise<readonly TournamentOfWebsite[]>;
+
+  /**
    * When the tournament `tournament` last changed, and each of its
    * competitions, archived or not, by their ids; nothing where there is no
    * such tournament. The tournament has changed when any of them has.

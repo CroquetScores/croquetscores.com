@@ -127,6 +127,27 @@ export class TournamentsByWebsite implements Asked {
     return rows.map(listed);
   }
 
+  // Both ends count, since a tournament is played on its start day and on its
+  // finish day. Kept apart from `startingBetween`, which the year and days
+  // questions use and which must go on leaving out what started before.
+  async underwayOrStartingBetween(
+    website: Website,
+    first: string,
+    last: string,
+    filter: TournamentFilter,
+  ): Promise<readonly TournamentOfWebsite[]> {
+    const narrowed = narrowedBy(filter, 4);
+    const { rows } = await this.unitOfWork.connection().query<Row>(
+      `select ${COLUMNS}
+           from tournaments t
+          where t.website = $1 and not t.archived
+            and t.starts <= $3 and t.finishes >= $2 ${narrowed.where}
+          order by t.starts, t.name`,
+      [website.host, first, last, ...narrowed.values],
+    );
+    return rows.map(listed);
+  }
+
   // When each last changed is kept in the tournaments table, with the greater
   // of its own events and its competitions', so that it is asked of the read
   // model and never of the events.
