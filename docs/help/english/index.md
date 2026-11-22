@@ -25,3 +25,7 @@
 - [World ranking officers](world-ranking-officers/index.md)
 
   What the admin's list of tournaments and a tournament's Rankings tab give you besides the tournaments you run.
+
+- [App developers](api/index.md)
+
+  The API an app reads tournaments from: its keys and allowances, how to ask cheaply, and what may be added to an answer without a new version.
