@@ -25,3 +25,7 @@
 - [Wêreldranglysbeamptes](world-ranking-officers/index.md)
 
   Wat die administrasie se lys toernooie en 'n toernooi se Ranglyste-oortjie jou gee benewens die toernooie wat jy bestuur.
+
+- [Toepassingontwikkelaars](api/index.md)
+
+  Die API waaruit 'n toepassing toernooie lees: sy sleutels en kwotas, hoe om goedkoop navraag te doen, en wat sonder 'n nuwe weergawe by 'n antwoord gevoeg kan word.

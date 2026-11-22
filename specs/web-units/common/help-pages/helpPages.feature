@@ -176,7 +176,7 @@ Feature: Help written in markdown becomes pages of the site
 
     The first page is the same in every language in what it offers, though not
     in its words: the same five questions leading to the same articles, and the
-    same four subjects, each with words under its title. The cards are made of
+    same five subjects, each with words under its title. The cards are made of
     these lists by the stylesheet, which finds them by their bookmarks.
 
     Scenario: Each language goes from its title straight to the popular questions
@@ -212,10 +212,10 @@ Feature: Help written in markdown becomes pages of the site
         | fourth | /help/accounts/signing-in#forgotten-password                             |
         | fifth  | /help/tournament-managers/standard-tournament/rankings                  |
 
-    Scenario: Each language has the four subjects
+    Scenario: Each language has the five subjects
       Given the help of every language
       When the first page of each is converted
-      Then each has 4 subjects
+      Then each has 5 subjects
 
     Scenario Outline: Each language's subject leads to the same page
       Given the help of every language
@@ -228,6 +228,7 @@ Feature: Help written in markdown becomes pages of the site
         | /help/accounts              |
         | /help/tournament-managers   |
         | /help/world-ranking-officers |
+        | /help/api                    |
 
     Scenario: Each language says what is in each subject
       Given the help of every language

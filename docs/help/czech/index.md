@@ -25,3 +25,7 @@
 - [Správci světového žebříčku](world-ranking-officers/index.md)
 
   Co vám seznam turnajů v adminu a karta Žebříčky turnaje dávají kromě turnajů, které vedete.
+
+- [Vývojáři aplikací](api/index.md)
+
+  API, z něhož aplikace čte turnaje: jeho klíče a limity, jak se ptát levně a co může do odpovědi přibýt bez nové verze.

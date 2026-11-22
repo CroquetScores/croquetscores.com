@@ -25,3 +25,7 @@
 - [Swyddogion detholion y byd](world-ranking-officers/index.md)
 
   Beth y mae rhestr twrnameintiau'r adran weinyddu a thab Detholion twrnamaint yn eu rhoi i chi yn ogystal â'r twrnameintiau yr ydych yn eu rhedeg.
+
+- [Datblygwyr apiau](api/index.md)
+
+  Yr API y mae ap yn darllen twrnameintiau ohono: ei allweddi a'i lwfansau, sut i ofyn yn rhad a beth y gellir ei ychwanegu at ateb heb fersiwn newydd.

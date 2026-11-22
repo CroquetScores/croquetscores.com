@@ -312,7 +312,7 @@ Then(
       const items = [
         ...listAfter(html, "subjects").matchAll(/<li>([\s\S]*?)<\/li>/g),
       ];
-      assert.equal(items.length, 4, language);
+      assert.equal(items.length, 5, language);
       for (const item of items) {
         const paragraphs = [...(item[1] ?? "").matchAll(/<p>([\s\S]*?)<\/p>/g)];
         assert.equal(paragraphs.length, 2, `${language}: ${item[1]}`);

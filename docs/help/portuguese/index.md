@@ -25,3 +25,7 @@
 - [Responsáveis pelo ranking mundial](world-ranking-officers/index.md)
 
   O que a lista de torneios da administração e a aba Rankings de um torneio dão a você além dos torneios que organiza.
+
+- [Desenvolvedores de aplicativos](api/index.md)
+
+  A API de onde um aplicativo lê torneios: suas chaves e cotas, como perguntar com economia e o que pode ser acrescentado a uma resposta sem uma nova versão.

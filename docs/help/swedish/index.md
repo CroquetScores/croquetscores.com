@@ -25,3 +25,7 @@
 - [Rankingansvariga](world-ranking-officers/index.md)
 
   Vad administrationens lista över turneringar och en turnerings flik Rankingar ger dig utöver de turneringar du leder.
+
+- [Apputvecklare](api/index.md)
+
+  API:et som en app läser turneringar från: dess nycklar och kvoter, hur man frågar billigt och vad som kan läggas till i ett svar utan en ny version.

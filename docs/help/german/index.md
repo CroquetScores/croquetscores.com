@@ -25,3 +25,7 @@
 - [Weltranglistenbeauftragte](world-ranking-officers/index.md)
 
   Was die Turnierliste in der Verwaltung und der Reiter „Ranglisten“ eines Turniers Ihnen über die Turniere hinaus geben, die Sie leiten.
+
+- [App-Entwickler](api/index.md)
+
+  Die API, aus der eine App Turniere liest: ihre Schlüssel und Kontingente, wie man sparsam fragt und was einer Antwort ohne neue Version hinzugefügt werden kann.
