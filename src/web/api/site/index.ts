@@ -39,7 +39,6 @@ import { RemovePlayer } from "../../../application/operations/competitions/Remov
 import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
 import { ReverseGameWithdrawal } from "../../../application/operations/competitions/ReverseGameWithdrawal.js";
 import { ReverseWithdrawal } from "../../../application/operations/competitions/ReverseWithdrawal.js";
-import { WithdrawPlayer } from "../../../application/operations/competitions/WithdrawPlayer.js";
 import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
 import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
 import { AddPair } from "../../../application/operations/tournaments/AddPair.js";
@@ -494,7 +493,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   // A competition's player moved a place, withdrawn, unwithdrawn or removed,
   // by the part of their id after "competition-player/", and a bye by its
   // order as well.
-  for (const action of ["withdraw", "unwithdraw", "remove"] as const) {
+  for (const action of ["unwithdraw", "remove"] as const) {
     server.post<{
       Params: { id: string; competition: string; player: string };
       Querystring: { order?: string };
@@ -514,11 +513,9 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         const { order } = request.query;
         const byeOrder = order === undefined ? undefined : Number(order);
         await request.server.mediator.send(
-          action === "withdraw"
-            ? new WithdrawPlayer(...asked, at)
-            : action === "unwithdraw"
-              ? new ReverseWithdrawal(...asked, at)
-              : new RemovePlayer(...asked, at, byeOrder),
+          action === "unwithdraw"
+            ? new ReverseWithdrawal(...asked, at)
+            : new RemovePlayer(...asked, at, byeOrder),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
