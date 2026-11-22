@@ -35,7 +35,6 @@ import { CompetitionsOfTournament } from "../../../application/operations/tourna
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
-import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
 import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
 import { AddPair } from "../../../application/operations/tournaments/AddPair.js";
 import { AddPlayers } from "../../../application/operations/tournaments/AddPlayers.js";
@@ -1091,7 +1090,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   );
 
   // A player moved a place, archived or restored.
-  for (const action of ["down", "archive", "restore"] as const) {
+  for (const action of ["archive", "restore"] as const) {
     server.post<{ Params: { id: string; player: string } }>(
       `/tournaments/:id/players/:player/${action}`,
       async (request, reply) => {
@@ -1106,9 +1105,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         await request.server.mediator.send(
           action === "archive"
             ? new ArchivePlayer(...asked, at)
-            : action === "restore"
-              ? new RestorePlayer(...asked, at)
-              : new MovePlayer(...asked, action, at),
+            : new RestorePlayer(...asked, at),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
