@@ -13,6 +13,7 @@ import "./people.css";
 const movedToV0: ReadonlySet<string> = new Set([
   "scorers:add",
   "scorers:remove",
+  "managers:add",
 ]);
 
 // Somebody given a part by their email address, in a field beside the list,
