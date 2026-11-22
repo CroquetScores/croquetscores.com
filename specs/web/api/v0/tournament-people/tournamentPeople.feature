@@ -127,3 +127,37 @@ Feature: A tournament's scorers and managers are made and taken off through the 
       Given the caller is signed in as "organiser@example.com"
       When "someone@example.com" is made a manager of "Spring Open" at the address it was at
       Then the API answers 404
+
+  Rule: A manager is taken off
+
+    Scenario: A manager takes another manager off
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      When the manager "Sam Someone" is taken off "Spring Open"
+      Then the API answers 204
+
+    Scenario: A manager taken off is no longer listed
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      And the manager "Sam Someone" is taken off "Spring Open"
+      When the managers of "Spring Open" are listed to the caller
+      Then the site does not list the person "Sam Someone"
+
+    Scenario: A reader who is not signed in may not take one off
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      When the manager "Sam Someone" is taken off "Spring Open"
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not take one off
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And the caller is signed in as "stranger@example.com"
+      When the manager "Sam Someone" is taken off "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      When the manager "Sam Someone" is taken off "Spring Open" at the address it was at
+      Then the API answers 404

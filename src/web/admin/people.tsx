@@ -8,14 +8,6 @@ import { idInAddress, refusalOf } from "./api.js";
 import "./listed.css";
 import "./people.css";
 
-// What a tab changes that is asked at /api/v0 now, by the tab and the change.
-// The list each tab shows is still read at /api/site.
-const movedToV0: ReadonlySet<string> = new Set([
-  "scorers:add",
-  "scorers:remove",
-  "managers:add",
-]);
-
 // Somebody given a part by their email address, in a field beside the list,
 // and the part taken by Remove, which asks first, since what it does is gone
 // rather than set aside. A tournament's Managers and Scorers tabs
@@ -49,6 +41,12 @@ interface Words {
 interface Props {
   /** Where they are listed, and where somebody is given the part or has it taken. */
   readonly at: string;
+  /**
+   * Where what the tab changes is asked, where it is not where the list is
+   * read. A tournament's scorers and managers are changed at /api/v0 and read
+   * at /api/site; the accounts that hold a role are both at /api/site.
+   */
+  readonly changesAt?: string;
   /** What the API lists them under. */
   readonly listedUnder: string;
   /**
@@ -82,6 +80,7 @@ interface Props {
 
 export const People = ({
   at,
+  changesAt: changesAtGiven,
   listedUnder,
   name,
   heading,
@@ -171,13 +170,7 @@ export const People = ({
     words: say(knows(code) ? code : otherwise),
   });
 
-  // The list is still read at /api/site, and what each change is asked of has
-  // moved to /api/v0 one at a time (movedToV0), so the address of a change is
-  // chosen by what it is.
-  const changesAt = (change: "add" | "remove"): string =>
-    movedToV0.has(`${name}:${change}`)
-      ? at.replace("/api/site/", "/api/v0/")
-      : at;
+  const changesAt = changesAtGiven ?? at;
 
   const add = async (): Promise<void> => {
     if (adding.current) return;
@@ -185,7 +178,7 @@ export const People = ({
     setRemoveRefused(undefined);
     setSending((count) => count + 1);
     try {
-      const response = await fetch(changesAt("add"), {
+      const response = await fetch(changesAt, {
         method: "POST",
         headers: {
           accept: "application/json",
@@ -224,7 +217,7 @@ export const People = ({
     setSending((count) => count + 1);
     try {
       const response = await fetch(
-        `${changesAt("remove")}/${idInAddress(person.id)}/remove`,
+        `${changesAt}/${idInAddress(person.id)}/remove`,
         {
           method: "POST",
           headers: { accept: "application/json" },
