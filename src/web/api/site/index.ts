@@ -35,7 +35,6 @@ import { CorrectGame } from "../../../application/operations/competitions/Correc
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { MoveGame } from "../../../application/operations/competitions/MoveGame.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
-import { RemovePlayer } from "../../../application/operations/competitions/RemovePlayer.js";
 import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
 import { ReverseGameWithdrawal } from "../../../application/operations/competitions/ReverseGameWithdrawal.js";
 import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
@@ -488,36 +487,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply.header("cache-control", "no-store").send({ players });
     },
   );
-
-  // A competition's player moved a place, withdrawn, unwithdrawn or removed,
-  // by the part of their id after "competition-player/", and a bye by its
-  // order as well.
-  for (const action of ["remove"] as const) {
-    server.post<{
-      Params: { id: string; competition: string; player: string };
-      Querystring: { order?: string };
-    }>(
-      `/tournaments/:id/competitions/:competition/players/:player/${action}`,
-      async (request, reply) => {
-        const reader = signedInOrRefused(request, reply);
-        if (reader === undefined) return reply;
-        const asked = [
-          reader.value,
-          `tournament/${request.params.id}`,
-          `competition/${request.params.competition}`,
-          `competition-player/${request.params.player}`,
-        ] as const;
-        const at = request.requestedAt;
-        // Every bye has the same id, so a bye is named by its order too.
-        const { order } = request.query;
-        const byeOrder = order === undefined ? undefined : Number(order);
-        await request.server.mediator.send(
-          new RemovePlayer(...asked, at, byeOrder),
-        );
-        return reply.code(204).header("cache-control", "no-store").send();
-      },
-    );
-  }
 
   // What a competition's player carries forward, by the part of their id after
   // "competition-player/": all six counts said again, each as it was typed.

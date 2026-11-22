@@ -148,3 +148,32 @@ Feature: A competition's player is moved, withdrawn and removed through the API
       Given the caller is signed in as "organiser@example.com"
       When the player "Ann Archer" in "Block A" of "Spring Open" is taken back into the competition at the address it was at
       Then the API answers 404
+
+  Rule: A player is removed
+
+    Scenario: A manager removes a player
+      Given the caller is signed in as "organiser@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is removed
+      Then the API answers 204
+
+    Scenario: A player removed is no longer listed
+      Given the caller is signed in as "organiser@example.com"
+      And the player "Ann Archer" in "Block A" of "Spring Open" is removed
+      When the players of "Block A" in "Spring Open" are listed to the caller
+      Then the site lists one player
+
+    Scenario: A reader who is not signed in may not do it
+      When the player "Ann Archer" in "Block A" of "Spring Open" is removed
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not do it
+      Given the caller is signed in as "stranger@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is removed
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is removed at the address it was at
+      Then the API answers 404
