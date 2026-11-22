@@ -52,7 +52,6 @@ import { MoveTeam } from "../../../application/operations/tournaments/MoveTeam.j
 import { MoveTeamPlayer } from "../../../application/operations/tournaments/MoveTeamPlayer.js";
 import { PlayersOfTeam } from "../../../application/operations/tournaments/PlayersOfTeam.js";
 import { PlayersOfTest } from "../../../application/operations/competitions/PlayersOfTest.js";
-import { WithdrawGame } from "../../../application/operations/competitions/WithdrawGame.js";
 import { RestoreTeam } from "../../../application/operations/tournaments/RestoreTeam.js";
 import { RestoreTeamPlayer } from "../../../application/operations/tournaments/RestoreTeamPlayer.js";
 import { TeamPage } from "../../../application/operations/tournaments/TeamPage.js";
@@ -530,7 +529,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   // reversed, by the part of its id after "game/". Unwithdraw, as a player's
   // withdrawal is reversed.
   const gameActions = {
-    withdraw: WithdrawGame,
     unwithdraw: ReverseGameWithdrawal,
   } as const;
   for (const action of Object.keys(
