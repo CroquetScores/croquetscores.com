@@ -11,7 +11,7 @@ import type {
 import { PassThrough } from "node:stream";
 
 import { helpSearchRoute } from "./helpSearch.js";
-import { teamFrom } from "../../common/requestBody.js";
+import { teamFrom, teamPlayerFrom } from "../../common/requestBody.js";
 import { noteBodyLimit, noteFrom } from "../../common/requestBody.js";
 import {
   oneOf,
@@ -43,7 +43,6 @@ import { DeleteManagerNote } from "../../../application/operations/tournaments/D
 import { EditManagerNote } from "../../../application/operations/tournaments/EditManagerNote.js";
 import { ManagerNotesOfTournament } from "../../../application/operations/tournaments/ManagerNotesOfTournament.js";
 import { ManagerNoteToEdit } from "../../../application/operations/tournaments/ManagerNoteToEdit.js";
-import { AddTeamPlayer } from "../../../application/operations/tournaments/AddTeamPlayer.js";
 import { AddTest } from "../../../application/operations/tournaments/AddTest.js";
 import { ArchiveTeam } from "../../../application/operations/tournaments/ArchiveTeam.js";
 import { ArchiveTeamPlayer } from "../../../application/operations/tournaments/ArchiveTeamPlayer.js";
@@ -972,16 +971,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
     };
   };
 
-  // What a player in a team is, as the team player dialog sends it. Their
-  // world ranking name is left out where nothing was said.
-  const teamPlayerFrom = (body: unknown) => {
-    const worldRankingName = textOf(body, "worldRankingName");
-    return {
-      name: textOf(body, "name"),
-      ...(worldRankingName === "" ? {} : { worldRankingName }),
-    };
-  };
-
   // A player added, and answered with their id.
   server.post<{ Params: { id: string } }>(
     "/tournaments/:id/players",
@@ -1290,29 +1279,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         ),
       );
       return reply.header("cache-control", "no-store").send({ players });
-    },
-  );
-
-  // A player added to a team, as the team player dialog sends them: their
-  // name, which is all a player in a team has. Answered with their id.
-  server.post<{ Params: { id: string; team: string } }>(
-    "/tournaments/:id/teams/:team/players",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      const added = await request.server.mediator.send(
-        new AddTeamPlayer(
-          reader.value,
-          `tournament/${request.params.id}`,
-          `team/${request.params.team}`,
-          teamPlayerFrom(request.body),
-          request.requestedAt,
-        ),
-      );
-      return reply
-        .code(201)
-        .header("cache-control", "no-store")
-        .send({ id: added.value });
     },
   );
 
