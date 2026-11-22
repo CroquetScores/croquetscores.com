@@ -7,12 +7,15 @@ import type { FastifyPluginAsync } from "fastify";
 
 import { ArchiveTournament } from "../../../application/operations/tournaments/ArchiveTournament.js";
 import { RestoreTournament } from "../../../application/operations/tournaments/RestoreTournament.js";
+import { RemoveNotableStatus } from "../../../application/operations/tournaments/RemoveNotableStatus.js";
 import { writerOf } from "./writer.js";
 
 export const tournamentActionsOfApps: FastifyPluginAsync = (server) => {
   for (const [action, making] of [
     ["archive", ArchiveTournament],
     ["restore", RestoreTournament],
+    // An administrator's, who judges it neither national nor international.
+    ["remove-notable-status", RemoveNotableStatus],
   ] as const) {
     server.post<{ Params: { id: string } }>(
       `/tournaments/:id/${action}`,
