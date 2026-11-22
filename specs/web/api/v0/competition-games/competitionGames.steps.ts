@@ -136,7 +136,7 @@ When(
 
 // The game by the part of its id after "game/", as a scenario knows it by who
 // beat whom.
-const gameAt = (
+export const gameAt = (
   world: WebWorld,
   winner: string,
   loser: string,
