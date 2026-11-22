@@ -969,7 +969,11 @@ When("{string} is pressed", async function (this: WebWorld, option: string) {
     ? page.waitForResponse(
         (response) =>
           ["POST", "PUT"].includes(response.request().method()) &&
-          new URL(response.url()).pathname.startsWith("/api/site/tournaments/"),
+          // Where a tab's or dialog's form sends, which is /api/v0 for the
+          // routes that have moved there and /api/site for those that have not.
+          /^\/api\/(?:site|v0)\/tournaments\//.test(
+            new URL(response.url()).pathname,
+          ),
       )
     : undefined;
   await pressing.click();
