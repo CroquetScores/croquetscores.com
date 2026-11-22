@@ -505,6 +505,7 @@ export const egyptian: Language = {
     "knockout.round.quarters": "ربع النهائي",
     "knockout.round.number": "الدور {number}",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "أحسن {count}",
     // A Swiss's table.
     "swiss.games": "الألعاب",
     "swiss.wins": "الفوز",

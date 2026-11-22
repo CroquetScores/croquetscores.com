@@ -4,7 +4,9 @@
 // though not shown, as the old site showed none. A round's matches are in the
 // order of the draw, each its two sides one above the other with a cell for
 // each game the match is the best of, and each two whose winners meet next
-// bracketed together by a line that leads on to that match. Every round's
+// bracketed together by a line that leads on to that match. Above each round's
+// matches, in a row across the grid, is what they are the best of, begun
+// where the names beneath it begin. Every round's
 // column is as tall as the first's and gives each pair an equal share of it,
 // its two matches at a quarter and three quarters of the way down, so that a
 // later round's match stands level with the gap between the two before it,
@@ -141,6 +143,7 @@ const roundShown = (
   assets: Assets,
 ): string => `            <section class="knockout-round"${at === 0 ? ' id="knockout-first"' : ""} aria-labelledby="knockout-round-${String(at)}">
               <h2 class="knockout-round-name visually-hidden" id="knockout-round-${String(at)}">${escape(roundName(at, rounds, speaking))}</h2>
+              <p class="knockout-best-of">${escape(speaking.say("knockout.bestOf", { count: String(round.bestOf) }))}</p>
               <div class="knockout-matches"${at === rounds - 1 ? ' id="knockout-final"' : ""}>
 ${pairsOf(round.matches)
   .map(

@@ -107,6 +107,103 @@ Then(
   },
 );
 
+// What each round's matches are the best of ----------------------------------
+
+const bestOfAt = (
+  world: WebWorld,
+  round: string,
+  view: string = "grid",
+): Locator => roundAt(world, round, view).locator(".knockout-best-of");
+
+// Where a cell's words begin, which is its edge less nothing for the padding
+// before them, so that two are compared by what a reader sees begin together
+// rather than by the boxes they happen to be drawn in.
+const wordsBeginAt = async (found: Locator): Promise<number> =>
+  // The specs are not compiled to know the page's own types, as with
+  // struckThrough.ts.
+  found.evaluate((element: unknown) => {
+    const style = (
+      globalThis as unknown as {
+        getComputedStyle(element: unknown): {
+          direction: string;
+          paddingLeft: string;
+          paddingRight: string;
+          borderLeftWidth: string;
+          borderRightWidth: string;
+        };
+      }
+    ).getComputedStyle(element);
+    const { left, right } = (
+      element as { getBoundingClientRect(): { left: number; right: number } }
+    ).getBoundingClientRect();
+    // Where words begin is the right edge in a language written right to left.
+    return style.direction === "rtl"
+      ? right -
+          parseFloat(style.paddingRight) -
+          parseFloat(style.borderRightWidth)
+      : left +
+          parseFloat(style.paddingLeft) +
+          parseFloat(style.borderLeftWidth);
+  });
+
+Then(
+  /^the best of (?:above|in) the (first|second|third|fourth) round in the (grid|summary) is "(.*)"$/,
+  async function (this: WebWorld, round: string, view: string, words: string) {
+    assert.equal(await said(bestOfAt(this, round, view)), words);
+  },
+);
+
+Then(
+  /^the best of (?:above|in) the (first|second|third|fourth) round in the (grid|summary) is above its first match$/,
+  async function (this: WebWorld, round: string, view: string) {
+    const label = await boxOf(bestOfAt(this, round, view));
+    const match = await boxOf(matchAt(this, "first", round, view));
+    assert.ok(
+      label.y + label.height <= match.y + 1,
+      `It ends ${String(label.y + label.height)} pixels down and the match starts ${String(match.y)}.`,
+    );
+  },
+);
+
+// Within a pixel, since a collapsed table's border is shared between its cells
+// and a half pixel of it falls to either side.
+Then(
+  /^the best of (?:above|in) the (first|second|third|fourth) round in the (grid|summary) is aligned with the names beneath it$/,
+  async function (this: WebWorld, round: string, view: string) {
+    const label = await wordsBeginAt(bestOfAt(this, round, view));
+    const name = await wordsBeginAt(
+      sideAt(this, "first", "first", round, view).locator(".knockout-name"),
+    );
+    assert.ok(
+      Math.abs(label - name) <= 1,
+      `Its words begin ${String(label)} pixels across and the names ${String(name)}.`,
+    );
+  },
+);
+
+Then(
+  /^the best of in the (first|second|third|fourth) round in the summary is beneath the round's name$/,
+  async function (this: WebWorld, round: string) {
+    const heading = await boxOf(
+      roundAt(this, round, "summary").locator(".knockout-round-name"),
+    );
+    const label = await boxOf(bestOfAt(this, round, "summary"));
+    assert.ok(
+      label.y >= heading.y + heading.height - 1,
+      `It starts ${String(label.y)} pixels down and the name ends ${String(heading.y + heading.height)}.`,
+    );
+  },
+);
+
+Then(
+  /^the best of above the (first|second|third|fourth) round in the grid is level with the best of above the first round$/,
+  async function (this: WebWorld, round: string) {
+    const first = await boxOf(bestOfAt(this, "first"));
+    const found = await boxOf(bestOfAt(this, round));
+    assert.equal(found.y, first.y);
+  },
+);
+
 // Its sides ------------------------------------------------------------------------
 
 Then(

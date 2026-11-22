@@ -3495,6 +3495,23 @@ a.player-name[data-withdrawn] {
   vertical-align: middle;
 }
 
+/* What a round's matches are the best of, begun where its names begin: past
+   the match's border (.knockout-match) and its cell's padding, and in a later
+   round past the line on from the bracket before (.knockout-pair) as well.
+   Those three are what the numbers below are made from, so a change to any of
+   them is a change to these; knockout.feature says when they part. Every round has one, so that the
+   rounds' columns stay as tall as each other. */
+.knockout-best-of {
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: calc(var(--space-2) + 1px) var(--space-2);
+  color: var(--ink-muted);
+}
+
+.knockout-round + .knockout-round .knockout-best-of {
+  padding-inline-start: calc(var(--space-3) + var(--space-2) + 1px);
+}
+
 /* A name on one line, so that every match is as tall as every other and the
    brackets meet them in their middles. */
 .knockout-name {

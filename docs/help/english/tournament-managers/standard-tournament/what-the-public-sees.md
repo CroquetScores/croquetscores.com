@@ -26,7 +26,7 @@ A withdrawn player's row says so. A withdrawn score is shown struck through and 
 
 ## A knockout
 
-A knockout's page draws its draw round by round, a column for each round from the first to the final, with each match's two sides one above the other and a cell for each game the match is the best of. A later round's match stands beside the two matches whose winners it is between. On a phone the draw scrolls across, with arrows to the final and back.
+A knockout's page draws its draw round by round, a column for each round from the first to the final, with each round's best-of ("Best of 3") said above it, aligned with the players' names, and each match's two sides one above the other with a cell for each game the match is the best of. A later round's match stands beside the two matches whose winners it is between. On a phone the draw scrolls across, with arrows to the final and back. The summary, which lists the rounds one beneath another, says the same beneath each round's name.
 
 ![A knockout's draw](images/public-knockout.png)
 

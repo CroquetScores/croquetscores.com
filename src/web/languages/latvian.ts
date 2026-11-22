@@ -543,6 +543,7 @@ export const latvian: Language = {
     "knockout.round.quarters": "Ceturtdaļfināli",
     "knockout.round.number": "{number}. kārta",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "Labākais no {count}",
     // Šveices sistēmas tabula: ko katrs spēlētājs ir spēlējis un uzvarējis, un
     // viņu rezultāti.
     "swiss.games": "Partijas",

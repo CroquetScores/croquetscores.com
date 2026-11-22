@@ -548,6 +548,7 @@ export const afrikaans: Language = {
     "knockout.round.quarters": "Kwarteindrondtes",
     "knockout.round.number": "Ronde {number}",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "Beste van {count}",
     // A Swiss's table: what each player has played and won, and their results.
     "swiss.games": "Spelle",
     "swiss.wins": "Oorwinnings",

@@ -139,6 +139,38 @@ Feature: A knockout's grid draws its draw round by round
       When the page at "/2026/ac/spring-open/competitions/plate" is opened
       Then the first round in the grid is headed "Round 1"
 
+  Rule: A row above the rounds says what each round's matches are the best of
+
+    A reader who sees three cells beside each side in the first round and one
+    in the final has to count them to learn how many games a match is played
+    over. Said once above each round, as "Best of 3", the number is there to be
+    read. Each is aligned with the names of its round rather than with its
+    column's edge, so that it reads as belonging to the players beneath it.
+
+    Scenario: The first round says what its matches are the best of
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the best of above the first round in the grid is "Best of 3"
+
+    Scenario: The final says what its match is the best of
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the best of above the second round in the grid is "Best of 1"
+
+    Scenario: The best of is above its round's first match
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the best of above the first round in the grid is above its first match
+
+    Scenario: The best of is aligned with the names of the first round
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the best of above the first round in the grid is aligned with the names beneath it
+
+    Scenario: The best of is aligned with the names of the final
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the best of above the second round in the grid is aligned with the names beneath it
+
+    Scenario: The best ofs are in a row
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the best of above the second round in the grid is level with the best of above the first round
+
   Rule: A match is its two sides one above the other, in the order of the draw
 
     Scenario: The first two places meet in the first match

@@ -1,5 +1,11 @@
 # Was ist neu für Verantwortliche
 
+## Veröffentlicht am 2026-11-22
+
+### Was die Öffentlichkeit sieht
+
+- **Ein K.-o.-Turnier sagt, über wie viele Spiele die Matches jeder Runde gehen.** Über jeder Runde im Raster eines K.-o.-Turniers und in der Übersicht unter dem Namen jeder Runde steht jetzt "Maximal 3 Spiele" (oder was Sie für die Runde gewählt haben), damit niemand die Ergebnisfelder zählen muss.
+
 ## Veröffentlicht am 2026-11-15
 
 ### Das Turnier

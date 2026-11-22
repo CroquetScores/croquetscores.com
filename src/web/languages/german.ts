@@ -565,6 +565,7 @@ export const german: Language = {
     "knockout.round.quarters": "Viertelfinale",
     "knockout.round.number": "Runde {number}",
     "knockout.bye": "Freilos",
+    "knockout.bestOf": "Maximal {count} Spiele",
     // Die Tabelle eines Schweizer Systems: was jeder Spieler gespielt und
     // gewonnen hat, und seine Ergebnisse.
     "swiss.games": "Spiele",

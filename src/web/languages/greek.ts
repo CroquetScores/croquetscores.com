@@ -575,6 +575,7 @@ export const greek: Language = {
     "knockout.round.quarters": "Προημιτελικοί",
     "knockout.round.number": "Γύρος {number}",
     "knockout.bye": "Bye",
+    "knockout.bestOf": "Ο καλύτερος από {count}",
     // Ο πίνακας ενός ελβετικού: τι έχει παίξει και κερδίσει κάθε παίκτης και
     // τα αποτελέσματά του.
     "swiss.games": "Παιχνίδια",
