@@ -11,7 +11,7 @@ import { MoveCompetitionPlayer } from "../../../application/operations/competiti
 import { writerOf } from "./writer.js";
 
 export const competitionPlayerActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const action of ["up"] as const) {
+  for (const action of ["up", "down"] as const) {
     server.post<{
       Params: { id: string; competition: string; player: string };
       Querystring: { order?: string };
@@ -27,16 +27,12 @@ export const competitionPlayerActionsOfApps: FastifyPluginAsync = (server) => {
           `competition/${request.params.competition}`,
           `competition-player/${request.params.player}`,
         ] as const;
+        const at = request.requestedAt;
         // Every bye has the same id, so a bye is named by its order too.
         const { order } = request.query;
         const byeOrder = order === undefined ? undefined : Number(order);
         await request.server.mediator.send(
-          new MoveCompetitionPlayer(
-            ...asked,
-            action,
-            request.requestedAt,
-            byeOrder,
-          ),
+          new MoveCompetitionPlayer(...asked, action, at, byeOrder),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },

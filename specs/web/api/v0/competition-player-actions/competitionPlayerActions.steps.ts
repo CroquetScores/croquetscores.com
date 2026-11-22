@@ -2,12 +2,12 @@
 // (competitionPlayerActions.feature), asked as the website's page or an app
 // asks: a plain request with no body, signed in by a session, a key or
 // neither, as the scenario chose.
-import { When } from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { WebWorld } from "../../../support/world.js";
 import { within } from "../../site/advantage/apiScene.js";
-import { told } from "../apiOfApps.js";
+import { answered, told } from "../apiOfApps.js";
 import { bare } from "../permissions/permissions.steps.js";
 
 const actions: Record<string, string> = {
@@ -91,3 +91,23 @@ When(
     );
   },
 );
+
+// What the website's own page lists of a competition's players, which is how a
+// manager sees them.
+const listedPlayers = (
+  world: WebWorld,
+): { name: string; withdrawn: boolean }[] =>
+  answered(world).body["players"] as { name: string; withdrawn: boolean }[];
+
+Then(
+  /^the site lists "([^"]*)" as (withdrawn|not withdrawn)$/,
+  function (this: WebWorld, name: string, state: string) {
+    const found = listedPlayers(this).find((each) => each.name === name);
+    assert.ok(found !== undefined, `${name} is not listed.`);
+    assert.equal(found.withdrawn, state === "withdrawn");
+  },
+);
+
+Then("the site lists one player", function (this: WebWorld) {
+  assert.equal(listedPlayers(this).length, 1);
+});
