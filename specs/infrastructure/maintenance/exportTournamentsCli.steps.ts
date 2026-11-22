@@ -40,7 +40,10 @@ import {
   tournamentNamed,
 } from "../../application/operations/tournaments/aRequest.js";
 import { competitionIn } from "../../application/operations/tournaments/requests.js";
-import { testRequestFor } from "../../application/operations/tournaments/teamRequests.js";
+import {
+  changeTeamPlayerWorldRankingName,
+  testRequestFor,
+} from "../../application/operations/tournaments/teamRequests.js";
 import {
   competitionNamed as competitionOfTournament,
   playerNamed,
@@ -1074,6 +1077,47 @@ Then(
   },
 );
 
+Then(
+  "the file says the world rankings know {string} as {string}",
+  function (this: SpecWorld, name: string, worldRankingName: string) {
+    const player = named(listIn(readOf(this), "players"), name);
+    assert.ok(player !== undefined, `The file does not name ${name}.`);
+    assert.equal(player["worldRankingName"], worldRankingName);
+  },
+);
+
+Then(
+  "the file says the world rankings know {string} of the team {string} as {string}",
+  function (
+    this: SpecWorld,
+    name: string,
+    team: string,
+    worldRankingName: string,
+  ) {
+    const player = named(listIn(teamNamed(this, team), "players"), name);
+    assert.ok(player !== undefined, `The team ${team} has no ${name}.`);
+    assert.equal(player["worldRankingName"], worldRankingName);
+  },
+);
+
+Then(
+  "the file says {string} has the handicap {string}",
+  function (this: SpecWorld, name: string, handicap: string) {
+    const player = named(listIn(readOf(this), "players"), name);
+    assert.ok(player !== undefined, `The file does not name ${name}.`);
+    assert.equal(player["handicap"], handicap);
+  },
+);
+
+Then(
+  "the file says {string} has no handicap",
+  function (this: SpecWorld, name: string) {
+    const player = named(listIn(readOf(this), "players"), name);
+    assert.ok(player !== undefined, `The file does not name ${name}.`);
+    assert.equal(player["handicap"], null);
+  },
+);
+
 // Competitions
 
 Then(
@@ -1577,6 +1621,55 @@ Given(
         },
         momentOf(this),
       ),
+    );
+  },
+);
+
+Given(
+  "{string} has given {string} the handicap {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    handicap: string,
+  ) {
+    const id = requestOf(this).looking;
+    assert.ok(id !== undefined, "No tournament has been looked at.");
+    const found = playerNamed(await load(this, id), player);
+    await inHandOf(this).send(
+      new UpdatePlayer(
+        (await accountFor(this, address)).value,
+        id.value,
+        found.id.value,
+        {
+          name: found.name.toString(),
+          representing: found.representing,
+          flag: found.flag === undefined ? undefined : String(found.flag),
+          handicap,
+        },
+        momentOf(this),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has changed the world ranking name of the player {string} of the team {string} in {string} to {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    team: string,
+    name: string,
+    worldRankingName: string,
+  ) {
+    await changeTeamPlayerWorldRankingName(
+      this,
+      (await accountFor(this, address)).value,
+      tournamentNamed(this, name),
+      team,
+      player,
+      worldRankingName,
     );
   },
 );

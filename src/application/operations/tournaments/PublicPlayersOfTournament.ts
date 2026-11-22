@@ -29,6 +29,16 @@ export interface PublicPlayer {
   readonly address: string;
 }
 
+/**
+ * A player as the players' page lists them. A competition's page has no use
+ * for what the world rankings know them by, so `PublicPlayer` which those pages
+ * share does not carry it.
+ */
+export interface PlayerOfPlayers extends PublicPlayer {
+  /** What the world rankings know them by, which is their name where none was given. */
+  readonly worldRankingName: string;
+}
+
 /** A tournament as its players' page shows it: what it is, its sections, its players. */
 export interface TournamentPlayersToRead {
   readonly name: string;
@@ -57,7 +67,7 @@ export interface TournamentPlayersToRead {
    * Every player not archived, in alphabetical order of their names; none
    * for a tournament played by teams.
    */
-  readonly players: readonly PublicPlayer[];
+  readonly players: readonly PlayerOfPlayers[];
   /**
    * For a tournament played by teams, each team not archived, in the
    * tournament's order, with its players not archived, in alphabetical order
@@ -78,6 +88,8 @@ export interface TeamPlayerOfPlayers {
   readonly playerId: string;
   /** What the tournament calls them now. */
   readonly name: string;
+  /** What the world rankings know them by, which is their name where none was given. */
+  readonly worldRankingName: string;
   /** Where their page is found, as "2026/ac/spring-tests/players/pat-player". */
   readonly address: string;
 }

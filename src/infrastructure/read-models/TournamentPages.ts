@@ -331,13 +331,14 @@ export class TournamentPages implements Asked {
     const players = await connection.query<{
       player_id: string;
       name: string;
+      world_ranking_name: string;
       representing: string | null;
       handicap: string | null;
       flag: string | null;
       slug: string | null;
       archived: boolean;
     }>(
-      `select player_id, name, representing,
+      `select player_id, name, world_ranking_name, representing,
               trim_scale(handicap)::text as handicap, flag, slug, archived
          from tournament_players where tournament_id = $1`,
       [tournament],
@@ -357,10 +358,12 @@ export class TournamentPages implements Asked {
       player_id: string;
       team_id: string;
       name: string;
+      world_ranking_name: string;
       slug: string | null;
       archived: boolean;
     }>(
-      `select p.player_id, p.team_id, p.name, p.slug, p.archived
+      `select p.player_id, p.team_id, p.name, p.world_ranking_name,
+              p.slug, p.archived
          from tournament_team_players p
          join tournament_teams t on t.team_id = p.team_id
         where t.tournament_id = $1
@@ -371,6 +374,7 @@ export class TournamentPages implements Asked {
       players: players.rows.map((each) => ({
         playerId: each.player_id,
         name: each.name,
+        worldRankingName: each.world_ranking_name,
         representing: each.representing ?? undefined,
         handicap: each.handicap ?? undefined,
         flag: each.flag ?? undefined,
@@ -387,6 +391,7 @@ export class TournamentPages implements Asked {
           .map((each) => ({
             playerId: each.player_id,
             name: each.name,
+            worldRankingName: each.world_ranking_name,
             slug: slugOf(each.player_id, each.slug, each.archived),
             archived: each.archived,
           })),

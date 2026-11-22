@@ -59,6 +59,17 @@ Then(
   },
 );
 
+Then(
+  "the player {string} is answered known by the world rankings as {string}",
+  function (this: SpecWorld, name: string, worldRankingName: string) {
+    const found = (this.answer as TournamentPlayersToRead).players.find(
+      (player) => player.name === name,
+    );
+    assert.ok(found !== undefined, `${name} is not answered.`);
+    assert.equal(found.worldRankingName, worldRankingName);
+  },
+);
+
 // A tournament played by teams, team by team -------------------------------------
 
 const answered = (world: SpecWorld): TournamentPlayersToRead => {
@@ -116,5 +127,21 @@ Then(
     );
     assert.ok(found !== undefined, `${name} is not answered.`);
     assert.equal(found.address, address);
+  },
+);
+
+Then(
+  "the player {string} of the team {string} is answered known by the world rankings as {string}",
+  function (
+    this: SpecWorld,
+    name: string,
+    team: string,
+    worldRankingName: string,
+  ) {
+    const found = teamAnswered(this, team).players.find(
+      (player) => player.name === name,
+    );
+    assert.ok(found !== undefined, `${name} is not answered.`);
+    assert.equal(found.worldRankingName, worldRankingName);
   },
 );

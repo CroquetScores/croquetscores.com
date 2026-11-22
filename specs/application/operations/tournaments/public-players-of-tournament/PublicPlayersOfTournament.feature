@@ -4,11 +4,11 @@ Feature: The players of a tournament, for anybody to read
   A tournament's players' page lists its players, each leading to their own
   page (`players.feature`). The application answers them: every player of the
   tournament who is not archived, in alphabetical order of their names, so
-  that a reader can find one by name, each with their name, what they
-  represent and the flag they fly where they have either, and where their own
-  page is found, which is the tournament's address followed by "players" and
-  the player's slug (`addPlayer.feature`). An archived player is set aside,
-  and is not one a reader is sent to.
+  that a reader can find one by name, each with their name, what the world
+  rankings know them by, what they represent and the flag they fly where they
+  have either, and where their own page is found, which is the tournament's
+  address followed by "players" and the player's slug (`addPlayer.feature`).
+  An archived player is set aside, and is not one a reader is sent to.
 
   The page is a section of the tournament's, so the tournament is answered
   with it as its games are (`GamesOfTournament.feature`): its name, where it
@@ -107,6 +107,12 @@ Feature: The players of a tournament, for anybody to read
       When the public players of the tournament at "2026/ac/spring-open" are asked for
       Then the player "Sam Someone" is answered representing "Canterbury Croquet Club"
 
+    Scenario: A player is answered with what the world rankings know them by
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the public players of the tournament at "2026/ac/spring-open" are asked for
+      Then the player "Sam Someone" is answered known by the world rankings as "Samuel Someone"
+
     Scenario: A player is answered with the flag they fly
       Given the player is to fly the flag "nz"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
@@ -197,6 +203,12 @@ Feature: The players of a tournament, for anybody to read
       When the public players of the tournament at "2026/ac/spring-tests" are asked for
       Then the first player of the team "Australia" among the players answered is "Pam Partner"
       And the second player of the team "Australia" among the players answered is "Pat Player"
+
+    Scenario: A team's player is answered with what the world rankings know them by
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      When the public players of the tournament at "2026/ac/spring-tests" are asked for
+      Then the player "Sam Someone" of the team "Australia" is answered known by the world rankings as "Samuel Someone"
 
     Scenario: A team's player is answered with where their page is found
       When the public players of the tournament at "2026/ac/spring-tests" are asked for

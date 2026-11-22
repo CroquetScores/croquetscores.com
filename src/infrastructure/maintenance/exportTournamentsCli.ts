@@ -420,6 +420,7 @@ const fileOf = async (
       players: team.players.map((player) => ({
         playerId: player.playerId,
         name: player.name,
+        worldRankingName: player.worldRankingName,
       })),
     }));
     const tests: Record<string, unknown>[] = [];
@@ -431,6 +432,8 @@ const fileOf = async (
     said["players"] = read.players.map((player) => ({
       playerId: player.playerId,
       name: player.name,
+      worldRankingName: player.worldRankingName,
+      handicap: player.handicap ?? null,
       representing: player.representing ?? null,
     }));
     const competitions: Record<string, unknown>[] = [];

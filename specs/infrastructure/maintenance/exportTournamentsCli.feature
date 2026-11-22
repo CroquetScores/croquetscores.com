@@ -47,7 +47,8 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
   what it says has changed.
 
   A file says the tournament's name, its sport, the days it was played, where
-  it was played, who played in it and what each represents, and each of its
+  it was played, who played in it and what each represents, what the world
+  rankings know each by and each one's handicap, and each of its
   competitions (a tournament played by teams has teams and tests in place of
   these, below): its name, whether it is a block, a knockout or a Swiss, and
   every game played in it, with who played, what each scored, and whether it
@@ -56,7 +57,12 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
   match is its games, in the order they were played, under the two players
   who met. A file also says which version of this layout it is, which is 2,
   so that a reader of the files is told when the layout changes and does not
-  have to notice.
+  have to notice. A player gaining a thing to say does not change it, since a
+  reader who does not know of the thing reads the file as it always did; the
+  layout is changed where something a reader relied on is taken away or means
+  something else. A player who has no handicap says so, rather than leaving it
+  out, as one who represents nothing does. A player of a team has no handicap
+  to say, since a team's player is not given one.
 
   Each thing a reader may want to follow from one run to the next, or to
   another file, carries the id the website keeps it by: the tournament's
@@ -438,6 +444,28 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-open.json" is read
       Then the file says "Sam Someone" represents nothing
+
+    Scenario: A player says what the world rankings know them by
+      Given "organiser@example.com" has changed the world ranking name of "Sam Someone" in "Spring Open" to "Samuel Rankings"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the world rankings know "Sam Someone" as "Samuel Rankings"
+
+    Scenario: A player the world rankings were told nothing of is known by their name
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the world rankings know "Sam Someone" as "Sam Someone"
+
+    Scenario: A player says what their handicap is
+      Given "organiser@example.com" has given "Sam Someone" the handicap "5"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says "Sam Someone" has the handicap "5"
+
+    Scenario: A player who has no handicap says none
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says "Sam Someone" has no handicap
 
     Scenario: A player who is archived is left out
       Given "organiser@example.com" has archived the player "Alex Another" in "Spring Open"
@@ -1250,6 +1278,17 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-tests.json" is read
       Then the file says the team "Australia" has the player "Pat Player"
+
+    Scenario: A team's player says what the world rankings know them by
+      Given "organiser@example.com" has changed the world ranking name of the player "Pat Player" of the team "Australia" in "Spring Tests" to "Patrick Rankings"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-tests.json" is read
+      Then the file says the world rankings know "Pat Player" of the team "Australia" as "Patrick Rankings"
+
+    Scenario: A team's player the world rankings were told nothing of is known by their name
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-tests.json" is read
+      Then the file says the world rankings know "Pat Player" of the team "Australia" as "Pat Player"
 
     Scenario: A player is under their own team and no other
       When the export script is run with "--folder export"
