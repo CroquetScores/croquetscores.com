@@ -33,7 +33,6 @@ import { AddSwiss } from "../../../application/operations/tournaments/AddSwiss.j
 import { UpdateBlock } from "../../../application/operations/tournaments/UpdateBlock.js";
 import { UpdateKnockout } from "../../../application/operations/tournaments/UpdateKnockout.js";
 import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateSwiss.js";
-import { ArchiveTournament } from "../../../application/operations/tournaments/ArchiveTournament.js";
 import { DeleteTournament } from "../../../application/operations/tournaments/DeleteTournament.js";
 import { RemoveNotableStatus } from "../../../application/operations/tournaments/RemoveNotableStatus.js";
 import { ArchiveCompetition } from "../../../application/operations/tournaments/ArchiveCompetition.js";
@@ -419,7 +418,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   // The tournament by the part of its id after "tournament/", so that the id
   // is one segment of the address rather than two.
   for (const [action, making] of [
-    ["archive", ArchiveTournament],
     ["restore", RestoreTournament],
     // An administrator's, who judges it neither national nor international.
     ["remove-notable-status", RemoveNotableStatus],
