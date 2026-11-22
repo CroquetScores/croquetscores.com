@@ -7,6 +7,7 @@
 // is only here now.
 import type { FastifyPluginAsync } from "fastify";
 
+import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
 import { MoveGame } from "../../../application/operations/competitions/MoveGame.js";
 import { writerOf } from "./writer.js";
 
@@ -30,6 +31,34 @@ export const competitionGameActionsOfApps: FastifyPluginAsync = (server) => {
             request.requestedAt,
           ),
         );
+        return reply.code(204).header("cache-control", "no-store").send();
+      },
+    );
+  }
+
+  // A game's score archived or restored, withdrawn or its withdrawal reversed,
+  // by the part of its id after "game/". Unwithdraw, as a player's withdrawal is
+  // reversed.
+  const gameActions = {
+    archive: ArchiveGame,
+  } as const;
+  for (const action of Object.keys(
+    gameActions,
+  ) as (keyof typeof gameActions)[]) {
+    server.post<{ Params: { id: string; competition: string; game: string } }>(
+      `/tournaments/:id/competitions/:competition/games/:game/${action}`,
+      async (request, reply) => {
+        const tournament = `tournament/${request.params.id}`;
+        const writer = writerOf(request, reply, tournament);
+        if (writer === undefined) return reply;
+        const asked = [
+          writer.value,
+          tournament,
+          `competition/${request.params.competition}`,
+          `game/${request.params.game}`,
+          request.requestedAt,
+        ] as const;
+        await request.server.mediator.send(new gameActions[action](...asked));
         return reply.code(204).header("cache-control", "no-store").send();
       },
     );

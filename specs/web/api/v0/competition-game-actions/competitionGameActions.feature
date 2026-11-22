@@ -79,3 +79,32 @@ Feature: A competition's game is moved, archived and withdrawn through the API
       Given the caller is signed in as "organiser@example.com"
       When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is moved down at the address it was at
       Then the API answers 404
+
+  Rule: A game is archived
+
+    Scenario: A manager archives a game
+      Given the caller is signed in as "organiser@example.com"
+      When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is archived
+      Then the API answers 204
+
+    Scenario: A game archived is listed as archived
+      Given the caller is signed in as "organiser@example.com"
+      And the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is archived
+      When the games of "Block A" in "Spring Open" are listed to the caller
+      Then the site lists the game as archived
+
+    Scenario: A reader who is not signed in may not do it
+      When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is archived
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not do it
+      Given the caller is signed in as "stranger@example.com"
+      When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is archived
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManagerOrScorer"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is archived at the address it was at
+      Then the API answers 404
