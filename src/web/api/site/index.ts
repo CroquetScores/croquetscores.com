@@ -495,13 +495,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   // A competition's player moved a place, withdrawn, unwithdrawn or removed,
   // by the part of their id after "competition-player/", and a bye by its
   // order as well.
-  for (const action of [
-    "up",
-    "down",
-    "withdraw",
-    "unwithdraw",
-    "remove",
-  ] as const) {
+  for (const action of ["down", "withdraw", "unwithdraw", "remove"] as const) {
     server.post<{
       Params: { id: string; competition: string; player: string };
       Querystring: { order?: string };
