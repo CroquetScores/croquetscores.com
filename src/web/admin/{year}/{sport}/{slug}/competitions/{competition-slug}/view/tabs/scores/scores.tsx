@@ -142,9 +142,12 @@ export const ScoresTab = ({
     const placed = (code: string) =>
       action === "restore" ? { code, game: game.id } : { code };
     try {
-      const response = await fetch(`${at}/${idInAddress(game.id)}/${action}`, {
-        method: "POST",
-      });
+      const response = await fetch(
+        `${action === "down" || action === "archive" || action === "restore" || action === "withdraw" || action === "unwithdraw" ? at : at.replace("/api/site/", "/api/v0/")}/${idInAddress(game.id)}/${action}`,
+        {
+          method: "POST",
+        },
+      );
       if (!response.ok) {
         setRefused(placed(await refusalOf(response)));
       }
