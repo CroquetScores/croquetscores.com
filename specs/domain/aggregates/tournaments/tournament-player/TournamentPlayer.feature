@@ -39,8 +39,10 @@ Feature: A player in a tournament
   A player may have a handicap, written as a reader would write it: a sign,
   "+" or "-", which may be left off, then one or two digits, then, if there
   is a fraction, a point and one digit, such as "4", "+4", "-1.5" or "12.5".
-  It is optional, since many tournaments have no handicaps. It is kept as
-  written rather than as a number, so that "+4" is still shown as "+4".
+  It is optional, since many tournaments have no handicaps. It is kept in the
+  tournament's events as written. What the pages and the API show of it is the
+  number it is, so "+4" is shown as "4" and "4.0" as "4"
+  (`TournamentContents.feature`).
   Whitespace at either end is taken off, and what is nothing but whitespace
   is no handicap. A handicap written any other way is refused with
   `TournamentPlayer.HandicapMalformed`, whether the player is made with it or

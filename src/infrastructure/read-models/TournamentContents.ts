@@ -194,7 +194,8 @@ export class TournamentContents implements Projection, Asked {
       handicap: string | null;
       representing: string | null;
     }>(
-      `select player_id, name, world_ranking_name, handicap, representing
+      `select player_id, name, world_ranking_name,
+              trim_scale(handicap)::text as handicap, representing
          from tournament_players
         where tournament_id = $1 and not archived`,
       [tournament],

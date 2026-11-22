@@ -86,6 +86,20 @@ Feature: What is in a tournament, kept for the API
       When "Spring Open" is read for an app
       Then the player "Sam Someone" is read with the handicap "-2"
 
+    Scenario Outline: A handicap is kept as the number it is
+      Given the player "Sam Someone" is added to "Spring Open"
+      And the player "Sam Someone" of "Spring Open" is given the handicap "<written>"
+      When "Spring Open" is read for an app
+      Then the player "Sam Someone" is read with the handicap "<read>"
+
+      Examples:
+        | written | read |
+        | +4      | 4    |
+        | 4.0     | 4    |
+        | 4.5     | 4.5  |
+        | -1.5    | -1.5 |
+        | 12.0    | 12   |
+
     Scenario: A player made to represent a club keeps it
       Given the player "Sam Someone" is added to "Spring Open"
       And the player "Sam Someone" of "Spring Open" is made to represent "Sydney"
