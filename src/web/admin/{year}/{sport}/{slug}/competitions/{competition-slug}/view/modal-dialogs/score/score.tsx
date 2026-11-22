@@ -401,7 +401,7 @@ export const ScoreDialog = ({
       const response = await fetch(
         correcting === undefined
           ? `${at.replace("/api/site/", "/api/v0/")}/games`
-          : `${at}/games/${idInAddress(correcting.id)}/correct`,
+          : `${at.replace("/api/site/", "/api/v0/")}/games/${idInAddress(correcting.id)}/correct`,
         {
           method: "POST",
           headers: {
