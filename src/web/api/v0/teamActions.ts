@@ -8,7 +8,7 @@ import { MoveTeam } from "../../../application/operations/tournaments/MoveTeam.j
 import { writerOf } from "./writer.js";
 
 export const teamActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const action of ["up"] as const) {
+  for (const action of ["up", "down"] as const) {
     server.post<{ Params: { id: string; team: string } }>(
       `/tournaments/:id/teams/:team/${action}`,
       async (request, reply) => {
