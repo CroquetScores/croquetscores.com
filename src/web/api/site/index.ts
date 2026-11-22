@@ -78,7 +78,6 @@ import { ImportErrorsKept } from "../../../application/operations/import-errors/
 import { TournamentsInUnlistedCountries } from "../../../application/operations/world-rankings/TournamentsInUnlistedCountries.js";
 import { RepresentingMatching } from "../../../application/operations/tournaments/RepresentingMatching.js";
 import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
-import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
 import { RemoveManager } from "../../../application/operations/tournaments/RemoveManager.js";
 import { ScorersOfTournament } from "../../../application/operations/tournaments/ScorersOfTournament.js";
@@ -553,24 +552,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply
         .header("cache-control", "no-store")
         .send({ managers, mayChange });
-    },
-  );
-
-  // Somebody made a manager, by their email address.
-  server.post<{ Params: { id: string } }>(
-    "/tournaments/:id/managers",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      await request.server.mediator.send(
-        new AddManager(
-          reader.value,
-          `tournament/${request.params.id}`,
-          textOf(request.body, "emailAddress"),
-          request.requestedAt,
-        ),
-      );
-      return reply.code(204).header("cache-control", "no-store").send();
     },
   );
 
