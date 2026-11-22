@@ -29,3 +29,16 @@ Then(
     );
   },
 );
+
+Then(
+  "the section {string} is at most {int} pixels wide",
+  async function (this: WebWorld, label: string, pixels: number) {
+    await drawn(this);
+    const box = await this.browserPage.locator(section(label)).boundingBox();
+    assert.ok(box !== null, `The section ${label} is not laid out.`);
+    assert.ok(
+      box.width <= pixels,
+      `The section ${label} is ${Math.round(box.width)} pixels wide, and wanted at most ${pixels}.`,
+    );
+  },
+);

@@ -227,11 +227,16 @@ Feature: The section bar of a tournament and its competitions
 
     The bar is as tall as every section bar is, its words with a little
     above and below (`LAYOUT.md`), which clears the 24 pixels WCAG 2.2 asks
-    of anything pressed.
+    of anything pressed. A competition's tile is only as wide as its name,
+    with no minimum width, so that a short name does not stand in a wide tile.
 
     Scenario: A section can be pressed
       When the page of "Spring Open" is opened
       Then the section "Block A" is at least 24 pixels tall
+
+    Scenario: A short name is not given a wider tile than it needs
+      When the page of "Spring Open" is opened
+      Then the section "Block A" is at most 100 pixels wide
 
     Scenario: Many competitions wrap rather than widening the page
       Given "organiser@example.com" has added the block "The Very Long Named Championship Block" to "Spring Open"

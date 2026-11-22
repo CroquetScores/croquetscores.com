@@ -1377,14 +1377,12 @@ body > .site-footer {
   text-decoration: none;
 }
 
-/* A tournament's competitions are tiles of one width, as the old site had
-   them, since their names run long: "Championship Singles Block A" wraps
-   within its tile onto tight lines of its own, and the tiles stand in even
-   columns rather than running on in a ragged line. The tournament's own
-   sections beside them, Recent, Players, Notes and Commentary, are only as
-   wide as their words. Every tab of such a bar is as tall as its own words
-   rather than its row, so that the current one beside a name of three lines
-   is not a tall block of black. */
+/* A tournament's competitions are tiles only as wide as their names, with no
+   minimum width, as the tournament's own sections beside them are: a short
+   name does not stand in a tile wider than it needs. A name too long for the
+   bar still wraps within its tile onto tight lines of its own. Every tab of
+   such a bar is as tall as its own words rather than its row, so that the
+   current one beside a name of three lines is not a tall block of black. */
 .site-sections ul:has(.section-competition) {
   align-items: flex-start;
 }
@@ -1399,7 +1397,7 @@ body > .site-footer {
 }
 
 .section-competition {
-  flex: 0 0 8.5rem;
+  flex: 0 1 auto;
 }
 
 .section-competition a {
