@@ -27,6 +27,9 @@ const lists = {
   "sport's tournaments": "tournaments",
   "found tournaments": "tournaments",
   "found competitions": "competitions",
+  // The tournaments a device has visited, which the home page lists
+  // (visitedTournaments.feature).
+  "visited tournaments": "visited",
 } as const;
 
 /** A list as a scenario names it. */

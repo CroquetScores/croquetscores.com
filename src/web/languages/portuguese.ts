@@ -378,6 +378,7 @@ export const portuguese: Language = {
     "home.recentResults": "Resultados recentes",
     "home.recentResults.none":
       "Nenhuma partida foi adicionada nos últimos sete dias.",
+    "home.visitedTournaments": "Os seus torneios recentes",
     "home.upcomingTournaments": "Próximos torneios",
     "home.upcomingTournaments.none":
       "Nenhum torneio começa nos próximos sessenta dias.",

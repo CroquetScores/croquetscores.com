@@ -24,6 +24,7 @@ import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
+import { rememberVisit } from "../common/visitedTournaments.js";
 import { sendPage } from "./tournamentLists.js";
 import { readsOf } from "./read.js";
 import { gameShown, sectionsOf } from "./tournamentPages.js";
@@ -79,6 +80,10 @@ export const registerTournamentPage = (
         // Location with a character outside Latin-1.
         return reply.redirect(encodeURI(`/${asked.address}`), 301);
       }
+
+      // Remembered by the address it is found at now, once the reader is where
+      // they are going, and not by the old one they followed to get here.
+      rememberVisit(request, reply, asked.address);
 
       const speaking = speakingOf(request);
       const { say } = speaking;

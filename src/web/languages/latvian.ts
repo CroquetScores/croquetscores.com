@@ -380,6 +380,7 @@ export const latvian: Language = {
     "home.recentResults": "Nesenie rezultāti",
     "home.recentResults.none":
       "Pēdējās septiņās dienās nav pievienota neviena partija.",
+    "home.visitedTournaments": "Jūsu nesenie turnīri",
     "home.upcomingTournaments": "Gaidāmie turnīri",
     "home.upcomingTournaments.none":
       "Tuvāko sešdesmit dienu laikā nesākas neviens turnīrs.",

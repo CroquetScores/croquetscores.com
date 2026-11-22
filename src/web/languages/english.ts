@@ -373,6 +373,9 @@ export const english: Language = {
     "home.recentResults": "Recent Results",
     "home.recentResults.none":
       "No games have been added in the last seven days.",
+    // The tournaments this device has visited lately, listed above the recent
+    // results once there is one (visitedTournaments.feature).
+    "home.visitedTournaments": "Your Recent Tournaments",
     "home.upcomingTournaments": "Upcoming Tournaments",
     "home.upcomingTournaments.none":
       "No tournaments start in the next sixty days.",

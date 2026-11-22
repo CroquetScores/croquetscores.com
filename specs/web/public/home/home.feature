@@ -11,6 +11,11 @@ Feature: The home page lists recent results and upcoming tournaments
   to every tournament this year, for a reader after one further off or long
   finished.
 
+  Between the filter and the recent results is a third list, which only a
+  reader who has opened a tournament lately has: the tournaments their device
+  visited, latest first (`visitedTournaments.feature`). It is not narrowed by
+  the filter, nor sorted, since the order it is in is what it is for.
+
   Each list is a table of up to four columns: the tournament's dates, on a
   tablet or wider the code of its sport, the flag of the country it is played
   in, and its name. The dates are said as the admin

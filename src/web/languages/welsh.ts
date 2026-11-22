@@ -374,6 +374,7 @@ export const welsh: Language = {
     "home.recentResults": "Canlyniadau diweddar",
     "home.recentResults.none":
       "Ni ychwanegwyd unrhyw gemau yn ystod y saith diwrnod diwethaf.",
+    "home.visitedTournaments": "Eich twrnameintiau diweddar",
     "home.upcomingTournaments": "Twrnameintiau i ddod",
     "home.upcomingTournaments.none":
       "Nid oes unrhyw dwrnameintiau'n dechrau yn ystod y chwe deg diwrnod nesaf.",

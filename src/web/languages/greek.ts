@@ -398,6 +398,7 @@ export const greek: Language = {
     "home.recentResults": "Πρόσφατα αποτελέσματα",
     "home.recentResults.none":
       "Δεν έχουν προστεθεί παιχνίδια τις τελευταίες επτά ημέρες.",
+    "home.visitedTournaments": "Τα τελευταία σας τουρνουά",
     "home.upcomingTournaments": "Επερχόμενα τουρνουά",
     "home.upcomingTournaments.none":
       "Δεν ξεκινούν τουρνουά τις επόμενες εξήντα ημέρες.",

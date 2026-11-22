@@ -374,6 +374,7 @@ export const norwegian: Language = {
     // dem til alle turneringer i år.
     "home.recentResults": "Siste resultater",
     "home.recentResults.none": "Ingen partier er lagt til de siste sju dagene.",
+    "home.visitedTournaments": "Dine nylige turneringer",
     "home.upcomingTournaments": "Kommende turneringer",
     "home.upcomingTournaments.none":
       "Ingen turneringer starter de neste seksti dagene.",

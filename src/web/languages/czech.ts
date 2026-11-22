@@ -376,6 +376,7 @@ export const czech: Language = {
     "home.recentResults": "Nedávné výsledky",
     "home.recentResults.none":
       "Za posledních sedm dní nebyly přidány žádné hry.",
+    "home.visitedTournaments": "Vaše nedávné turnaje",
     "home.upcomingTournaments": "Nadcházející turnaje",
     "home.upcomingTournaments.none":
       "Během příštích šedesáti dní nezačíná žádný turnaj.",

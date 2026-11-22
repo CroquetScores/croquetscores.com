@@ -7,6 +7,7 @@ import type { FastifyInstance } from "fastify";
 
 import { RecentResults } from "../../application/operations/tournaments/RecentResults.js";
 import type { TournamentOfWebsite } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
+import { TournamentsAtAddresses } from "../../application/operations/tournaments/TournamentsAtAddresses.js";
 import { TournamentYears } from "../../application/operations/tournaments/TournamentYears.js";
 import { UpcomingTournaments } from "../../application/operations/tournaments/UpcomingTournaments.js";
 import type { Assets } from "../common/assets.js";
@@ -16,6 +17,7 @@ import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
+import { visitedOf } from "../common/visitedTournaments.js";
 import type { HelpLibrary } from "../common/helpLibrary.js";
 import { releaseOf, whatsNewAlert } from "../common/whatsNew.js";
 import {
@@ -77,6 +79,16 @@ export const registerHomePage = (
       if (code === undefined) throw failure;
       return sendRefused(reply, request, assets, shell, code);
     }
+    // The reader's own, so the filter does not narrow it. Asked of only when
+    // there is something to ask, so that a reader who has visited nothing
+    // costs the database nothing and is shown no heading over an empty list.
+    const addresses = visitedOf(request);
+    const visited =
+      addresses.length === 0
+        ? []
+        : await mediator.query(
+            new TournamentsAtAddresses(website.host, addresses),
+          );
     const years = await mediator.query(new TournamentYears(website.host));
     // This year by the server's clock, in UTC, as the year of a tournament's
     // address is.
@@ -98,7 +110,28 @@ export const registerHomePage = (
           await releaseOf(help, server.languages[0]?.tag, "public"),
           request.url,
         )}
-${filter(request, asked, speaking, recent.length + upcoming.length)}
+${filter(request, asked, speaking, recent.length + upcoming.length)}${
+          visited.length === 0
+            ? ""
+            : `
+          <div class="home-visited">
+${table(
+  {
+    table: "visited",
+    heading: say("home.visitedTournaments"),
+    none: "",
+    listed: visited,
+    sortedAtFirst: undefined,
+    // Each can be a different year's.
+    withYear: true,
+    unsorted: true,
+  },
+  asked,
+  speaking,
+  assets,
+)}
+          </div>`
+        }
           <div class="home-lists">
 ${table(
   {
