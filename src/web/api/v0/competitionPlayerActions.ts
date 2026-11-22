@@ -8,10 +8,11 @@
 import type { FastifyPluginAsync } from "fastify";
 
 import { MoveCompetitionPlayer } from "../../../application/operations/competitions/MoveCompetitionPlayer.js";
+import { WithdrawPlayer } from "../../../application/operations/competitions/WithdrawPlayer.js";
 import { writerOf } from "./writer.js";
 
 export const competitionPlayerActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const action of ["up", "down"] as const) {
+  for (const action of ["up", "down", "withdraw"] as const) {
     server.post<{
       Params: { id: string; competition: string; player: string };
       Querystring: { order?: string };
@@ -32,7 +33,9 @@ export const competitionPlayerActionsOfApps: FastifyPluginAsync = (server) => {
         const { order } = request.query;
         const byeOrder = order === undefined ? undefined : Number(order);
         await request.server.mediator.send(
-          new MoveCompetitionPlayer(...asked, action, at, byeOrder),
+          action === "withdraw"
+            ? new WithdrawPlayer(...asked, at)
+            : new MoveCompetitionPlayer(...asked, action, at, byeOrder),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
