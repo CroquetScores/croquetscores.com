@@ -7,6 +7,7 @@ import { strict as assert } from "node:assert";
 
 import type { WebWorld } from "../../../support/world.js";
 import { answered, sceneOf, told } from "../apiOfApps.js";
+import { sessionFor } from "../../../support/control.js";
 import { bare } from "../permissions/permissions.steps.js";
 
 type Part = "scorer" | "manager";
@@ -88,6 +89,64 @@ Then(
     assert.ok(
       !listed(this).some((each) => each.name === name),
       `${name} is listed.`,
+    );
+  },
+);
+
+// Who is on the tournament is read as the website's own page reads it, which
+// is where a scenario finds the account to take off, since an account's id is
+// not something a scenario knows.
+const accountOf = async (
+  world: WebWorld,
+  part: Part,
+  name: string,
+  tournament: string,
+): Promise<string> => {
+  const answer = await fetch(
+    `${world.baseUrl!}${peopleAt(world, tournament, part, "/api/site")}`,
+    {
+      headers: {
+        cookie: `session=${await sessionFor("organiser@example.com")}`,
+      },
+    },
+  );
+  const found = (
+    (await answer.json()) as Record<string, { id: string; name: string }[]>
+  )[`${part}s`]?.find((each) => each.name === name);
+  assert.ok(found !== undefined, `${name} is not a ${part}.`);
+  return found.id.slice(found.id.indexOf("/") + 1);
+};
+
+When(
+  /^the (scorer|manager) "([^"]*)" is taken off "([^"]*)"$/,
+  async function (
+    this: WebWorld,
+    part: Part,
+    name: string,
+    tournament: string,
+  ) {
+    const account = await accountOf(this, part, name, tournament);
+    await told(
+      this,
+      "POST",
+      `${peopleAt(this, tournament, part, "/api/v0")}/${account}/remove`,
+    );
+  },
+);
+
+When(
+  /^the (scorer|manager) "([^"]*)" is taken off "([^"]*)" at the address it was at$/,
+  async function (
+    this: WebWorld,
+    part: Part,
+    name: string,
+    tournament: string,
+  ) {
+    const account = await accountOf(this, part, name, tournament);
+    await told(
+      this,
+      "POST",
+      `${peopleAt(this, tournament, part, "/api/site")}/${account}/remove`,
     );
   },
 );
