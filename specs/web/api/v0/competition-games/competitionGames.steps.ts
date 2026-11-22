@@ -134,6 +134,66 @@ When(
   },
 );
 
+// The game by the part of its id after "game/", as a scenario knows it by who
+// beat whom.
+const gameAt = (
+  world: WebWorld,
+  winner: string,
+  loser: string,
+  competition: string,
+  tournament: string,
+  api: string,
+): string => {
+  const id = world.games.get(
+    within(within(tournament, competition), `${winner}>${loser}`),
+  );
+  assert.ok(id !== undefined, `No game of ${winner} beating ${loser}.`);
+  return `${competitionAt(world, competition, tournament, api)}/games/${partOf(id)}`;
+};
+
+const corrected =
+  '^the game of "([^"]*)" beating "([^"]*)" in "([^"]*)" of "([^"]*)" is corrected to (\\S+) to (\\S+)';
+
+When(
+  new RegExp(`${corrected}$`),
+  async function (
+    this: WebWorld,
+    winner: string,
+    loser: string,
+    competition: string,
+    tournament: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    await told(
+      this,
+      "POST",
+      `${gameAt(this, winner, loser, competition, tournament, "/api/v0")}/correct`,
+      { winnerScore, loserScore },
+    );
+  },
+);
+
+When(
+  new RegExp(`${corrected} at the address it was at$`),
+  async function (
+    this: WebWorld,
+    winner: string,
+    loser: string,
+    competition: string,
+    tournament: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    await told(
+      this,
+      "POST",
+      `${gameAt(this, winner, loser, competition, tournament, "/api/site")}/correct`,
+      { winnerScore, loserScore },
+    );
+  },
+);
+
 // What the website's own page lists of a competition's games, which is how a
 // manager sees them.
 When(
@@ -163,3 +223,12 @@ Then("the API says the id of the game", function (this: WebWorld) {
 Then("the site lists one game", function (this: WebWorld) {
   assert.equal(gamesListed(this).length, 1);
 });
+
+Then(
+  "the site lists the game as {int} to {int}",
+  function (this: WebWorld, winnerScore: number, loserScore: number) {
+    const [game] = gamesListed(this);
+    assert.equal(game?.["winnerScore"], String(winnerScore));
+    assert.equal(game?.["loserScore"], String(loserScore));
+  },
+);

@@ -18,9 +18,7 @@ import {
   numberOf,
   numbersOf,
   countOf,
-  typedOf,
   rulesOf,
-  gamePlayerOf,
   tournamentFrom,
 } from "../../common/requestBody.js";
 
@@ -30,7 +28,6 @@ import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateS
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
-import { CorrectGame } from "../../../application/operations/competitions/CorrectGame.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { MoveGame } from "../../../application/operations/competitions/MoveGame.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
@@ -529,44 +526,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         ),
       );
       return reply.header("cache-control", "no-store").send({ games });
-    },
-  );
-
-  // A game's scores corrected, as the score dialog sends them, by the part of
-  // its id after "game/", and its players where they are sent, as adding a
-  // game sends them. A player not sent is the game's
-  // own. A score left empty is left out, for the command to refuse.
-  server.post<{ Params: { id: string; competition: string; game: string } }>(
-    "/tournaments/:id/competitions/:competition/games/:game/correct",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      const score = (field: string): string | undefined => {
-        const said = textOf(request.body, field);
-        return said === "" ? undefined : said;
-      };
-      const player = (field: string): string | undefined =>
-        gamePlayerOf(textOf(request.body, field));
-      await request.server.mediator.send(
-        new CorrectGame(
-          reader.value,
-          `tournament/${request.params.id}`,
-          `competition/${request.params.competition}`,
-          `game/${request.params.game}`,
-          {
-            winnerScore: score("winnerScore"),
-            loserScore: score("loserScore"),
-            winnerHoops: typedOf(request.body, "winnerHoops"),
-            winnerTarget: typedOf(request.body, "winnerTarget"),
-            loserHoops: typedOf(request.body, "loserHoops"),
-            loserTarget: typedOf(request.body, "loserTarget"),
-            winner: player("winner"),
-            loser: player("loser"),
-          },
-          request.requestedAt,
-        ),
-      );
-      return reply.code(204).header("cache-control", "no-store").send();
     },
   );
 
