@@ -64,6 +64,10 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   rankings do not know is kept as readily as one they do, since a player new
   to the rankings is not in them yet.
 
+  A handicap is a number, so a phone shows a keypad of decimals for it. It
+  stays a box that takes any typing, so that one written any other way is
+  refused with its reason rather than quietly not typed.
+
   The flags are offered by the name of the place each is the flag of, in the
   reader's language, in order of those names, with a choice of none first,
   since most players fly none.
@@ -146,6 +150,11 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       Given the page of "Spring Open" is open
       When "Add Player" is pressed
       Then the field after "Handicap" in the player dialog is "World Ranking Player Name"
+
+    Scenario: The handicap is typed on a keypad of decimals
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then "Handicap" is typed on a keypad of decimals
 
   Rule: A player opened from the page opens the dialog to change them
 

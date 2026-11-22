@@ -10,6 +10,7 @@ import type {
 import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import { Flags } from "../../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { Assets } from "../common/assets.js";
+import { handicapShown } from "../common/handicapShown.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import type { Section } from "../common/layout.js";
@@ -179,7 +180,7 @@ export const playerShown = (
   // are. Kept in the span that has always held what they represent, so that
   // what styles or reads it need not know there is more in it now.
   const about =
-    [handicap, representing]
+    [handicap === undefined ? undefined : handicapShown(handicap), representing]
       .filter((each) => each !== undefined)
       .join(", ")
       .trim() || undefined;

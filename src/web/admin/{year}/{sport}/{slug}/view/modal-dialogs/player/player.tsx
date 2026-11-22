@@ -403,6 +403,10 @@ export const PlayerDialog = ({
             <input
               {...tied}
               type="text"
+              // A keypad with a point, for a number such as 4.5. Not
+              // type="number": that would not let a malformed one be typed to
+              // be refused with its reason (player.feature).
+              inputMode="decimal"
               placeholder=" "
               autoComplete="off"
               disabled={onlyWorldRankingName}

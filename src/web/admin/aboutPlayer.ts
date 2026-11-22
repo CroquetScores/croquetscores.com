@@ -1,3 +1,5 @@
+import { handicapShown } from "../common/handicapShown.js";
+
 /**
  * What a list says of a player beside their name: their handicap and what they
  * represent, with a comma between them only where there are both. Nothing is
@@ -11,4 +13,6 @@ export const aboutPlayer = ({
   readonly handicap?: string | undefined;
   readonly representing?: string | undefined;
 }): string =>
-  [handicap, representing].filter((each) => each !== undefined).join(", ");
+  [handicap === undefined ? undefined : handicapShown(handicap), representing]
+    .filter((each) => each !== undefined)
+    .join(", ");
