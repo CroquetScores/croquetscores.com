@@ -27,7 +27,6 @@ import { UpdateKnockout } from "../../../application/operations/tournaments/Upda
 import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateSwiss.js";
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
-import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
 import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
@@ -532,7 +531,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   // reversed, by the part of its id after "game/". Unwithdraw, as a player's
   // withdrawal is reversed.
   const gameActions = {
-    archive: ArchiveGame,
     restore: RestoreGame,
     withdraw: WithdrawGame,
     unwithdraw: ReverseGameWithdrawal,
