@@ -76,6 +76,9 @@ export default tseslint.config(
       "reports",
       "node_modules",
       "assets",
+      // Scratch scripts for one-off jobs, kept out of the project's tsconfig,
+      // so the linter has nothing to check them against.
+      "temp",
       // Runs in k6's own runtime, which has its own globals and imports.
       "scripts/*.k6.js",
     ],

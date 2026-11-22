@@ -34,7 +34,7 @@ export interface Section {
   readonly href: string;
   readonly label: string;
   /** Whether it is one of a tournament's competitions, whose names run long
-      and so are drawn as tiles of one width with the name wrapped within. */
+      and so are drawn as tiles as wide as their names, wrapped where too long. */
   readonly competition?: boolean | undefined;
   /** Whether it holds something new to the reader, as a note they have not
       read, which marks it with a red asterisk. */
