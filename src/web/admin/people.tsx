@@ -8,6 +8,10 @@ import { idInAddress, refusalOf } from "./api.js";
 import "./listed.css";
 import "./people.css";
 
+// What a tab changes that is asked at /api/v0 now, by the tab and the change.
+// The list each tab shows is still read at /api/site.
+const movedToV0: ReadonlySet<string> = new Set(["scorers:add"]);
+
 // Somebody given a part by their email address, in a field beside the list,
 // and the part taken by Remove, which asks first, since what it does is gone
 // rather than set aside. A tournament's Managers and Scorers tabs
@@ -163,13 +167,21 @@ export const People = ({
     words: say(knows(code) ? code : otherwise),
   });
 
+  // The list is still read at /api/site, and what each change is asked of has
+  // moved to /api/v0 one at a time (movedToV0), so the address of a change is
+  // chosen by what it is.
+  const changesAt = (change: "add" | "remove"): string =>
+    movedToV0.has(`${name}:${change}`)
+      ? at.replace("/api/site/", "/api/v0/")
+      : at;
+
   const add = async (): Promise<void> => {
     if (adding.current) return;
     adding.current = true;
     setRemoveRefused(undefined);
     setSending((count) => count + 1);
     try {
-      const response = await fetch(at, {
+      const response = await fetch(changesAt("add"), {
         method: "POST",
         headers: {
           accept: "application/json",
@@ -185,12 +197,13 @@ export const People = ({
         field.current?.focus();
       } else {
         const answer = (await response.json()) as {
+          code?: string;
           error?: string;
           broken?: { code: string }[];
         };
         setRefused(
           answer.broken?.map(({ code }) => refusal(code, words.otherwise)) ?? [
-            refusal(answer.error ?? "Unknown", words.otherwise),
+            refusal(answer.code ?? answer.error ?? "Unknown", words.otherwise),
           ],
         );
       }
@@ -206,10 +219,13 @@ export const People = ({
     setRemoveRefused(undefined);
     setSending((count) => count + 1);
     try {
-      const response = await fetch(`${at}/${idInAddress(person.id)}/remove`, {
-        method: "POST",
-        headers: { accept: "application/json" },
-      });
+      const response = await fetch(
+        `${changesAt("remove")}/${idInAddress(person.id)}/remove`,
+        {
+          method: "POST",
+          headers: { accept: "application/json" },
+        },
+      );
       if (response.ok) removed?.(person);
       else setRemoveRefused(await refusalOf(response));
     } catch {
