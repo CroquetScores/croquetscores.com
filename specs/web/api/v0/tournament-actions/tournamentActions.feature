@@ -1,9 +1,11 @@
 @postgres
-Feature: A tournament is archived, restored and judged through the API
+Feature: A tournament is archived, restored, judged and deleted through the API
 
   A tournament is set aside, brought back, or has its notable status taken
   away by sending `POST /api/v0/tournaments/{id}/{action}` with no body, with
-  the tournament named by the part of its id after "tournament/". The account
+  the tournament named by the part of its id after "tournament/". An
+  administrator deletes a test tournament by sending the words its managers
+  are told, and whether it is archived as well. The account
   that asks, by session or by key (`writer.feature`), must be allowed to do it
   to that tournament; what the tournament refuses is answered with its code,
   as the API answers any refusal (`errors.feature`).
@@ -122,4 +124,42 @@ Feature: A tournament is archived, restored and judged through the API
     Scenario: The address it was at is gone
       Given the caller is signed in as "admin@example.com"
       When the notable status of the tournament "Spring Open" is removed at the address it was at
+      Then the API answers 404
+
+  Rule: An administrator deletes a test tournament
+
+    "Deleting" is the administrator's word: nothing the site keeps is deleted,
+    so the managers are told, and the tournament is archived where that is asked.
+
+    Scenario: An administrator deletes a test tournament and archives it
+      Given the caller is signed in as "admin@example.com"
+      When the tournament "Spring Open" is deleted with the words "This was a test." and archived
+      Then the API answers 204
+
+    Scenario: A tournament deleted and archived is listed as archived
+      Given the caller is signed in as "admin@example.com"
+      And the tournament "Spring Open" is deleted with the words "This was a test." and archived
+      When the archived tournaments are asked with that key
+      Then the archived tournaments are "Spring Open"
+
+    Scenario: A tournament deleted and not archived is not listed as archived
+      Given the caller is signed in as "admin@example.com"
+      And the tournament "Spring Open" is deleted with the words "This was a test." and not archived
+      When the archived tournaments are asked with that key
+      Then no tournaments are listed as archived
+
+    Scenario: A reader who is not signed in may not delete it
+      When the tournament "Spring Open" is deleted with the words "This was a test." and archived
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A manager who is no administrator may not delete it
+      Given the caller is signed in as "organiser@example.com"
+      When the tournament "Spring Open" is deleted with the words "This was a test." and archived
+      Then the API answers 422
+      And the API's code is "Account.NotAnAdministrator"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "admin@example.com"
+      When the tournament "Spring Open" is deleted at the address it was at
       Then the API answers 404
