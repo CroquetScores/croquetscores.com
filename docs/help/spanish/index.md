@@ -25,3 +25,7 @@
 - [Responsables del ranking mundial](world-ranking-officers/index.md)
 
   Lo que la lista de torneos de la administración y la pestaña Rankings de un torneo te dan además de los torneos que llevas.
+
+- [Desarrolladores de aplicaciones](api/index.md)
+
+  La API de la que una aplicación lee torneos: sus claves y límites, cómo preguntar con economía y qué puede añadirse a una respuesta sin una versión nueva.

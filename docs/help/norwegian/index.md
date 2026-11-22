@@ -25,3 +25,7 @@
 - [Verdensrangeringsansvarlige](world-ranking-officers/index.md)
 
   Hva adminlisten over turneringer og en turnerings fane Rangeringer gir deg utover turneringene du driver.
+
+- [Apputviklere](api/index.md)
+
+  API-et en app leser turneringer fra: nøkler og kvoter, hvordan man spør billig og hva som kan legges til i et svar uten en ny versjon.

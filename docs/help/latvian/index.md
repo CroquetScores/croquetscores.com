@@ -25,3 +25,7 @@
 - [Pasaules ranga atbildīgie](world-ranking-officers/index.md)
 
   Ko turnīru saraksts administrēšanas sadaļā un turnīra cilne Rangi jums dod papildus turnīriem, ko vadāt.
+
+- [Lietotņu izstrādātāji](api/index.md)
+
+  API, no kura lietotne lasa turnīrus: tā atslēgas un limiti, kā pieprasīt lēti un ko atbildei var pievienot bez jaunas versijas.
