@@ -6,10 +6,10 @@ Feature: The home page lists recent results and upcoming tournaments
   things: the recent results, which are the tournaments a game has been added
   to in the last seven days, the most recently played first
   (`RecentResults.feature`); and the upcoming tournaments, which are those
-  being played today or starting within sixty days from today, the soonest
-  started first (`UpcomingTournaments.feature`). Beneath the upcoming tournaments is the way
-  to every tournament this year, for a reader after one further off or long
-  finished.
+  started in the last two days and not yet finished, or starting within sixty
+  days from today, the soonest started first (`UpcomingTournaments.feature`).
+  Beneath the upcoming tournaments is the way to every tournament this year,
+  for a reader after one further off or long finished.
 
   Between the filter and the recent results is a third list, which only a
   reader who has opened a tournament lately has: the tournaments their device
@@ -197,7 +197,7 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then "Spring Open" is not in the recent results
 
-  Rule: The upcoming tournaments are those being played today, and those starting within sixty days from today
+  Rule: The upcoming tournaments are those that started in the last two days and have not finished, and those starting within sixty days from today
 
     Scenario: A tournament starting today is in the upcoming tournaments
       Given "organiser@example.com" has created the tournament "Spring Open"
@@ -223,6 +223,20 @@ Feature: The home page lists recent results and upcoming tournaments
       And the tournament "Spring Open" finishes on "2026-10-04"
       When the home page is opened
       Then "Spring Open" is in the upcoming tournaments
+
+    Scenario: A tournament that started two days ago and finishes later is in the upcoming tournaments
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-09-30"
+      And the tournament "Spring Open" finishes on "2026-10-04"
+      When the home page is opened
+      Then "Spring Open" is in the upcoming tournaments
+
+    Scenario: A tournament that started three days ago and finishes later is not in the upcoming tournaments
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-09-29"
+      And the tournament "Spring Open" finishes on "2026-10-04"
+      When the home page is opened
+      Then "Spring Open" is not in the upcoming tournaments
 
     Scenario: A tournament that finished yesterday is not in the upcoming tournaments
       Given "organiser@example.com" has created the tournament "Spring Open"

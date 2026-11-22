@@ -134,16 +134,18 @@ export class TournamentsByWebsite implements Asked {
     website: Website,
     first: string,
     last: string,
+    startedFrom: string,
     filter: TournamentFilter,
   ): Promise<readonly TournamentOfWebsite[]> {
-    const narrowed = narrowedBy(filter, 4);
+    const narrowed = narrowedBy(filter, 5);
     const { rows } = await this.unitOfWork.connection().query<Row>(
       `select ${COLUMNS}
            from tournaments t
           where t.website = $1 and not t.archived
-            and t.starts <= $3 and t.finishes >= $2 ${narrowed.where}
+            and t.starts <= $3 and t.finishes >= $2 and t.starts >= $4
+            ${narrowed.where}
           order by t.starts, t.name`,
-      [website.host, first, last, ...narrowed.values],
+      [website.host, first, last, startedFrom, ...narrowed.values],
     );
     return rows.map(listed);
   }

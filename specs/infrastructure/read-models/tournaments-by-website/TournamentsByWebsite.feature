@@ -268,33 +268,48 @@ Feature: Finding a website's tournaments by when they were played and when they 
     it, so a tournament that started before the first day is still found while
     it has not finished. The ends are both days it is played, so a tournament
     finishing on the first day is found, and one that finished the day before
-    is not.
+    is not. Those that started before a day of its own are left out, so that a
+    tournament played for weeks is not found for as long as it is played.
+
+    Scenario: A tournament that started before the day it may start from is not found
+      Given a tournament "Spring Open" to start on "2026-09-20"
+      And "Spring Open" to finish on "2026-10-04"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments under way or starting from "2026-10-02" to "2026-12-01", started from "2026-09-30", are looked for
+      Then "Spring Open" is not found
+
+    Scenario: A tournament that started on the day it may start from is found
+      Given a tournament "Spring Open" to start on "2026-09-30"
+      And "Spring Open" to finish on "2026-10-04"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments under way or starting from "2026-10-02" to "2026-12-01", started from "2026-09-30", are looked for
+      Then "Spring Open" is found
 
     Scenario: A tournament that started before the first day and finishes after it is found
       Given a tournament "Spring Open" to start on "2026-10-01"
       And "Spring Open" to finish on "2026-10-04"
       And "Spring Open" is created by the account for "organiser@example.com"
-      When the tournaments under way or starting from "2026-10-02" to "2026-12-01" are looked for
+      When the tournaments under way or starting from "2026-10-02" to "2026-12-01", started from "2026-09-01", are looked for
       Then "Spring Open" is found
 
     Scenario: A tournament finishing on the first day is found
       Given a tournament "Spring Open" to start on "2026-09-30"
       And "Spring Open" to finish on "2026-10-02"
       And "Spring Open" is created by the account for "organiser@example.com"
-      When the tournaments under way or starting from "2026-10-02" to "2026-12-01" are looked for
+      When the tournaments under way or starting from "2026-10-02" to "2026-12-01", started from "2026-09-01", are looked for
       Then "Spring Open" is found
 
     Scenario: A tournament finishing before the first day is not found
       Given a tournament "Spring Open" to start on "2026-09-29"
       And "Spring Open" to finish on "2026-10-01"
       And "Spring Open" is created by the account for "organiser@example.com"
-      When the tournaments under way or starting from "2026-10-02" to "2026-12-01" are looked for
+      When the tournaments under way or starting from "2026-10-02" to "2026-12-01", started from "2026-09-01", are looked for
       Then "Spring Open" is not found
 
     Scenario: A tournament starting after the last day is not found as under way
       Given a tournament "Spring Open" to start on "2026-12-02"
       And "Spring Open" is created by the account for "organiser@example.com"
-      When the tournaments under way or starting from "2026-10-02" to "2026-12-01" are looked for
+      When the tournaments under way or starting from "2026-10-02" to "2026-12-01", started from "2026-09-01", are looked for
       Then "Spring Open" is not found
 
     Scenario: A tournament that started first comes first
@@ -303,7 +318,7 @@ Feature: Finding a website's tournaments by when they were played and when they 
       And a tournament "Spring Open" to start on "2026-10-01"
       And "Spring Open" to finish on "2026-10-04"
       And "Spring Open" is created by the account for "organiser@example.com"
-      When the tournaments under way or starting from "2026-10-02" to "2026-12-01" are looked for
+      When the tournaments under way or starting from "2026-10-02" to "2026-12-01", started from "2026-09-01", are looked for
       Then the first tournament found is "Spring Open"
       And the second tournament found is "Autumn Open"
 

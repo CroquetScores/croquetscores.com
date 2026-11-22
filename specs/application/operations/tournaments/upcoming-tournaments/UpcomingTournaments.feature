@@ -1,11 +1,11 @@
 @postgres
 Feature: The tournaments about to start
 
-  The home page lists the tournaments that are being played today, and those
-  that start from tomorrow to sixty days from today, the soonest started
-  first (`home.feature`). The application answers them: each with its name,
-  its dates, the country it is played in, and where it is found, as recent
-  results are (`RecentResults.feature`).
+  The home page lists the tournaments that started in the last two days and
+  have not finished, and those that start from today to sixty days from
+  today, the soonest started first (`home.feature`). The application answers
+  them: each with its name, its dates, the country it is played in, and where
+  it is found, as recent results are (`RecentResults.feature`).
 
   A tournament's days are kept as days, with no time of day and no time zone
   of their own, so today is the day of the moment the reader asked, in UTC,
@@ -16,10 +16,13 @@ Feature: The tournaments about to start
 
   A tournament that started before today and has not yet finished is still
   answered, since a reader looking for what is on today wants it as much as
-  one that starts today. It is answered on its finishing day too, and not the
-  day after. It was once left to the recent results, which only list it once
-  a game is added to it, so a tournament nobody had yet scored was listed
-  nowhere on the days it was played (issue 744).
+  one that starts today, but only if it started no more than two days before
+  today: one that started longer ago is left to the recent results, which list
+  it once a game is added to it, and the list does not fill with long
+  tournaments that have been played for weeks. It is answered on its
+  finishing day too, and not the day after. It was once left to the recent
+  results alone, so a tournament nobody had yet scored was listed nowhere on
+  the days it was played (issue 744).
 
   Tournaments starting on the same day are answered by name, so that the
   order does not change from one visit to the next. An archived tournament is
@@ -45,7 +48,7 @@ Feature: The tournaments about to start
     And the tournament is to be played in the country "nz"
     And the tournament is to be played in the region "can"
 
-  Rule: A tournament being played today, or starting within sixty days from today, is answered
+  Rule: A tournament that started in the last two days and has not finished, or starts within sixty days from today, is answered
 
     Scenario: A tournament starting today is answered
       Given the tournament is to start at "2026-10-02T00:00:00Z"
@@ -77,6 +80,20 @@ Feature: The tournaments about to start
       And "organiser@example.com" has created the tournament "Spring Open"
       When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
       Then "Spring Open" is answered
+
+    Scenario: A tournament that started two days ago and finishes later is answered
+      Given the tournament is to start at "2026-09-30T00:00:00Z"
+      And the tournament is to finish at "2026-10-04T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
+      Then "Spring Open" is answered
+
+    Scenario: A tournament that started three days ago and finishes later is not answered
+      Given the tournament is to start at "2026-09-29T00:00:00Z"
+      And the tournament is to finish at "2026-10-04T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the upcoming tournaments are asked for at "2026-10-02T10:00:00Z"
+      Then "Spring Open" is not answered
 
     Scenario: A tournament finishing today is answered
       Given the tournament is to start at "2026-09-30T00:00:00Z"

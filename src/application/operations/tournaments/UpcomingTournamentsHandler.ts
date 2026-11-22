@@ -9,8 +9,12 @@ import {
 import { UpcomingTournaments } from "./UpcomingTournaments.js";
 
 // Sixty days from today is the last day a tournament may start on and be
-// answered. A tournament already under way is answered until it finishes.
+// answered. A tournament already under way is answered until it finishes, if
+// it started no more than two days before today: one that has been played
+// longer is left to the recent results, and the list does not fill with the
+// tournaments of weeks.
 const DAYS_AHEAD = 60;
+const DAYS_BACK = 2;
 
 // The day of `moment` in UTC, as a tournament's days are kept, written as the
 // year, the month and the day.
@@ -36,10 +40,13 @@ export class UpcomingTournamentsHandler extends QueryHandler<
     );
     const last = new Date(today);
     last.setUTCDate(last.getUTCDate() + DAYS_AHEAD);
+    const earliest = new Date(today);
+    earliest.setUTCDate(earliest.getUTCDate() - DAYS_BACK);
     return this.byWebsite.underwayOrStartingBetween(
       website,
       dayOf(new Date(today)),
       dayOf(last),
+      dayOf(earliest),
       filterFor(website, query.chose, "UpcomingTournaments"),
     );
   }
