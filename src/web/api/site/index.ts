@@ -34,7 +34,6 @@ import { UpdateBlock } from "../../../application/operations/tournaments/UpdateB
 import { UpdateKnockout } from "../../../application/operations/tournaments/UpdateKnockout.js";
 import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateSwiss.js";
 import { DeleteTournament } from "../../../application/operations/tournaments/DeleteTournament.js";
-import { RemoveNotableStatus } from "../../../application/operations/tournaments/RemoveNotableStatus.js";
 import { ArchiveCompetition } from "../../../application/operations/tournaments/ArchiveCompetition.js";
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
@@ -413,29 +412,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         .send({ address: after.address });
     },
   );
-
-  // The tournament by the part of its id after "tournament/", so that the id
-  // is one segment of the address rather than two.
-  for (const [action, making] of [
-    // An administrator's, who judges it neither national nor international.
-    ["remove-notable-status", RemoveNotableStatus],
-  ] as const) {
-    server.post<{ Params: { id: string } }>(
-      `/tournaments/:id/${action}`,
-      async (request, reply) => {
-        const reader = signedInOrRefused(request, reply);
-        if (reader === undefined) return reply;
-        await request.server.mediator.send(
-          new making(
-            reader.value,
-            `tournament/${request.params.id}`,
-            request.requestedAt,
-          ),
-        );
-        return reply.code(204).header("cache-control", "no-store").send();
-      },
-    );
-  }
 
   // A test tournament deleted, as an administrator judges it: its managers
   // told what was written, and the tournament archived where `archive` is

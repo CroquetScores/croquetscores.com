@@ -19,6 +19,8 @@ Feature: A tournament is archived, restored and judged through the API
     And "stranger@example.com" has an account, confirmed, called "Sam Stranger"
     And "reader@example.com" has an account, confirmed, called "Rae Reader"
     And "reader@example.com" has made a key that may only read
+    And "admin@example.com" has an account, confirmed, called "Ada Administrator"
+    And "admin@example.com" has been given the role "Administrator"
     And "organiser@example.com" has created the tournament "Spring Open"
 
   Rule: A tournament is archived by its manager
@@ -86,4 +88,38 @@ Feature: A tournament is archived, restored and judged through the API
     Scenario: The address it was at is gone
       Given the caller is signed in as "organiser@example.com"
       When the tournament "Spring Open" is restored at the address it was at
+      Then the API answers 404
+
+  Rule: An administrator removes a tournament's notable status
+
+    A tournament is national or international as its manager says, and an
+    administrator who judges it is neither removes that, which no manager may.
+
+    Scenario: An administrator removes its national status
+      Given the tournament "Spring Open" is national
+      And the caller is signed in as "admin@example.com"
+      When the notable status of the tournament "Spring Open" is removed
+      Then the API answers 204
+
+    Scenario: A tournament whose status was removed is no longer national
+      Given the tournament "Spring Open" is national
+      And the caller is signed in as "admin@example.com"
+      And the notable status of the tournament "Spring Open" is removed
+      When the tournament "Spring Open" is read with that key
+      Then the tournament read says it is not national
+
+    Scenario: A reader who is not signed in may not remove it
+      When the notable status of the tournament "Spring Open" is removed
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A manager who is no administrator may not remove it
+      Given the tournament "Spring Open" is national
+      And the caller is signed in as "organiser@example.com"
+      When the notable status of the tournament "Spring Open" is removed
+      Then the API answers 422
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "admin@example.com"
+      When the notable status of the tournament "Spring Open" is removed at the address it was at
       Then the API answers 404
