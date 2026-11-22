@@ -10,6 +10,7 @@ import { AddScorer } from "../../../application/operations/tournaments/AddScorer
 import { textOf } from "../../common/requestBody.js";
 import { RemoveScorer } from "../../../application/operations/tournaments/RemoveScorer.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
+import { RemoveManager } from "../../../application/operations/tournaments/RemoveManager.js";
 import { writerOf } from "./writer.js";
 
 export const tournamentPeopleOfApps: FastifyPluginAsync = (server) => {
@@ -63,6 +64,25 @@ export const tournamentPeopleOfApps: FastifyPluginAsync = (server) => {
           writer.value,
           tournament,
           textOf(request.body, "emailAddress"),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A manager taken off, by the part of their account's id after "account/".
+  server.post<{ Params: { id: string; account: string } }>(
+    "/tournaments/:id/managers/:account/remove",
+    async (request, reply) => {
+      const tournament = `tournament/${request.params.id}`;
+      const writer = writerOf(request, reply, tournament);
+      if (writer === undefined) return reply;
+      await request.server.mediator.send(
+        new RemoveManager(
+          writer.value,
+          tournament,
+          `account/${request.params.account}`,
           request.requestedAt,
         ),
       );
