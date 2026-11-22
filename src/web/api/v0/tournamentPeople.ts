@@ -9,6 +9,7 @@ import type { FastifyPluginAsync } from "fastify";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
 import { textOf } from "../../common/requestBody.js";
 import { RemoveScorer } from "../../../application/operations/tournaments/RemoveScorer.js";
+import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { writerOf } from "./writer.js";
 
 export const tournamentPeopleOfApps: FastifyPluginAsync = (server) => {
@@ -43,6 +44,25 @@ export const tournamentPeopleOfApps: FastifyPluginAsync = (server) => {
           writer.value,
           tournament,
           `account/${request.params.account}`,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // Somebody made a manager, by their email address.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/managers",
+    async (request, reply) => {
+      const tournament = `tournament/${request.params.id}`;
+      const writer = writerOf(request, reply, tournament);
+      if (writer === undefined) return reply;
+      await request.server.mediator.send(
+        new AddManager(
+          writer.value,
+          tournament,
+          textOf(request.body, "emailAddress"),
           request.requestedAt,
         ),
       );

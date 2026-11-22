@@ -93,3 +93,37 @@ Feature: A tournament's scorers and managers are made and taken off through the 
       And the caller is signed in as "organiser@example.com"
       When the scorer "Sam Someone" is taken off "Spring Open" at the address it was at
       Then the API answers 404
+
+  Rule: Somebody is made a manager
+
+    Scenario: A manager makes somebody a manager
+      Given the caller is signed in as "organiser@example.com"
+      When "someone@example.com" is made a manager of "Spring Open"
+      Then the API answers 204
+
+    Scenario: A manager made is listed
+      Given the caller is signed in as "organiser@example.com"
+      And "someone@example.com" is made a manager of "Spring Open"
+      When the managers of "Spring Open" are listed to the caller
+      Then the site lists the person "Sam Someone"
+
+    Scenario: An address with no account is refused
+      Given the caller is signed in as "organiser@example.com"
+      When "nobody@example.com" is made a manager of "Spring Open"
+      Then the API answers 422
+
+    Scenario: A reader who is not signed in may not make one
+      When "someone@example.com" is made a manager of "Spring Open"
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not make one
+      Given the caller is signed in as "stranger@example.com"
+      When "someone@example.com" is made a manager of "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When "someone@example.com" is made a manager of "Spring Open" at the address it was at
+      Then the API answers 404
