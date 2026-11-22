@@ -6,10 +6,14 @@
 import type { FastifyPluginAsync } from "fastify";
 
 import { ArchiveTournament } from "../../../application/operations/tournaments/ArchiveTournament.js";
+import { RestoreTournament } from "../../../application/operations/tournaments/RestoreTournament.js";
 import { writerOf } from "./writer.js";
 
 export const tournamentActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const [action, making] of [["archive", ArchiveTournament]] as const) {
+  for (const [action, making] of [
+    ["archive", ArchiveTournament],
+    ["restore", RestoreTournament],
+  ] as const) {
     server.post<{ Params: { id: string } }>(
       `/tournaments/:id/${action}`,
       async (request, reply) => {
