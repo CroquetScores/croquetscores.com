@@ -284,9 +284,10 @@ Then(
 );
 
 Then(
-  "the player {string} says their handicap is {string}",
-  function (this: WebWorld, name: string, said: string) {
-    assert.equal(namedIn(this, "players", name)["handicap"], said);
+  "the player {string} says their handicap is the number {float}",
+  function (this: WebWorld, name: string, said: number) {
+    // Strictly: "5" as a string is not the number 5.
+    assert.strictEqual(namedIn(this, "players", name)["handicap"], said);
   },
 );
 

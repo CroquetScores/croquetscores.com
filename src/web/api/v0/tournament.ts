@@ -69,7 +69,9 @@ export const tournamentOfApps: FastifyPluginAsync = (server) => {
                 id: each.id,
                 name: each.name,
                 worldRankingName: each.worldRankingName,
-                handicap: each.handicap ?? null,
+                // A number, as a handicap is, though the read model has it as text.
+                handicap:
+                  each.handicap === undefined ? null : Number(each.handicap),
                 representing: each.representing ?? null,
               }),
             ),

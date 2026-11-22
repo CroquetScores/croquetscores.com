@@ -13,7 +13,7 @@ Feature: An app reads a tournament, its competitions and its players
   and when it last changed. Each competition says its id, its name, which kind
   it is, where its page is on the site (its uri) and where the API tells of it
   (its href), and when it last changed, and each player their id, name, the name the
-  world rankings know them by, their handicap and who they represent, where
+  world rankings know them by, their handicap, a number, and who they represent, where
   they have one. A kind is a block, a Swiss, a knockout or a test, which is
   the site's word for a match between two teams. A tournament played by teams
   says its teams, each with its players, and has no players of its own.
@@ -189,11 +189,19 @@ Feature: An app reads a tournament, its competitions and its players
       When the tournament "Spring Open" is read with that key
       Then the player "Sam Someone" says their world ranking name is "Sam Someone"
 
-    Scenario: A player says their handicap
-      Given the player is to have the handicap "5"
+    Scenario Outline: A player says their handicap as a number
+      Given the player is to have the handicap "<written>"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the tournament "Spring Open" is read with that key
-      Then the player "Sam Someone" says their handicap is "5"
+      Then the player "Sam Someone" says their handicap is the number <said>
+
+      Examples:
+        | written | said |
+        | 5       | 5    |
+        | 4.0     | 4    |
+        | +4      | 4    |
+        | -1.5    | -1.5 |
+        | 0       | 0    |
 
     Scenario: A player says who they represent
       Given the player is to represent "Sydney"
