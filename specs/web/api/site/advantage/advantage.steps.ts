@@ -293,7 +293,7 @@ When(
       this,
       host,
       "POST",
-      `/tournaments/${sceneOf(this).tournaments.get(tournament)!}/tests`,
+      `/api/v0/tournaments/${sceneOf(this).tournaments.get(tournament)!}/tests`,
       testBody(this, tournament, first, second, said),
     );
   },
