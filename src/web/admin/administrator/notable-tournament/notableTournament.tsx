@@ -83,7 +83,7 @@ export const NotableTournament = (): React.JSX.Element => {
     setRefused(undefined);
     try {
       const response = await fetch(
-        `/api/site/tournaments/${idInAddress(judged.id)}/remove-notable-status`,
+        `/api/v0/tournaments/${idInAddress(judged.id)}/remove-notable-status`,
         { method: "POST" },
       );
       if (!response.ok) setRefused(await refusalOf(response));
