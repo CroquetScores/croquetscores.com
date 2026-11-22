@@ -414,7 +414,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     // the tournament is now rather than what the reader pressed.
     try {
       await fetch(
-        `/api/site/tournaments/${idInAddress(tournament.id)}/${action}`,
+        `/api/${action === "archive" ? "v0" : "site"}/tournaments/${idInAddress(tournament.id)}/${action}`,
         { method: "POST" },
       );
     } catch {
