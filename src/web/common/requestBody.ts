@@ -5,6 +5,7 @@
 // by /api/site and /api/v0 so that a route moved from the one to the other
 // reads its body as it did.
 import type { LosersKnockoutSaid } from "../../application/operations/tournaments/AddKnockout.js";
+import type { TestRequest } from "../../application/operations/tournaments/testOperations.js";
 import type { TournamentRequest } from "../../application/operations/tournaments/tournamentOperations.js";
 import type { CompetitionRulesSaid } from "../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 
@@ -196,5 +197,25 @@ export const teamPlayerFrom = (body: unknown) => {
   return {
     name: textOf(body, "name"),
     ...(worldRankingName === "" ? {} : { worldRankingName }),
+  };
+};
+
+// What a test is, as the test dialog sends it: its teams by the part of
+// their ids after "team/", nothing where none was chosen, for the request
+// to refuse.
+export const testFrom = (body: unknown): TestRequest => {
+  const team = (field: string): string | undefined => {
+    const said = textOf(body, field);
+    return said === "" ? undefined : `team/${said}`;
+  };
+  return {
+    firstTeam: team("firstTeam"),
+    secondTeam: team("secondTeam"),
+    starts: textOf(body, "starts"),
+    finishes: textOf(body, "finishes"),
+    expectedMatches: numberOf(body, "expectedMatches"),
+    bestOf: numberOf(body, "bestOf"),
+    group: textOf(body, "group"),
+    rules: rulesOf(body),
   };
 };

@@ -11,7 +11,11 @@ import type {
 import { PassThrough } from "node:stream";
 
 import { helpSearchRoute } from "./helpSearch.js";
-import { teamFrom, teamPlayerFrom } from "../../common/requestBody.js";
+import {
+  teamFrom,
+  teamPlayerFrom,
+  testFrom,
+} from "../../common/requestBody.js";
 import { noteBodyLimit, noteFrom } from "../../common/requestBody.js";
 import {
   oneOf,
@@ -43,7 +47,6 @@ import { DeleteManagerNote } from "../../../application/operations/tournaments/D
 import { EditManagerNote } from "../../../application/operations/tournaments/EditManagerNote.js";
 import { ManagerNotesOfTournament } from "../../../application/operations/tournaments/ManagerNotesOfTournament.js";
 import { ManagerNoteToEdit } from "../../../application/operations/tournaments/ManagerNoteToEdit.js";
-import { AddTest } from "../../../application/operations/tournaments/AddTest.js";
 import { ArchiveTeam } from "../../../application/operations/tournaments/ArchiveTeam.js";
 import { ArchiveTeamPlayer } from "../../../application/operations/tournaments/ArchiveTeamPlayer.js";
 import { MoveTeam } from "../../../application/operations/tournaments/MoveTeam.js";
@@ -54,7 +57,6 @@ import { RestoreTeam } from "../../../application/operations/tournaments/Restore
 import { RestoreTeamPlayer } from "../../../application/operations/tournaments/RestoreTeamPlayer.js";
 import { TeamPage } from "../../../application/operations/tournaments/TeamPage.js";
 import { TeamsOfTournament } from "../../../application/operations/tournaments/TeamsOfTournament.js";
-import type { TestRequest } from "../../../application/operations/tournaments/testOperations.js";
 import { UpdateTeam } from "../../../application/operations/tournaments/UpdateTeam.js";
 import { UpdateTeamPlayer } from "../../../application/operations/tournaments/UpdateTeamPlayer.js";
 import { UpdateTest } from "../../../application/operations/tournaments/UpdateTest.js";
@@ -1348,58 +1350,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       },
     );
   }
-
-  // What a test is, as the test dialog sends it: its teams by the part of
-  // their ids after "team/", nothing where none was chosen, for the request
-  // to refuse.
-  const testFrom = (body: unknown): TestRequest => {
-    const team = (field: string): string | undefined => {
-      const said = textOf(body, field);
-      return said === "" ? undefined : `team/${said}`;
-    };
-    return {
-      firstTeam: team("firstTeam"),
-      secondTeam: team("secondTeam"),
-      starts: textOf(body, "starts"),
-      finishes: textOf(body, "finishes"),
-      expectedMatches: numberOf(body, "expectedMatches"),
-      bestOf: numberOf(body, "bestOf"),
-      group: textOf(body, "group"),
-      rules: rulesOf(body),
-    };
-  };
-
-  // A test added, and answered with its id, which is a competition's. It is
-  // moved, archived and restored as any competition is.
-  server.post<{ Params: { id: string } }>(
-    "/tournaments/:id/tests",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      if (
-        await makesAdvantageNotOffered(
-          request,
-          reader,
-          `tournament/${request.params.id}`,
-          undefined,
-        )
-      ) {
-        return refusedAsNotOffered(reply);
-      }
-      const added = await request.server.mediator.send(
-        new AddTest(
-          reader.value,
-          `tournament/${request.params.id}`,
-          testFrom(request.body),
-          request.requestedAt,
-        ),
-      );
-      return reply
-        .code(201)
-        .header("cache-control", "no-store")
-        .send({ id: added.value });
-    },
-  );
 
   // A test changed, by the part of its id after "competition/".
   server.put<{ Params: { id: string; test: string } }>(
