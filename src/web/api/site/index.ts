@@ -11,6 +11,7 @@ import type {
 import { PassThrough } from "node:stream";
 
 import { helpSearchRoute } from "./helpSearch.js";
+import { teamFrom } from "../../common/requestBody.js";
 import { noteBodyLimit, noteFrom } from "../../common/requestBody.js";
 import {
   oneOf,
@@ -42,7 +43,6 @@ import { DeleteManagerNote } from "../../../application/operations/tournaments/D
 import { EditManagerNote } from "../../../application/operations/tournaments/EditManagerNote.js";
 import { ManagerNotesOfTournament } from "../../../application/operations/tournaments/ManagerNotesOfTournament.js";
 import { ManagerNoteToEdit } from "../../../application/operations/tournaments/ManagerNoteToEdit.js";
-import { AddTeam } from "../../../application/operations/tournaments/AddTeam.js";
 import { AddTeamPlayer } from "../../../application/operations/tournaments/AddTeamPlayer.js";
 import { AddTest } from "../../../application/operations/tournaments/AddTest.js";
 import { ArchiveTeam } from "../../../application/operations/tournaments/ArchiveTeam.js";
@@ -1232,38 +1232,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         flag: flag === undefined ? undefined : flagAsSeen(request, flag),
       }));
       return reply.header("cache-control", "no-store").send({ teams });
-    },
-  );
-
-  // What a team is, as the team dialog sends it. Its flag is left out where
-  // none was chosen.
-  const teamFrom = (body: unknown) => {
-    const flag = textOf(body, "flag");
-    return {
-      name: textOf(body, "name"),
-      shortName: textOf(body, "shortName"),
-      ...(flag === "" ? {} : { flag }),
-    };
-  };
-
-  // A team added, and answered with its id.
-  server.post<{ Params: { id: string } }>(
-    "/tournaments/:id/teams",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      const added = await request.server.mediator.send(
-        new AddTeam(
-          reader.value,
-          `tournament/${request.params.id}`,
-          teamFrom(request.body),
-          request.requestedAt,
-        ),
-      );
-      return reply
-        .code(201)
-        .header("cache-control", "no-store")
-        .send({ id: added.value });
     },
   );
 

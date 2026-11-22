@@ -177,3 +177,14 @@ export const noteFrom = (body: unknown) => ({
   title: textOf(body, "title"),
   description: textOf(body, "description"),
 });
+
+// What a team is, as the team dialog sends it. Its flag is left out where
+// none was chosen.
+export const teamFrom = (body: unknown) => {
+  const flag = textOf(body, "flag");
+  return {
+    name: textOf(body, "name"),
+    shortName: textOf(body, "shortName"),
+    ...(flag === "" ? {} : { flag }),
+  };
+};

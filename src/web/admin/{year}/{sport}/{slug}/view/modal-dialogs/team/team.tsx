@@ -96,7 +96,9 @@ export const TeamDialog = ({
     setSending(true);
     try {
       const response = await fetch(
-        team === undefined ? at : `${at}/${idInAddress(team.id)}`,
+        team === undefined
+          ? at.replace("/api/site/", "/api/v0/")
+          : `${at}/${idInAddress(team.id)}`,
         {
           method: team === undefined ? "POST" : "PUT",
           headers: {
@@ -121,13 +123,14 @@ export const TeamDialog = ({
         nameField.current?.focus();
       } else {
         const answer = (await response.json()) as {
+          code?: string;
           error?: string;
           broken?: { code: string }[];
         };
         setAdded(undefined);
         setRefused(
           answer.broken?.map(({ code }) => refusal(code)) ?? [
-            refusal(answer.error ?? "Unknown"),
+            refusal(answer.code ?? answer.error ?? "Unknown"),
           ],
         );
       }
