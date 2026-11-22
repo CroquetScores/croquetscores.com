@@ -79,7 +79,6 @@ import { TournamentsInUnlistedCountries } from "../../../application/operations/
 import { RepresentingMatching } from "../../../application/operations/tournaments/RepresentingMatching.js";
 import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
-import { RemoveManager } from "../../../application/operations/tournaments/RemoveManager.js";
 import { ScorersOfTournament } from "../../../application/operations/tournaments/ScorersOfTournament.js";
 import { TournamentsOfAccount } from "../../../application/operations/tournaments/TournamentsOfAccount.js";
 import { TournamentYearsOfAccount } from "../../../application/operations/tournaments/TournamentYearsOfAccount.js";
@@ -552,24 +551,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply
         .header("cache-control", "no-store")
         .send({ managers, mayChange });
-    },
-  );
-
-  // A manager taken off, by the part of their account's id after "account/".
-  server.post<{ Params: { id: string; account: string } }>(
-    "/tournaments/:id/managers/:account/remove",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      await request.server.mediator.send(
-        new RemoveManager(
-          reader.value,
-          `tournament/${request.params.id}`,
-          `account/${request.params.account}`,
-          request.requestedAt,
-        ),
-      );
-      return reply.code(204).header("cache-control", "no-store").send();
     },
   );
 
