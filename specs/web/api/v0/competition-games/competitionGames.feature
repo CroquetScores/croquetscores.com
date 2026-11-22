@@ -74,3 +74,37 @@ Feature: A competition's games are recorded and changed through the API
       Given the caller is signed in as "organiser@example.com"
       When the game of "Ann Archer" beating "Bob Bowler" 26 to 10 is recorded in "Block A" of "Spring Open" at the address it was at
       Then the API answers 404
+
+  Rule: A game is corrected
+
+    Scenario: A manager corrects a game's scores
+      Given "Ann Archer" has beaten "Bob Bowler" 26 to 10 in "Block A" of "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is corrected to 26 to 12
+      Then the API answers 204
+
+    Scenario: A game corrected is listed with its new scores
+      Given "Ann Archer" has beaten "Bob Bowler" 26 to 10 in "Block A" of "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      And the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is corrected to 26 to 12
+      When the games of "Block A" in "Spring Open" are listed to the caller
+      Then the site lists the game as 26 to 12
+
+    Scenario: A reader who is not signed in may not correct it
+      Given "Ann Archer" has beaten "Bob Bowler" 26 to 10 in "Block A" of "Spring Open"
+      When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is corrected to 26 to 12
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not correct it
+      Given "Ann Archer" has beaten "Bob Bowler" 26 to 10 in "Block A" of "Spring Open"
+      And the caller is signed in as "stranger@example.com"
+      When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is corrected to 26 to 12
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManagerOrScorer"
+
+    Scenario: The address it was at is gone
+      Given "Ann Archer" has beaten "Bob Bowler" 26 to 10 in "Block A" of "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      When the game of "Ann Archer" beating "Bob Bowler" in "Block A" of "Spring Open" is corrected to 26 to 12 at the address it was at
+      Then the API answers 404
