@@ -25,6 +25,7 @@ Feature: Players are entered in a competition through the API
     And "organiser@example.com" has created the tournament "Spring Open"
     And "organiser@example.com" has added the block "Block A" to "Spring Open"
     And "organiser@example.com" has added the player "Ann Archer" to "Spring Open"
+    And "organiser@example.com" has added the player "Bob Bowler" to "Spring Open"
 
   Rule: A player is put into a competition
 
@@ -60,4 +61,34 @@ Feature: Players are entered in a competition through the API
     Scenario: The address it was at is gone
       Given the caller is signed in as "organiser@example.com"
       When the player "Ann Archer" is put into "Block A" of "Spring Open" at the address it was at
+      Then the API answers 404
+
+  Rule: Several players are entered at once
+
+    Scenario: A manager enters several players
+      Given the caller is signed in as "organiser@example.com"
+      When the players "Ann Archer" and "Bob Bowler" are put into "Block A" of "Spring Open"
+      Then the API answers 201
+      And the API says the ids of two players in the competition
+
+    Scenario: Players entered are listed in the competition
+      Given the caller is signed in as "organiser@example.com"
+      And the players "Ann Archer" and "Bob Bowler" are put into "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are listed to the caller
+      Then the first player the site lists is "Ann Archer"
+
+    Scenario: A reader who is not signed in may not enter them
+      When the players "Ann Archer" and "Bob Bowler" are put into "Block A" of "Spring Open"
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not enter them
+      Given the caller is signed in as "stranger@example.com"
+      When the players "Ann Archer" and "Bob Bowler" are put into "Block A" of "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the players "Ann Archer" and "Bob Bowler" are put into "Block A" of "Spring Open" at the address it was at
       Then the API answers 404

@@ -64,6 +64,50 @@ When(
   },
 );
 
+When(
+  "the players {string} and {string} are put into {string} of {string}",
+  async function (
+    this: WebWorld,
+    first: string,
+    second: string,
+    competition: string,
+    tournament: string,
+  ) {
+    await told(
+      this,
+      "POST",
+      `${competitionAt(this, competition, tournament, "/api/v0")}/players/many`,
+      {
+        players: [first, second].map(
+          (name) => playerOf(this, name, tournament).player,
+        ),
+      },
+    );
+  },
+);
+
+When(
+  "the players {string} and {string} are put into {string} of {string} at the address it was at",
+  async function (
+    this: WebWorld,
+    first: string,
+    second: string,
+    competition: string,
+    tournament: string,
+  ) {
+    await told(
+      this,
+      "POST",
+      `${competitionAt(this, competition, tournament, "/api/site")}/players/many`,
+      {
+        players: [first, second].map(
+          (name) => playerOf(this, name, tournament).player,
+        ),
+      },
+    );
+  },
+);
+
 // What the website's own page lists, which is how a manager sees who is in.
 When(
   "the players of {string} in {string} are listed to the caller",
@@ -94,5 +138,13 @@ Then(
   function (this: WebWorld, name: string) {
     const players = answered(this).body["players"] as { name: string }[];
     assert.equal(players[0]?.name, name);
+  },
+);
+
+Then(
+  "the API says the ids of two players in the competition",
+  function (this: WebWorld) {
+    const { ids } = answered(this).body;
+    assert.ok(Array.isArray(ids) && ids.length === 2);
   },
 );

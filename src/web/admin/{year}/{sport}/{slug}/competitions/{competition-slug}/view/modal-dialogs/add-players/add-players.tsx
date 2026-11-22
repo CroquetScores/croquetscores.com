@@ -80,7 +80,7 @@ export const AddPlayersDialog = ({
     setProblems([]);
     try {
       const response = await fetch(
-        `/api/site/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players/many`,
+        `/api/v0/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players/many`,
         {
           method: "POST",
           headers: {
@@ -99,6 +99,7 @@ export const AddPlayersDialog = ({
         return;
       }
       const answer = (await response.json().catch(() => ({}))) as {
+        code?: string;
         error?: string;
         broken?: Broken[];
       };
@@ -123,7 +124,7 @@ export const AddPlayersDialog = ({
           })),
         );
       } else {
-        setProblems([refusal(answer.error ?? "Unknown")]);
+        setProblems([refusal(answer.code ?? answer.error ?? "Unknown")]);
       }
     } catch {
       setProblems([refusal("Unknown")]);
