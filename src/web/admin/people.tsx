@@ -10,7 +10,10 @@ import "./people.css";
 
 // What a tab changes that is asked at /api/v0 now, by the tab and the change.
 // The list each tab shows is still read at /api/site.
-const movedToV0: ReadonlySet<string> = new Set(["scorers:add"]);
+const movedToV0: ReadonlySet<string> = new Set([
+  "scorers:add",
+  "scorers:remove",
+]);
 
 // Somebody given a part by their email address, in a field beside the list,
 // and the part taken by Remove, which asks first, since what it does is gone
