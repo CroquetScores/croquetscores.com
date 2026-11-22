@@ -44,10 +44,11 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   types in it, since then it is a name of its own; emptied, it follows the
   name again. A world ranking name left empty is kept as the player's name.
   A player being changed keeps the world ranking name they have when their
-  name is corrected, since the rankings still know them by it, so it follows
-  nothing while a player is changed. In American 6 Wicket it is the name
-  and nothing else, so it is corrected with it.
-  In a tournament of association or golf croquet, the name and the world
+  name is corrected, where the rankings know them by it. Where the rankings
+  do not know it, there is nothing there to keep, so it follows the corrected
+  name as it does while a player is added, until the reader types in it
+  themselves. In American 6 Wicket it is the name and nothing else, so it is
+  corrected with it. In a tournament of association or golf croquet, the name and the world
   ranking name each offer, as they are typed, the players the world rankings
   know for the tournament's sport whose names the typing may be the start of
   (`WorldRankingPlayersMatching.feature`), so that a manager can take a
@@ -569,8 +570,9 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Save" is pressed
       Then the player "Samantha Someone" of "Spring Open" represents "Canterbury Croquet Club"
 
-    Scenario: A renamed player keeps their world ranking name
-      Given the player is to have the world ranking name "Samuel Someone"
+    Scenario: A renamed player keeps the world ranking name the world rankings know
+      Given the association croquet players include "Samuel Someone"
+      And the player is to have the world ranking name "Samuel Someone"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And the page of "Spring Open" is open
       And the name of the player "Sam Someone" is pressed
@@ -578,13 +580,47 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Save" is pressed
       Then the player "Samantha Someone" of "Spring Open" has the world ranking name "Samuel Someone"
 
-    Scenario: The world ranking name does not follow the name while a player is changed
-      Given the player is to have the world ranking name "Samuel Someone"
+    Scenario: The world ranking name the world rankings know does not follow the name while a player is changed
+      Given the association croquet players include "Samuel Someone"
+      And the player is to have the world ranking name "Samuel Someone"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And the page of "Spring Open" is open
       And the name of the player "Sam Someone" is pressed
+      And the world ranking name is ticked
       When "Samantha Someone" is typed as the "Name"
       Then "World Ranking Player Name" says "Samuel Someone"
+
+    Scenario: The world ranking name the world rankings do not know follows the name while a player is changed
+      Given the association croquet players include "Keith Aiton"
+      And the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And the world ranking name is questioned
+      When "Samantha Someone" is typed as the "Name"
+      Then "World Ranking Player Name" says "Samantha Someone"
+
+    Scenario: A renamed player whose world ranking name the world rankings do not know is kept by the new name
+      Given the association croquet players include "Keith Aiton"
+      And the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And the world ranking name is questioned
+      And "Samantha Someone" is typed as the "Name"
+      When "Save" is pressed
+      Then the player "Samantha Someone" of "Spring Open" has the world ranking name "Samantha Someone"
+
+    Scenario: A world ranking name typed in no longer follows the name while a player is changed
+      Given the association croquet players include "Keith Aiton"
+      And the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And the world ranking name is questioned
+      And "Sammy Someone" is typed as the "World Ranking Player Name"
+      When "Samantha Someone" is typed as the "Name"
+      Then "World Ranking Player Name" says "Sammy Someone"
 
     Scenario: A player with no world ranking name saved is given their name
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
