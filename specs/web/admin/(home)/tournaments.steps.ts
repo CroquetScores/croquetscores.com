@@ -943,7 +943,7 @@ When("{string} is pressed", async function (this: WebWorld, option: string) {
     const to = new URL(response.url()).pathname;
     const method = response.request().method();
     return from === "/admin/tournaments/new"
-      ? to === "/api/site/tournaments" && method === "POST"
+      ? to === "/api/v0/tournaments" && method === "POST"
       : from.endsWith("/edit") &&
           to.startsWith("/api/site/tournaments/at/") &&
           method === "PUT";

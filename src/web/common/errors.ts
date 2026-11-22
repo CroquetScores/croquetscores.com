@@ -115,10 +115,16 @@ const sendFailure = (
     readonly field?: string | undefined;
   },
   site: unknown,
+  // What the public API says as well, where it has more to say than its one
+  // shape holds: every rule a request broke, as the website's pages need to
+  // say each beside its field, and as an app wants to show all at once.
+  alsoInPublicApi: object = {},
 ): FastifyReply =>
   sendJson(
     reply,
-    publicApi(request) ? apiError(said.code, said.message, said.field) : site,
+    publicApi(request)
+      ? { ...apiError(said.code, said.message, said.field), ...alsoInPublicApi }
+      : site,
   );
 
 // How long a program is told to wait before asking again. A guess at how
@@ -213,6 +219,7 @@ export const registerErrorMapping = (
             field: error.broken[0]?.fields[0],
           },
           { error: error.code, broken: error.broken },
+          { broken: error.broken },
         );
       }
       return sendPage(

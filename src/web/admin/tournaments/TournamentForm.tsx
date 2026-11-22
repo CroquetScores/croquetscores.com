@@ -75,13 +75,15 @@ const placed = (
     else (byField[field] ??= []).push(refusal(code));
   };
   const said = answer as {
+    code?: unknown;
     error?: unknown;
     broken?: { code: string; fields: string[] }[];
   };
   if (Array.isArray(said.broken)) {
     for (const rule of said.broken) put(rule.fields[0], rule.code);
-  } else if (typeof said.error === "string") {
-    put(fieldOfRefusal[said.error], said.error);
+  } else if (typeof (said.code ?? said.error) === "string") {
+    const code = (said.code ?? said.error) as string;
+    put(fieldOfRefusal[code], code);
   } else {
     above.push(refusal("Unknown"));
   }

@@ -27,6 +27,10 @@ interface Scene {
   earlier: Answer | undefined;
   /** A moment a scenario kept, to ask what changed since. */
   kept: string | undefined;
+  /** The session of the reader a scenario signed in, as their browser holds it. */
+  session: string | undefined;
+  /** The key the caller sends with what it changes, which may be one that does not work. */
+  sends: string | undefined;
 }
 
 const scenes = new WeakMap<WebWorld, Scene>();
@@ -40,6 +44,8 @@ export const sceneOf = (world: WebWorld): Scene => {
       answer: undefined,
       earlier: undefined,
       kept: undefined,
+      session: undefined,
+      sends: undefined,
     };
     scenes.set(world, scene);
   }
@@ -80,6 +86,14 @@ export const keyMade = (world: WebWorld): string => {
   return key;
 };
 
+let addressesGiven = 0;
+
+/** An address no other scenario of the run has asked from. */
+const nextAddress = (): string => {
+  addressesGiven += 1;
+  return `10.20.${String(Math.floor(addressesGiven / 250) % 250)}.${String((addressesGiven % 250) + 1)}`;
+};
+
 /** What a request sends to be counted against an address the scenario chose. */
 export const asIfFrom = (world: WebWorld): Record<string, string> => {
   const { address } = sceneOf(world);
@@ -93,6 +107,46 @@ export const asked = async (
 ): Promise<Answer> => {
   const answer = await fetch(`${world.baseUrl!}${path}`, {
     headers: { ...asIfFrom(world), ...headers },
+  });
+  const text = await answer.text();
+  const said: Answer = {
+    status: answer.status,
+    headers: answer.headers,
+    body: text === "" ? {} : (JSON.parse(text) as Record<string, unknown>),
+  };
+  sceneOf(world).answer = said;
+  return said;
+};
+
+/**
+ * Changes something as a caller does: with the session of the reader the
+ * scenario signed in, as their browser sends it from the site's own pages,
+ * and with the key it chose to send, as an app does. Either, both or neither,
+ * since which of them a route goes by is what the scenarios are about.
+ */
+export const told = async (
+  world: WebWorld,
+  method: "POST" | "PUT" | "DELETE",
+  path: string,
+  body?: object,
+): Promise<Answer> => {
+  const scene = sceneOf(world);
+  const { session, sends } = scene;
+  // Each scenario asks from an address of its own unless it chose one, so that
+  // what one is refused is not counted against the next: a caller with no key
+  // is counted by its address, and they would all be one address here.
+  scene.address ??= nextAddress();
+  const answer = await fetch(`${world.baseUrl!}${path}`, {
+    method,
+    headers: {
+      ...asIfFrom(world),
+      ...(session === undefined
+        ? {}
+        : { cookie: `session=${session}`, "sec-fetch-site": "same-origin" }),
+      ...(sends === undefined ? {} : bearer(sends)),
+      ...(body === undefined ? {} : { "content-type": "application/json" }),
+    },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
   const text = await answer.text();
   const said: Answer = {
@@ -125,6 +179,24 @@ Given(
   "{string} has made a key that may only read",
   async function (this: WebWorld, address: string) {
     await makeKey(this, address, false);
+  },
+);
+
+Given(
+  "the caller is signed in as {string}",
+  async function (this: WebWorld, address: string) {
+    sceneOf(this).session = await sessionFor(address);
+  },
+);
+
+Given("the caller sends that key", function (this: WebWorld) {
+  sceneOf(this).sends = keyMade(this);
+});
+
+Given(
+  "the caller sends the key {string}",
+  function (this: WebWorld, key: string) {
+    sceneOf(this).sends = key;
   },
 );
 
