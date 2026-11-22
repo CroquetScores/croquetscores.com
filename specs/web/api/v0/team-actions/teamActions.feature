@@ -107,3 +107,34 @@ Feature: A tournament's teams are moved, archived and restored through the API
       Given the caller is signed in as "organiser@example.com"
       When the team "Hampshire" of "Spring Open" is archived at the address it was at
       Then the API answers 404
+
+  Rule: A team is restored
+
+    Scenario: A manager restores an archived team
+      Given the caller is signed in as "organiser@example.com"
+      And the team "Hampshire" of "Spring Open" is archived
+      When the team "Hampshire" of "Spring Open" is restored
+      Then the API answers 204
+
+    Scenario: A team restored is no longer listed as archived
+      Given the caller is signed in as "organiser@example.com"
+      And the team "Hampshire" of "Spring Open" is archived
+      And the team "Hampshire" of "Spring Open" is restored
+      When the teams of "Spring Open" are listed to the caller
+      Then the site lists the team "Hampshire" as not archived
+
+    Scenario: A reader who is not signed in may not do it
+      When the team "Hampshire" of "Spring Open" is restored
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not do it
+      Given the caller is signed in as "stranger@example.com"
+      When the team "Hampshire" of "Spring Open" is restored
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the team "Hampshire" of "Spring Open" is restored at the address it was at
+      Then the API answers 404

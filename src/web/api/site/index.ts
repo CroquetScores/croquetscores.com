@@ -48,7 +48,6 @@ import { ArchiveTeamPlayer } from "../../../application/operations/tournaments/A
 import { MoveTeamPlayer } from "../../../application/operations/tournaments/MoveTeamPlayer.js";
 import { PlayersOfTeam } from "../../../application/operations/tournaments/PlayersOfTeam.js";
 import { PlayersOfTest } from "../../../application/operations/competitions/PlayersOfTest.js";
-import { RestoreTeam } from "../../../application/operations/tournaments/RestoreTeam.js";
 import { RestoreTeamPlayer } from "../../../application/operations/tournaments/RestoreTeamPlayer.js";
 import { TeamPage } from "../../../application/operations/tournaments/TeamPage.js";
 import { TeamsOfTournament } from "../../../application/operations/tournaments/TeamsOfTournament.js";
@@ -1217,25 +1216,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
-
-  // A team moved a place, archived or restored.
-  for (const action of ["restore"] as const) {
-    server.post<{ Params: { id: string; team: string } }>(
-      `/tournaments/:id/teams/:team/${action}`,
-      async (request, reply) => {
-        const reader = signedInOrRefused(request, reply);
-        if (reader === undefined) return reply;
-        const asked = [
-          reader.value,
-          `tournament/${request.params.id}`,
-          `team/${request.params.team}`,
-        ] as const;
-        const at = request.requestedAt;
-        await request.server.mediator.send(new RestoreTeam(...asked, at));
-        return reply.code(204).header("cache-control", "no-store").send();
-      },
-    );
-  }
 
   // A team's players, as its manager lists them.
   server.get<{ Params: { id: string; team: string } }>(
