@@ -143,7 +143,7 @@ export const ScoresTab = ({
       action === "restore" ? { code, game: game.id } : { code };
     try {
       const response = await fetch(
-        `${action === "unwithdraw" ? at : at.replace("/api/site/", "/api/v0/")}/${idInAddress(game.id)}/${action}`,
+        `${at.replace("/api/site/", "/api/v0/")}/${idInAddress(game.id)}/${action}`,
         {
           method: "POST",
         },
