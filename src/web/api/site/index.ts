@@ -81,7 +81,6 @@ import { WorldRankingPlayersMatching } from "../../../application/operations/wor
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
 import { RemoveManager } from "../../../application/operations/tournaments/RemoveManager.js";
-import { RemoveScorer } from "../../../application/operations/tournaments/RemoveScorer.js";
 import { ScorersOfTournament } from "../../../application/operations/tournaments/ScorersOfTournament.js";
 import { TournamentsOfAccount } from "../../../application/operations/tournaments/TournamentsOfAccount.js";
 import { TournamentYearsOfAccount } from "../../../application/operations/tournaments/TournamentYearsOfAccount.js";
@@ -536,24 +535,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         ),
       );
       return reply.header("cache-control", "no-store").send({ scorers });
-    },
-  );
-
-  // A scorer taken off, by the part of their account's id after "account/".
-  server.post<{ Params: { id: string; account: string } }>(
-    "/tournaments/:id/scorers/:account/remove",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      await request.server.mediator.send(
-        new RemoveScorer(
-          reader.value,
-          `tournament/${request.params.id}`,
-          `account/${request.params.account}`,
-          request.requestedAt,
-        ),
-      );
-      return reply.code(204).header("cache-control", "no-store").send();
     },
   );
 
