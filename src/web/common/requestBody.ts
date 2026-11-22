@@ -161,3 +161,19 @@ export const tournamentFrom = (body: unknown): TournamentRequest => {
     international: yesOrNoOf(body, "international"),
   };
 };
+
+// A note's description may be 750,000 characters (ManagerNoteDescription.ts),
+// counted as a reader counts them, and a character can take several bytes to
+// send: an accented letter typed as a letter and its accent takes three, and
+// JSON escapes some characters into six. So adding and editing a note take a
+// body larger than the 1 MiB every other request is held to: eight, room for
+// a description at its limit of any of those. The description's own rule is
+// still what refuses one too long.
+export const noteBodyLimit = 8 * 1024 * 1024;
+
+// What a note is, as the note dialog sends it. A description left empty is
+// no description.
+export const noteFrom = (body: unknown) => ({
+  title: textOf(body, "title"),
+  description: textOf(body, "description"),
+});

@@ -175,7 +175,9 @@ export const NotePanel = ({
     setSending(true);
     try {
       const response = await fetch(
-        note === undefined ? at : `${at}/${idInAddress(note.id)}`,
+        note === undefined
+          ? at.replace("/api/site/", "/api/v0/")
+          : `${at}/${idInAddress(note.id)}`,
         {
           method: note === undefined ? "POST" : "PUT",
           headers: {
@@ -191,11 +193,12 @@ export const NotePanel = ({
         return;
       }
       const answer = (await response.json()) as {
+        code?: string;
         error?: string;
         broken?: { code: string }[];
       };
       const codes = answer.broken?.map(({ code }) => code) ?? [
-        answer.error ?? "Unknown",
+        answer.code ?? answer.error ?? "Unknown",
       ];
       setRefused(codes.map(refusal));
       // The description refused is said beneath its box, which is on Write.
