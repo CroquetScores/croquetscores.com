@@ -59,3 +59,32 @@ Feature: A competition's player is moved, withdrawn and removed through the API
       Given the caller is signed in as "organiser@example.com"
       When the player "Bob Bowler" in "Block A" of "Spring Open" is moved up at the address it was at
       Then the API answers 404
+
+  Rule: A player is moved down a place
+
+    Scenario: A manager moves a player down
+      Given the caller is signed in as "organiser@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is moved down
+      Then the API answers 204
+
+    Scenario: A player moved down is listed after the one they passed
+      Given the caller is signed in as "organiser@example.com"
+      And the player "Ann Archer" in "Block A" of "Spring Open" is moved down
+      When the players of "Block A" in "Spring Open" are listed to the caller
+      Then the first player the site lists is "Bob Bowler"
+
+    Scenario: A reader who is not signed in may not do it
+      When the player "Ann Archer" in "Block A" of "Spring Open" is moved down
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not do it
+      Given the caller is signed in as "stranger@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is moved down
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is moved down at the address it was at
+      Then the API answers 404
