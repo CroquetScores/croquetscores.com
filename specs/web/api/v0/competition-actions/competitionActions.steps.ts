@@ -78,3 +78,7 @@ Then(
 Then("the tournament read lists one competition", function (this: WebWorld) {
   assert.equal(competitionsRead(this).length, 1);
 });
+
+Then("the tournament read lists two competitions", function (this: WebWorld) {
+  assert.equal(competitionsRead(this).length, 2);
+});
