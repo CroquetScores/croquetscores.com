@@ -87,16 +87,21 @@ export const asked = async (
   body?: object,
 ): Promise<void> => {
   const session = world.apiSession;
-  const answer = await fetch(`${world.baseUrl!}/api/site${path}`, {
-    method,
-    headers: {
-      "x-forwarded-host": host,
-      "sec-fetch-site": "same-origin",
-      ...(session === undefined ? {} : { cookie: `session=${session}` }),
-      ...(body === undefined ? {} : { "content-type": "application/json" }),
+  // An address under /api is already whole, as a route that has moved from
+  // /api/site to /api/v0 is asked at where it is now.
+  const answer = await fetch(
+    `${world.baseUrl!}${path.startsWith("/api/") ? "" : "/api/site"}${path}`,
+    {
+      method,
+      headers: {
+        "x-forwarded-host": host,
+        "sec-fetch-site": "same-origin",
+        ...(session === undefined ? {} : { cookie: `session=${session}` }),
+        ...(body === undefined ? {} : { "content-type": "application/json" }),
+      },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     },
-    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-  });
+  );
   const text = await answer.text();
   sceneOf(world).answered = {
     status: answer.status,
