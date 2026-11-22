@@ -77,3 +77,32 @@ Feature: A tournament's players are moved, archived and restored through the API
       Given the caller is signed in as "organiser@example.com"
       When the tournament player "Ann Archer" of "Spring Open" is moved down at the address it was at
       Then the API answers 404
+
+  Rule: A tournament player is archived
+
+    Scenario: A manager archives a tournament player
+      Given the caller is signed in as "organiser@example.com"
+      When the tournament player "Ann Archer" of "Spring Open" is archived
+      Then the API answers 204
+
+    Scenario: A tournament player archived is listed as archived
+      Given the caller is signed in as "organiser@example.com"
+      And the tournament player "Ann Archer" of "Spring Open" is archived
+      When the tournament players of "Spring Open" are listed to the caller
+      Then the site lists the tournament player "Ann Archer" as archived
+
+    Scenario: A reader who is not signed in may not do it
+      When the tournament player "Ann Archer" of "Spring Open" is archived
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not do it
+      Given the caller is signed in as "stranger@example.com"
+      When the tournament player "Ann Archer" of "Spring Open" is archived
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the tournament player "Ann Archer" of "Spring Open" is archived at the address it was at
+      Then the API answers 404

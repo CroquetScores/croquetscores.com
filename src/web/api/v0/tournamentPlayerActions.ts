@@ -4,11 +4,12 @@
 // one segment of the address. Each was at /api/site, and is only here now.
 import type { FastifyPluginAsync } from "fastify";
 
+import { ArchivePlayer } from "../../../application/operations/tournaments/ArchivePlayer.js";
 import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
 import { writerOf } from "./writer.js";
 
 export const tournamentPlayerActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const action of ["up", "down"] as const) {
+  for (const action of ["up", "down", "archive"] as const) {
     server.post<{ Params: { id: string; player: string } }>(
       `/tournaments/:id/players/:player/${action}`,
       async (request, reply) => {
@@ -22,7 +23,9 @@ export const tournamentPlayerActionsOfApps: FastifyPluginAsync = (server) => {
         ] as const;
         const at = request.requestedAt;
         await request.server.mediator.send(
-          new MovePlayer(...asked, action, at),
+          action === "archive"
+            ? new ArchivePlayer(...asked, at)
+            : new MovePlayer(...asked, action, at),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
