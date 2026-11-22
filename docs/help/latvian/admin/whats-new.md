@@ -1,5 +1,29 @@
 # Kas jauns turnīru pārvaldniekiem
 
+## Izdots 2026-11-22
+
+### Turnīrs
+
+- **Var izvēlēties Jaunzēlandes kroketa reģionus.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury un pārējie reģioni, kādos tiek dalīti Jaunzēlandes nacionālie turnīri, ir norādīti kā turnīra reģions blakus provincēm.
+
+- **E-pasts par noņemtu nacionālo vai starptautisko statusu to pasaka.** Kad administrators noņem turnīram statusu, e-pasts tā pārvaldniekiem tagad saka, ka tas ir noņemts, un lūdz jūs pateikt, kāpēc nepiekrītat, ja nepiekrītat. Tas kā nacionāla pasākuma piemēru min Australian Open un kā starptautiska piemēru WCF Association Croquet Singles.
+
+### Spēlētāji
+
+- **Vārds pasaules rangā, ko pasaules rangs nepazīst, seko labotajam vārdam.** Vārda labošana atstāja **Spēlētāja vārds pasaules rangā** tādu, kāds tas bija, tāpēc spēlētājs, kas pievienots kā „aaa” un laboīts uz „Tim Murphy”, rangā joprojām bija pazīstams kā „aaa”. Ja rangs nepazīst vārdu, ar kādu spēlētājs tika atvērts, tas tagad kļūst par labojumu vārdu, kamēr jūs to rakstāt, līdz paši sākat rakstīt pasaules ranga vārdā. Tāds, ko rangs pazīst, ko parāda atzīme blakus, tiek saglabāts.
+
+- **Handikaps tiek rādīts kā skaitlis, kāds tas ir.** Spēlētāju saraksts rāda „4” handikapam, ko ierakstījāt kā „4.0”, un „4” handikapam „+4”. Handikaps ar daļu, piemēram, „-1.5”, tiek rādīts tāds, kāds tas ir. To joprojām var ierakstīt ar zīmi vai punktu.
+
+### Lietotnes
+
+- **Lietotne var lasīt jūsu turnīrus no vietnes API.** Vietnei ir atklāta API (skatiet **Palīdzība lietotņu izstrādātājiem**), kas pagaidām tikai lasa. Varat izveidot atslēgu sadaļā **API atslēgas** savā kontā, lai lietotnei dotu savu kvotu: to var izveidot tikai lasīšanai vai lasīšanai un rakstīšanai, to var ierobežot ar vienu turnīru, un jūs to varat atsaukt jebkurā laikā. Glabājiet atslēgu tikpat slepenībā kā paroli.
+
+### Ko redz sabiedrība
+
+- **Gaidāmie turnīri sākumlapā ietver turnīru, kas sākās pēdējās divās dienās.** Turnīrs tiek rādīts no sešdesmit dienām pirms tā sākuma līdz dienai, kad tas beidzas, bet tāds, kas sākās pirms vairāk nekā divām dienām, tiek izlaists. Tātad dienās, kad to spēlē, to var atrast, pirms kāds tajā ir ierakstījis partiju, un pēc pirmajām divām dienām tas ir nesenajos rezultātos, kad ir pievienota partija.
+
+- **Izslēgšanas turnīrs norāda, no cik partijām ir katras kārtas mači.** Virs katras kārtas izslēgšanas turnīra režģī un zem katras kārtas nosaukuma tā kopsavilkumā tagad ir teikts „Labākais no 3” vai tas, ko esat izvēlējies šai kārtai, lai nevienam nebūtu jāskaita rezultātu rūtiņas, lai to uzzinātu. Skatiet [Ko redz sabiedrība](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Izdots 2026-11-15
 
 ### Turnīrs

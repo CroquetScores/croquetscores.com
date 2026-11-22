@@ -1,5 +1,29 @@
 # Hva er nytt for turneringsarrangører
 
+## Lansert 2026-11-22
+
+### Turneringen
+
+- **Newzealandske krokketregioner kan velges.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury og de andre regionene New Zealands nasjonale turneringer deles inn i, er med som en turnerings region, ved siden av provinsene.
+
+- **E-posten om en nasjonal eller internasjonal status som er fjernet, sier det.** Når administratoren tar statusen bort fra en turnering, sier e-posten til arrangørene nå at den er fjernet, og ber deg si hvorfor du er uenig, hvis du er det. Den gir Australian Open som eksempel på en nasjonal turnering og WCF Association Croquet Singles som en internasjonal.
+
+### Spillere
+
+- **Et navn i verdensrangeringen som verdensrangeringen ikke kjenner, følger et rettet navn.** Å rette et navn lot **Spillerens navn i verdensrangeringen** stå som det var, så en spiller som ble lagt til som «aaa» og rettet til «Tim Murphy» var fortsatt kjent i rangeringen som «aaa». Der rangeringen ikke kjenner navnet spilleren ble åpnet med, blir det nå det rettede navnet mens du skriver det, til du selv skriver i verdensrangeringsnavnet. Ett rangeringen kjenner, vist med haken ved siden av, beholdes.
+
+- **En handicap vises som det tallet den er.** Listen over spillere viser «4» for en handicap du skrev som «4.0» og «4» for «+4». En handicap med desimal, for eksempel «-1.5», vises som den er. Du kan fortsatt skrive den med fortegn eller punktum.
+
+### Apper
+
+- **En app kan lese turneringene dine fra nettstedets API.** Nettstedet har et åpent API (se **Hjelp for apputviklere**), som bare leser foreløpig. Du kan lage en nøkkel under **API-nøkler** i kontoen din for å gi en app en egen kvote: den kan lages for bare å lese, eller for å lese og skrive, den kan begrenses til én turnering, og du kan trekke den tilbake når som helst. Hold en nøkkel like hemmelig som et passord.
+
+### Hva publikum ser
+
+- **De kommende turneringene på startsiden tar med en turnering som startet de siste to dagene.** En turnering vises fra seksti dager før den starter til dagen den slutter, men en som startet for mer enn to dager siden, utelates. Så de dagene den spilles, kan den finnes før noen har ført inn et parti i den, og etter de to første dagene står den blant de siste resultatene når et parti er lagt til.
+
+- **En utslagning sier hva hver runde sine kamper er best av.** Over hver runde i en utslagnings oppsett, og under hver runde sitt navn i oppsummeringen, står det nå «Best av 3», eller det du har valgt for runden, slik at ingen må telle resultatrutene for å få vite det. Se [Hva publikum ser](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Lansert 2026-11-15
 
 ### Turneringen

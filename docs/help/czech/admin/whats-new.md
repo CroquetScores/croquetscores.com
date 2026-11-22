@@ -1,5 +1,29 @@
 # Novinky pro organizátory turnajů
 
+## Vydáno 2026-11-22
+
+### Turnaj
+
+- **Lze zvolit kroketové regiony Nového Zélandu.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury a další regiony, na které se dělí novozélandské národní turnaje, jsou uvedeny jako region turnaje vedle provincií.
+
+- **E-mail o odebraném národním nebo mezinárodním statusu to říká.** Když administrátor turnaji status odebere, e-mail jeho správcům nyní říká, že byl odebrán, a prosí vás, abyste napsali, proč nesouhlasíte, pokud nesouhlasíte. Jako příklad národní akce uvádí Australian Open a jako příklad mezinárodní WCF Association Croquet Singles.
+
+### Hráči
+
+- **Jméno ve světovém žebříčku, které světový žebříček nezná, následuje opravené jméno.** Oprava jména nechávala **Jméno hráče ve světovém žebříčku** beze změny, takže hráč přidaný jako „aaa“ a opravený na „Tim Murphy“ byl žebříčku dál znám jako „aaa“. Kde žebříček nezná jméno, se kterým byl hráč otevřen, stane se nyní opraveným jménem, jak ho píšete, dokud sami nezačnete psát do jména ve světovém žebříčku. Jméno, které žebříček zná, což ukazuje zaškrtnutí vedle něj, zůstane.
+
+- **Handicap se zobrazuje jako číslo, kterým je.** Seznam hráčů ukazuje „4“ pro handicap, který jste napsali jako „4.0“, a „4“ pro „+4“. Handicap s desetinnou částí, například „-1.5“, se ukáže tak, jak je. Stále ho můžete napsat se znaménkem nebo s tečkou.
+
+### Aplikace
+
+- **Aplikace může číst vaše turnaje z API webu.** Web má veřejné API (viz **Nápověda pro vývojáře aplikací**), které zatím jen čte. Ve svém účtu můžete v části **Klíče API** vytvořit klíč, který aplikaci dá vlastní limit: lze ho vytvořit jen pro čtení, nebo pro čtení i zápis, lze ho omezit na jeden turnaj a kdykoli ho můžete odvolat. Chraňte klíč stejně tajně jako heslo.
+
+### Co vidí veřejnost
+
+- **Připravované turnaje na úvodní stránce zahrnují turnaj, který začal v posledních dvou dnech.** Turnaj se uvádí od šedesáti dnů před začátkem do dne, kdy končí, ale ten, který začal před více než dvěma dny, se vynechá. Ve dnech, kdy se hraje, ho tedy lze najít dřív, než do něj někdo zapíše hru, a po prvních dvou dnech je mezi nedávnými výsledky, jakmile se přidá hra.
+
+- **Pavouk říká, na kolik her se hrají zápasy každého kola.** Nad každým kolem v rozpisu pavouka a pod názvem každého kola v jeho přehledu nyní stojí „Nejvýše 3 her“, nebo to, co jste pro dané kolo zvolili, takže nikdo nemusí počítat políčka se skóre, aby to zjistil. Viz [Co vidí veřejnost](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Vydáno 2026-11-15
 
 ### Turnaj

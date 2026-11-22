@@ -2,7 +2,25 @@
 
 ## Released 2026-11-22
 
+### The tournament
+
+- **The croquet regions of New Zealand can be chosen.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury and the other regions New Zealand's national tournaments are split into are listed as the region of a tournament, beside the provinces.
+
+- **The email about a national or international status that has been removed says so.** When the administrator takes the status away from a tournament, the email to its managers now says that it has been removed, and asks you to say why you disagree if you do. It gives the Australian Open as an example of a national event, and the WCF Association Croquet Singles as an international one.
+
+### Players
+
+- **A world ranking name the world rankings do not know follows a corrected name.** Correcting a name used to leave the **World Ranking Player Name** as it was, so a player added as "aaa" and corrected to "Tim Murphy" was still known to the rankings as "aaa". Where the rankings do not know the name the player was opened with, it now becomes the corrected name as you type it, until you type in the world ranking name yourself. One the rankings know, shown by the tick beside it, is kept.
+
+- **A handicap is shown as the number it is.** The list of players shows "4" for a handicap you typed as "4.0" and "4" for "+4". A handicap with a fraction, such as "-1.5", is shown as it is. You may still type it with a sign or a point.
+
+### Apps
+
+- **An app can read your tournaments from the site's API.** The site has a public API (see **Help for app developers**), which only reads for now. You can make a key under **API Keys** in your account to give an app an allowance of its own: it may be made to read only, or to read and write, it may be limited to one tournament, and you can revoke it at any time. Keep a key as secret as a password.
+
 ### What the public sees
+
+- **The upcoming tournaments on the home page include a tournament that started in the last two days.** A tournament is listed from sixty days before it starts until the day it finishes, but one that started more than two days ago is left out. So on the days it is played it can be found before anybody has scored a game in it, and after the first two days it appears in the recent results once a game is added.
 
 - **A knockout says what each round's matches are the best of.** Above each round of a knockout's grid, and beneath each round's name in its summary, it now says "Best of 3", or whatever you chose for that round, so that nobody has to count the score cells to learn it. See [What the public sees](../tournament-managers/standard-tournament/what-the-public-sees.md).
 

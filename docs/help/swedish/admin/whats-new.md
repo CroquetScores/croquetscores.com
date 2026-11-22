@@ -1,5 +1,29 @@
 # Nytt för arrangörer
 
+## Släppt 2026-11-22
+
+### Turneringen
+
+- **Nya Zeelands croquetregioner kan väljas.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury och de övriga regioner som Nya Zeelands nationella turneringar delas in i finns med som en turnerings region, bredvid provinserna.
+
+- **E-postmeddelandet om en nationell eller internationell status som har tagits bort säger det.** När administratören tar bort statusen från en turnering säger e-postmeddelandet till dess arrangörer nu att den har tagits bort, och ber dig säga varför du inte håller med om du inte gör det. Det ger Australian Open som exempel på en nationell tävling och WCF Association Croquet Singles som en internationell.
+
+### Spelare
+
+- **Ett namn i världsrankingen som världsrankingen inte känner till följer ett rättat namn.** Att rätta ett namn lät **Spelarens namn i världsrankingen** vara som det var, så en spelare som lagts till som "aaa" och rättats till "Tim Murphy" var fortfarande känd i rankingen som "aaa". Där rankingen inte känner till det namn spelaren öppnades med blir det nu det rättade namnet medan du skriver det, tills du själv skriver i världsrankingnamnet. Ett som rankingen känner till, vilket visas av bocken bredvid, behålls.
+
+- **Ett handicap visas som det tal det är.** Listan över spelare visar "4" för ett handicap du skrev som "4.0" och "4" för "+4". Ett handicap med decimal, till exempel "-1.5", visas som det är. Du kan fortfarande skriva det med tecken eller punkt.
+
+### Appar
+
+- **En app kan läsa dina turneringar från webbplatsens API.** Webbplatsen har ett öppet API (se **Hjälp för apputvecklare**), som bara läser tills vidare. Du kan skapa en nyckel under **API-nycklar** i ditt konto för att ge en app en egen kvot: den kan skapas för att bara läsa, eller för att läsa och skriva, den kan begränsas till en turnering, och du kan återkalla den när som helst. Håll en nyckel lika hemlig som ett lösenord.
+
+### Vad allmänheten ser
+
+- **De kommande turneringarna på startsidan tar med en turnering som började de senaste två dagarna.** En turnering visas från sextio dagar innan den börjar till dagen den slutar, men en som började för mer än två dagar sedan lämnas utanför. Så de dagar den spelas går den att hitta innan någon har fört in ett parti i den, och efter de första två dagarna finns den bland de senaste resultaten när ett parti har lagts till.
+
+- **En utslagning säger vad varje rundas matcher är bäst av.** Ovanför varje runda i en utslagnings schema, och under varje rundas namn i dess sammanställning, står det nu "Bäst av 3", eller vad du har valt för den rundan, så att ingen behöver räkna resultatrutorna för att få veta det. Se [Vad allmänheten ser](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Släppt 2026-11-15
 
 ### Turneringen

@@ -1,5 +1,29 @@
 # Novedades para los gestores de torneo
 
+## Publicado el 2026-11-22
+
+### El torneo
+
+- **Se pueden elegir las regiones de croquet de Nueva Zelanda.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury y las demás regiones en que se dividen los torneos nacionales de Nueva Zelanda están listadas como la región de un torneo, junto a las provincias.
+
+- **El correo sobre un estatus nacional o internacional que se ha retirado lo dice.** Cuando el administrador quita el estatus a un torneo, el correo a sus gestores ahora dice que se ha retirado, y te pide que digas por qué no estás de acuerdo, si no lo estás. Pone el Australian Open como ejemplo de un evento nacional y el WCF Association Croquet Singles como uno internacional.
+
+### Jugadores
+
+- **Un nombre del ranking mundial que el ranking mundial no conoce sigue a un nombre corregido.** Corregir un nombre dejaba el **Nombre del jugador en el ranking mundial** como estaba, así que un jugador añadido como "aaa" y corregido a "Tim Murphy" seguía siendo conocido por el ranking como "aaa". Donde el ranking no conoce el nombre con que se abrió al jugador, ahora pasa a ser el nombre corregido mientras lo escribes, hasta que escribas tú mismo en el nombre del ranking mundial. Uno que el ranking conoce, que muestra la marca de verificación a su lado, se conserva.
+
+- **Un hándicap se muestra como el número que es.** La lista de jugadores muestra "4" para un hándicap que escribiste como "4.0" y "4" para "+4". Un hándicap con fracción, como "-1.5", se muestra tal cual. Aún puedes escribirlo con signo o con punto.
+
+### Aplicaciones
+
+- **Una aplicación puede leer tus torneos desde la API del sitio.** El sitio tiene una API pública (consulta **Ayuda para desarrolladores de aplicaciones**), que por ahora solo lee. Puedes crear una clave en **Claves de API** en tu cuenta para dar a una aplicación un límite propio: se puede crear solo para leer, o para leer y escribir, se puede limitar a un torneo y puedes revocarla en cualquier momento. Mantén una clave tan secreta como una contraseña.
+
+### Lo que ve el público
+
+- **Los próximos torneos de la página de inicio incluyen un torneo que empezó en los últimos dos días.** Un torneo se muestra desde sesenta días antes de empezar hasta el día en que termina, pero uno que empezó hace más de dos días se deja fuera. Así, en los días en que se juega se puede encontrar antes de que nadie haya anotado una partida en él, y pasados los dos primeros días aparece en los resultados recientes cuando se añade una partida.
+
+- **Una eliminatoria dice a cuántas partidas son los partidos de cada ronda.** Encima de cada ronda en el cuadro de una eliminatoria, y debajo del nombre de cada ronda en su resumen, ahora aparece "Al mejor de 3", o lo que hayas elegido para esa ronda, para que nadie tenga que contar las casillas de resultado para saberlo. Consulta [Lo que ve el público](../tournament-managers/standard-tournament/what-the-public-sees.md).
+
 ## Publicado el 2026-11-15
 
 ### El torneo

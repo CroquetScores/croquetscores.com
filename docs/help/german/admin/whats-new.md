@@ -2,7 +2,25 @@
 
 ## Veröffentlicht am 2026-11-22
 
+### Das Turnier
+
+- **Die Croquet-Regionen Neuseelands können gewählt werden.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury und die anderen Regionen, in die Neuseelands nationale Turniere aufgeteilt sind, sind als Region eines Turniers aufgeführt, neben den Provinzen.
+
+- **Die E-Mail über einen entfernten nationalen oder internationalen Status sagt das.** Wenn die Administratorin oder der Administrator einem Turnier den Status entzieht, sagt die E-Mail an seine Verantwortlichen jetzt, dass er entfernt wurde, und bittet Sie zu sagen, warum Sie nicht einverstanden sind, falls Sie es nicht sind. Sie nennt die Australian Open als Beispiel für eine nationale Veranstaltung und die WCF Association Croquet Singles als Beispiel für eine internationale.
+
+### Spieler
+
+- **Ein Weltranglistenname, den die Weltrangliste nicht kennt, folgt einem korrigierten Namen.** Eine Korrektur des Namens ließ den **Name des Weltranglistenspielers** bisher, wie er war, sodass ein Spieler, der als „aaa“ hinzugefügt und zu „Tim Murphy“ korrigiert wurde, der Rangliste weiter als „aaa“ bekannt war. Wo die Rangliste den Namen nicht kennt, mit dem der Spieler geöffnet wurde, wird er jetzt zum korrigierten Namen, während Sie ihn tippen, bis Sie selbst in den Weltranglistennamen tippen. Einer, den die Rangliste kennt, was das Häkchen daneben zeigt, bleibt.
+
+- **Eine Vorgabe wird als die Zahl angezeigt, die sie ist.** Die Liste der Spieler zeigt „4“ für eine Vorgabe, die Sie als „4.0“ getippt haben, und „4“ für „+4“. Eine Vorgabe mit Nachkommastelle, etwa „-1.5“, wird angezeigt, wie sie ist. Sie können sie weiterhin mit Vorzeichen oder Punkt tippen.
+
+### Apps
+
+- **Eine App kann Ihre Turniere über die API der Website lesen.** Die Website hat eine öffentliche API (siehe **Hilfe für App-Entwickler**), die vorerst nur liest. Sie können unter **API-Schlüssel** in Ihrem Konto einen Schlüssel erstellen, um einer App ein eigenes Kontingent zu geben: Er kann nur zum Lesen oder zum Lesen und Schreiben erstellt werden, kann auf ein Turnier beschränkt werden und kann jederzeit widerrufen werden. Halten Sie einen Schlüssel so geheim wie ein Passwort.
+
 ### Was die Öffentlichkeit sieht
+
+- **Die kommenden Turniere auf der Startseite enthalten ein Turnier, das in den letzten zwei Tagen begonnen hat.** Ein Turnier wird von sechzig Tagen vor seinem Beginn bis zu dem Tag aufgeführt, an dem es endet, aber eines, das vor mehr als zwei Tagen begonnen hat, entfällt. So ist es an den Tagen, an denen gespielt wird, zu finden, bevor jemand ein Spiel eingetragen hat, und nach den ersten zwei Tagen steht es unter den neuesten Ergebnissen, sobald ein Spiel hinzugefügt wurde.
 
 - **Ein K.-o.-Turnier sagt, über wie viele Spiele die Matches jeder Runde gehen.** Über jeder Runde im Raster eines K.-o.-Turniers und in der Übersicht unter dem Namen jeder Runde steht jetzt "Maximal 3 Spiele" (oder was Sie für die Runde gewählt haben), damit niemand die Ergebnisfelder zählen muss.
 

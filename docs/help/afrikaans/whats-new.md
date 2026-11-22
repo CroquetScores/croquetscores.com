@@ -1,5 +1,33 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-22
+
+- **Die tuisblad onthou die toernooie waarna jy onlangs gekyk het.** Wanneer jy 'n toernooi oopmaak, kom dit eerste onder **Jou onlangse toernooie**, tussen die filter en die onlangse uitslae, tot vyf van hulle, sodat jy terug kan gaan na dié wat jy volg sonder om hulle in die lyste te soek. Dit word op jou eie toestel bewaar, in 'n koekie wat net die toernooie se adresse bevat, en die lys word glad nie gewys voordat jy een oopgemaak het nie. Die hulp sê wat die koekie is.
+
+- **Die komende toernooie sluit dié in wat in die laaste twee dae begin het.** 'n Toernooi wat begin het en nie klaar is nie, word gelys tot die dag waarop dit eindig, solank dit nie meer as twee dae gelede begin het nie, sodat dit op die dae waarop dit gespeel word gevind kan word voordat iemand 'n spel daarin aangeteken het. Dié wat langer gelede begin het, is by die onlangse uitslae sodra 'n spel bygevoeg is.
+
+- **'n Uitklopkompetisie sê waarvan elke ronde se wedstryde die beste is.** Bo elke ronde van 'n uitklopkompetisie se rooster, en onder elke ronde se naam in die opsomming, staan "Beste van 3", of wat die toernooibestuurder vir daardie ronde gekies het.
+
+- **'n Telling pas in sy blokkie in 'n uitklopkompetisie se opsomming, en 'n naam bly saam in 'n blok se opsomming.** Op 'n smal skerm het 'n Advantage-telling wat as "83% (5/6)" geskryf is, oor die name uit sy blokkie geloop, en 'n naam in 'n blok se opsomming kon ná die voornaam breek. 'n Paar word aan elke kant van sy ampersand saamgehou.
+
+- **Jy kan die werf by jou foon se tuisskerm voeg.** 'n Knoppie in die voetskrif bied dit aan wanneer jou blaaier dit kan doen, en **Voeg die werf by jou tuisskerm** in die hulp sê hoe, vir 'n iPhone en vir 'n Android-foon. Croquet Scores en Gateball Scores het elk 'n ikoon, sodat jy hulle uitmekaar kan ken.
+
+- **Nieu-Seeland se kroketstreke is gelys.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury en die ander streke waarin Nieu-Seeland se nasionale toernooie verdeel word, kan as die streek van 'n toernooi gekies word.
+
+### Vir toepassingontwikkelaars
+
+- **Daar is 'n openbare API.** 'n Toepassing kan 'n jaar se toernooie lees, 'n toernooi met sy kompetisies en spelers, 'n kompetisie se spelle en stand, die toernooie wat van jaar verander het en die toernooie wat geargiveer is, as JSON, by `/api/v0`. Dit is `v0` solank dit in ontwikkeling is. Enigeen mag lees, en 'n toepassing wat 'n sleutel stuur wat onder **API-sleutels** in jou rekening gemaak is, het 'n eie kwota, aanvanklik 60 versoeke per minuut en 10 000 per dag. 'n Toepassing sonder sleutel deel 'n kwota volgens sy adres, 10 per minuut en 500 per dag.
+
+- **'n Sleutel laat 'n toepassing namens jou optree sonder jou wagwoord.** Maak 'n sleutel in jou rekening, sê waarvoor dit is, en herroep dit wanneer jy nie meer wil hê dit moet gebruik word nie. 'n Sleutel kan gemaak word om net te lees of om te lees en te skryf, en kan tot een toernooi beperk word. Die API lees vir eers net. Net 'n hash van die sleutel word bewaar, so die sleutel word een keer gewys, wanneer jy dit maak.
+
+- **Velde kan sonder 'n nuwe weergawe by 'n antwoord gevoeg word.** 'n Toepassing moet 'n veld ignoreer wat dit nie ken nie. 'n Verandering wat 'n toepassing sou breek, word as 'n nuwe weergawe langs die ou een gemaak, sodat 'n toepassing wat teen `v1` geskryf is, aanhou werk wanneer `v2` kom. **Hulp vir toepassingontwikkelaars** en **Die API se eindpunte** in die hulp sê wat elke adres neem en antwoord, in elke taal.
+
+- **'n Voorgee in die API is 'n getal.** Dit is `4.5` en nie `"4.5"` nie, en `null` waar 'n speler geen het nie.
+
+### Wêreldranglysbeamptes
+
+- **'n Tweede sigblad van Golf Croquet-spelle het die dag waarop elkeen aangeteken is.** Voeg `rankings2` by die adres, waar `rankings` is, en kolom I sê die dag waarop elke spel aangeteken is, as 'n Excel-datum, in die tyd van die plek waar die toernooi gespeel word. Die Ranglyste-oortjie bied dit aan as **Laai spelle af vir die wêreldranglys met speldatum**. Die eerste sigblad is soos dit was, omdat die beamptes se sagteware dit volgens posisie lees.
+
 ## Vrygestel 2026-11-15
 
 - **'n Dubbelspelpaar is een speler in die soektog, ongeag watter van sy twee spelers eerste genoem word.** "Sam Someone & Alex Another" en "Alex Another & Sam Someone" was twee inskrywings op die spelersbladsy, net soos "Peter & Rosie Landrebe" en "Rosie & Peter Landrebe". Hulle is nou een, by een adres, gelys onder die naam wat die jongste toernooi geskryf het.

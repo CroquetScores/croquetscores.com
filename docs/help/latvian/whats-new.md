@@ -1,5 +1,33 @@
 # Kas jauns
 
+## Izlaists 2026-11-22
+
+- **Sākumlapa atceras turnīrus, ko nesen skatījāties.** Kad atverat turnīru, tas kļūst par pirmo sadaļā **Jūsu nesenie turnīri**, starp filtru un nesenajiem rezultātiem, līdz pieciem, lai varētu atgriezties pie tiem, kurus sekojat, nemeklējot tos sarakstos. Tie tiek glabāti jūsu pašu ierīcē sīkdatnē, kurā ir tikai turnīru adreses, un saraksts netiek rādīts vispār, līdz esat atvēruši kādu. Palīdzība pasaka, kas ir šī sīkdatne.
+
+- **Gaidāmajos turnīros ir arī tie, kas sākās pēdējās divās dienās.** Turnīrs, kas ir sācies un nav beidzies, tiek rādīts līdz dienai, kad tas beidzas, ja tas sākās ne agrāk kā pirms divām dienām, tāpēc dienās, kad to spēlē, to var atrast, pirms kāds tajā ir ierakstījis partiju. Tie, kas sākās agrāk, ir nesenajos rezultātos, kad ir pievienota partija.
+
+- **Izslēgšanas turnīrs norāda, no cik partijām ir katras kārtas mači.** Virs katras kārtas izslēgšanas turnīra režģī un zem katras kārtas nosaukuma tā kopsavilkumā ir teikts „Labākais no 3” vai tas, ko turnīra pārvaldnieks izvēlējies šai kārtai.
+
+- **Rezultāts ietilpst savā rūtiņā izslēgšanas turnīra kopsavilkumā, un vārds paliek kopā grupas kopsavilkumā.** Šaurā ekrānā Advantage rezultāts, kas rakstīts kā „83% (5/6)”, izlīda no savas rūtiņas pāri vārdiem, un vārds grupas kopsavilkumā varēja tikt pārnests aiz vārda. Pāris paliek kopā katrā & zīmes pusē.
+
+- **Vietni var pievienot tālruņa sākuma ekrānam.** Poga lapas kājenē to piedāvā, kad to var jūsu pārlūks, un **Vietnes pievienošana sākuma ekrānam** palīdzībā pasaka, kā to izdarīt iPhone un Android tālrunim. Croquet Scores un Gateball Scores ir katrai sava ikona, lai jūs tās varētu atšķirt.
+
+- **Ir norādīti Jaunzēlandes kroketa reģioni.** Central Districts, Counties Manukau, Marlborough Nelson West Coast, South Canterbury un pārējos reģionus, kādos tiek dalīti Jaunzēlandes nacionālie turnīri, var izvēlēties kā turnīra reģionu.
+
+### Lietotņu izstrādātājiem
+
+- **Ir atklāta API.** Lietotne var lasīt viena gada turnīrus, turnīru ar tā sacensībām un spēlētājiem, sacensību partijas un kārtību, turnīrus, kas mainījuši gadu, un turnīrus, kas arhivēti, kā JSON adresē `/api/v0`. Tā ir `v0`, kamēr tā tiek izstrādāta. Lasīt drīkst ikviens, un lietotnei, kas sūta atslēgu, kas izveidota sadaļā **API atslēgas** jūsu kontā, ir sava kvota, sākumā 60 pieprasījumu minūtē un 10 000 dienā. Lietotne bez atslēgas dala kvotu pēc savas adreses, 10 minūtē un 500 dienā.
+
+- **Atslēga ļauj lietotnei darboties jūsu vārdā bez jūsu paroles.** Izveidojiet atslēgu savā kontā, pasakiet, kam tā paredzēta, un atsauciet to, kad vairs nevēlaties, lai to lieto. Atslēgu var izveidot tikai lasīšanai vai lasīšanai un rakstīšanai, un to var ierobežot ar vienu turnīru. API pagaidām tikai lasa. Tiek glabāts tikai atslēgas jaucējkods (hash), tāpēc atslēga tiek parādīta vienu reizi, kad to izveidojat.
+
+- **Atbildei var pievienot laukus bez jaunas versijas.** Lietotnei jāignorē lauks, ko tā nepazīst. Izmaiņa, kas salauztu lietotni, tiek izdarīta kā jauna versija blakus vecajai, lai lietotne, kas rakstīta `v1`, turpinātu darboties, kad parādīsies `v2`. **Palīdzība lietotņu izstrādātājiem** un **API galapunkti** palīdzībā pasaka, ko katra adrese pieņem un atbild, visās valodās.
+
+- **Handikaps API ir skaitlis.** Tas ir `4.5`, nevis `"4.5"`, un `null`, ja spēlētājam tā nav.
+
+### Pasaules ranga atbildīgie
+
+- **Otrā Golf Croquet partiju izklājlapa satur dienu, kad katra partija tika ierakstīta.** Pievienojiet adresei `rankings2` tur, kur ir `rankings`, un I kolonna norāda dienu, kad katra partija tika ierakstīta, kā Excel datumu, tās vietas laikā, kur turnīrs tiek spēlēts. Cilne Rangi to piedāvā kā **Lejupielādēt partijas pasaules rangam ar partijas datumu**. Pirmā izklājlapa ir tāda, kāda bija, jo atbildīgo programmatūra to lasa pēc pozīcijas.
+
 ## Izlaists 2026-11-15
 
 - **Dubultspēļu pāris meklēšanā ir viens spēlētājs, neatkarīgi no tā, kurš no abiem spēlētājiem nosaukts pirmais.** "Sam Someone & Alex Another" un "Alex Another & Sam Someone" spēlētāju lapā bija divi ieraksti, tāpat kā "Peter & Rosie Landrebe" un "Rosie & Peter Landrebe". Tagad tie ir viens, vienā adresē, norādīts ar nosaukumu, ko rakstīja pēdējais turnīrs.
