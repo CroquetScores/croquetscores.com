@@ -98,7 +98,6 @@ import { AddScorer } from "../../../application/operations/tournaments/AddScorer
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
 import { RemoveManager } from "../../../application/operations/tournaments/RemoveManager.js";
 import { RemoveScorer } from "../../../application/operations/tournaments/RemoveScorer.js";
-import { RestoreCompetition } from "../../../application/operations/tournaments/RestoreCompetition.js";
 import { ScorersOfTournament } from "../../../application/operations/tournaments/ScorersOfTournament.js";
 import { TournamentsOfAccount } from "../../../application/operations/tournaments/TournamentsOfAccount.js";
 import { TournamentYearsOfAccount } from "../../../application/operations/tournaments/TournamentYearsOfAccount.js";
@@ -467,25 +466,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
                 rulesOf(body),
                 optionalTextOf(body, "tieBreak"),
               ),
-      );
-      return reply.code(204).header("cache-control", "no-store").send();
-    },
-  );
-
-  // A competition restored, named by the part of its id after "competition/",
-  // as the tournament is by its own.
-  server.post<{ Params: { id: string; competition: string } }>(
-    "/tournaments/:id/competitions/:competition/restore",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      await request.server.mediator.send(
-        new RestoreCompetition(
-          reader.value,
-          `tournament/${request.params.id}`,
-          `competition/${request.params.competition}`,
-          request.requestedAt,
-        ),
       );
       return reply.code(204).header("cache-control", "no-store").send();
     },
