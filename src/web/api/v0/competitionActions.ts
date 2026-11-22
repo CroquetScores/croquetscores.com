@@ -7,11 +7,12 @@
 import type { FastifyPluginAsync } from "fastify";
 
 import { ArchiveCompetition } from "../../../application/operations/tournaments/ArchiveCompetition.js";
+import { RestoreCompetition } from "../../../application/operations/tournaments/RestoreCompetition.js";
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
 import { writerOf } from "./writer.js";
 
 export const competitionActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const action of ["up", "down", "archive"] as const) {
+  for (const action of ["up", "down", "archive", "restore"] as const) {
     server.post<{ Params: { id: string; competition: string } }>(
       `/tournaments/:id/competitions/:competition/${action}`,
       async (request, reply) => {
@@ -27,7 +28,9 @@ export const competitionActionsOfApps: FastifyPluginAsync = (server) => {
         await request.server.mediator.send(
           action === "archive"
             ? new ArchiveCompetition(...asked, at)
-            : new MoveCompetition(...asked, action, at),
+            : action === "restore"
+              ? new RestoreCompetition(...asked, at)
+              : new MoveCompetition(...asked, action, at),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },

@@ -114,3 +114,34 @@ Feature: A competition is moved, archived and restored through the API
       Given the caller is signed in as "organiser@example.com"
       When the competition "Block A" of "Spring Open" is archived at the address it was at
       Then the API answers 404
+
+  Rule: A competition is restored
+
+    Scenario: A manager restores an archived competition
+      Given the caller is signed in as "organiser@example.com"
+      And the competition "Block A" of "Spring Open" is archived
+      When the competition "Block A" of "Spring Open" is restored
+      Then the API answers 204
+
+    Scenario: A competition restored is listed again
+      Given the caller is signed in as "organiser@example.com"
+      And the competition "Block A" of "Spring Open" is archived
+      And the competition "Block A" of "Spring Open" is restored
+      When the tournament "Spring Open" is read with that key
+      Then the tournament read lists two competitions
+
+    Scenario: A reader who is not signed in may not restore it
+      When the competition "Block A" of "Spring Open" is restored
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not restore it
+      Given the caller is signed in as "stranger@example.com"
+      When the competition "Block A" of "Spring Open" is restored
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the competition "Block A" of "Spring Open" is restored at the address it was at
+      Then the API answers 404
