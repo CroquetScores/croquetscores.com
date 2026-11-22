@@ -196,6 +196,9 @@ const once = (codes: readonly (string | undefined)[]): string[] => [
 export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
   const [years, setYears] = useState<readonly number[]>([]);
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
+  // Whether the reader is an administrator, which is offered the events of
+  // every tournament listed (events.feature).
+  const [administrator, setAdministrator] = useState(false);
   // Counted up to ask again, once something has been archived or restored.
   const [asking, setAsking] = useState(0);
   // What the list on the page was the answer to, and whether something the
@@ -216,13 +219,14 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     let current = true;
     void Promise.all([
       asked<{ years: number[] }>("/api/site/my/tournament-years"),
-      asked<{ tournaments: Listed[] }>(
+      asked<{ tournaments: Listed[]; administrator?: boolean }>(
         `/api/site/my/tournaments?year=${String(year)}`,
       ),
     ]).then(([yearsAnswer, tournamentsAnswer]) => {
       if (!current) return;
       setYears(yearsAnswer?.years ?? []);
       setListed(tournamentsAnswer?.tournaments);
+      setAdministrator(tournamentsAnswer?.administrator === true);
       setAnswered(question);
     });
     return () => {
@@ -422,7 +426,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     }
   };
 
-  const options = (tournament: Listed): React.JSX.Element[] => {
+  const optionsOf = (tournament: Listed): React.JSX.Element[] => {
     const at = `/admin/${tournament.address}`;
     // A world ranking officer's, whose players' world ranking names it looks
     // after, offers those players, on the tournament's page.
@@ -497,6 +501,26 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
       </button>,
     ];
   };
+
+  // What the reader does with a tournament, and after it, for an administrator,
+  // to read the events kept of it: of every tournament listed, archived ones
+  // too, since an archived one has events and is the one most likely to be
+  // looked into.
+  const options = (tournament: Listed): React.JSX.Element[] => [
+    ...optionsOf(tournament),
+    ...(administrator
+      ? [
+          <a
+            key="events"
+            className="button"
+            href={`/admin/${tournament.address}/events`}
+            title={say("admin.hover.events.open")}
+          >
+            {say("admin.events.open")}
+          </a>,
+        ]
+      : []),
+  ];
 
   return (
     <>

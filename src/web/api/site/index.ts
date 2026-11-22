@@ -86,6 +86,7 @@ import { WhenEmergencyAccessMayBeAskedAgain } from "../../../application/operati
 import { AskForEmergencyAccess } from "../../../application/operations/emergency/AskForEmergencyAccess.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
 import { ImportWorldRankingPlayers } from "../../../application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { EventsOfTournament } from "../../../application/operations/tournaments/EventsOfTournament.js";
 import { LogEntries } from "../../../application/operations/logs/LogEntries.js";
 import { PruneLog } from "../../../application/operations/logs/PruneLog.js";
 import { ImportErrorKept } from "../../../application/operations/import-errors/ImportErrorKept.js";
@@ -385,7 +386,11 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
           Number(year),
         ),
       );
-      return reply.header("cache-control", "no-store").send({ tournaments });
+      // Whether the reader is an administrator, which the list offers Events
+      // to: asked here and not of every row, since it is the reader's.
+      return reply
+        .header("cache-control", "no-store")
+        .send({ tournaments, administrator: isAdministrator(request) });
     },
   );
 
@@ -504,6 +509,21 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         new TournamentPage(reader.value, addressOf(request.params)),
       );
       return reply.header("cache-control", "no-store").send(tournament);
+    },
+  );
+
+  // Every event kept of the tournament found at an address, as an
+  // administrator reads them. Refused as any of the administrator's routes
+  // are, and as a tournament there is not is, whether or not it is archived.
+  server.get<{ Params: AtAddress }>(
+    "/tournaments/at/:year/:sport/:slug/events",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const answer = await request.server.mediator.query(
+        new EventsOfTournament(reader.value, addressOf(request.params)),
+      );
+      return reply.header("cache-control", "no-store").send(answer);
     },
   );
 

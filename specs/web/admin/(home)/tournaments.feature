@@ -216,6 +216,60 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the tournament "Autumn Open" is not listed
 
+  Rule: An administrator is offered the tournament's events
+
+    Events is beside the trash can, and goes to the page that lists everything
+    that was kept of the tournament (`events.feature`). It is for an
+    administrator alone, who is looking into how a tournament came to be as it
+    is, so a manager of a tournament is not offered it, nor is a reader who
+    only scores it.
+
+    Scenario: An administrator is offered the events of a tournament they manage
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      Then the tournament "Spring Open" offers "Events"
+
+    Scenario: An administrator is offered the events of a tournament they have no part in
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" offers "Events"
+
+    Scenario: An administrator is offered the events of an archived tournament
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the admin is opened
+      Then the tournament "Spring Open" offers "Events"
+
+    Scenario: Events follows the tournament's name to its page
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      And "Events" is pressed for the tournament "Spring Open"
+      Then the page is the events of "Spring Open"
+
+    Scenario: A manager who is not an administrator is not offered the events
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      Then the tournament "Spring Open" does not offer "Events"
+
+    Scenario: A scorer who is not an administrator is not offered the events
+      Given "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And "other@example.com" has made "organiser@example.com" a scorer of "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" does not offer "Events"
+
+    Scenario: An account the role was taken from is not offered the events
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has had the role "Administrator" taken away
+      When the admin is opened
+      Then the tournament "Spring Open" does not offer "Events"
+
   Rule: A world ranking officer's list adds every tournament of a sport it looks after
 
     An account that holds the AC World Ranking Officer or the GC World Ranking

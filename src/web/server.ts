@@ -131,6 +131,8 @@ import { CreateTournamentHandler } from "../application/operations/tournaments/C
 import { CreateTournamentValidator } from "../application/operations/tournaments/CreateTournamentValidator.js";
 import { RemoveManagerHandler } from "../application/operations/tournaments/RemoveManagerHandler.js";
 import { CompetitionsOfTournamentHandler } from "../application/operations/tournaments/CompetitionsOfTournamentHandler.js";
+import { EventsOfTournamentHandler } from "../application/operations/tournaments/EventsOfTournamentHandler.js";
+import { PostgresTournamentEvents } from "../infrastructure/event-store/PostgresTournamentEvents.js";
 import { ManagersOfTournamentHandler } from "../application/operations/tournaments/ManagersOfTournamentHandler.js";
 import { PlayersOfTournamentHandler } from "../application/operations/tournaments/PlayersOfTournamentHandler.js";
 import { RemoveScorerHandler } from "../application/operations/tournaments/RemoveScorerHandler.js";
@@ -619,8 +621,11 @@ const putTogether = (
 };
 
 // /admin/administrator and everything beneath it, but not an address that
-// only begins the same way, such as /admin/administrators.
-const administratorsOnly = /^\/admin\/administrator(?:[/?#]|$)/;
+// only begins the same way, such as /admin/administrators; and the page of a
+// tournament's events, which is the administrator's though it is found
+// beneath the tournament (events.feature).
+const administratorsOnly =
+  /^\/admin\/(?:administrator|[1-9]\d{3}\/[^/?#]+\/[^/?#]+\/events)(?:[/?#]|$)/;
 
 // The admin's page as it was built, read once, so that the page served and the
 // build it is named as are the same reading of it, or nothing where the admin
@@ -1589,6 +1594,14 @@ export const buildApplication = async (
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both, games));
+  mediator.handleQuery(
+    new EventsOfTournamentHandler(
+      tournaments,
+      tournamentsByAddress,
+      accounts,
+      new PostgresTournamentEvents(unitOfWork),
+    ),
+  );
   mediator.handleQuery(new TeamsOfTournamentHandler(...both));
   mediator.handleQuery(new PlayersOfTeamHandler(...both, games));
   mediator.handleQuery(new PlayersOfTestHandler(...both));
