@@ -9,6 +9,7 @@ import type { FastifyPluginAsync } from "fastify";
 
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
 import { MoveGame } from "../../../application/operations/competitions/MoveGame.js";
+import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
 import { writerOf } from "./writer.js";
 
 export const competitionGameActionsOfApps: FastifyPluginAsync = (server) => {
@@ -41,6 +42,7 @@ export const competitionGameActionsOfApps: FastifyPluginAsync = (server) => {
   // reversed.
   const gameActions = {
     archive: ArchiveGame,
+    restore: RestoreGame,
   } as const;
   for (const action of Object.keys(
     gameActions,
