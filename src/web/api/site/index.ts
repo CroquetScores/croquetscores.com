@@ -1276,7 +1276,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   );
 
   // A team's player moved a place, archived or restored.
-  for (const action of ["up", "down", "archive", "restore"] as const) {
+  for (const action of ["down", "archive", "restore"] as const) {
     server.post<{ Params: { id: string; team: string; player: string } }>(
       `/tournaments/:id/teams/:team/players/:player/${action}`,
       async (request, reply) => {
