@@ -21,8 +21,17 @@ import type { FastifyInstance, FastifyRequest } from "fastify";
 import { IdentifyApiKey } from "../../../application/operations/accounts/IdentifyApiKey.js";
 import type { ApiKeyIdentified } from "../../../application/operations/accounts/IdentifyApiKey.js";
 import { loggedAsInformation } from "../../common/errors.js";
+import { readerOf } from "../../common/reader.js";
 import { ipAddressOf } from "../../common/trustedProxy.js";
 import { keyOf } from "./apiKey.js";
+
+// The methods that change something, as crossSite.ts counts them.
+const changing: ReadonlySet<string> = new Set([
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE",
+]);
 
 /** What a caller with no key may ask for, a minute and, unless the site is told less, a day. */
 export const requestsAMinuteWithNoKey = 10;
@@ -96,6 +105,17 @@ export const counting = async (
     },
     timeWindow: count === "day" ? "1 day" : "1 minute",
     keyGenerator: countedAs,
+    // What a reader signed in to the website changes is the website's own
+    // pages at work, which /api/site was never counted for, so moving a route
+    // here does not start counting it. A request that sends a key is counted
+    // whoever is signed in, and what only reads is counted as ever.
+    // Only the methods that change something, and not what answers an address
+    // there is nothing at, which is for any caller to ask of and is counted.
+    allowList: (request) =>
+      changing.has(request.method) &&
+      request.routeOptions.url?.endsWith("/*") !== true &&
+      !callerOf(request).carriedKey &&
+      readerOf(request) !== undefined,
     cache: 100_000,
     // The day's count says nothing until it refuses, since the minute's
     // headers are the ones a caller reads the allowance by.
