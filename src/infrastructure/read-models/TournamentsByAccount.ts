@@ -15,6 +15,7 @@ import type { Id } from "../../domain/common/Id.js";
 import type { Website } from "../../domain/common/Website.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 // What each of the listing queries selects of a tournament, whichever columns
 // it takes them from: the days are text, since the server's own reading of a
@@ -256,7 +257,7 @@ export class TournamentsByAccount implements Projection, Asked {
         tournament,
         event.createdBy.value,
         "manager",
-        event.occurredAt,
+        writtenMoment(event.occurredAt),
       );
     } else if (event instanceof ManagerAdded) {
       // A scorer made a manager stops being a scorer, as the tournament has
@@ -266,7 +267,7 @@ export class TournamentsByAccount implements Projection, Asked {
         tournament,
         event.account,
         "manager",
-        event.occurredAt,
+        writtenMoment(event.occurredAt),
       );
     } else if (event instanceof ManagerRemoved) {
       await this.#takesNoPart(tournament, event.account, "manager");
@@ -275,7 +276,7 @@ export class TournamentsByAccount implements Projection, Asked {
         tournament,
         event.account,
         "scorer",
-        event.occurredAt,
+        writtenMoment(event.occurredAt),
       );
     } else if (event instanceof ScorerRemoved) {
       await this.#takesNoPart(tournament, event.account, "scorer");

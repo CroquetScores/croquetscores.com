@@ -12,6 +12,7 @@ import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 export class AccountsByRole implements Projection, Finding {
   constructor(private readonly unitOfWork: UnitOfWork) {}
@@ -40,7 +41,7 @@ export class AccountsByRole implements Projection, Finding {
           `insert into accounts_by_role (account_id, role, changed_at)
            values ($1, $2, $3)
            on conflict do nothing`,
-          [stream, event.role, event.occurredAt.toISOString()],
+          [stream, event.role, writtenMoment(event.occurredAt).toISOString()],
         );
       } else if (event instanceof RoleRemoved) {
         await connection.query(

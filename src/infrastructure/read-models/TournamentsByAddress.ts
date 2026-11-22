@@ -8,6 +8,7 @@ import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 // Where a tournament is in the years: the one it is in, the one it was in
 // before it came into that, and when it came into it.
@@ -91,7 +92,7 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
         continue;
       }
       const year = yearOf(event.starts);
-      const at = event.occurredAt.toISOString();
+      const at = writtenMoment(event.occurredAt).toISOString();
       if (now === undefined) now = { year, previous: undefined, at };
       else if (year !== now.year) {
         now = { year, previous: now.year, at };
@@ -133,7 +134,7 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
          -- Said again, the address is held as it was, so its moment is too.
          on conflict (address) do update set address = excluded.address
            where tournaments_by_address.tournament_id = excluded.tournament_id`,
-        [event.address, stream, event.occurredAt.toISOString()],
+        [event.address, stream, writtenMoment(event.occurredAt).toISOString()],
       );
       const { rows } = await connection.query<{ tournament_id: string }>(
         `select tournament_id from tournaments_by_address where address = $1`,

@@ -10,6 +10,7 @@
 // account's Google account, so nothing needs its hash once its subject can no
 // longer be read.
 import { createHmac } from "node:crypto";
+import { writtenMoment } from "./writtenMoment.js";
 
 import type { Projection } from "../../application/common/Projection.js";
 import type { AccountsByGoogleAccount as Finding } from "../../application/operations/accounts/SignInWithGoogleHandler.js";
@@ -52,7 +53,11 @@ export class AccountsByGoogleAccount implements Projection, Finding {
              (account_id, subject_hash, changed_at)
            values ($1, $2, $3)
            on conflict (account_id) do nothing`,
-          [stream, this.#hash(event.subject), event.occurredAt.toISOString()],
+          [
+            stream,
+            this.#hash(event.subject),
+            writtenMoment(event.occurredAt).toISOString(),
+          ],
         );
       } else if (event instanceof AccountForgotten) {
         await connection.query(

@@ -36,6 +36,7 @@ import { Slug } from "../../domain/common/Slug.js";
 import type { Website } from "../../domain/common/Website.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 // Each word as a pattern that finds it anywhere in a name. A folded word is
 // only letters and digits, so nothing in it is a wildcard.
@@ -353,14 +354,22 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
          on conflict (tournament_id) do update
            set folded_name = excluded.folded_name,
                changed_at = excluded.changed_at`,
-        [stream, foldedForSearch(event.name), event.occurredAt.toISOString()],
+        [
+          stream,
+          foldedForSearch(event.name),
+          writtenMoment(event.occurredAt).toISOString(),
+        ],
       );
     } else if (event instanceof TournamentUpdated) {
       await connection.query(
         `update search_by_website_tournament_names
             set folded_name = $2, changed_at = $3
           where tournament_id = $1`,
-        [stream, foldedForSearch(event.name), event.occurredAt.toISOString()],
+        [
+          stream,
+          foldedForSearch(event.name),
+          writtenMoment(event.occurredAt).toISOString(),
+        ],
       );
     } else if (
       event instanceof BlockAdded ||
@@ -379,7 +388,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         [
           event.competitionId,
           foldedForSearch(event.name),
-          event.occurredAt.toISOString(),
+          writtenMoment(event.occurredAt).toISOString(),
         ],
       );
     } else if (
@@ -394,7 +403,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         [
           event.competitionId,
           foldedForSearch(event.name),
-          event.occurredAt.toISOString(),
+          writtenMoment(event.occurredAt).toISOString(),
         ],
       );
     } else if (
@@ -411,7 +420,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         [
           event.competitionId,
           foldedForSearch(event.name),
-          event.occurredAt.toISOString(),
+          writtenMoment(event.occurredAt).toISOString(),
         ],
       );
     } else if (
@@ -424,7 +433,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         event.playerId,
         event.name,
         event.worldRankingName,
-        event.occurredAt.toISOString(),
+        writtenMoment(event.occurredAt).toISOString(),
       );
     } else if (
       event instanceof TournamentPlayerArchived ||
@@ -437,7 +446,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       await this.unitOfWork.connection().query(
         `update search_by_website_players set changed_at = $2
             where player_id = $1`,
-        [event.playerId, event.occurredAt.toISOString()],
+        [event.playerId, writtenMoment(event.occurredAt).toISOString()],
       );
     }
   }

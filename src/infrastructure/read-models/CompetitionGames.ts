@@ -31,6 +31,7 @@ import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import { standCompetition, standingsToMakeOf } from "./CompetitionStandings.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 const bye = CompetitionPlayerId.bye().value;
 
@@ -252,13 +253,13 @@ export class CompetitionGames implements Projection, Asked {
     if (last !== undefined && rebuilding) {
       standingsToMakeOf(this.unitOfWork).note(
         stream,
-        last.occurredAt.toISOString(),
+        writtenMoment(last.occurredAt).toISOString(),
       );
     } else if (last !== undefined) {
       await standCompetition(
         this.unitOfWork.connection(),
         stream,
-        last.occurredAt.toISOString(),
+        writtenMoment(last.occurredAt).toISOString(),
       );
     }
   }
@@ -269,7 +270,7 @@ export class CompetitionGames implements Projection, Asked {
     const connection = this.unitOfWork.connection();
     // The moment of every row this event changes: the `occurredAt` of the last
     // event that changed it, and never when it was written.
-    const at = event.occurredAt.toISOString();
+    const at = writtenMoment(event.occurredAt).toISOString();
 
     // Its players and byes --------------------------------------------------
     if (event instanceof CompetitionPlayerEntered) {
@@ -409,7 +410,7 @@ export class CompetitionGames implements Projection, Asked {
           event.loserId,
           loser.toString(),
           drawnBy(winner, loser),
-          event.occurredAt.toISOString(),
+          writtenMoment(event.occurredAt).toISOString(),
         ],
       );
     } else if (event instanceof CompetitionGameCorrected) {
@@ -447,7 +448,7 @@ export class CompetitionGames implements Projection, Asked {
       await connection.query(
         `update competition_games set changed_at = greatest(changed_at, $2)
           where game_id = $1`,
-        [event.gameId, event.occurredAt.toISOString()],
+        [event.gameId, writtenMoment(event.occurredAt).toISOString()],
       );
     }
   }

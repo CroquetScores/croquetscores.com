@@ -1,6 +1,10 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import { CompetitionId } from "../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
+import { BestOf } from "../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
+import { CompetitionName } from "../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
+import { Rounds } from "../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
 import type { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
 import type { Id } from "../../../../src/domain/common/Id.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
@@ -16,6 +20,7 @@ import {
   standUp,
   tournamentNamed,
   type TournamentReadModel,
+  updated,
 } from "../../support/tournamentReadModels.js";
 import { unitOfWorkOf } from "../../support/transactions.js";
 import {
@@ -83,6 +88,36 @@ const at = (moment: string): ReadOnlyDate =>
   ReadOnlyDate.from(new Date(moment));
 
 // Done at a moment of its own -------------------------------------------------
+
+Given(
+  "a block named {string} is made in {string} at {string}",
+  async function (
+    this: SpecWorld,
+    block: string,
+    tournament: string,
+    moment: string,
+  ) {
+    await doneTo(this, tournament, (each, by) => {
+      each.addBlock(
+        CompetitionId.create(),
+        CompetitionName.from(block),
+        BestOf.from(1),
+        Rounds.from(1),
+        by,
+        at(moment),
+      );
+    });
+  },
+);
+
+Given(
+  "{string} is updated to start on {string} at {string}",
+  async function (this: SpecWorld, name: string, day: string, moment: string) {
+    // It finishes the day it starts, since it cannot finish before it starts.
+    const starts = new Date(`${day}T00:00:00Z`).toISOString();
+    await updated(this, name, { starts, finishes: starts }, at(moment));
+  },
+);
 
 When(
   "the player {string} of {string} is archived at {string}",
@@ -176,6 +211,18 @@ const rows = {
             where p.name = $1`,
     of: "name",
   },
+  tournament: {
+    sql: `select changed_at from tournaments where tournament_id = $1`,
+    of: "tournament",
+  },
+  competition: {
+    sql: `select changed_at from competitions where name = $1`,
+    of: "name",
+  },
+  year: {
+    sql: `select changed_at from tournament_years where tournament_id = $1`,
+    of: "tournament",
+  },
   "tournament player": {
     sql: `select changed_at from tournament_players where name = $1`,
     of: "name",
@@ -220,6 +267,28 @@ Then(
       first.changed_at?.toISOString(),
       new Date(moment).toISOString(),
     );
+  },
+);
+
+Then(
+  /^the (address|part|search name|search competition|search player|tournament player|entry|standing|tournament|competition|year) row of "([^"]*)" was not last changed in the future$/,
+  async function (this: SpecWorld, which: keyof typeof rows, name: string) {
+    const row = rows[which];
+    const key =
+      row.of === "tournament" ? tournamentNamed(this, name).value : name;
+    const { rows: found } = await this.asARequest(() =>
+      unitOfWorkOf(this)
+        .connection()
+        .query<{ changed_at: Date | null }>(row.sql, [key]),
+    );
+    assert.ok(found.length > 0, `The ${which} table has no row for ${name}.`);
+    // Every row there is, since a tournament may have held more than one.
+    for (const each of found) {
+      assert.ok(
+        each.changed_at !== null && each.changed_at <= new Date(),
+        `The ${which} row of ${name} was last changed ${each.changed_at?.toISOString()}.`,
+      );
+    }
   },
 );
 

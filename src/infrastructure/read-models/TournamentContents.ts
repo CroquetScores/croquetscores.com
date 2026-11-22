@@ -52,6 +52,7 @@ import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import { standCompetition, standingsToMakeOf } from "./CompetitionStandings.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 // In the order a reader looks for a name in a list, capitals or none.
 const byName = new Intl.Collator("en");
@@ -325,7 +326,7 @@ export class TournamentContents implements Projection, Asked {
 
   async #project(stream: string, event: DomainEvent): Promise<void> {
     if (!stream.startsWith("tournament/")) return;
-    this.#at = event.occurredAt.toISOString();
+    this.#at = writtenMoment(event.occurredAt).toISOString();
     await this.#write(stream, event);
     await this.#rulesWritten(event);
     // What a block is played as changes its places, which are kept

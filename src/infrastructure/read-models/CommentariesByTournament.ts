@@ -16,6 +16,7 @@ import type { Id } from "../../domain/common/Id.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 // A commentary's row as a rebuild works it out from its stream, before it is
 // written.
@@ -77,7 +78,7 @@ export class CommentariesByTournament
     for (const { event } of events) {
       if (event instanceof CommentaryStarted) {
         if (row !== undefined) continue;
-        const at = event.occurredAt.toDate();
+        const at = writtenMoment(event.occurredAt).toDate();
         row = {
           tournamentId: event.tournamentId,
           title: event.title,
@@ -92,7 +93,7 @@ export class CommentariesByTournament
         event instanceof CommentaryCommentAdded ||
         event instanceof CommentaryCommentEdited
       ) {
-        const at = event.occurredAt.toDate();
+        const at = writtenMoment(event.occurredAt).toDate();
         if (row !== undefined && at > row.changedAt) row.changedAt = at;
       }
       // A comment's row is its own, so it can be written as its event comes.
@@ -267,7 +268,7 @@ export class CommentariesByTournament
     const connection = this.unitOfWork.connection();
     await this.#projectComment(stream, event);
     if (event instanceof CommentaryStarted) {
-      const at = event.occurredAt.toDate();
+      const at = writtenMoment(event.occurredAt).toDate();
       await connection.query(
         `insert into commentaries_by_tournament
                 (commentary_id, tournament_id, title, slug, writer_id,
@@ -290,7 +291,7 @@ export class CommentariesByTournament
         `update commentaries_by_tournament
             set changed_at = greatest(changed_at, $2)
           where commentary_id = $1`,
-        [stream, event.occurredAt.toDate()],
+        [stream, writtenMoment(event.occurredAt).toDate()],
       );
     }
   }
@@ -308,14 +309,24 @@ export class CommentariesByTournament
                 (commentary_id, comment_id, text, created_at, changed_at)
          values ($1, $2, $3, $4, $4)
          on conflict (commentary_id, comment_id) do nothing`,
-        [stream, event.commentId, event.text, event.occurredAt.toDate()],
+        [
+          stream,
+          event.commentId,
+          event.text,
+          writtenMoment(event.occurredAt).toDate(),
+        ],
       );
     } else if (event instanceof CommentaryCommentEdited) {
       await connection.query(
         `update commentary_comments
             set text = $3, changed_at = $4
           where commentary_id = $1 and comment_id = $2`,
-        [stream, event.commentId, event.text, event.occurredAt.toDate()],
+        [
+          stream,
+          event.commentId,
+          event.text,
+          writtenMoment(event.occurredAt).toDate(),
+        ],
       );
     } else if (event instanceof CommentaryCommentDeleted) {
       await connection.query(
