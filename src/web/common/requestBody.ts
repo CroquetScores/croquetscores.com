@@ -188,3 +188,13 @@ export const teamFrom = (body: unknown) => {
     ...(flag === "" ? {} : { flag }),
   };
 };
+
+// What a player in a team is, as the team player dialog sends it. Their
+// world ranking name is left out where nothing was said.
+export const teamPlayerFrom = (body: unknown) => {
+  const worldRankingName = textOf(body, "worldRankingName");
+  return {
+    name: textOf(body, "name"),
+    ...(worldRankingName === "" ? {} : { worldRankingName }),
+  };
+};

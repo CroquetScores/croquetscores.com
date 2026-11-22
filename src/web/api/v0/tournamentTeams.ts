@@ -5,8 +5,9 @@
 // now.
 import type { FastifyPluginAsync } from "fastify";
 
+import { AddTeamPlayer } from "../../../application/operations/tournaments/AddTeamPlayer.js";
 import { AddTeam } from "../../../application/operations/tournaments/AddTeam.js";
-import { teamFrom } from "../../common/requestBody.js";
+import { teamFrom, teamPlayerFrom } from "../../common/requestBody.js";
 import { writerOf } from "./writer.js";
 
 export const tournamentTeamsOfApps: FastifyPluginAsync = (server) => {
@@ -22,6 +23,30 @@ export const tournamentTeamsOfApps: FastifyPluginAsync = (server) => {
           writer.value,
           tournament,
           teamFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: added.value });
+    },
+  );
+
+  // A player added to a team, as the team player dialog sends them: their
+  // name, which is all a player in a team has. Answered with their id.
+  server.post<{ Params: { id: string; team: string } }>(
+    "/tournaments/:id/teams/:team/players",
+    async (request, reply) => {
+      const tournament = `tournament/${request.params.id}`;
+      const writer = writerOf(request, reply, tournament);
+      if (writer === undefined) return reply;
+      const added = await request.server.mediator.send(
+        new AddTeamPlayer(
+          writer.value,
+          tournament,
+          `team/${request.params.team}`,
+          teamPlayerFrom(request.body),
           request.requestedAt,
         ),
       );

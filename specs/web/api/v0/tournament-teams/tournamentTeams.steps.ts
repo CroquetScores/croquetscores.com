@@ -86,3 +86,82 @@ Then(
     );
   },
 );
+
+// The team by the part of its id after "team/", as a scenario knows it by its
+// name within its tournament.
+const teamAt = (
+  world: WebWorld,
+  team: string,
+  tournament: string,
+  api: string,
+): string => {
+  const found = world.teams.get(`${tournament}\u0000${team}`);
+  assert.ok(found !== undefined, `No team called ${team}.`);
+  return `${teamsAt(world, tournament, api)}/${found.id.slice(found.id.indexOf("/") + 1)}`;
+};
+
+When(
+  "the player {string} is added to the team {string} of {string}",
+  async function (
+    this: WebWorld,
+    name: string,
+    team: string,
+    tournament: string,
+  ) {
+    await told(
+      this,
+      "POST",
+      `${teamAt(this, team, tournament, "/api/v0")}/players`,
+      { name },
+    );
+  },
+);
+
+When(
+  "the player {string} is added to the team {string} of {string} at the address it was at",
+  async function (
+    this: WebWorld,
+    name: string,
+    team: string,
+    tournament: string,
+  ) {
+    await told(
+      this,
+      "POST",
+      `${teamAt(this, team, tournament, "/api/site")}/players`,
+      { name },
+    );
+  },
+);
+
+When(
+  "the players of the team {string} of {string} are listed to the caller",
+  async function (this: WebWorld, team: string, tournament: string) {
+    const { session } = sceneOf(this);
+    const answer = await fetch(
+      `${this.baseUrl!}${teamAt(this, team, tournament, "/api/site")}/players`,
+      { headers: { cookie: `session=${session!}` } },
+    );
+    assert.equal(answer.status, 200, "The site would not list the players.");
+    sceneOf(this).answer = {
+      status: answer.status,
+      headers: answer.headers,
+      body: (await answer.json()) as Record<string, unknown>,
+    };
+  },
+);
+
+Then("the API says the id of the team player", function (this: WebWorld) {
+  assert.match(String(answered(this).body["id"]), /^team-player\//);
+});
+
+Then(
+  "the site lists the team player {string}",
+  function (this: WebWorld, name: string) {
+    const players = answered(this).body["players"] as { name: string }[];
+    assert.ok(
+      players.some((each) => each.name === name),
+      `${name} is not listed.`,
+    );
+  },
+);
