@@ -429,6 +429,10 @@ export const PlayerDialog = ({
             <input
               {...tied}
               type="text"
+              // The ordinary keyboard, on purpose. A keypad of decimals has no
+              // minus on an iPhone, and a handicap may be negative; and
+              // type="number" would not let a malformed one be typed to be
+              // refused with its reason (player.feature).
               placeholder=" "
               autoComplete="off"
               disabled={onlyWorldRankingName}

@@ -265,7 +265,8 @@ export class TournamentPages implements Asked {
       slug: string | null;
       withdrawn: boolean;
     }>(
-      `select e.entry_id, p.player_id, p.name, p.representing, p.handicap,
+      `select e.entry_id, p.player_id, p.name, p.representing,
+              trim_scale(p.handicap)::text as handicap,
               p.flag, p.slug, e.withdrawn
          from competition_entries e
          join tournament_players p on p.player_id = e.tournament_player_id
@@ -336,7 +337,8 @@ export class TournamentPages implements Asked {
       slug: string | null;
       archived: boolean;
     }>(
-      `select player_id, name, representing, handicap, flag, slug, archived
+      `select player_id, name, representing,
+              trim_scale(handicap)::text as handicap, flag, slug, archived
          from tournament_players where tournament_id = $1`,
       [tournament],
     );

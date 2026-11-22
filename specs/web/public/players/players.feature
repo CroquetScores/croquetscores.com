@@ -106,6 +106,18 @@ Feature: A tournament's players' page lists its players by name
       When the page at "/2026/ac/spring-open/players" is opened
       Then the player "Sam Someone" represents "(4)"
 
+    Scenario: A whole handicap is shown without a decimal
+      Given the player is to have the handicap "4.0"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the page at "/2026/ac/spring-open/players" is opened
+      Then the player "Sam Someone" represents "(4)"
+
+    Scenario: A handicap with a fraction is shown with it
+      Given the player is to have the handicap "4.5"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the page at "/2026/ac/spring-open/players" is opened
+      Then the player "Sam Someone" represents "(4.5)"
+
     Scenario: What a player represents alone is shown in brackets without a comma
       Given the player is to represent "Canterbury Croquet Club"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

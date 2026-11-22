@@ -65,6 +65,11 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   rankings do not know is kept as readily as one they do, since a player new
   to the rankings is not in them yet.
 
+  A handicap is a number, but the box takes any typing and has the ordinary
+  keyboard: a keypad of numbers has no minus on every phone, and a handicap
+  may be negative. One written any other way is refused with its reason
+  rather than quietly not typed.
+
   The flags are offered by the name of the place each is the flag of, in the
   reader's language, in order of those names, with a choice of none first,
   since most players fly none.
