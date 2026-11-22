@@ -29,7 +29,6 @@ import { CompetitionsOfTournament } from "../../../application/operations/tourna
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
-import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
 import { ReverseGameWithdrawal } from "../../../application/operations/competitions/ReverseGameWithdrawal.js";
 import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
 import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
@@ -531,7 +530,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   // reversed, by the part of its id after "game/". Unwithdraw, as a player's
   // withdrawal is reversed.
   const gameActions = {
-    restore: RestoreGame,
     withdraw: WithdrawGame,
     unwithdraw: ReverseGameWithdrawal,
   } as const;
