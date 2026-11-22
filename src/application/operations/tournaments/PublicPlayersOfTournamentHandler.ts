@@ -72,6 +72,7 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
             .map((player) => ({
               playerId: player.playerId,
               name: player.name,
+              worldRankingName: player.worldRankingName,
               address: playerPageOf(address, player.slug),
             }))
             .sort((one, other) => byName.compare(one.name, other.name)),
@@ -81,6 +82,7 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
         .map((player) => ({
           playerId: player.playerId,
           name: player.name,
+          worldRankingName: player.worldRankingName,
           representing: player.representing,
           handicap: player.handicap,
           flag: player.flag,

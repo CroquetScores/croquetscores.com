@@ -116,6 +116,8 @@ export interface PlayerOfPage {
 export interface PlayerOfTournamentPage {
   readonly playerId: string;
   readonly name: string;
+  /** What the world rankings know them by, which is their name where none was given. */
+  readonly worldRankingName: string;
   readonly representing: string | undefined;
   readonly handicap: string | undefined;
   readonly flag: string | undefined;
@@ -131,6 +133,8 @@ export interface PlayerOfTournamentPage {
 export interface TeamPlayerOfTournamentPage {
   readonly playerId: string;
   readonly name: string;
+  /** What the world rankings know them by, which is their name where none was given. */
+  readonly worldRankingName: string;
   /** As for a tournament's own player. */
   readonly slug: string | undefined;
   readonly archived: boolean;
