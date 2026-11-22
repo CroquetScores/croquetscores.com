@@ -8,11 +8,12 @@
 import type { FastifyPluginAsync } from "fastify";
 
 import { MoveCompetitionPlayer } from "../../../application/operations/competitions/MoveCompetitionPlayer.js";
+import { ReverseWithdrawal } from "../../../application/operations/competitions/ReverseWithdrawal.js";
 import { WithdrawPlayer } from "../../../application/operations/competitions/WithdrawPlayer.js";
 import { writerOf } from "./writer.js";
 
 export const competitionPlayerActionsOfApps: FastifyPluginAsync = (server) => {
-  for (const action of ["up", "down", "withdraw"] as const) {
+  for (const action of ["up", "down", "withdraw", "unwithdraw"] as const) {
     server.post<{
       Params: { id: string; competition: string; player: string };
       Querystring: { order?: string };
@@ -35,7 +36,9 @@ export const competitionPlayerActionsOfApps: FastifyPluginAsync = (server) => {
         await request.server.mediator.send(
           action === "withdraw"
             ? new WithdrawPlayer(...asked, at)
-            : new MoveCompetitionPlayer(...asked, action, at, byeOrder),
+            : action === "unwithdraw"
+              ? new ReverseWithdrawal(...asked, at)
+              : new MoveCompetitionPlayer(...asked, action, at, byeOrder),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
