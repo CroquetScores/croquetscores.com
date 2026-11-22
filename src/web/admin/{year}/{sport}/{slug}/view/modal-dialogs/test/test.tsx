@@ -217,7 +217,7 @@ export const TestDialog = ({
     try {
       const response = await fetch(
         test === undefined
-          ? `${ofTournament}/tests`
+          ? `${ofTournament.replace("/api/site/", "/api/v0/")}/tests`
           : `${ofTournament}/tests/${idInAddress(test.id)}`,
         {
           method: test === undefined ? "POST" : "PUT",
@@ -258,19 +258,16 @@ export const TestDialog = ({
         firstTeamField.current?.focus();
       } else {
         const answer = (await response.json()) as {
+          code?: string;
           error?: string;
           broken?: { code: string; fields?: string[] }[];
         };
+        const refusedAs = answer.code ?? answer.error ?? "Unknown";
         setAdded(undefined);
         setRefused(
           answer.broken?.map(({ code, fields }) =>
             refusal(code, isPart(fields?.[0]) ? fields[0] : partOf[code]),
-          ) ?? [
-            refusal(
-              answer.error ?? "Unknown",
-              partOf[answer.error ?? "Unknown"],
-            ),
-          ],
+          ) ?? [refusal(refusedAs, partOf[refusedAs])],
         );
       }
     } catch {
