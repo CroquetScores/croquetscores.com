@@ -50,3 +50,32 @@ Feature: A team's players are moved, archived and restored through the API
       Given the caller is signed in as "organiser@example.com"
       When the team player "Quinn Player" of the team "Hampshire" of "Spring Open" is moved up at the address it was at
       Then the API answers 404
+
+  Rule: A team player is moved down a place
+
+    Scenario: A manager moves a team player down
+      Given the caller is signed in as "organiser@example.com"
+      When the team player "Pat Player" of the team "Hampshire" of "Spring Open" is moved down
+      Then the API answers 204
+
+    Scenario: A team player moved down is listed after the one they passed
+      Given the caller is signed in as "organiser@example.com"
+      And the team player "Pat Player" of the team "Hampshire" of "Spring Open" is moved down
+      When the players of the team "Hampshire" of "Spring Open" are listed to the caller
+      Then the first team player the site lists is "Quinn Player"
+
+    Scenario: A reader who is not signed in may not do it
+      When the team player "Pat Player" of the team "Hampshire" of "Spring Open" is moved down
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not do it
+      Given the caller is signed in as "stranger@example.com"
+      When the team player "Pat Player" of the team "Hampshire" of "Spring Open" is moved down
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the team player "Pat Player" of the team "Hampshire" of "Spring Open" is moved down at the address it was at
+      Then the API answers 404
