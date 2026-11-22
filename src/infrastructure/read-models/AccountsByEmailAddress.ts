@@ -25,6 +25,7 @@ import type { Id } from "../../domain/common/Id.js";
 import { Refused } from "../../domain/common/Refused.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 /** Every reason the read model refuses. */
 export type AccountsByEmailAddressErrorCode =
@@ -215,7 +216,7 @@ export class AccountsByEmailAddress implements Projection {
         event instanceof EmailAddressConfirmed ||
         event instanceof AccountForgotten
       ) {
-        changedAt = event.occurredAt.toISOString();
+        changedAt = writtenMoment(event.occurredAt).toISOString();
       }
       if (event instanceof AccountForgotten) forgotten = true;
       if (
@@ -275,7 +276,7 @@ export class AccountsByEmailAddress implements Projection {
             stream,
             event.emailAddressHash,
             event instanceof AccountBroughtOver,
-            event.occurredAt.toISOString(),
+            writtenMoment(event.occurredAt).toISOString(),
           ],
         );
       } catch (failure) {
@@ -296,7 +297,11 @@ export class AccountsByEmailAddress implements Projection {
           `update accounts_by_email_address
               set email_address_hash = $2, changed_at = $3
             where account_id = $1`,
-          [stream, event.emailAddressHash, event.occurredAt.toISOString()],
+          [
+            stream,
+            event.emailAddressHash,
+            writtenMoment(event.occurredAt).toISOString(),
+          ],
         );
       } catch (failure) {
         if (isTheAddressTaken(failure)) {
@@ -312,14 +317,14 @@ export class AccountsByEmailAddress implements Projection {
         `update accounts_by_email_address
             set confirmed = true, changed_at = $2
           where account_id = $1`,
-        [stream, event.occurredAt.toISOString()],
+        [stream, writtenMoment(event.occurredAt).toISOString()],
       );
     } else if (event instanceof AccountForgotten) {
       await connection.query(
         `update accounts_by_email_address
             set email_address_hash = null, changed_at = $2
           where account_id = $1`,
-        [stream, event.occurredAt.toISOString()],
+        [stream, writtenMoment(event.occurredAt).toISOString()],
       );
     }
   }

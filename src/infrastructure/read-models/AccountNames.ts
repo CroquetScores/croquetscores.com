@@ -11,6 +11,7 @@ import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 export class AccountNames implements Projection, Asked {
   constructor(private readonly unitOfWork: UnitOfWork) {}
@@ -45,7 +46,7 @@ export class AccountNames implements Projection, Asked {
            values ($1, $2, $3)
            on conflict (account_id)
            do update set name = excluded.name, changed_at = excluded.changed_at`,
-          [stream, event.name, event.occurredAt.toISOString()],
+          [stream, event.name, writtenMoment(event.occurredAt).toISOString()],
         );
       } else if (event instanceof AccountForgotten) {
         await connection.query(

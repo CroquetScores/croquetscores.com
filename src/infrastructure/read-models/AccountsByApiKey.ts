@@ -20,6 +20,7 @@ import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 export class AccountsByApiKey implements Projection, FindsApiKeys {
   constructor(private readonly unitOfWork: UnitOfWork) {}
@@ -71,7 +72,7 @@ export class AccountsByApiKey implements Projection, FindsApiKeys {
             event.tournament ?? null,
             event.perMinute,
             event.perDay,
-            event.occurredAt.toISOString(),
+            writtenMoment(event.occurredAt).toISOString(),
           ],
         );
       } else if (event instanceof ApiKeyLimitsChanged) {
@@ -85,7 +86,7 @@ export class AccountsByApiKey implements Projection, FindsApiKeys {
             event.keyId,
             event.perMinute,
             event.perDay,
-            event.occurredAt.toISOString(),
+            writtenMoment(event.occurredAt).toISOString(),
           ],
         );
       } else if (event instanceof ApiKeyRevoked) {

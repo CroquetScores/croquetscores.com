@@ -23,6 +23,13 @@ Feature: The tournaments' read models keep when each row last changed
   has the moment of the last event that could change the competition's
   standings, and a line that last changed before it is later than it was.
 
+  An event that says it happened after the moment it is written, as the
+  events imported from the old sites do, with the day a tournament starts,
+  moves a row to the moment it is written and no later. A moment still to
+  come would have the row told of by every answer of what changed since,
+  whenever it was asked. That is the one time a moment is not the event's,
+  so a rebuild gives these rows the moment of the rebuild.
+
   Everything is done at 2026-09-26T10:00:00Z unless a scenario says when.
 
   Background:
@@ -102,6 +109,40 @@ Feature: The tournaments' read models keep when each row last changed
       And the player "Chris Third" is entered in "Block A" of "Spring Open" at "2026-09-26T10:00:00Z"
       When the player "Chris Third" in "Block A" of "Spring Open" is withdrawn at "2026-09-27T10:00:00Z"
       Then the standing row of "Chris Third" was last changed at "2026-09-27T10:00:00Z"
+
+  Rule: A moment still to come is held as the moment it is written
+
+    Scenario: A tournament renamed in the future is not changed in the future
+      Given "Spring Open" is renamed "Spring Classic" at "2999-01-01T00:00:00Z"
+      Then the tournament row of "Spring Classic" was not last changed in the future
+
+    Scenario: A competition added in the future is not changed in the future
+      Given a block named "Block B" is made in "Spring Open" at "2999-01-01T00:00:00Z"
+      Then the competition row of "Block B" was not last changed in the future
+
+    Scenario: A tournament's new address is not changed in the future
+      Given "Spring Open" is renamed "Spring Classic" at "2999-01-01T00:00:00Z"
+      Then the address row of "Spring Classic" was not last changed in the future
+
+    Scenario: A player archived in the future is not changed in the future
+      When the player "Sam Someone" of "Spring Open" is archived at "2999-01-01T00:00:00Z"
+      Then the tournament player row of "Sam Someone" was not last changed in the future
+
+    Scenario: A player archived in the future is not changed in the future for searching
+      When the player "Sam Someone" of "Spring Open" is archived at "2999-01-01T00:00:00Z"
+      Then the search player row of "Sam Someone" was not last changed in the future
+
+    Scenario: A tournament renamed in the future is not changed in the future for searching
+      Given "Spring Open" is renamed "Spring Classic" at "2999-01-01T00:00:00Z"
+      Then the search name row of "Spring Classic" was not last changed in the future
+
+    Scenario: A player withdrawn in the future is not changed in the future
+      When the player "Sam Someone" in "Block A" of "Spring Open" is withdrawn at "2999-01-01T00:00:00Z"
+      Then the entry row of "Sam Someone" was not last changed in the future
+
+    Scenario: A tournament moved to another year in the future is not moved in the future
+      Given "Spring Open" is updated to start on "2027-03-01" at "2999-01-01T00:00:00Z"
+      Then the year row of "Spring Open" was not last changed in the future
 
   Rule: The same moments are kept however the read models are made again
 

@@ -13,6 +13,7 @@ import type { Id } from "../../domain/common/Id.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 /**
  * The notes of each tournament, kept in step with every append, with their
@@ -142,7 +143,7 @@ export class ManagerNotesByTournament
   async #project(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
     if (event instanceof ManagerNoteAdded) {
-      const at = event.occurredAt.toDate();
+      const at = writtenMoment(event.occurredAt).toDate();
       await connection.query(
         `insert into manager_notes_by_tournament
                 (note_id, tournament_id, title, slug, description, created_at,
@@ -163,7 +164,12 @@ export class ManagerNotesByTournament
         `update manager_notes_by_tournament
             set title = $2, description = $3, changed_at = $4
           where note_id = $1`,
-        [stream, event.title, event.description, event.occurredAt.toDate()],
+        [
+          stream,
+          event.title,
+          event.description,
+          writtenMoment(event.occurredAt).toDate(),
+        ],
       );
     } else if (event instanceof ManagerNoteDeleted) {
       // Kept, marked, so that its slug stays taken.

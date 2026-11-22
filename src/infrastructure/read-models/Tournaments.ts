@@ -27,6 +27,7 @@ import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
+import { writtenMoment } from "./writtenMoment.js";
 
 // The competition a tournament's event is about, where it is about one.
 const competitionOf = (event: DomainEvent): string | undefined => {
@@ -122,7 +123,7 @@ export class Tournaments implements Projection {
     event: DomainEvent,
   ): Promise<void> {
     const connection = this.unitOfWork.connection();
-    const at = event.occurredAt.toISOString();
+    const at = writtenMoment(event.occurredAt).toISOString();
     await connection.query(
       `update tournaments set changed_at = greatest(changed_at, $2)
         where tournament_id = $1`,
@@ -162,7 +163,7 @@ export class Tournaments implements Projection {
     event: DomainEvent,
   ): Promise<void> {
     const connection = this.unitOfWork.connection();
-    const at = event.occurredAt.toISOString();
+    const at = writtenMoment(event.occurredAt).toISOString();
     await connection.query(
       `insert into competitions (competition_id, changed_at)
        values ($1, $2)
@@ -211,7 +212,7 @@ export class Tournaments implements Projection {
           event.sport,
           event.national,
           event.international,
-          event.occurredAt.toISOString(),
+          writtenMoment(event.occurredAt).toISOString(),
         ],
       );
     } else if (event instanceof TournamentUpdated) {
@@ -235,9 +236,17 @@ export class Tournaments implements Projection {
         ],
       );
     } else if (event instanceof TournamentArchived) {
-      await this.#tournamentArchived(tournament, true, event.occurredAt);
+      await this.#tournamentArchived(
+        tournament,
+        true,
+        writtenMoment(event.occurredAt),
+      );
     } else if (event instanceof TournamentRestored) {
-      await this.#tournamentArchived(tournament, false, event.occurredAt);
+      await this.#tournamentArchived(
+        tournament,
+        false,
+        writtenMoment(event.occurredAt),
+      );
     } else if (
       event instanceof BlockAdded ||
       event instanceof KnockoutAdded ||
@@ -263,7 +272,7 @@ export class Tournaments implements Projection {
           event.competitionId,
           tournament,
           event.worldRankings,
-          event.occurredAt.toISOString(),
+          writtenMoment(event.occurredAt).toISOString(),
         ],
       );
     } else if (
