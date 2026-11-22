@@ -206,9 +206,9 @@ Feature: The first page of the help helps a reader find an answer without knowin
 
   Rule: The subjects are cards
 
-    Scenario: There is a card for each of the four subjects
+    Scenario: There is a card for each of the five subjects
       When the first page of the help is opened in the browser
-      Then there are 4 subject cards
+      Then there are 5 subject cards
 
     Scenario Outline: A card leads to its subject
       When the first page of the help is opened in the browser
@@ -221,6 +221,7 @@ Feature: The first page of the help helps a reader find an answer without knowin
         | Your account           | Help for your account              |
         | Tournament managers    | Help for tournament managers       |
         | World ranking officers | Help for world ranking officers    |
+        | App developers         | Help for app developers            |
 
     Scenario: The whole card is pressed, and not only its title
       When the first page of the help is opened in the browser
@@ -236,7 +237,7 @@ Feature: The first page of the help helps a reader find an answer without knowin
     Scenario: Each card is stopped at once
       When the first page of the help is opened in the browser
       And the keyboard goes through the cards
-      Then it stops 4 times
+      Then it stops 5 times
 
     Scenario: The card the keyboard is on is marked
       When the first page of the help is opened in the browser
