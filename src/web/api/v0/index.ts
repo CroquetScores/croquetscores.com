@@ -28,6 +28,7 @@ import { competitionPlayerActionsOfApps } from "./competitionPlayerActions.js";
 import { competitionGamesOfApps } from "./competitionGames.js";
 import { competitionGameActionsOfApps } from "./competitionGameActions.js";
 import { tournamentPeopleOfApps } from "./tournamentPeople.js";
+import { managerNotesOfApps } from "./managerNotes.js";
 
 export interface ApiV0Options {
   /** What a caller with no key may ask in a day, counted by address. */
@@ -106,6 +107,7 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
       await day.register(competitionGamesOfApps);
       await day.register(competitionGameActionsOfApps);
       await day.register(tournamentPeopleOfApps);
+      await day.register(managerNotesOfApps);
 
       // An address nothing is at is counted as any other request is, so that
       // asking for what is not there is no way round the allowance.
