@@ -117,3 +117,34 @@ Feature: A competition's player is moved, withdrawn and removed through the API
       Given the caller is signed in as "organiser@example.com"
       When the player "Ann Archer" in "Block A" of "Spring Open" is withdrawn at the address it was at
       Then the API answers 404
+
+  Rule: A player's withdrawal is taken back
+
+    Scenario: A manager takes a withdrawal back
+      Given the caller is signed in as "organiser@example.com"
+      And the player "Ann Archer" in "Block A" of "Spring Open" is withdrawn
+      When the player "Ann Archer" in "Block A" of "Spring Open" is taken back into the competition
+      Then the API answers 204
+
+    Scenario: A player taken back is no longer listed as withdrawn
+      Given the caller is signed in as "organiser@example.com"
+      And the player "Ann Archer" in "Block A" of "Spring Open" is withdrawn
+      And the player "Ann Archer" in "Block A" of "Spring Open" is taken back into the competition
+      When the players of "Block A" in "Spring Open" are listed to the caller
+      Then the site lists "Ann Archer" as not withdrawn
+
+    Scenario: A reader who is not signed in may not do it
+      When the player "Ann Archer" in "Block A" of "Spring Open" is taken back into the competition
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not do it
+      Given the caller is signed in as "stranger@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is taken back into the competition
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is taken back into the competition at the address it was at
+      Then the API answers 404
