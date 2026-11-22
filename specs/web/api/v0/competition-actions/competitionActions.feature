@@ -54,3 +54,33 @@ Feature: A competition is moved, archived and restored through the API
       Given the caller is signed in as "organiser@example.com"
       When the competition "Block B" of "Spring Open" is moved up at the address it was at
       Then the API answers 404
+
+  Rule: A competition is moved down a place
+
+    Scenario: A manager moves a competition down
+      Given the caller is signed in as "organiser@example.com"
+      When the competition "Block A" of "Spring Open" is moved down
+      Then the API answers 204
+
+    Scenario: A competition moved down is listed after the one it passed
+      Given the caller is signed in as "organiser@example.com"
+      And the competition "Block A" of "Spring Open" is moved down
+      When the tournament "Spring Open" is read with that key
+      Then the first competition read is "Block B"
+      And the second competition read is "Block A"
+
+    Scenario: A reader who is not signed in may not move it down
+      When the competition "Block A" of "Spring Open" is moved down
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not move it down
+      Given the caller is signed in as "stranger@example.com"
+      When the competition "Block A" of "Spring Open" is moved down
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given the caller is signed in as "organiser@example.com"
+      When the competition "Block A" of "Spring Open" is moved down at the address it was at
+      Then the API answers 404

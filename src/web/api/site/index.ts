@@ -476,7 +476,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
 
   // A competition moved a place, archived or restored, named by the part of
   // its id after "competition/", as the tournament is by its own.
-  for (const action of ["down", "archive", "restore"] as const) {
+  for (const action of ["archive", "restore"] as const) {
     server.post<{ Params: { id: string; competition: string } }>(
       `/tournaments/:id/competitions/:competition/${action}`,
       async (request, reply) => {
