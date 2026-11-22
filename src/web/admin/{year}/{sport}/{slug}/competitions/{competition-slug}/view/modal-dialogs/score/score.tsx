@@ -400,7 +400,7 @@ export const ScoreDialog = ({
     try {
       const response = await fetch(
         correcting === undefined
-          ? `${at}/games`
+          ? `${at.replace("/api/site/", "/api/v0/")}/games`
           : `${at}/games/${idInAddress(correcting.id)}/correct`,
         {
           method: "POST",
@@ -443,11 +443,12 @@ export const ScoreDialog = ({
         fields.winner.current?.focus();
       } else {
         const answer = (await response.json()) as {
+          code?: string;
           error?: string;
           broken?: { code: string; fields: string[] }[];
         };
         setAdded(undefined);
-        const code = answer.error ?? "Unknown";
+        const code = answer.code ?? answer.error ?? "Unknown";
         setRefused(
           answer.broken?.map(({ code: broken, fields: about }) =>
             refusal(broken, (about[0] as Part | undefined) ?? partFor(broken)),

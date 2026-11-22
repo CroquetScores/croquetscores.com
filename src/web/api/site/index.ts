@@ -28,7 +28,6 @@ import { UpdateBlock } from "../../../application/operations/tournaments/UpdateB
 import { UpdateKnockout } from "../../../application/operations/tournaments/UpdateKnockout.js";
 import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateSwiss.js";
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
-import { AddGame } from "../../../application/operations/competitions/AddGame.js";
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
 import { CorrectGame } from "../../../application/operations/competitions/CorrectGame.js";
@@ -530,45 +529,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         ),
       );
       return reply.header("cache-control", "no-store").send({ games });
-    },
-  );
-
-  // A game's score added, as the score dialog sends it, its players by the
-  // part of their ids after "competition-player/", or a test's by their whole
-  // ids (gamePlayerOf), and answered with the game's id. What was left empty is left out, for the game to refuse.
-  server.post<{ Params: { id: string; competition: string } }>(
-    "/tournaments/:id/competitions/:competition/games",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      const player = (field: string): string | undefined =>
-        gamePlayerOf(textOf(request.body, field));
-      const score = (field: string): string | undefined => {
-        const said = textOf(request.body, field);
-        return said === "" ? undefined : said;
-      };
-      const added = await request.server.mediator.send(
-        new AddGame(
-          reader.value,
-          `tournament/${request.params.id}`,
-          `competition/${request.params.competition}`,
-          {
-            winner: player("winner"),
-            winnerScore: score("winnerScore"),
-            loser: player("loser"),
-            loserScore: score("loserScore"),
-            winnerHoops: typedOf(request.body, "winnerHoops"),
-            winnerTarget: typedOf(request.body, "winnerTarget"),
-            loserHoops: typedOf(request.body, "loserHoops"),
-            loserTarget: typedOf(request.body, "loserTarget"),
-          },
-          request.requestedAt,
-        ),
-      );
-      return reply
-        .code(201)
-        .header("cache-control", "no-store")
-        .send({ id: added });
     },
   );
 
