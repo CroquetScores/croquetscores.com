@@ -44,7 +44,6 @@ import { DeleteManagerNote } from "../../../application/operations/tournaments/D
 import { EditManagerNote } from "../../../application/operations/tournaments/EditManagerNote.js";
 import { ManagerNotesOfTournament } from "../../../application/operations/tournaments/ManagerNotesOfTournament.js";
 import { ManagerNoteToEdit } from "../../../application/operations/tournaments/ManagerNoteToEdit.js";
-import { ArchiveTeam } from "../../../application/operations/tournaments/ArchiveTeam.js";
 import { ArchiveTeamPlayer } from "../../../application/operations/tournaments/ArchiveTeamPlayer.js";
 import { MoveTeamPlayer } from "../../../application/operations/tournaments/MoveTeamPlayer.js";
 import { PlayersOfTeam } from "../../../application/operations/tournaments/PlayersOfTeam.js";
@@ -1220,7 +1219,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   );
 
   // A team moved a place, archived or restored.
-  for (const action of ["archive", "restore"] as const) {
+  for (const action of ["restore"] as const) {
     server.post<{ Params: { id: string; team: string } }>(
       `/tournaments/:id/teams/:team/${action}`,
       async (request, reply) => {
@@ -1232,11 +1231,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
           `team/${request.params.team}`,
         ] as const;
         const at = request.requestedAt;
-        await request.server.mediator.send(
-          action === "archive"
-            ? new ArchiveTeam(...asked, at)
-            : new RestoreTeam(...asked, at),
-        );
+        await request.server.mediator.send(new RestoreTeam(...asked, at));
         return reply.code(204).header("cache-control", "no-store").send();
       },
     );
