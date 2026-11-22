@@ -47,9 +47,8 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   name is corrected, where the rankings know them by it. Where the rankings
   do not know it, there is nothing there to keep, so it follows the corrected
   name as it does while a player is added, until the reader types in it
-  themselves. In American 6 Wicket it is the name
-  and nothing else, so it is corrected with it.
-  In a tournament of association or golf croquet, the name and the world
+  themselves. In American 6 Wicket it is the name and nothing else, so it is
+  corrected with it. In a tournament of association or golf croquet, the name and the world
   ranking name each offer, as they are typed, the players the world rankings
   know for the tournament's sport whose names the typing may be the start of
   (`WorldRankingPlayersMatching.feature`), so that a manager can take a
