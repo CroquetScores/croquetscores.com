@@ -65,7 +65,7 @@ export const TeamPlayers = ({
     setActing(true);
     try {
       await fetch(
-        `${action === "restore" ? at : at.replace("/api/site/", "/api/v0/")}/${idInAddress(player.id)}/${action}`,
+        `${at.replace("/api/site/", "/api/v0/")}/${idInAddress(player.id)}/${action}`,
         {
           method: "POST",
         },

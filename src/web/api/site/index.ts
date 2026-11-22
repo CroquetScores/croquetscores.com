@@ -46,7 +46,6 @@ import { ManagerNotesOfTournament } from "../../../application/operations/tourna
 import { ManagerNoteToEdit } from "../../../application/operations/tournaments/ManagerNoteToEdit.js";
 import { PlayersOfTeam } from "../../../application/operations/tournaments/PlayersOfTeam.js";
 import { PlayersOfTest } from "../../../application/operations/competitions/PlayersOfTest.js";
-import { RestoreTeamPlayer } from "../../../application/operations/tournaments/RestoreTeamPlayer.js";
 import { TeamPage } from "../../../application/operations/tournaments/TeamPage.js";
 import { TeamsOfTournament } from "../../../application/operations/tournaments/TeamsOfTournament.js";
 import { UpdateTeam } from "../../../application/operations/tournaments/UpdateTeam.js";
@@ -1272,26 +1271,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
-
-  // A team's player moved a place, archived or restored.
-  for (const action of ["restore"] as const) {
-    server.post<{ Params: { id: string; team: string; player: string } }>(
-      `/tournaments/:id/teams/:team/players/:player/${action}`,
-      async (request, reply) => {
-        const reader = signedInOrRefused(request, reply);
-        if (reader === undefined) return reply;
-        const asked = [
-          reader.value,
-          `tournament/${request.params.id}`,
-          `team/${request.params.team}`,
-          `team-player/${request.params.player}`,
-        ] as const;
-        const at = request.requestedAt;
-        await request.server.mediator.send(new RestoreTeamPlayer(...asked, at));
-        return reply.code(204).header("cache-control", "no-store").send();
-      },
-    );
-  }
 
   // A test changed, by the part of its id after "competition/".
   server.put<{ Params: { id: string; test: string } }>(
