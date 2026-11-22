@@ -21,8 +21,9 @@ import { useFlags } from "../../../../../../useFlags.js";
 // world ranking name as well. While a player is added it follows the name as
 // it is typed, as long as it is empty or still says what the name said, so
 // that a reader who types in it has a name of their own there; while one is
-// changed it follows nothing, since the rankings still know a player by it
-// when their name is corrected. Left empty, it is sent as the name. Both
+// changed it follows only where the rankings do not know it, since they still
+// know a player by one they do when their name is corrected. Left empty, it
+// is sent as the name. Both
 // offer the world ranking players as they are typed, and the world ranking
 // name is marked as known to the rankings or not (WorldRankingPlayers.tsx).
 //
@@ -138,6 +139,17 @@ export const PlayerDialog = ({
     worldRankingSport,
     worldRankingName.trim() === "" ? name : worldRankingName,
   );
+
+  // While a player is changed, the world ranking name they were opened with
+  // is left alone where the rankings know it, and follows the name where they
+  // do not, since there is then nothing in the rankings to keep it for. Once it
+  // has followed, or been typed in, which of the two it is stays settled.
+  const [followingTheName, setFollowingTheName] = useState(false);
+  const theSavedOneIsUnknown =
+    player !== undefined &&
+    worldRankingName === (player.worldRankingName ?? "") &&
+    markedFor !== undefined &&
+    !markedFor.known;
 
   const refusal = (code: string): Refusal => ({
     code,
@@ -302,10 +314,14 @@ export const PlayerDialog = ({
                   // Followed while a player is added, until it says something
                   // of its own.
                   if (
-                    player === undefined &&
-                    (worldRankingName === "" || worldRankingName === name)
+                    player === undefined
+                      ? worldRankingName === "" || worldRankingName === name
+                      : worldRankingName === "" ||
+                        followingTheName ||
+                        theSavedOneIsUnknown
                   ) {
                     setWorldRankingName(event.target.value);
+                    if (player !== undefined) setFollowingTheName(true);
                   }
                   setName(event.target.value);
                   // Who was added is no longer the news once the next is typed.
@@ -436,6 +452,7 @@ export const PlayerDialog = ({
                   value={worldRankingName}
                   onChange={(event) => {
                     setWorldRankingName(event.target.value);
+                    setFollowingTheName(false);
                   }}
                 />
                 <Offers
