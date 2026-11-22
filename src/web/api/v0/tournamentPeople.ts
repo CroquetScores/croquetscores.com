@@ -1,0 +1,33 @@
+// The people who have a part in a tournament, made and taken off by asking
+// (tournamentPeople.feature): POST /api/v0/tournaments/{id}/scorers and
+// /api/v0/tournaments/{id}/managers, and the removal of one at
+// .../{account}/remove, with the tournament and the account each named by the
+// part of its id after its kind, so that each is one segment of the address.
+// Each was at /api/site/tournaments/{id}, and is only here now.
+import type { FastifyPluginAsync } from "fastify";
+
+import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
+import { textOf } from "../../common/requestBody.js";
+import { writerOf } from "./writer.js";
+
+export const tournamentPeopleOfApps: FastifyPluginAsync = (server) => {
+  // Somebody made a scorer, by their email address.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/scorers",
+    async (request, reply) => {
+      const tournament = `tournament/${request.params.id}`;
+      const writer = writerOf(request, reply, tournament);
+      if (writer === undefined) return reply;
+      await request.server.mediator.send(
+        new AddScorer(
+          writer.value,
+          tournament,
+          textOf(request.body, "emailAddress"),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+  return Promise.resolve();
+};
