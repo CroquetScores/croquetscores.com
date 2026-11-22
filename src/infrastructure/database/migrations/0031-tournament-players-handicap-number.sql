@@ -10,5 +10,6 @@
 alter table tournament_players
     alter column handicap type numeric(3, 1)
     using case
-        when handicap ~ '^[+-]?[0-9]{1,2}(\.[0-9])?$' then handicap::numeric(3, 1)
+        when btrim(handicap) ~ '^[+-]?[0-9]{1,2}(\.[0-9])?$'
+            then btrim(handicap)::numeric(3, 1)
     end;

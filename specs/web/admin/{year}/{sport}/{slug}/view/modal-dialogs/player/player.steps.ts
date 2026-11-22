@@ -20,21 +20,6 @@ const open = "dialog[open]";
 
 const dialogOf = (world: WebWorld): Locator => world.browserPage.locator(open);
 
-// A number with a sign and a point is not on the keypad of numbers the test
-// dialog's scores are typed on, which has neither.
-Then(
-  "{string} is typed on a keypad of decimals",
-  async function (this: WebWorld, label: string) {
-    await dialogOf(this).waitFor();
-    assert.equal(
-      await dialogOf(this)
-        .getByLabel(label, { exact: true })
-        .getAttribute("inputmode"),
-      "decimal",
-    );
-  },
-);
-
 // Opened ------------------------------------------------------------------------
 
 Then(
