@@ -65,3 +65,45 @@ Feature: A tournament's teams are added and changed through the API
       Given the caller is signed in as "organiser@example.com"
       When the team "Hampshire" is added to "Spring Open" at the address it was at
       Then the API answers 404
+
+  Rule: A player is added to a team
+
+    Scenario: A manager adds a player to a team
+      Given "organiser@example.com" has added the team "Hampshire" to "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      When the player "Pat Player" is added to the team "Hampshire" of "Spring Open"
+      Then the API answers 201
+      And the API says the id of the team player
+
+    Scenario: A player added is listed in the team
+      Given "organiser@example.com" has added the team "Hampshire" to "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      And the player "Pat Player" is added to the team "Hampshire" of "Spring Open"
+      When the players of the team "Hampshire" of "Spring Open" are listed to the caller
+      Then the site lists the team player "Pat Player"
+
+    Scenario: A player with no name is refused with its code
+      Given "organiser@example.com" has added the team "Hampshire" to "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      When the player "" is added to the team "Hampshire" of "Spring Open"
+      Then the API answers 422
+      And the API's code is "PersonName.Missing"
+
+    Scenario: A reader who is not signed in may not add one
+      Given "organiser@example.com" has added the team "Hampshire" to "Spring Open"
+      When the player "Pat Player" is added to the team "Hampshire" of "Spring Open"
+      Then the API answers 401
+      And the API's code is "ApiKey.Missing"
+
+    Scenario: A reader with no part in the tournament may not add one
+      Given "organiser@example.com" has added the team "Hampshire" to "Spring Open"
+      And the caller is signed in as "stranger@example.com"
+      When the player "Pat Player" is added to the team "Hampshire" of "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: The address it was at is gone
+      Given "organiser@example.com" has added the team "Hampshire" to "Spring Open"
+      And the caller is signed in as "organiser@example.com"
+      When the player "Pat Player" is added to the team "Hampshire" of "Spring Open" at the address it was at
+      Then the API answers 404
