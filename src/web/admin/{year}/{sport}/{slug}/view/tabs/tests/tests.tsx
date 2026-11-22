@@ -156,9 +156,12 @@ export const TestsTab = ({
     // Asked again whether or not it was done, since the list is to say what
     // the tests are now.
     try {
-      const response = await fetch(`${at}/${idInAddress(test.id)}/${action}`, {
-        method: "POST",
-      });
+      const response = await fetch(
+        `${at.replace("/api/site/", "/api/v0/")}/${idInAddress(test.id)}/${action}`,
+        {
+          method: "POST",
+        },
+      );
       if (!response.ok) {
         setRefused(await refusalOf(response));
       }
