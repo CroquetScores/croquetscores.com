@@ -110,7 +110,6 @@ import { RemoveManager } from "../../../application/operations/tournaments/Remov
 import { RemoveScorer } from "../../../application/operations/tournaments/RemoveScorer.js";
 import { RestoreCompetition } from "../../../application/operations/tournaments/RestoreCompetition.js";
 import { ScorersOfTournament } from "../../../application/operations/tournaments/ScorersOfTournament.js";
-import { RestoreTournament } from "../../../application/operations/tournaments/RestoreTournament.js";
 import { TournamentsOfAccount } from "../../../application/operations/tournaments/TournamentsOfAccount.js";
 import { TournamentYearsOfAccount } from "../../../application/operations/tournaments/TournamentYearsOfAccount.js";
 import { CompetitionPage } from "../../../application/operations/tournaments/CompetitionPage.js";
@@ -418,7 +417,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   // The tournament by the part of its id after "tournament/", so that the id
   // is one segment of the address rather than two.
   for (const [action, making] of [
-    ["restore", RestoreTournament],
     // An administrator's, who judges it neither national nor international.
     ["remove-notable-status", RemoveNotableStatus],
   ] as const) {
