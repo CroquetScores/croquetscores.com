@@ -167,7 +167,7 @@ export const CompetitionPlayersTab = ({
   const act = (player: Listed, action: Action): Promise<void> =>
     done(() =>
       fetch(
-        `${action === "remove" ? at : at.replace("/api/site/", "/api/v0/")}/players/${idInAddress(player.id)}/${action}${
+        `${at.replace("/api/site/", "/api/v0/")}/players/${idInAddress(player.id)}/${action}${
           player.bye ? `?order=${String(player.order)}` : ""
         }`,
         { method: "POST" },
