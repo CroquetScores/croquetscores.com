@@ -74,3 +74,7 @@ Then(
     assert.equal(competitionsRead(this)[place === "first" ? 0 : 1]?.name, name);
   },
 );
+
+Then("the tournament read lists one competition", function (this: WebWorld) {
+  assert.equal(competitionsRead(this).length, 1);
+});
