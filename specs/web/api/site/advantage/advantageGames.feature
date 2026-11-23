@@ -52,7 +52,7 @@ Feature: The API takes a game in an Advantage competition as hoops and targets
 
     Scenario: A game without a hoops is refused for it
       When a request as "croquetscores.com" adds the game of "Sam Someone" beating "Alex Another" 5 of 6 to 5 of 8 in "Block A" without the winner's hoops
-      Then the request is refused with "Request.Invalid"
+      Then the request is refused with "Game.WinnerHoopsMissing"
 
   Rule: A game is corrected from hoops and targets
 
