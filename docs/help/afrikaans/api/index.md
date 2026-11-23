@@ -24,11 +24,13 @@ Elke toernooi in 'n lys het ook 'n eie `etag`, gemaak van wat dit sê. 'n Toepas
 
 'n Lys van 'n jaar se toernooie neem `changedSince`, geskryf as `2026-03-01T10:00:00Z`, sodat 'n toepassing wat 'n jaar weer lees, net vra na wat verander het. 'n Lys is 'n bladsy van hoogstens 100, met die pad na die volgende, en neem `page` en `pageSize`.
 
-Wat elke adres antwoord, staan in [die API se eindpunte](endpoints.md).
+Wat elke adres antwoord, staan in [die GET-eindpunte](get-endpoints.md), en wat elkeen wat iets verander neem, staan in [die POST-eindpunte](post-endpoints.md).
 
 ## Sleutels {#keys}
 
 Lees is vir enigeen: 'n versoek sonder sleutel word beantwoord soos een met 'n sleutel. 'n Sleutel sê wie se kwota 'n versoek teen getel word, en wat die vraer bo lees mag doen.
+
+'n Sleutel word gemaak om te lees, of om te lees en te skryf. 'n Sleutel wat skryf, mag in 'n toernooi doen wat die rekening waarvoor dit gemaak is, mag doen, wat meer is vir 'n bestuurder as vir 'n teler (kyk [wie mag skryf](post-endpoints.md#who-may-write)), en 'n sleutel kan tot een toernooi beperk word.
 
 Maak 'n sleutel in jou rekening, onder **API-sleutels**, met **Maak 'n sleutel**. Stuur dit by elke versoek as 'n draer-teken (bearer token):
 

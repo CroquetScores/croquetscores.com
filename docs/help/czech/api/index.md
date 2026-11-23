@@ -24,11 +24,13 @@ Každý turnaj v seznamu nese také vlastní `etag`, vytvořený z toho, co ří
 
 Seznam turnajů jednoho roku přijímá `changedSince`, zapsané jako `2026-03-01T10:00:00Z`, aby aplikace, která rok čte znovu, žádala jen to, co se změnilo. Seznam je stránka o nejvýše 100 položkách s cestou k další a přijímá `page` a `pageSize`.
 
-Co která adresa odpovídá, je v [koncových bodech API](endpoints.md).
+Co která adresa odpovídá, je v [koncových bodech pro GET](get-endpoints.md), a co přijímá každá, která něco mění, je v [koncových bodech pro POST](post-endpoints.md).
 
 ## Klíče {#keys}
 
 Číst smí kdokoli: požadavek bez klíče se vyřizuje stejně jako požadavek s klíčem. Klíč říká, na čí limit se požadavek počítá a co smí volající kromě čtení.
+
+Klíč se vytváří ke čtení, nebo ke čtení a zápisu. Klíč, který zapisuje, smí v turnaji to, co smí účet, pro který vznikl, což je pro organizátora víc než pro zapisovatele (viz [kdo smí zapisovat](post-endpoints.md#who-may-write)), a klíč lze omezit na jeden turnaj.
 
 Klíč vytvoříte ve svém účtu v části **Klíče API** tlačítkem **Vytvořit klíč**. Posílejte ho s každým požadavkem jako nosný token (bearer token):
 

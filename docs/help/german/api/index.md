@@ -24,11 +24,13 @@ Jedes Turnier in einer Liste trägt außerdem ein eigenes `etag`, gebildet aus d
 
 Eine Liste der Turniere eines Jahres nimmt `changedSince` an, geschrieben als `2026-03-01T10:00:00Z`, damit eine App, die ein Jahr erneut liest, nur nach dem fragt, was sich geändert hat. Eine Liste ist eine Seite mit höchstens 100 Einträgen und dem Weg zur nächsten und nimmt `page` und `pageSize` an.
 
-Was jede Adresse antwortet, steht in [den Endpunkten der API](endpoints.md).
+Was jede Adresse antwortet, steht in den [GET-Endpunkten](get-endpoints.md), und was jede nimmt, die etwas ändert, steht in den [POST-Endpunkten](post-endpoints.md).
 
 ## Schlüssel {#keys}
 
 Lesen ist für alle da: Eine Anfrage ohne Schlüssel wird beantwortet wie eine mit Schlüssel. Ein Schlüssel sagt, auf wessen Kontingent eine Anfrage angerechnet wird und was der Aufrufer über das Lesen hinaus darf.
+
+Ein Schlüssel wird zum Lesen oder zum Lesen und Schreiben erstellt. Ein Schlüssel, der schreibt, darf in einem Turnier, was das Konto darf, für das er erstellt wurde, und das ist für einen Verantwortlichen mehr als für einen Ergebniserfasser (siehe [wer schreiben darf](post-endpoints.md#who-may-write)); außerdem kann ein Schlüssel auf ein Turnier beschränkt werden.
 
 Erstellen Sie einen Schlüssel in Ihrem Konto unter **API-Schlüssel** mit **Schlüssel erstellen**. Senden Sie ihn mit jeder Anfrage als Bearer-Token:
 

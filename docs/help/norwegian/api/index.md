@@ -24,11 +24,13 @@ Hver turnering i en liste har også en egen `etag`, laget av det den sier. En ap
 
 En liste over et års turneringer tar `changedSince`, skrevet som `2026-03-01T10:00:00Z`, slik at en app som leser et år på nytt, bare spør om det som er endret. En liste er en side på høyst 100, med veien til neste, og tar `page` og `pageSize`.
 
-Hva hver adresse svarer, står i [API-ets endepunkter](endpoints.md).
+Hva hver adresse svarer, står i [GET-endepunktene](get-endpoints.md), og hva hver som endrer noe tar, står i [POST-endepunktene](post-endpoints.md).
 
 ## Nøkler {#keys}
 
 Å lese er for alle: en forespørsel uten nøkkel besvares som en med nøkkel. En nøkkel sier hvem sin kvote en forespørsel telles mot, og hva den som spør får gjøre utover å lese.
+
+En nøkkel lages for å lese, eller for å lese og skrive. En nøkkel som skriver, kan i en turnering gjøre det kontoen den ble laget for kan gjøre, og det er mer for en leder enn for en poengfører (se [hvem som kan skrive](post-endpoints.md#who-may-write)); en nøkkel kan også begrenses til én turnering.
 
 Lag en nøkkel i kontoen din, under **API-nøkler**, med **Lag en nøkkel**. Send den med hver forespørsel som et bærertoken (bearer token):
 
