@@ -125,6 +125,24 @@ const offeredAsAFormOf = (
 ): Language | undefined =>
   offered.find((language) => baseOf(language.tag).toLowerCase() === base);
 
+/**
+ * The language the tag names among those offered, as a browser's is read: the
+ * tag itself, then the language it is a form of, then another form of that.
+ * Undefined where the site has none of them, so that whoever asked decides
+ * whether that is a refusal or a fall back.
+ */
+export const languageNamed = (
+  tag: string,
+  offered: readonly Language[],
+): Language | undefined => {
+  const lowered = tag.toLowerCase();
+  return (
+    offeredAs(lowered, offered) ??
+    offeredAs(baseOf(lowered), offered) ??
+    offeredAsAFormOf(baseOf(lowered), offered)
+  );
+};
+
 /** The language `request` is answered in. */
 export const languageFor = (
   request: FastifyRequest,
@@ -134,10 +152,7 @@ export const languageFor = (
   if (chosen !== undefined) return chosen;
 
   for (const tag of askedFor(request.headers["accept-language"])) {
-    const found =
-      offeredAs(tag, offered) ??
-      offeredAs(baseOf(tag), offered) ??
-      offeredAsAFormOf(baseOf(tag), offered);
+    const found = languageNamed(tag, offered);
     if (found !== undefined) return found;
   }
 
