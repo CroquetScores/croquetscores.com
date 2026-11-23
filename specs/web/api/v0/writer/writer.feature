@@ -85,3 +85,61 @@ Feature: Who may change something through the API
     Scenario: A refusal is not kept
       When the tournament "Spring Open" is created
       Then the API says the answer is not to be kept
+
+  Rule: A key may do what the account it was made for may do
+
+    The key is the account's, so it has the part in a tournament that the
+    account has and no more. Somebody with no part in a tournament cannot change
+    it by making a key, and a scorer's key records scores and changes nothing
+    else.
+
+    Background:
+      Given "stranger@example.com" has an account, confirmed, called "Sam Stranger"
+      And "scorer@example.com" has an account, confirmed, called "Sue Scorer"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has added the player "Ann Archer" to "Spring Open"
+      And "organiser@example.com" has added the player "Bob Bowler" to "Spring Open"
+      And "organiser@example.com" has entered the player "Ann Archer" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Bob Bowler" in "Block A" of "Spring Open"
+
+    Scenario: A key of a manager may change the tournament
+      Given "organiser@example.com" has made a key that may read and write
+      And the caller sends that key
+      When the block "Block B" is added to "Spring Open"
+      Then the API answers 201
+
+    Scenario: A key of somebody with no part in the tournament may not change it
+      Given "stranger@example.com" has made a key that may read and write
+      And the caller sends that key
+      When the block "Block B" is added to "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: A key of somebody with no part in the tournament may not record a game
+      Given "stranger@example.com" has made a key that may read and write
+      And the caller sends that key
+      When the game of "Ann Archer" beating "Bob Bowler" 26 to 10 is recorded in "Block A" of "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManagerOrScorer"
+
+    Scenario: A key of a scorer may record a game
+      Given "scorer@example.com" has made a key that may read and write
+      And the caller sends that key
+      When the game of "Ann Archer" beating "Bob Bowler" 26 to 10 is recorded in "Block A" of "Spring Open"
+      Then the API answers 201
+
+    Scenario: A key of a scorer may not change the tournament
+      Given "scorer@example.com" has made a key that may read and write
+      And the caller sends that key
+      When the block "Block B" is added to "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: A key that may only read may not record a game
+      Given "organiser@example.com" has made a key that may only read
+      And the caller sends that key
+      When the game of "Ann Archer" beating "Bob Bowler" 26 to 10 is recorded in "Block A" of "Spring Open"
+      Then the API answers 403
+      And the API's code is "ApiKey.ReadOnly"
