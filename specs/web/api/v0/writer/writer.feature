@@ -143,3 +143,31 @@ Feature: Who may change something through the API
       When the game of "Ann Archer" beating "Bob Bowler" 26 to 10 is recorded in "Block A" of "Spring Open"
       Then the API answers 403
       And the API's code is "ApiKey.ReadOnly"
+
+    Scenario: A key of a scorer may not add a team
+      Given "scorer@example.com" has made a key that may read and write
+      And the caller sends that key
+      When the team "Reds" is added to "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: A key of a scorer may not make somebody a manager
+      Given "scorer@example.com" has made a key that may read and write
+      And the caller sends that key
+      When "stranger@example.com" is made a manager of "Spring Open"
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: A key of a scorer may not archive the tournament
+      Given "scorer@example.com" has made a key that may read and write
+      And the caller sends that key
+      When the tournament "Spring Open" is archived
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
+
+    Scenario: A key of a scorer may not remove a player from a competition
+      Given "scorer@example.com" has made a key that may read and write
+      And the caller sends that key
+      When the player "Ann Archer" in "Block A" of "Spring Open" is removed
+      Then the API answers 422
+      And the API's code is "Tournament.NotAManager"
