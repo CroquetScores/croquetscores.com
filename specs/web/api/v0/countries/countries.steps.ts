@@ -136,7 +136,7 @@ Then(
 
 const marksKept = new WeakMap<WebWorld, string | null>();
 
-Given("the mark of the answer is kept", function (this: WebWorld) {
+Given("the mark of the countries answer is kept", function (this: WebWorld) {
   marksKept.set(this, answered(this).headers.get("etag"));
 });
 

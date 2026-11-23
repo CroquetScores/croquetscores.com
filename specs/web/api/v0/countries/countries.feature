@@ -114,7 +114,7 @@ Feature: An app lists the countries and their regions
 
     Scenario: A language has a mark of its own
       Given the countries are asked with that key
-      And the mark of the answer is kept
+      And the mark of the countries answer is kept
       When the countries are asked with that key in the language "de"
       Then the answer's mark is not the mark kept
 
