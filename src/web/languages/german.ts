@@ -554,8 +554,6 @@ export const german: Language = {
     "competition.playedTo": "Gespielt bis {hoops} Tore",
     "competition.advantage":
       "Gespielt als Advantage Golf Croquet. Jedes Ergebnis sind die Tore eines Spielers als Prozentsatz seines Ziels (SF%), mit seinen Toren und seinem Ziel daneben.",
-    "blockSummary.ranking":
-      "Gereiht nach dem Anteil gewonnener Matches. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
     "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",
     "orderOfPlay.column.game": "Spiel",
     "orderOfPlay.column.date": "Datum",

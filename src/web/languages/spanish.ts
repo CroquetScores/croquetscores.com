@@ -540,8 +540,6 @@ export const spanish: Language = {
     "competition.playedTo": "Se juega a {hoops} aros",
     "competition.advantage":
       "Se juega como Advantage Golf Croquet. Cada puntuación son los aros de un jugador como porcentaje de su objetivo (SF%), con sus aros y su objetivo al lado.",
-    "blockSummary.ranking":
-      "Ordenados por la proporción de partidos ganados. Los reglamentos propios de un torneo pueden clasificar a sus jugadores de otro modo.",
     "orderOfPlay.none": "Todavía no se ha jugado ninguna partida.",
     "orderOfPlay.column.game": "Partida",
     "orderOfPlay.column.date": "Fecha",

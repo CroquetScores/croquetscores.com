@@ -537,8 +537,6 @@ export const afrikaans: Language = {
     "competition.playedTo": "Gespeel tot {hoops} poorte",
     "competition.advantage":
       "Gespeel as Advantage Golf Croquet. Elke telling is 'n speler se poorte as 'n persentasie van hul teiken (SF%), met hul poorte en teiken langsaan.",
-    "blockSummary.ranking":
-      "Gerangskik volgens die aandeel wedstryde gewen. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
     "orderOfPlay.none": "Nog geen spelle is gespeel nie.",
     "orderOfPlay.column.game": "Wedstryd",
     "orderOfPlay.column.date": "Datum",

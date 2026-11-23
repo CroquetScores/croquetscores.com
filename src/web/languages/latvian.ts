@@ -532,8 +532,6 @@ export const latvian: Language = {
     "competition.playedTo": "Spēlē līdz {hoops} vārtiņiem",
     "competition.advantage":
       "Spēlē kā Advantage golfa kroketu. Katrs rezultāts ir spēlētāja vārtiņi kā procents no viņa mērķa (SF%), ar viņa vārtiņiem un mērķi blakus.",
-    "blockSummary.ranking":
-      "Sakārtots pēc uzvarēto maču daļas. Turnīra paša noteikumi spēlētājus var sakārtot citādi.",
     "orderOfPlay.none": "Vēl nav nospēlēta neviena partija.",
     "orderOfPlay.column.game": "Partija",
     "orderOfPlay.column.date": "Datums",

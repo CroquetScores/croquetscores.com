@@ -527,8 +527,6 @@ export const czech: Language = {
     "competition.playedTo": "Počet branek ve hře: {hoops}",
     "competition.advantage":
       "Hraje se jako Advantage golfový kroket. Každé skóre je počet branek hráče jako procento jeho cíle (SF%), s jeho brankami a cílem vedle něj.",
-    "blockSummary.ranking":
-      "Pořadí podle podílu vyhraných zápasů. Vlastní pravidla turnaje mohou hráče seřadit jinak.",
     "orderOfPlay.none": "Zatím nebyly odehrány žádné hry.",
     "orderOfPlay.column.game": "Hra",
     "orderOfPlay.column.date": "Datum",

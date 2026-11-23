@@ -529,8 +529,6 @@ export const norwegian: Language = {
     "competition.playedTo": "Spilt til {hoops} buer",
     "competition.advantage":
       "Spilles som Advantage Golfcroquet. Hver poengsum er en spillers buer som prosent av målet deres (SF%), med buene og målet ved siden av.",
-    "blockSummary.ranking":
-      "Rangert etter andelen vunne kamper. En turnerings egne reglement kan plassere spillerne annerledes.",
     "orderOfPlay.none": "Ingen partier er spilt ennå.",
     "orderOfPlay.column.game": "Parti",
     "orderOfPlay.column.date": "Dato",

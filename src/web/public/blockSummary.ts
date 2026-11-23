@@ -92,7 +92,7 @@ ${rows}
             </tbody>
           </table>
           </div>
-          <p class="block-summary-ranking">${escape(say("blockSummary.ranking"))}</p>${tieBreakSaid(asked, speaking)}`;
+          ${tieBreakSaid(asked, speaking)}`;
 };
 
 /** What draws a block's summary. */

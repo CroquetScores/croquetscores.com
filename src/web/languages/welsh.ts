@@ -517,8 +517,6 @@ export const welsh: Language = {
     "competition.playedTo": "Chwaraeir i {hoops} cylch",
     "competition.advantage":
       "Chwaraeir fel Golf Croquet Advantage. Mae pob sgôr yn gylchau chwaraewr fel canran o'u targed (SF%), gyda'u cylchau a'u targed wrth ei hochr.",
-    "blockSummary.ranking":
-      "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
     "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",
     "orderOfPlay.column.game": "Gêm",
     "orderOfPlay.column.date": "Dyddiad",

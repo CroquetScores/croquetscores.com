@@ -3261,7 +3261,6 @@ a.player-name[data-withdrawn] {
   white-space: nowrap;
 }
 
-.block-summary-ranking,
 .block-tie-break {
   font-size: var(--text-sm);
   color: var(--ink-muted);

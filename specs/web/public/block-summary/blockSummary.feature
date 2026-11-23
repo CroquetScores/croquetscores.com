@@ -296,12 +296,6 @@ Feature: A block's summary ranks its players
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the page does not say "Tie breaks are decided by net games then net hoops then who beat who."
 
-  Rule: Beneath the table the page says how the players are ranked
-
-    Scenario: The page says how the players are ranked
-      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
-      Then the page says "Ranked by the share of matches won. A tournament's own regulations may place its players otherwise."
-
   Rule: On a phone the summary fits the window
 
     Background:

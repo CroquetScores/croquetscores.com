@@ -532,8 +532,6 @@ export const portuguese: Language = {
     "competition.playedTo": "Jogado a {hoops} arcos",
     "competition.advantage":
       "Jogado como Advantage Croquet de Golfe. Cada pontuação é os arcos de um jogador como percentagem da sua meta (SF%), com os arcos e a meta ao lado.",
-    "blockSummary.ranking":
-      "Classificados pela proporção de partidas vencidas. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
     "orderOfPlay.none": "Nenhuma partida foi jogada ainda.",
     "orderOfPlay.column.game": "Jogo",
     "orderOfPlay.column.date": "Data",

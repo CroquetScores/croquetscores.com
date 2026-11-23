@@ -530,8 +530,6 @@ export const swedish: Language = {
     "competition.playedTo": "Spelas till {hoops} bågar",
     "competition.advantage":
       "Spelas som Advantage Golfcroquet. Varje resultat är en spelares bågar som procent av målet (SF%), med bågarna och målet bredvid.",
-    "blockSummary.ranking":
-      "Rankad efter andelen vunna matcher. En turnerings egna regler kan placera spelarna annorlunda.",
     "orderOfPlay.none": "Inga partier har spelats än.",
     "orderOfPlay.column.game": "Match",
     "orderOfPlay.column.date": "Datum",
