@@ -80,7 +80,7 @@ export const AddPlayersDialog = ({
     setProblems([]);
     try {
       const response = await fetch(
-        `/api/v0/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players/many`,
+        `/api/site/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players/many`,
         {
           method: "POST",
           headers: {

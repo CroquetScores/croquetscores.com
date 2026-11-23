@@ -1,14 +1,12 @@
 @postgres
-Feature: A tournament is archived, restored, judged and deleted through the API
+Feature: A tournament is archived and restored through the API
 
-  A tournament is set aside, brought back, or has its notable status taken
-  away by sending `POST /api/v0/tournaments/{id}/{action}` with no body, with
-  the tournament named by the part of its id after "tournament/". An
-  administrator deletes a test tournament by sending the words its managers
-  are told, and whether it is archived as well. The account
-  that asks, by session or by key (`writer.feature`), must be allowed to do it
-  to that tournament; what the tournament refuses is answered with its code,
-  as the API answers any refusal (`errors.feature`).
+  A tournament is set aside or brought back by sending
+  `POST /api/v0/tournaments/{id}/{action}` with no body, with the tournament
+  named by the part of its id after "tournament/". The account that asks, by
+  session or by key (`writer.feature`), must be allowed to do it to that
+  tournament; what the tournament refuses is answered with its code, as the
+  API answers any refusal (`errors.feature`).
 
   Each was at `/api/site/tournaments/{id}/{action}`, which the website's pages
   called. It is no longer there, so that there is one address for it to be at.
@@ -92,74 +90,19 @@ Feature: A tournament is archived, restored, judged and deleted through the API
       When the tournament "Spring Open" is restored at the address it was at
       Then the API answers 404
 
-  Rule: An administrator removes a tournament's notable status
+  Rule: What only the website's own pages ask is not offered
 
-    A tournament is national or international as its manager says, and an
-    administrator who judges it is neither removes that, which no manager may.
+    An administrator's judgements of a tournament, taking its notable status
+    away and deleting a test tournament, are asked of
+    `/api/site/tournaments/{id}` by the admin pages
+    (`administratorActions.feature`), and are not for apps, whoever asks.
 
-    Scenario: An administrator removes its national status
-      Given the tournament "Spring Open" is national
-      And the caller is signed in as "admin@example.com"
-      When the notable status of the tournament "Spring Open" is removed
-      Then the API answers 204
-
-    Scenario: A tournament whose status was removed is no longer national
-      Given the tournament "Spring Open" is national
-      And the caller is signed in as "admin@example.com"
-      And the notable status of the tournament "Spring Open" is removed
-      When the tournament "Spring Open" is read with that key
-      Then the tournament read says it is not national
-
-    Scenario: A reader who is not signed in may not remove it
-      When the notable status of the tournament "Spring Open" is removed
-      Then the API answers 401
-      And the API's code is "ApiKey.Missing"
-
-    Scenario: A manager who is no administrator may not remove it
-      Given the tournament "Spring Open" is national
-      And the caller is signed in as "organiser@example.com"
-      When the notable status of the tournament "Spring Open" is removed
-      Then the API answers 422
-
-    Scenario: The address it was at is gone
+    Scenario: Removing notable status is not offered
       Given the caller is signed in as "admin@example.com"
-      When the notable status of the tournament "Spring Open" is removed at the address it was at
+      When the notable status of the tournament "Spring Open" is removed through the API
       Then the API answers 404
 
-  Rule: An administrator deletes a test tournament
-
-    "Deleting" is the administrator's word: nothing the site keeps is deleted,
-    so the managers are told, and the tournament is archived where that is asked.
-
-    Scenario: An administrator deletes a test tournament and archives it
+    Scenario: Deleting a test tournament is not offered
       Given the caller is signed in as "admin@example.com"
-      When the tournament "Spring Open" is deleted with the words "This was a test." and archived
-      Then the API answers 204
-
-    Scenario: A tournament deleted and archived is listed as archived
-      Given the caller is signed in as "admin@example.com"
-      And the tournament "Spring Open" is deleted with the words "This was a test." and archived
-      When the archived tournaments are asked with that key
-      Then the archived tournaments are "Spring Open"
-
-    Scenario: A tournament deleted and not archived is not listed as archived
-      Given the caller is signed in as "admin@example.com"
-      And the tournament "Spring Open" is deleted with the words "This was a test." and not archived
-      When the archived tournaments are asked with that key
-      Then no tournaments are listed as archived
-
-    Scenario: A reader who is not signed in may not delete it
-      When the tournament "Spring Open" is deleted with the words "This was a test." and archived
-      Then the API answers 401
-      And the API's code is "ApiKey.Missing"
-
-    Scenario: A manager who is no administrator may not delete it
-      Given the caller is signed in as "organiser@example.com"
-      When the tournament "Spring Open" is deleted with the words "This was a test." and archived
-      Then the API answers 422
-      And the API's code is "Account.NotAnAdministrator"
-
-    Scenario: The address it was at is gone
-      Given the caller is signed in as "admin@example.com"
-      When the tournament "Spring Open" is deleted at the address it was at
+      When the tournament "Spring Open" is deleted through the API
       Then the API answers 404

@@ -65,7 +65,7 @@ When(
 );
 
 When(
-  "the players {string} and {string} are put into {string} of {string}",
+  "the players {string} and {string} are put into {string} of {string} through the API",
   async function (
     this: WebWorld,
     first: string,
@@ -77,28 +77,6 @@ When(
       this,
       "POST",
       `${competitionAt(this, competition, tournament, "/api/v0")}/players/many`,
-      {
-        players: [first, second].map(
-          (name) => playerOf(this, name, tournament).player,
-        ),
-      },
-    );
-  },
-);
-
-When(
-  "the players {string} and {string} are put into {string} of {string} at the address it was at",
-  async function (
-    this: WebWorld,
-    first: string,
-    second: string,
-    competition: string,
-    tournament: string,
-  ) {
-    await told(
-      this,
-      "POST",
-      `${competitionAt(this, competition, tournament, "/api/site")}/players/many`,
       {
         players: [first, second].map(
           (name) => playerOf(this, name, tournament).player,
@@ -138,13 +116,5 @@ Then(
   function (this: WebWorld, name: string) {
     const players = answered(this).body["players"] as { name: string }[];
     assert.equal(players[0]?.name, name);
-  },
-);
-
-Then(
-  "the API says the ids of two players in the competition",
-  function (this: WebWorld) {
-    const { ids } = answered(this).body;
-    assert.ok(Array.isArray(ids) && ids.length === 2);
   },
 );
