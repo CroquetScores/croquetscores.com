@@ -186,7 +186,7 @@ export const PlayerDialog = ({
         worldRankingName.trim() === "" ? name : worldRankingName;
       const response = await fetch(
         player === undefined
-          ? at
+          ? at.replace("/api/site/", "/api/v0/")
           : `${at}/${idInAddress(player.id)}${onlyWorldRankingName ? "/world-ranking-name" : ""}`,
         {
           method: player === undefined ? "POST" : "PUT",
@@ -234,6 +234,7 @@ export const PlayerDialog = ({
         nameField.current?.focus();
       } else {
         const answer = (await response.json()) as {
+          code?: string;
           error?: string;
           broken?: { code: string }[];
         };
@@ -246,7 +247,7 @@ export const PlayerDialog = ({
         } else {
           setRefused(
             answer.broken?.map(({ code }) => refusal(code)) ?? [
-              refusal(answer.error ?? "Unknown"),
+              refusal(answer.code ?? answer.error ?? "Unknown"),
             ],
           );
         }
