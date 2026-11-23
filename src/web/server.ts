@@ -1357,6 +1357,16 @@ export const buildApplication = async (
         ),
       worldRankingPlayers,
       unitOfWork,
+      // Written to the server's log at error, where the administrator who
+      // reads it will look. The server is made after this, so it is asked
+      // for when something is said.
+      {
+        error: (message, details) => {
+          server.log.error(details, message);
+        },
+      },
+      emailQueue,
+      config.administratorEmailAddress,
     ),
   );
   mediator.handleQuery(
@@ -1968,9 +1978,24 @@ export const buildApplication = async (
           )
         ).rows.map((row) => row.name),
       addWorldRankingPlayer: async (sport, name) => {
+        if (sport === "gc") {
+          await pool.query(
+            `insert into gc_world_ranking_players (name)
+             values ($1) on conflict do nothing`,
+            [name],
+          );
+          return;
+        }
+        // The next number and an identifier of its own, which no scenario
+        // that asks for a player by name is about.
         await pool.query(
-          `insert into ${worldRankingTables[sport]} (name)
-           values ($1) on conflict do nothing`,
+          `insert into ac_world_ranking_players
+             (ac_world_ranking_id, world_ranking_id, name, changed_at)
+           select 'ac-world-ranking-id/' || gen_random_uuid(),
+                  coalesce(max(world_ranking_id), 0) + 1, $1, now()
+             from ac_world_ranking_players
+            where not exists
+                  (select 1 from ac_world_ranking_players where name = $1)`,
           [name],
         );
       },

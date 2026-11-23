@@ -3,6 +3,8 @@ import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
+import type { EmailQueue } from "../../services/EmailQueue.js";
+import type { ErrorLog } from "../../services/ErrorLog.js";
 import type { Transactions } from "../../services/Transactions.js";
 import type { WorldRankingLists } from "../../services/WorldRankingLists.js";
 import type { WorldRankingPlayers } from "../../services/WorldRankingPlayers.js";
@@ -31,6 +33,10 @@ export class ImportWorldRankingPlayersHandler extends CommandHandler<
     private readonly lists: WorldRankingLists,
     private readonly players: WorldRankingPlayers,
     private readonly transactions: Transactions,
+    private readonly errors: ErrorLog,
+    private readonly queue: EmailQueue,
+    /** Who is told of a list that gives one name to two players. */
+    private readonly administrator: string,
   ) {
     super();
   }
@@ -44,8 +50,13 @@ export class ImportWorldRankingPlayersHandler extends CommandHandler<
         lists: this.lists,
         players: this.players,
         transactions: this.transactions,
+        errors: this.errors,
+        queue: this.queue,
+        administrator: this.administrator,
+        website: command.website,
       },
       command.report,
+      command.requestedAt,
     );
   }
 }

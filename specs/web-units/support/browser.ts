@@ -67,6 +67,12 @@ let baseUrl: string | undefined;
 // Nothing is the build the admin was built to.
 const deployedAs = new WeakMap<SpecWorld, string>();
 
+const noWorldRankings = (): ListRefused =>
+  new ListRefused(
+    "WorldRankingLists.Unreachable",
+    "The scenario stood up no world rankings.",
+  );
+
 /** The numbers the log writes information and a warning as. */
 export const INFORMATION = 30;
 export const WARNING = 40;
@@ -612,14 +618,12 @@ const itsOwn = async (
       // step standing it up comes after the application is built. With none,
       // the lists cannot be reached, as a site that is not there cannot.
       worldRankingLists: {
-        playersOf: (sport) =>
-          world.worldRankingLists?.playersOf(sport) ??
-          Promise.reject(
-            new ListRefused(
-              "WorldRankingLists.Unreachable",
-              "The scenario stood up no world rankings.",
-            ),
-          ),
+        associationCroquetPlayers: () =>
+          world.worldRankingLists?.associationCroquetPlayers() ??
+          Promise.reject(noWorldRankings()),
+        golfCroquetNames: () =>
+          world.worldRankingLists?.golfCroquetNames() ??
+          Promise.reject(noWorldRankings()),
       },
       // Never Google: a spec run has no business asking it, and a scenario
       // about being judged has to say what the judgement was. It judges a

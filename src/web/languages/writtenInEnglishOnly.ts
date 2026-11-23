@@ -13,6 +13,8 @@
  */
 export const writtenInEnglishOnly: readonly string[] = [
   "Email.NotableTournament",
+  "Email.WorldRankingDuplicateNames",
+  "Email.WorldRankingNameTaken",
   "Email.PossibleTestTournament",
   "Email.NationalStatusRemoved",
   "Email.InternationalStatusRemoved",
@@ -50,6 +52,12 @@ const administratorsPages: readonly string[] = [
   "admin.events.",
   "admin.hover.events.",
   "EventsOfTournament.",
+  // What the import of the world ranking players is refused with for names
+  // and numbers the lists give twice, which only the administrator who ran it
+  // reads.
+  "WorldRankingLists.DuplicateNames",
+  "WorldRankingLists.DuplicateNumbers",
+  "WorldRankingLists.NameTaken",
 ];
 
 /** Whether the catalogue entry `key` is one written in English only. */

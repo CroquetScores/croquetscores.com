@@ -36,6 +36,7 @@ const importAs = async (world: SpecWorld, address: string): Promise<void> => {
         asking.id.value,
         (report) => reports.push(report),
         momentOf(world),
+        "croquetscores.com",
       ),
     ),
   );
@@ -151,3 +152,74 @@ Then(
     assert.deepEqual(reportAt(this, place), { kind: "finished" });
   },
 );
+
+// Where the administrator is, which is what the handler is made with.
+Given(
+  "the administrator of the site is at {string}",
+  function (this: SpecWorld, address: string) {
+    registeringOf(this).importsWorldRankingPlayersTelling(address);
+  },
+);
+
+// What went wrong with a list that gave a name to two players, told the two
+// ways the administrator is: in the log, and by email.
+const SITE_ADMINISTRATOR = "administrator@example.com";
+const KINDS = {
+  "duplicate names": "Email.WorldRankingDuplicateNames",
+  "a name taken": "Email.WorldRankingNameTaken",
+} as const;
+
+Then(
+  "an error was logged naming {string}",
+  function (this: SpecWorld, name: string) {
+    const logged = registeringOf(this).errorsLogged();
+    assert.ok(
+      logged.some((line) => line.includes(name)),
+      `Logged ${inspect(logged)}.`,
+    );
+  },
+);
+
+const toldCount = async (
+  world: SpecWorld,
+  about: keyof typeof KINDS,
+): Promise<number> =>
+  (await registeringOf(world).queued()).filter(
+    (email) => email.kind === KINDS[about] && email.to === SITE_ADMINISTRATOR,
+  ).length;
+
+Then(
+  /^the administrator of the site was emailed (once|twice) about (duplicate names|a name taken)$/,
+  async function (this: SpecWorld, times: string, about: keyof typeof KINDS) {
+    assert.equal(await toldCount(this, about), times === "once" ? 1 : 2);
+  },
+);
+
+Then(
+  "the administrator of the site was not emailed about duplicate names",
+  async function (this: SpecWorld) {
+    assert.equal(await toldCount(this, "duplicate names"), 0);
+  },
+);
+
+Then(
+  "the email to the administrator names {string}",
+  async function (this: SpecWorld, name: string) {
+    const written = await registeringOf(this).writtenFor(SITE_ADMINISTRATOR);
+    assert.ok(written.includes(name), `The email does not name ${name}.`);
+  },
+);
+
+Then(
+  "the email to the administrator names the world ranking number {int}",
+  async function (this: SpecWorld, number: number) {
+    const written = await registeringOf(this).writtenFor(SITE_ADMINISTRATOR);
+    assert.match(written, new RegExp(`[(, ]${number}[,)]`));
+  },
+);
+
+// The queue refusing what the import gives it, as an administrator who cannot
+// be reached is.
+Given("the administrator cannot be emailed", function (this: SpecWorld) {
+  registeringOf(this).failsToQueueEmails();
+});

@@ -51,6 +51,8 @@ export class ImportWorldRankingPlayers
      */
     readonly report: (report: ImportReport) => void,
     requestedAt: ReadOnlyDate,
+    /** The host of the website it was asked on. */
+    readonly website: string,
   ) {
     super(requestedAt);
   }

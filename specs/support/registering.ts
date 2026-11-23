@@ -176,6 +176,20 @@ export interface Registering {
   /** Has reporting tell `address`, or nobody where there is none. */
   tellsAdministrator(address: string): void;
 
+  /**
+   * Registers the import of the world ranking players, telling `address` of
+   * a list that gives one name to two players, and keeps what it logs as an
+   * error. Registered when the scenario says where the administrator is, for
+   * the same reason as {@link tellsAdministrator}.
+   */
+  importsWorldRankingPlayersTelling(address: string): void;
+
+  /** From now on the queue refuses what it is given, for the import. */
+  failsToQueueEmails(): void;
+
+  /** Every error the import has logged, as it said it, with what it carried. */
+  errorsLogged(): readonly string[];
+
   /** Has asking for emergency access tell these addresses, or nobody where there are none. */
   emergencyContactsAre(addresses: readonly string[]): void;
 
