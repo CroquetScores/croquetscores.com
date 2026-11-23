@@ -10,7 +10,7 @@ import { headingOf, linesOf } from "../../support/headings.js";
 // once the page has loaded: nothing here waits for it to be drawn again. The
 // views it offers are said with the grid's (block.steps.ts).
 
-const places = ["first", "second", "third", "fourth"];
+const places = ["first", "second", "third", "fourth", "fifth"];
 
 const placeOf = (which: string): number => {
   const at = places.indexOf(which);
@@ -163,14 +163,14 @@ Then("the page does not scroll sideways", async function (this: WebWorld) {
 // Its columns --------------------------------------------------------------------
 
 Then(
-  /^the (first|second|third|fourth) column of the summary is headed "(.*)"$/,
+  /^the (first|second|third|fourth|fifth) column of the summary is headed "(.*)"$/,
   async function (this: WebWorld, which: string, heading: string) {
     assert.equal(await headingOf(headings(this).nth(placeOf(which))), heading);
   },
 );
 
 Then(
-  /^the (first|second|third) column of the summary is headed in (\d+) lines?$/,
+  /^the (first|second|third|fourth) column of the summary is headed in (\d+) lines?$/,
   async function (this: WebWorld, which: string, count: string) {
     assert.equal(
       (await linesOf(headings(this).nth(placeOf(which)))).length,

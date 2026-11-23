@@ -22,10 +22,14 @@ import { playerShown } from "./tournamentPages.js";
 const signed = (count: number): string =>
   count > 0 ? `+${String(count)}` : String(count);
 
-// The numbers beside each player, with the words they are headed by. A game
-// won is a match won where each match is a single game, so these serve a
-// block of any best-of.
+// The numbers beside each player, with the words they are headed by: the
+// matches they have won and lost, then, where a match is more than one game,
+// their net games, which decide a tie before hoops do, then their net hoops.
+// Where each match is a single game there are no net games to give. The games
+// won are left to the grid, which has the room, since a phone's table is only
+// as wide as its window.
 const columnsOf = (
+  bestOf: number,
   advantage: boolean,
 ): readonly {
   word: string;
@@ -33,6 +37,14 @@ const columnsOf = (
 }[] => [
   { word: "block.wins", of: (player) => String(player.matchesWon) },
   { word: "block.losses", of: (player) => String(player.matchesLost) },
+  ...(bestOf === 1
+    ? []
+    : [
+        {
+          word: "block.netGames",
+          of: (player: PlayerOfBlock) => signed(player.netGames),
+        },
+      ]),
   // In an Advantage block the same sum is of percentage points (block.feature).
   {
     word: advantage ? "block.netSf" : "block.netHoops",
@@ -62,7 +74,7 @@ const summary = (
   assets: Assets,
 ): string => {
   const { say } = speaking;
-  const columns = columnsOf(asked.block.advantage);
+  const columns = columnsOf(asked.block.bestOf, asked.block.advantage);
   const byId = playersById(asked);
   const rows = asked.ranked
     .flatMap((id) => {
