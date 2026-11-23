@@ -492,8 +492,6 @@ export const egyptian: Language = {
     "competition.playedTo": "بتتلعب لحد {hoops} حلقة",
     "competition.advantage":
       "بتتلعب جولف كروكيه بنظام Advantage. كل نتيجة هي حلقات اللاعب كنسبة مئوية من هدفه (SF%)، وجنبها حلقاته وهدفه.",
-    "blockSummary.ranking":
-      "الترتيب على حسب نسبة المباريات اللي اتكسبت. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
     "orderOfPlay.none": "لسه محدش لعب أي لعبة.",
     "orderOfPlay.column.game": "اللعبة",
     "orderOfPlay.column.date": "التاريخ",

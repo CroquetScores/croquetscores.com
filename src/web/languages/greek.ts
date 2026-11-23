@@ -563,8 +563,6 @@ export const greek: Language = {
     "competition.playedTo": "Παίζεται μέχρι {hoops} τόξα",
     "competition.advantage":
       "Παίζεται ως Advantage Golf Croquet. Κάθε σκορ είναι τα τόξα ενός παίκτη ως ποσοστό του στόχου του (SF%), με τα τόξα και τον στόχο του δίπλα.",
-    "blockSummary.ranking":
-      "Κατάταξη με βάση το ποσοστό των αγώνων που κερδήθηκαν. Οι κανονισμοί ενός τουρνουά μπορεί να κατατάσσουν τους παίκτες του διαφορετικά.",
     "orderOfPlay.none": "Δεν έχουν παιχτεί ακόμα παιχνίδια.",
     "orderOfPlay.column.game": "Παιχνίδι",
     "orderOfPlay.column.date": "Ημερομηνία",

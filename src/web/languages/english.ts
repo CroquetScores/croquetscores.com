@@ -529,8 +529,6 @@ export const english: Language = {
     "competition.playedTo": "Played to {hoops} hoops",
     "competition.advantage":
       "Played as Advantage Golf Croquet. Each score is a player's hoops as a percentage of their target (SF%), with their hoops and target beside it.",
-    "blockSummary.ranking":
-      "Ranked by the share of matches won. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",
     "orderOfPlay.column.game": "Game",
     "orderOfPlay.column.date": "Date",

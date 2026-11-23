@@ -4,20 +4,23 @@ Feature: A block's summary ranks its players
   A block is shown three ways (`block.feature`). Its summary, at the block's
   address followed by "summary", as
   "/2026/ac/spring-open/competitions/block-a/summary", is the one for a
-  phone: a short table with a row for each player and three numbers beside
+  phone: a short table with a row for each player and a few numbers beside
   them, where the grid has a column for every player.
 
   A row is headed by the player as the tournament's other pages show one:
   their name, leading to their own page, what they represent and their flag.
   A withdrawn player's row says they have withdrawn, and their name is struck
   through, since their games count for nothing
-  (`PublicBlockOfTournament.feature`). Beside them are the
-  matches they have won, headed "Wins", the matches they have lost, headed
-  "Losses", and their net hoops, headed "Net Hoops" and, being two words, on
-  two lines as the grid's headings are. Where each match is a single game, a
-  game won is a match won, so the same three serve a block of any best-of.
-  Net hoops carry their sign, as "+9" and "-9", so that ahead and behind
-  read as such down the column; none is "0".
+  (`PublicBlockOfTournament.feature`). Beside them are the matches they have
+  won, headed "Wins", and the matches they have lost, headed "Losses", then,
+  where a match is the best of more than one game, their net games, headed
+  "Net Games", and their net hoops, headed "Net Hoops", each of two words on two
+  lines as the grid's headings are. Where each match is a single game there
+  are no net games to say, so it is "Wins", "Losses" and "Net Hoops". Net
+  games and net hoops carry their sign, as "+9" and "-9", so that ahead and
+  behind read as such down the column; none is "0". Where the block is played
+  as Advantage Golf Croquet, net hoops are headed "Net SF%" in place, as they
+  are on the grid (`block.feature`).
 
   The rows are the players ranked (`PublicBlockOfTournament.feature`): by the
   share of their decided matches they have won, and those level on that as the
@@ -158,17 +161,24 @@ Feature: A block's summary ranks its players
       Then the summary scrolls sideways
       And the page does not scroll sideways
 
-  Rule: Beside each player are their wins, their losses and their net hoops
+  Rule: Where a match is the best of more than one game, beside each player are their wins, their losses, their net games and their net hoops
 
     Scenario: The columns are headed in order
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the first column of the summary is headed "Wins"
       And the second column of the summary is headed "Losses"
-      And the third column of the summary is headed "Net Hoops"
+      And the third column of the summary is headed "Net Games"
+      And the fourth column of the summary is headed "Net Hoops"
+      And the fifth column of the summary is headed "#"
 
     Scenario: A heading of two words is on two lines
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the third column of the summary is headed in 2 lines
+      And the fourth column of the summary is headed in 2 lines
+
+    Scenario: A heading of one word is on one line
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the first column of the summary is headed in 1 line
 
     Scenario: A player's wins are the matches they have won
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
@@ -181,6 +191,22 @@ Feature: A block's summary ranks its players
       And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the "Losses" of "Alex Another" in the summary are "1"
+
+    Scenario: Net games ahead carry a plus
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the "Net Games" of "Sam Someone" in the summary are "+2"
+
+    Scenario: Net games behind carry a minus
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the "Net Games" of "Alex Another" in the summary are "-2"
+
+    Scenario: No net games carry no sign
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the "Net Games" of "Sam Someone" in the summary are "0"
 
     Scenario: Net hoops ahead carry a plus
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
@@ -196,20 +222,45 @@ Feature: A block's summary ranks its players
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the "Net Hoops" of "Sam Someone" in the summary are "0"
 
-    Scenario: Where each match is a single game, a game won is a win
+  Rule: Where each match is a single game, beside each player are their wins, their losses and their net hoops
+
+    Background:
       Given the block is to be the best of 1
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
-      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+
+    Scenario: The columns are headed in order
+      When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
+      Then the first column of the summary is headed "Wins"
+      And the second column of the summary is headed "Losses"
+      And the third column of the summary is headed "Net Hoops"
+      And the fourth column of the summary is headed "#"
+
+    Scenario: A heading of two words is on two lines
+      When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
+      Then the third column of the summary is headed in 2 lines
+
+    Scenario: A player's wins are the games they have won
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
       Then the "Wins" of "Sam Someone" in the summary are "1"
+
+    Scenario: A player's losses are the games they have lost
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
+      Then the "Losses" of "Alex Another" in the summary are "1"
+
+    Scenario: Net hoops ahead carry a plus
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
+      Then the "Net Hoops" of "Sam Someone" in the summary are "+9"
 
   Rule: At the end of each row is the player's place
 
     Scenario: The last column is headed #
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
-      Then the fourth column of the summary is headed "#"
+      Then the fifth column of the summary is headed "#"
 
     Scenario: The first player's place is 1
       Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
@@ -296,12 +347,6 @@ Feature: A block's summary ranks its players
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the page does not say "Tie breaks are decided by net games then net hoops then who beat who."
 
-  Rule: Beneath the table the page says how the players are ranked
-
-    Scenario: The page says how the players are ranked
-      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
-      Then the page says "Ranked by the share of matches won. A tournament's own regulations may place its players otherwise."
-
   Rule: On a phone the summary fits the window
 
     Background:
@@ -367,8 +412,9 @@ Feature: A block's summary ranks its players
   Rule: A block played as Advantage Golf Croquet is summarised in net SF%
 
     As the grid shows it (`block.feature`): the page says it is played as
-    Advantage Golf Croquet, and its third column is headed "Net SF%", the
-    percentage points a player made less those made against them, in place of
+    Advantage Golf Croquet, and its net hoops column, the fourth where a match is
+    more than one game and the third where it is a single game, is headed
+    "Net SF%", the percentage points a player made less those made against them, in place of
     "Net Hoops". Its values are the plain numbers, with no percent sign after
     them since the heading already says what they are, and a plus or a minus
     before them as they do in any other block.
@@ -384,8 +430,17 @@ Feature: A block's summary ranks its players
       When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
       Then the competition says it is played as Advantage Golf Croquet
 
-    Scenario: The third column is headed Net SF%
+    Scenario: The fourth column is headed Net SF%
       When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
+      Then the fourth column of the summary is headed "Net SF%"
+
+    Scenario: Where each match is a single game the third column is headed Net SF%
+      Given the block is to be the best of 1
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block S" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block S" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block S" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-s/summary" is opened
       Then the third column of the summary is headed "Net SF%"
 
     Scenario: Net SF% ahead carries a plus
@@ -416,4 +471,4 @@ Feature: A block's summary ranks its players
 
     Scenario: A block that is not Advantage is still headed Net Hoops
       When the page at "/2026/gc/spring-open/competitions/block-a/summary" is opened
-      Then the third column of the summary is headed "Net Hoops"
+      Then the fourth column of the summary is headed "Net Hoops"
