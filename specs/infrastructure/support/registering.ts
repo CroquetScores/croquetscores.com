@@ -214,6 +214,9 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   const unitOfWork = unitOfWorkOf(world);
   const accounts = keepAccounts(world, aSiteKey());
   const { queue } = queueingOf(world);
+  const worldRankingLists = listsStoodUpBy(world);
+  const errorsLogged: string[] = [];
+  let queueFails = false;
 
   const refusing = new RefusingProjection();
   const store = new ProjectingEventStore(accounts.store, [
@@ -388,15 +391,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   mediator.handleQuery(
     new AccountsWithRoleHandler(repository, accounts.byRole),
   );
-  const worldRankingLists = listsStoodUpBy(world);
-  mediator.handleCommand(
-    new ImportWorldRankingPlayersHandler(
-      repository,
-      worldRankingLists,
-      new PostgresWorldRankingPlayers(unitOfWork),
-      unitOfWork,
-    ),
-  );
+
   const keptImportErrors = new PostgresKeptImportErrors(unitOfWork);
   mediator.handleQuery(
     new ImportErrorsKeptHandler(repository, keptImportErrors),
@@ -690,6 +685,35 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
 
     // Registered when the scenario says who the administrator is, since that
     // is what the handler is made with, as the site's is made with its config.
+    importsWorldRankingPlayersTelling(address) {
+      mediator.handleCommand(
+        new ImportWorldRankingPlayersHandler(
+          repository,
+          worldRankingLists,
+          new PostgresWorldRankingPlayers(unitOfWork),
+          unitOfWork,
+          {
+            error: (message, details) => {
+              errorsLogged.push(`${message} ${JSON.stringify(details)}`);
+            },
+          },
+          {
+            queue: (email) =>
+              queueFails
+                ? Promise.reject(new Error("The queue refused it."))
+                : queue.queue(email),
+          },
+          address,
+        ),
+      );
+    },
+
+    errorsLogged: () => errorsLogged,
+
+    failsToQueueEmails() {
+      queueFails = true;
+    },
+
     tellsAdministrator(address) {
       mediator.handleCommand(
         new ReportUnreachableServiceHandler(queue, written, address),

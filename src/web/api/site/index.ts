@@ -802,6 +802,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
           saidSomething();
         },
         request.requestedAt,
+        websiteOf(request).host,
       ),
     );
     // Throws a refusal that comes first, for the errors to answer.

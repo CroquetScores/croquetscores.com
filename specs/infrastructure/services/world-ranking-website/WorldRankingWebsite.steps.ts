@@ -5,25 +5,35 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
-import { ListRefused } from "../../../../src/application/services/WorldRankingLists.js";
+import {
+  DuplicateNamesRefused,
+  ListRefused,
+} from "../../../../src/application/services/WorldRankingLists.js";
 import { SPORT, sportCalled } from "../../support/worldRankings.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 // What the last reading answered, or what it was refused with, kept apart for
 // each scenario.
+// A player as read, with the number the rankings give them where the sport's
+// list has one.
+interface Read {
+  readonly name: string;
+  readonly worldRankingId?: number;
+}
+
 const read = new WeakMap<
   SpecWorld,
-  { names?: readonly string[]; refused?: unknown }
+  { players?: readonly Read[]; refused?: unknown }
 >();
 
-const readOf = (world: SpecWorld): readonly string[] => {
+const readOf = (world: SpecWorld): readonly Read[] => {
   const found = read.get(world);
   assert.ok(found !== undefined, "Nothing has been read.");
   assert.ok(
-    found.names !== undefined,
+    found.players !== undefined,
     `The reading was refused: ${inspect(found.refused)}.`,
   );
-  return found.names;
+  return found.players;
 };
 
 When(
@@ -32,7 +42,11 @@ When(
     const lists = this.worldRankingLists;
     assert.ok(lists !== undefined, "There is no fake of the world rankings.");
     try {
-      read.set(this, { names: await lists.playersOf(sportCalled(sport)) });
+      const players =
+        sportCalled(sport) === "ac"
+          ? await lists.associationCroquetPlayers()
+          : (await lists.golfCroquetNames()).map((name) => ({ name }));
+      read.set(this, { players });
     } catch (refused) {
       read.set(this, { refused });
     }
@@ -42,15 +56,22 @@ When(
 Then(
   "the first player read is {string}",
   function (this: SpecWorld, fullName: string) {
-    assert.equal(readOf(this)[0], fullName);
+    assert.equal(readOf(this)[0]?.name, fullName);
+  },
+);
+
+Then(
+  "the first player read has the world ranking number {int}",
+  function (this: SpecWorld, number: number) {
+    assert.equal(readOf(this)[0]?.worldRankingId, number);
   },
 );
 
 Then(
   /^(\d+) players? (?:is|are) read$/,
   function (this: SpecWorld, count: string) {
-    const names = readOf(this);
-    assert.equal(names.length, Number(count), `Read ${inspect(names)}.`);
+    const players = readOf(this);
+    assert.equal(players.length, Number(count), `Read ${inspect(players)}.`);
   },
 );
 
@@ -67,5 +88,29 @@ Then(
       `Expected a refusal, and got ${inspect(read.get(this))}.`,
     );
     assert.equal(refused.code, code);
+  },
+);
+
+const duplicatesOf = (world: SpecWorld): DuplicateNamesRefused => {
+  const refused = read.get(world)?.refused;
+  assert.ok(
+    refused instanceof DuplicateNamesRefused,
+    `Expected duplicate names, and got ${inspect(read.get(world))}.`,
+  );
+  return refused;
+};
+
+Then("the refusal names {string}", function (this: SpecWorld, name: string) {
+  assert.ok(duplicatesOf(this).duplicates.some((each) => each.name === name));
+});
+
+Then(
+  "the refusal names the world ranking number {int}",
+  function (this: SpecWorld, number: number) {
+    assert.ok(
+      duplicatesOf(this).duplicates.some((each) =>
+        each.worldRankingIds.includes(number),
+      ),
+    );
   },
 );

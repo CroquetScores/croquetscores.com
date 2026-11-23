@@ -1,8 +1,10 @@
 // The players' lists as the world rankings keep them on their own site
 // (WorldRankingWebsite.feature): a file for each sport, a line to a player,
 // the player's details separated by commas. Only each player's full name is
-// read.
+// read, and for association croquet the number the rankings give them.
 import {
+  type AssociationCroquetPlayer,
+  DuplicateNamesRefused,
   ListRefused,
   type WorldRankingLists,
   type WorldRankingSport,
@@ -44,6 +46,10 @@ const LAYOUTS: Readonly<
   gc: { details: 17, firstName: 3, surname: 1 },
 };
 
+// The most a number can be and still be kept, which is as large as the
+// database's integer goes.
+const MOST_ID = 2_147_483_647;
+
 const unreachable = (
   sport: WorldRankingSport,
   what: string,
@@ -69,8 +75,64 @@ export class WorldRankingWebsite implements WorldRankingLists {
     private readonly waitMilliseconds: number = defaultWaitMilliseconds,
   ) {}
 
-  async playersOf(sport: WorldRankingSport): Promise<readonly string[]> {
-    return this.namesIn(sport, await this.fetched(sport));
+  async associationCroquetPlayers(): Promise<
+    readonly AssociationCroquetPlayer[]
+  > {
+    const players: AssociationCroquetPlayer[] = [];
+    for (const { details, index } of this.linesOf(
+      "ac",
+      await this.fetched("ac"),
+    )) {
+      const worldRankingId = Number(details[0]);
+      if (!/^\d+$/.test(details[0] ?? "") || worldRankingId > MOST_ID) {
+        throw unreadable("ac", `could not be read at line ${index + 1}`);
+      }
+      players.push({ worldRankingId, name: this.nameOn("ac", details) });
+    }
+    this.somebody("ac", players);
+
+    // Refused whole where a name is two players or a number is two names:
+    // the site finds a player by either, and could not tell them apart.
+    // Names are matched exactly, as the site spells them.
+    const numbersOf = new Map<string, number[]>();
+    const nameOf = new Map<number, string>();
+    let numberGivenTwice: number | undefined;
+    for (const { worldRankingId, name } of players) {
+      numbersOf.set(name, [...(numbersOf.get(name) ?? []), worldRankingId]);
+      const had = nameOf.get(worldRankingId);
+      if (had !== undefined && had !== name) numberGivenTwice = worldRankingId;
+      nameOf.set(worldRankingId, name);
+    }
+    const duplicates = [...numbersOf]
+      .filter(([, numbers]) => numbers.length > 1)
+      .map(([name, worldRankingIds]) => ({ name, worldRankingIds }));
+    if (duplicates.length > 0) {
+      throw new DuplicateNamesRefused(
+        `The world rankings' ${worldRankingSportNames.ac} list gives a full name to more than one player, so none of it was read: ${duplicates
+          .map(
+            ({ name, worldRankingIds }) =>
+              `${name} (${worldRankingIds.join(", ")})`,
+          )
+          .join("; ")}.`,
+        duplicates,
+      );
+    }
+    if (numberGivenTwice !== undefined) {
+      throw new ListRefused(
+        "WorldRankingLists.DuplicateNumbers",
+        `The world rankings' ${worldRankingSportNames.ac} list gives the number ${numberGivenTwice} to more than one name, so none of it was read.`,
+      );
+    }
+    return players;
+  }
+
+  async golfCroquetNames(): Promise<readonly string[]> {
+    // A Set keeps each name once, in the order the list first names it.
+    const names = new Set<string>();
+    for (const { details } of this.linesOf("gc", await this.fetched("gc"))) {
+      names.add(this.nameOn("gc", details));
+    }
+    return this.somebody("gc", [...names]);
   }
 
   // The whole of the list, as it was sent. The time allowed covers reading
@@ -95,7 +157,12 @@ export class WorldRankingWebsite implements WorldRankingLists {
     }
   }
 
-  private namesIn(sport: WorldRankingSport, body: Uint8Array): string[] {
+  // Every line that is a player's, with its details, refused where any is not
+  // laid out as its sport's are.
+  private linesOf(
+    sport: WorldRankingSport,
+    body: Uint8Array,
+  ): { details: string[]; index: number }[] {
     let text: string;
     try {
       // Refused rather than read with a stand-in for what is not UTF-8,
@@ -106,19 +173,29 @@ export class WorldRankingWebsite implements WorldRankingLists {
     }
 
     const { details, firstName, surname } = LAYOUTS[sport];
-    // A Set keeps each name once, in the order the list first names it.
-    const names = new Set<string>();
+    const lines: { details: string[]; index: number }[] = [];
     for (const [index, line] of text.split(/\r?\n/).entries()) {
       if (line.trim() === "") continue;
       const said = line.split(",").map((detail) => detail.trim());
-      const first = said[firstName] ?? "";
-      const last = said[surname] ?? "";
-      if (said.length !== details || first === "" || last === "") {
+      if (
+        said.length !== details ||
+        (said[firstName] ?? "") === "" ||
+        (said[surname] ?? "") === ""
+      ) {
         throw unreadable(sport, `could not be read at line ${index + 1}`);
       }
-      names.add(`${first} ${last}`);
+      lines.push({ details: said, index });
     }
-    if (names.size === 0) throw unreadable(sport, "has nobody on it");
-    return [...names];
+    return lines;
+  }
+
+  private nameOn(sport: WorldRankingSport, details: string[]): string {
+    const { firstName, surname } = LAYOUTS[sport];
+    return `${details[firstName] ?? ""} ${details[surname] ?? ""}`;
+  }
+
+  private somebody<T>(sport: WorldRankingSport, players: T[]): T[] {
+    if (players.length === 0) throw unreadable(sport, "has nobody on it");
+    return players;
   }
 }

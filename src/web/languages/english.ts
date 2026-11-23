@@ -801,6 +801,14 @@ export const english: Language = {
     "admin.worldRankings.otherwise": "Something went wrong on the site.",
     "WorldRankingLists.Unreachable":
       "The world rankings' site could not be reached.",
+    // The three below are for the administrator who ran the import, and are
+    // written in English only (writtenInEnglishOnly.ts).
+    "WorldRankingLists.DuplicateNames":
+      "The association croquet list gives one full name to more than one player, so none of it was kept. The administrator has been emailed which names.",
+    "WorldRankingLists.DuplicateNumbers":
+      "The association croquet list gives one world ranking number to more than one name, so none of it was kept.",
+    "WorldRankingLists.NameTaken":
+      "The association croquet list gives a name to a player when the site already keeps it for another, so none of it was kept. The administrator has been emailed which names.",
     "WorldRankingLists.Unreadable":
       "The list is not laid out as the world rankings lay theirs out: a line in it could not be read, it has nobody on it, or it is not written in UTF-8.",
     // The documents the import from the old sites refused, and the page of one.
@@ -2008,6 +2016,55 @@ export const english: Language = {
 
     // Written in English only, in no other catalogue: it goes to the
     // administrator, and every other language falls back to these words.
+    "Email.WorldRankingDuplicateNames.subject":
+      "The association croquet world rankings list gives one name to two players",
+    "Email.WorldRankingDuplicateNames.body": `
+<p>Hi,</p>
+
+<p>
+    The import of the association croquet world rankings list was refused,
+    and none of it was kept, because the list gives one full name to more
+    than one player. Each name is followed by the world ranking numbers it is
+    given to:
+</p>
+
+<p>{names}</p>
+
+<p>
+    It will be refused again, and you will be told again, by every import
+    until the list at the world rankings is corrected.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+    "Email.WorldRankingNameTaken.subject":
+      "The association croquet world rankings list gives a name the site keeps for another player",
+    "Email.WorldRankingNameTaken.body": `
+<p>Hi,</p>
+
+<p>
+    The import of the association croquet world rankings list was refused,
+    and none of it was kept, because the list gives these names to players
+    other than the ones the site keeps them for. A player may have been
+    renamed to the name of one the rankings no longer list, or two players may
+    have swapped names:
+</p>
+
+<p>{names}</p>
+
+<p>
+    It will be refused again, and you will be told again, by every import
+    until the list at the world rankings is corrected.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
     "Email.NotableTournament.subject":
       "A {level} tournament was {change}: {tournament}",
     "Email.NotableTournament.body": `

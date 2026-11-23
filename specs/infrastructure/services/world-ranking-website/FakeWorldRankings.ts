@@ -45,6 +45,12 @@ const lineNaming = (
     : `${number},${surname},${first},${first},m,ENG,ENG,,2000,2000,,,,,1,0,0`;
 };
 
+// A full name as its first name, then its surname, which is the rest.
+const splitName = (fullName: string): [string, string] => {
+  const space = fullName.indexOf(" ");
+  return [fullName.slice(0, space), fullName.slice(space + 1)];
+};
+
 export class FakeWorldRankings {
   /** The path of every request made of it, in order. */
   readonly asked: string[] = [];
@@ -100,6 +106,31 @@ export class FakeWorldRankings {
         .split(",")
         .map((detail) => detail.trim());
       return !said.includes(first) || !said.includes(surname);
+    });
+  }
+
+  /**
+   * Gives the player named `was` the name `now`, as the rankings do when a
+   * player's name is corrected: the line keeps its number, so it is still the
+   * same player.
+   */
+  renames(sport: WorldRankingSport, was: string, now: string): void {
+    const [oldFirst = "", oldSurname = ""] = splitName(was);
+    const [first, surname] = splitName(now);
+    const at = { ac: { first: 6, surname: 1 }, gc: { first: 3, surname: 1 } }[
+      sport
+    ];
+    this.lines[sport] = this.lines[sport].map((line) => {
+      const details = line.toString("utf8").split(",");
+      if (
+        details[at.first]?.trim() !== oldFirst ||
+        details[at.surname]?.trim() !== oldSurname
+      ) {
+        return line;
+      }
+      details[at.first] = first;
+      details[at.surname] = surname;
+      return Buffer.from(details.join(","), "utf8");
     });
   }
 

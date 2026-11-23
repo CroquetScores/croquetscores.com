@@ -1,11 +1,18 @@
-// The players the world rankings know, by their full names, in a table for
-// each sport (PostgresWorldRankingPlayers.feature), and found by them
+// The players the world rankings know, in a table for each sport
+// (PostgresWorldRankingPlayers.feature): golf croquet's by their full names,
+// replaced whole, and association croquet's by world ranking number, brought
+// up to date with the rankings' list. Found by their names
 // (WorldRankingPlayersMatching.feature).
-import type { WorldRankingSport } from "../../application/services/WorldRankingLists.js";
+import {
+  type AssociationCroquetPlayer,
+  NameTakenRefused,
+  type WorldRankingSport,
+} from "../../application/services/WorldRankingLists.js";
 import type {
   WorldRankingPlayerNames,
   WorldRankingPlayers,
 } from "../../application/services/WorldRankingPlayers.js";
+import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "./UnitOfWork.js";
 
 // Written out rather than made from the sport, so that nothing a caller says
@@ -29,12 +36,9 @@ export class PostgresWorldRankingPlayers
 {
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
-  async replace(
-    sport: WorldRankingSport,
-    names: readonly string[],
-  ): Promise<void> {
+  async replaceGolfCroquet(names: readonly string[]): Promise<void> {
     const connection = this.unitOfWork.connection();
-    const table = TABLES[sport];
+    const table = TABLES.gc;
     // A lock that two replacings cannot both hold, so that the second waits
     // for the first to commit and then replaces what it kept. Without it the
     // second deletes only the rows it could see when it began, and its
@@ -47,6 +51,76 @@ export class PostgresWorldRankingPlayers
       `insert into ${table} (name)
        select distinct name from unnest($1::text[]) as given (name)`,
       [names],
+    );
+  }
+
+  // Not replaced whole, as golf croquet's are: the number the rankings give a
+  // player is what identifies them here, and a player who drops off the list
+  // is still one the site has met, so is archived rather than let go. The
+  // same lock as golf croquet's, for the same reason.
+  async keepAssociationCroquet(
+    players: readonly AssociationCroquetPlayer[],
+    at: ReadOnlyDate,
+  ): Promise<void> {
+    // Nobody given is no list the rankings would send, and would archive
+    // everybody kept (an empty array is one nobody is different from), so
+    // nothing is done.
+    if (players.length === 0) return;
+    const connection = this.unitOfWork.connection();
+    const table = TABLES.ac;
+    await connection.query(`lock table ${table} in share row exclusive mode`);
+    const numbers = players.map((player) => player.worldRankingId);
+    const names = players.map((player) => player.name);
+    // A name is one player's, so a name on the list that another number holds
+    // is refused before anything is written, whether that player is listed
+    // or archived: the table would refuse it anyway, with nothing to say what
+    // was wrong, and a swap of names in one list is refused with the rest
+    // rather than guessed at.
+    const { rows: taken } = await connection.query<{ name: string }>(
+      `select kept.name
+         from unnest($1::integer[], $2::text[]) as given (world_ranking_id, name)
+         join ${table} kept
+           on kept.name = given.name
+          and kept.world_ranking_id <> given.world_ranking_id
+        order by kept.name`,
+      [numbers, names],
+    );
+    if (taken.length > 0) {
+      const named = taken.map((row) => row.name);
+      throw new NameTakenRefused(
+        `The world rankings' association croquet list gives ${named.join(", ")} to a player other than the one the site keeps it for, so none of it was kept.`,
+        named,
+      );
+    }
+    // The identifier is made here, one for each player given, and kept only
+    // for those that are new: a player kept before keeps the one they have.
+    await connection.query(
+      `insert into ${table}
+         (ac_world_ranking_id, world_ranking_id, name, changed_at)
+       select given.ac_world_ranking_id, given.world_ranking_id, given.name, $4
+         from unnest($1::text[], $2::integer[], $3::text[])
+              as given (ac_world_ranking_id, world_ranking_id, name)
+       on conflict (world_ranking_id) do update
+          set name = excluded.name,
+              changed_at = excluded.changed_at,
+              archived_at = null
+        where ${table}.name is distinct from excluded.name
+           or ${table}.archived_at is not null`,
+      [
+        players.map(
+          () => `ac-world-ranking-id/${globalThis.crypto.randomUUID()}`,
+        ),
+        numbers,
+        names,
+        at.toDate(),
+      ],
+    );
+    await connection.query(
+      `update ${table}
+          set archived_at = $2, changed_at = $2
+        where archived_at is null
+          and world_ranking_id <> all($1::integer[])`,
+      [numbers, at.toDate()],
     );
   }
 

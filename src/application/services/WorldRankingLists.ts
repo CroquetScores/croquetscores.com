@@ -23,7 +23,11 @@ export const isWorldRankingSport = (code: string): code is WorldRankingSport =>
 
 /** Every way reading a list can be refused. */
 export type WorldRankingListsErrorCode =
-  "WorldRankingLists.Unreachable" | "WorldRankingLists.Unreadable";
+  | "WorldRankingLists.Unreachable"
+  | "WorldRankingLists.Unreadable"
+  | "WorldRankingLists.DuplicateNames"
+  | "WorldRankingLists.DuplicateNumbers"
+  | "WorldRankingLists.NameTaken";
 
 /**
  * A list that was not read. Named by a code, because the code is the
@@ -32,18 +36,68 @@ export type WorldRankingListsErrorCode =
  */
 export class ListRefused extends Refused<WorldRankingListsErrorCode> {}
 
+/** A full name the list gives to more than one player, and their numbers. */
+export interface DuplicateName {
+  readonly name: string;
+  readonly worldRankingIds: readonly number[];
+}
+
+/**
+ * An association croquet list that gives one full name to two players, kept
+ * apart from {@link ListRefused} so that what is told to the administrator
+ * can say which names and which numbers.
+ */
+export class DuplicateNamesRefused extends ListRefused {
+  constructor(
+    message: string,
+    readonly duplicates: readonly DuplicateName[],
+  ) {
+    super("WorldRankingLists.DuplicateNames", message);
+  }
+}
+
+/**
+ * An association croquet list that gives a name to a player when the site
+ * keeps it for another number, kept apart for the same reason as
+ * {@link DuplicateNamesRefused}.
+ */
+export class NameTakenRefused extends ListRefused {
+  constructor(
+    message: string,
+    readonly names: readonly string[],
+  ) {
+    super("WorldRankingLists.NameTaken", message);
+  }
+}
+
+/**
+ * An association croquet player as the rankings list them: the number the
+ * rankings keep them by, which does not change when their name does, and
+ * their full name.
+ */
+export interface AssociationCroquetPlayer {
+  readonly worldRankingId: number;
+  readonly name: string;
+}
+
 /**
  * What the application wants of the place the world rankings keep the players
  * they know (WorldRankingWebsite.feature).
  *
- * A list is read whole or not at all: a list read in part would let go of
- * every player it did not reach.
+ * A list is read whole or not at all: a list read in part would archive or
+ * let go of every player it did not reach.
  */
 export interface WorldRankingLists {
   /**
-   * The full name of every player on `sport`'s list, each name once. Throws
-   * {@link ListRefused} where the list could not be asked for, or where any
-   * of it could not be read.
+   * Every player on association croquet's list, each world ranking number
+   * once. Throws {@link ListRefused} where the list could not be asked for,
+   * or where any of it could not be read.
    */
-  playersOf(sport: WorldRankingSport): Promise<readonly string[]>;
+  associationCroquetPlayers(): Promise<readonly AssociationCroquetPlayer[]>;
+
+  /**
+   * The full name of every player on golf croquet's list, each name once.
+   * Throws {@link ListRefused} as above.
+   */
+  golfCroquetNames(): Promise<readonly string[]>;
 }

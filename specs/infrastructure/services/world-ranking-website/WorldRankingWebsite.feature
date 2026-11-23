@@ -17,9 +17,21 @@ Feature: Reading the players' lists from the world rankings' site
   then the second, their surname. The spaces padding a detail are not part of
   it.
 
-  Each full name is read once, however many lines name it: a name is all
-  that is kept of a player, and two players of the same name could not be
-  told apart by it.
+  Each golf croquet full name is read once, however many lines name it: a
+  name is all that is kept of a golf croquet player, and two players of the
+  same name could not be told apart by it.
+
+  An association croquet player is read with their world ranking number as
+  well, which is the first detail on their line, a whole number with the
+  spaces padding it left out. A line whose first detail is not a whole number
+  is refused like any other that cannot be read.
+
+  Unlike golf croquet's, an association croquet list may not give one full
+  name to two players, whatever their numbers: the site finds a player by
+  their name, and a name that is two players cannot be told apart. Such a
+  list is refused as `WorldRankingLists.DuplicateNames`, whole, and says
+  which names and which numbers, for whoever has to correct the list at the
+  rankings.
 
   A list is read whole or not at all, since a list read in part would let go
   of every player it did not reach. So a list is refused as
@@ -58,6 +70,60 @@ Feature: Reading the players' lists from the world rankings' site
       When the association croquet list is read
       Then 2 players are read
 
+  Rule: An association croquet player is read with their world ranking number
+
+    Scenario: The player's world ranking number is read
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the first player read has the world ranking number 3
+
+    Scenario: Two lines with the same full name are refused
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      And the association croquet list has the line "     9,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the reading is refused with "WorldRankingLists.DuplicateNames"
+
+    Scenario: The refusal names the full name given twice
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      And the association croquet list has the line "     9,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the refusal names "Keith Aiton"
+
+    Scenario: The refusal names the first world ranking number of the name
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      And the association croquet list has the line "     9,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the refusal names the world ranking number 3
+
+    Scenario: The refusal names the second world ranking number of the name
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      And the association croquet list has the line "     9,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the refusal names the world ranking number 9
+
+    Scenario: Two lines with the same number and name are refused
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      And the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the reading is refused with "WorldRankingLists.DuplicateNames"
+
+    Scenario: Two lines with the same number and different names are refused
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      And the association croquet list has the line "     3,Aldridge,WO,       ,England,      100,Bill, , ,Chs, ,Standard, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the reading is refused with "WorldRankingLists.DuplicateNumbers"
+
+    Scenario: Names that differ only in case are not the same name
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      And the association croquet list has the line "     9,AITON,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then 2 players are read
+
+    Scenario: A line whose world ranking number is not a whole number is refused
+      Given the association croquet list has the line "  none,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the reading is refused with "WorldRankingLists.Unreadable"
+
   Rule: A golf croquet player's full name is the name they are known by and their surname
 
     Scenario: The player's full name is read
@@ -71,7 +137,7 @@ Feature: Reading the players' lists from the world rankings' site
       When the golf croquet list is read
       Then 2 players are read
 
-  Rule: Each full name is read once
+  Rule: Each golf croquet full name is read once
 
     Scenario: Two lines with the same full name are one player
       Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"

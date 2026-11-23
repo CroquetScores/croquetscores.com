@@ -1,19 +1,36 @@
-import type { WorldRankingSport } from "./WorldRankingLists.js";
+import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
+import type {
+  AssociationCroquetPlayer,
+  WorldRankingSport,
+} from "./WorldRankingLists.js";
 
 /**
- * Where the players the world rankings know are kept, by their full names, a
- * sport's apart from the other's (PostgresWorldRankingPlayers.feature).
+ * Where the players the world rankings know are kept, a sport's apart from
+ * the other's (PostgresWorldRankingPlayers.feature).
  *
  * Kept rather than projected: they are the rankings' and not the site's, so
- * nothing records them as events, and an import replaces them whole.
+ * nothing records them as events.
  */
 export interface WorldRankingPlayers {
   /**
-   * Lets go of every player kept for `sport` and keeps `names`, each once.
-   * Done in the transaction underway, and after any other replacing of the
-   * same sport's players rather than alongside it.
+   * Lets go of every golf croquet player kept and keeps `names`, each once.
+   * Done in the transaction underway, and after any other replacing rather
+   * than alongside it.
    */
-  replace(sport: WorldRankingSport, names: readonly string[]): Promise<void>;
+  replaceGolfCroquet(names: readonly string[]): Promise<void>;
+
+  /**
+   * Keeps `players` as association croquet's list now has them, at `at`: one
+   * not kept before is added, one whose name has changed is renamed, one
+   * archived and listed again is no longer archived, and one kept and no
+   * longer listed is archived, unless it already was. Nobody is let go of,
+   * since the site has met them. Done in the transaction underway, and after
+   * any other keeping rather than alongside it.
+   */
+  keepAssociationCroquet(
+    players: readonly AssociationCroquetPlayer[],
+    at: ReadOnlyDate,
+  ): Promise<void>;
 }
 
 /**

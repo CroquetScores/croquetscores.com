@@ -47,13 +47,17 @@ const fakes = new WeakMap<SpecWorld, FakeWorldRankings>();
  * may come after whatever is given these, and a step may stand a reading of
  * its own up in place of the first, as holding a list back does.
  */
-export const listsStoodUpBy = (world: SpecWorld): WorldRankingLists => ({
-  playersOf: (sport) => {
+export const listsStoodUpBy = (world: SpecWorld): WorldRankingLists => {
+  const stoodUp = (): WorldRankingLists => {
     const lists = world.worldRankingLists;
     assert.ok(lists !== undefined, "There is no fake of the world rankings.");
-    return lists.playersOf(sport);
-  },
-});
+    return lists;
+  };
+  return {
+    associationCroquetPlayers: () => stoodUp().associationCroquetPlayers(),
+    golfCroquetNames: () => stoodUp().golfCroquetNames(),
+  };
+};
 
 export const fakeRankingsOf = (world: SpecWorld): FakeWorldRankings => {
   const fake = fakes.get(world);
@@ -85,6 +89,26 @@ Given(
   new RegExp(`^the ${SPORT} list names "([^"]*)"$`),
   function (this: SpecWorld, sport: string, fullName: string) {
     fakeRankingsOf(this).names(sportCalled(sport), fullName);
+  },
+);
+
+// A second player of the same name, with a number of its own, which is what a
+// list that gives one name to two players is.
+Given(
+  new RegExp(
+    `^the ${SPORT} list names "([^"]*)" again with another world ranking number$`,
+  ),
+  function (this: SpecWorld, sport: string, fullName: string) {
+    fakeRankingsOf(this).names(sportCalled(sport), fullName);
+  },
+);
+
+Given(
+  new RegExp(
+    `^the ${SPORT} list names the player who was "([^"]*)" as "([^"]*)"$`,
+  ),
+  function (this: SpecWorld, sport: string, was: string, now: string) {
+    fakeRankingsOf(this).renames(sportCalled(sport), was, now);
   },
 );
 
@@ -220,6 +244,41 @@ Then(
   },
 );
 
+// Whether a kept player has been archived, which only association croquet's
+// are. A player not kept at all is neither.
+const archivedAt = (
+  world: SpecWorld,
+  name: string,
+): Promise<{ found: boolean; archived: boolean }> =>
+  fromOutside(world, async (outside) => {
+    const { rows } = await outside.query<{ archived: boolean }>(
+      `select archived_at is not null as archived
+         from ${TABLES.ac} where name = $1`,
+      [name],
+    );
+    return { found: rows.length > 0, archived: rows[0]?.archived === true };
+  });
+
+Then(
+  /^"([^"]*)" is archived among the association croquet players$/,
+  async function (this: SpecWorld, name: string) {
+    assert.deepEqual(await archivedAt(this, name), {
+      found: true,
+      archived: true,
+    });
+  },
+);
+
+Then(
+  /^"([^"]*)" is not archived among the association croquet players$/,
+  async function (this: SpecWorld, name: string) {
+    assert.deepEqual(await archivedAt(this, name), {
+      found: true,
+      archived: false,
+    });
+  },
+);
+
 Then(
   new RegExp(`^(\\d+) ${SPORT} players? (?:is|are) kept$`),
   async function (this: SpecWorld, count: string, sport: string) {
@@ -228,17 +287,39 @@ Then(
   },
 );
 
+// A player straight into a sport's table. An association croquet player is
+// given the next number and an identifier of its own, which nothing here is
+// about.
+const putIn = async (
+  world: SpecWorld,
+  sport: WorldRankingSport,
+  name: string,
+): Promise<void> => {
+  if (sport === "gc") {
+    await world.database.query(
+      `insert into ${TABLES.gc} (name) values ($1) on conflict do nothing`,
+      [name],
+    );
+    return;
+  }
+  await world.database.query(
+    `insert into ${TABLES.ac}
+       (ac_world_ranking_id, world_ranking_id, name, changed_at)
+     select 'ac-world-ranking-id/' || gen_random_uuid(),
+            coalesce(max(world_ranking_id), 0) + 1, $1, now()
+       from ${TABLES.ac}
+      where not exists (select 1 from ${TABLES.ac} where name = $1)`,
+    [name],
+  );
+};
+
 // The players a scenario says are kept, put straight into the tables, as an
 // import would have left them: what is found among them is the scenario's
 // subject, not how they came to be there.
 Given(
   new RegExp(`^the ${SPORT} players include "([^"]*)"$`),
   async function (this: SpecWorld, sport: string, name: string) {
-    await this.database.query(
-      `insert into ${TABLES[sportCalled(sport)]} (name) values ($1)
-       on conflict do nothing`,
-      [name],
-    );
+    await putIn(this, sportCalled(sport), name);
   },
 );
 
@@ -254,10 +335,7 @@ Given(
     surname: string,
   ) {
     for (let each = 1; each <= Number(count); each += 1) {
-      await this.database.query(
-        `insert into ${TABLES[sportCalled(sport)]} (name) values ($1)`,
-        [`Player${String(each)} ${surname}`],
-      );
+      await putIn(this, sportCalled(sport), `Player${String(each)} ${surname}`);
     }
   },
 );
