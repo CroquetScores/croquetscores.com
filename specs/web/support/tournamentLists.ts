@@ -345,7 +345,7 @@ Then(
 );
 
 Then(
-  /^"(.*)" is dated "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
+  /^"(.*)" is dated "(.*)" in the (recent results|upcoming tournaments|visited tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
   async function (
     this: WebWorld,
     tournament: string,

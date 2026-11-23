@@ -2215,6 +2215,40 @@ main {
   white-space: nowrap;
 }
 
+/* On a phone the dates that run from one month into the next, "29 Oct-03 Dec",
+   may break before their hyphen, so that the column can be as wide as dates in
+   one month, "19-21 Nov", and no wider. Each end is kept whole, and from a
+   tablet's width there is room for them on one line again. */
+.tournament-list .tournament-dates:has(.date-part) {
+  white-space: normal;
+}
+
+.tournament-list .date-part {
+  white-space: nowrap;
+}
+
+/* The year of a tournament in the list of those visited: on a phone it is left
+   out where it is this year's, and otherwise is beneath the dates, so that it
+   does not widen their column. From a tablet's width it is beside them. */
+.tournament-list .date-year {
+  display: block;
+}
+
+.tournament-list .date-year-current {
+  display: none;
+}
+
+@media (min-width: 40rem) {
+  .tournament-list .tournament-dates:has(.date-part) {
+    white-space: nowrap;
+  }
+
+  .tournament-list .date-year,
+  .tournament-list .date-year-current {
+    display: inline;
+  }
+}
+
 /* A national or international tournament's row is bold, every cell of it, so
    that the tournaments that matter beyond one club stand out in a long list. */
 .tournament-list tbody tr[data-bold] td,
@@ -2299,7 +2333,18 @@ main {
   .tournament-list
   thead
   th:first-child {
-  width: 10em;
+  /* A phone: as wide as "19-21 Nov" and its cell's padding, which the dates
+     that are longer are broken to fit. */
+  width: calc(8ch + 2 * var(--space-3));
+}
+
+@media (min-width: 40rem) {
+  :is(.year-month-body, .home-lists, .home-visited)
+    .tournament-list
+    thead
+    th:first-child {
+    width: 10em;
+  }
 }
 
 :is(.year-month-body, .home-lists, .home-visited)
