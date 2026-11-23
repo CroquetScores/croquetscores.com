@@ -79,7 +79,6 @@ import { TournamentPage } from "../../../application/operations/tournaments/Tour
 import { TournamentToChange } from "../../../application/operations/tournaments/TournamentToChange.js";
 import { UpdateTournament } from "../../../application/operations/tournaments/UpdateTournament.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import { Countries } from "../../../domain/aggregates/tournaments/value-objects/Countries.js";
 import {
   croquetScoresSports,
   gateballScoresSports,
@@ -88,6 +87,7 @@ import {
   croquetScoresFormats,
   gateballScoresFormats,
 } from "../../../domain/aggregates/tournaments/value-objects/tournamentFormats.js";
+import { countriesSpokenIn } from "../../common/countryList.js";
 import { speakingOf } from "../../common/language.js";
 import { isAdministrator, readerOf } from "../../common/reader.js";
 import { CompetitionNamesOfWebsite } from "../../../application/operations/tournaments/CompetitionNamesOfWebsite.js";
@@ -229,7 +229,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
     if (reader === undefined) return reply;
     const speaking = speakingOf(request);
     const gateball = websiteOf(request).site === "gateballScores";
-    const byName = new Intl.Collator(speaking.language.tag);
     return reply.header("cache-control", "no-store").send({
       sports: (gateball ? gateballScoresSports : croquetScoresSports).map(
         (sport) => ({
@@ -245,16 +244,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
           drawsLevelTests: format.drawsLevelTests,
         }),
       ),
-      countries: Countries.thereAre.all
-        .map((country) => ({
-          code: country.code,
-          name: speaking.say(`country.${country.code}`),
-          regions: country.regions.map((region) => ({
-            code: region.code,
-            name: region.name,
-          })),
-        }))
-        .sort((one, other) => byName.compare(one.name, other.name)),
+      countries: countriesSpokenIn(speaking),
     });
   });
 
