@@ -34,7 +34,27 @@ import { ValidationError } from "../domain/common/validation/ValidationError.js"
 import type { Clock } from "./common/requestedAt.js";
 import { sameToken, testControlHeader } from "./testControl.js";
 
+// The moment a call says it is made at, where it says one. A scenario that
+// moved the site's clock says it so that what is kept is the moment it moved
+// the clock to and not that moment and the milliseconds since, which the
+// clock goes on counting.
+const momentOf = (body: unknown): Date | undefined => {
+  const { at } = (body ?? {}) as { at?: unknown };
+  const moment = typeof at === "string" ? new Date(at) : undefined;
+  return moment === undefined || Number.isNaN(moment.getTime())
+    ? undefined
+    : moment;
+};
+
 /** What making an account needs of the site, named by what each does. */
+/**
+ * What the control refuses to write, which a call answers as not writable: a
+ * player given a number another has, or the same player given two. Thrown
+ * rather than returned, since a refusal is not one of the answers each
+ * function already gives.
+ */
+export class NotWritable extends Error {}
+
 export interface ReaderMaking {
   readonly mediator: Mediator;
   readonly sessions: Sessions;
@@ -73,11 +93,39 @@ export interface ReaderMaking {
   /** How many sessions the account has. */
   readonly sessionsOf: (id: AccountId) => Promise<number>;
   /** Says `times` sign ins as `comparable` (an address as it is compared) failed, `minutesAgo`. */
-  /** Says the world rankings of `sport` ("ac" or "gc") hold a player called `name`. */
+  /**
+   * Says the world rankings of `sport` ("ac" or "gc") hold a player called
+   * `name`, with the number the rankings give them where it is association
+   * croquet's and one is said. The id the site gave an association croquet
+   * player, which golf croquet's have none of.
+   */
   readonly addWorldRankingPlayer: (
     sport: "ac" | "gc",
     name: string,
-  ) => Promise<void>;
+    worldRankingId?: number,
+    at?: Date,
+  ) => Promise<string | undefined>;
+  /** Archives the association croquet player called `name`; false where there is none. */
+  readonly archiveWorldRankingPlayer: (
+    name: string,
+    at?: Date,
+  ) => Promise<boolean>;
+  /** Gives the association croquet player called `name` another number; false where there is none. */
+  readonly renumberWorldRankingPlayer: (
+    name: string,
+    worldRankingId: number,
+    at?: Date,
+  ) => Promise<boolean>;
+  /** Every association croquet player the site holds, by name. */
+  readonly associationCroquetPlayers: () => Promise<
+    readonly {
+      readonly name: string;
+      readonly id: string;
+      readonly worldRankingId: number;
+      readonly changedAt: string;
+      readonly archivedAt: string | null;
+    }[]
+  >;
   readonly writeFailedSignIns: (
     comparable: string,
     ipAddress: string,
@@ -535,7 +583,14 @@ export const registerTestControlReaders = (
         if (sport !== "ac" && sport !== "gc") {
           return reply.code(400).send({ code: "TestControl.NotWritable" });
         }
-        return { names: await making.worldRankingPlayers(sport) };
+        return {
+          names: await making.worldRankingPlayers(sport),
+          // Only association croquet's players are kept by number, with the
+          // moments they changed and were archived.
+          ...(sport === "ac"
+            ? { players: await making.associationCroquetPlayers() }
+            : {}),
+        };
       });
 
       // What the admin is told the site's build is called, and a deploy that
@@ -559,8 +614,70 @@ export const registerTestControlReaders = (
         ) {
           return reply.code(400).send({ code: "TestControl.NotWritable" });
         }
-        await making.addWorldRankingPlayer(body.sport, body.name);
-        return reply.code(201).send({});
+        const { worldRankingId } = body as { worldRankingId?: unknown };
+        const at = momentOf(request.body);
+        if (
+          worldRankingId !== undefined &&
+          (body.sport !== "ac" || !Number.isInteger(worldRankingId))
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        try {
+          const id = await making.addWorldRankingPlayer(
+            body.sport,
+            body.name,
+            worldRankingId as number | undefined,
+            at,
+          );
+          return reply.code(201).send(id === undefined ? {} : { id });
+        } catch (failure) {
+          if (!(failure instanceof NotWritable)) throw failure;
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+      });
+
+      // What the rankings do to a player the site has met: list them no more,
+      // or give them another number when they find two players of one name.
+      scope.post("/world-ranking-players/archive", async (request, reply) => {
+        const { name } = (request.body ?? {}) as { name?: unknown };
+        if (
+          typeof name !== "string" ||
+          !(await making.archiveWorldRankingPlayer(
+            name,
+            momentOf(request.body),
+          ))
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        return reply.code(200).send({});
+      });
+
+      scope.post("/world-ranking-players/renumber", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          name?: unknown;
+          worldRankingId?: unknown;
+        };
+        if (
+          typeof body.name !== "string" ||
+          !Number.isInteger(body.worldRankingId)
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        try {
+          if (
+            !(await making.renumberWorldRankingPlayer(
+              body.name,
+              body.worldRankingId as number,
+              momentOf(request.body),
+            ))
+          ) {
+            return reply.code(400).send({ code: "TestControl.NotWritable" });
+          }
+        } catch (failure) {
+          if (!(failure instanceof NotWritable)) throw failure;
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        return reply.code(200).send({});
       });
 
       // Sign ins that failed, which the site counts against a limit.

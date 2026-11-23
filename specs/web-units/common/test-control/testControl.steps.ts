@@ -1937,6 +1937,117 @@ Then(
 );
 
 When(
+  "the association croquet world ranking player {string} with the world ranking number {int} is given through the control",
+  async function (this: SpecWorld, name: string, worldRankingId: number) {
+    await controlled(this, "/__test/world-ranking-players", {
+      sport: "ac",
+      name,
+      worldRankingId,
+    });
+  },
+);
+
+When(
+  "the association croquet world ranking player {string} is archived through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/world-ranking-players/archive", { name });
+  },
+);
+
+When(
+  "the association croquet world ranking player {string} is given the world ranking number {int} through the control",
+  async function (this: SpecWorld, name: string, worldRankingId: number) {
+    await controlled(this, "/__test/world-ranking-players/renumber", {
+      name,
+      worldRankingId,
+    });
+  },
+);
+
+When(
+  "the association croquet world ranking players are asked for",
+  async function (this: SpecWorld) {
+    await asking(this, "GET", "/__test/world-ranking-players?sport=ac");
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+interface PlayerTold {
+  readonly name: string;
+  readonly id: string;
+  readonly worldRankingId: number;
+  readonly changedAt: string;
+  readonly archivedAt: string | null;
+}
+
+// Not to the millisecond, since the clock a scenario sets goes on from there,
+// as a clock does, and a call is made a few milliseconds after it was set.
+const withinSeconds = (told: string | null, moment: string): void => {
+  assert.ok(told !== null, "No moment was told.");
+  assert.ok(
+    Math.abs(Date.parse(told) - Date.parse(moment)) < 5000,
+    `Told ${told}, expected near ${moment}.`,
+  );
+};
+
+const playerTold = (world: SpecWorld, name: string): PlayerTold => {
+  const { players } = JSON.parse(responseOf(world).body) as {
+    players: PlayerTold[];
+  };
+  const found = players.find((each) => each.name === name);
+  assert.ok(found !== undefined, `${name} was not told.`);
+  return found;
+};
+
+Then("the site tells the id it gave the player", function (this: SpecWorld) {
+  // Only that it is one of the site's own, since which one is not the
+  // control's to say.
+  assert.match(
+    (JSON.parse(responseOf(this).body) as { id: string }).id,
+    /^ac-world-ranking-id\/.+/,
+  );
+});
+
+Then(
+  "the world ranking number told for {string} is {int}",
+  function (this: SpecWorld, name: string, number: number) {
+    assert.equal(playerTold(this, name).worldRankingId, number);
+  },
+);
+
+Then(
+  "the moment told that {string} changed is {string}",
+  function (this: SpecWorld, name: string, moment: string) {
+    withinSeconds(playerTold(this, name).changedAt, moment);
+  },
+);
+
+Then(
+  "the moment told that {string} was archived is {string}",
+  function (this: SpecWorld, name: string, moment: string) {
+    withinSeconds(playerTold(this, name).archivedAt, moment);
+  },
+);
+
+const idsKept = new WeakMap<SpecWorld, Map<string, string>>();
+
+Given(
+  "the id told for {string} is kept",
+  function (this: SpecWorld, name: string) {
+    const kept = idsKept.get(this) ?? new Map<string, string>();
+    kept.set(name, playerTold(this, name).id);
+    idsKept.set(this, kept);
+  },
+);
+
+Then(
+  "the id told for {string} is the one kept",
+  function (this: SpecWorld, name: string) {
+    assert.equal(playerTold(this, name).id, idsKept.get(this)?.get(name));
+  },
+);
+
+When(
   "the account for {string} is linked to the Google account {string} through the control",
   async function (this: SpecWorld, address: string, subject: string) {
     await asking(this, "POST", "/__test/accounts/google", {

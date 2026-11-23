@@ -48,6 +48,7 @@ import { SearchHelpHandler } from "../application/operations/help/SearchHelpHand
 import type { HelpPagesToSearch } from "../application/services/HelpSearchIndex.js";
 import { PostgresHelpSearchIndex } from "../infrastructure/database/PostgresHelpSearchIndex.js";
 import { helpPagesToSearchIn } from "./common/helpPagesToSearch.js";
+import { WorldRankingPlayersForAppsHandler } from "../application/operations/world-rankings/WorldRankingPlayersForAppsHandler.js";
 import { WorldRankingPlayersMatchingHandler } from "../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import { ImportErrorKeptHandler } from "../application/operations/import-errors/ImportErrorKeptHandler.js";
 import { ImportErrorsKeptHandler } from "../application/operations/import-errors/ImportErrorsKeptHandler.js";
@@ -342,6 +343,7 @@ import {
   registerTestControlEventStore,
 } from "./testControlEventStore.js";
 import {
+  NotWritable,
   registerTestControlReaders,
   type ReaderMaking,
 } from "./testControlReaders.js";
@@ -1372,6 +1374,9 @@ export const buildApplication = async (
   mediator.handleQuery(
     new WorldRankingPlayersMatchingHandler(worldRankingPlayers),
   );
+  mediator.handleQuery(
+    new WorldRankingPlayersForAppsHandler(worldRankingPlayers),
+  );
   const helpSearchIndex = new PostgresHelpSearchIndex(unitOfWork);
   mediator.handleQuery(new SearchHelpHandler(helpSearchIndex));
   const keptImportErrors = new PostgresKeptImportErrors(unitOfWork);
@@ -1977,28 +1982,109 @@ export const buildApplication = async (
             `select name from ${worldRankingTables[sport]} order by name`,
           )
         ).rows.map((row) => row.name),
-      addWorldRankingPlayer: async (sport, name) => {
+      addWorldRankingPlayer: async (sport, name, worldRankingId, at) => {
         if (sport === "gc") {
           await pool.query(
             `insert into gc_world_ranking_players (name)
              values ($1) on conflict do nothing`,
             [name],
           );
-          return;
+          return undefined;
         }
-        // The next number and an identifier of its own, which no scenario
-        // that asks for a player by name is about.
-        await pool.query(
+        // A name is one player's and so is a number, so a player given again
+        // is the same player or is refused, and not given two numbers or
+        // another player's. The same name and number again is the same
+        // player, which golf croquet's names are too.
+        const { rows: held } = await pool.query<{
+          id: string;
+          name: string;
+          world_ranking_id: number;
+        }>(
+          `select ac_world_ranking_id as id, name, world_ranking_id
+             from ac_world_ranking_players
+            where name = $1 or world_ranking_id = $2::integer`,
+          [name, worldRankingId ?? null],
+        );
+        const named = held.find((each) => each.name === name);
+        if (
+          held.some((each) => each.name !== name) ||
+          (named !== undefined &&
+            worldRankingId !== undefined &&
+            named.world_ranking_id !== worldRankingId)
+        ) {
+          throw new NotWritable();
+        }
+        if (named !== undefined) return named.id;
+        // The number the scenario said, or the next one, and an identifier of
+        // its own, which no scenario that asks for a player by name is about.
+        // Changed when the site's clock says, not the database's, since the
+        // scenarios that ask what changed since a moment move the site's.
+        const { rows } = await pool.query<{ id: string }>(
           `insert into ac_world_ranking_players
              (ac_world_ranking_id, world_ranking_id, name, changed_at)
            select 'ac-world-ranking-id/' || gen_random_uuid(),
-                  coalesce(max(world_ranking_id), 0) + 1, $1, now()
-             from ac_world_ranking_players
-            where not exists
-                  (select 1 from ac_world_ranking_players where name = $1)`,
-          [name],
+                  coalesce($2::integer,
+                    (select coalesce(max(world_ranking_id), 0) + 1
+                       from ac_world_ranking_players)),
+                  $1, $3
+           returning ac_world_ranking_id as id`,
+          [name, worldRankingId ?? null, at ?? clock()],
+        );
+        return rows[0]?.id;
+      },
+      archiveWorldRankingPlayer: async (name, at) =>
+        (
+          await pool.query(
+            // Archived once, as the import archives a player: the first
+            // moment stays, and nothing changes when it is said again.
+            `update ac_world_ranking_players
+                set archived_at = coalesce(archived_at, $2),
+                    changed_at = case when archived_at is null
+                                      then $2 else changed_at end
+              where name = $1`,
+            [name, at ?? clock()],
+          )
+        ).rowCount === 1,
+      renumberWorldRankingPlayer: async (name, worldRankingId, at) => {
+        // Another player's number is refused here and not left to the
+        // table's constraint, which would answer as a failure of the site.
+        const { rowCount: taken } = await pool.query(
+          `select 1 from ac_world_ranking_players
+            where world_ranking_id = $2 and name <> $1`,
+          [name, worldRankingId],
+        );
+        if (taken !== 0) throw new NotWritable();
+        return (
+          (
+            await pool.query(
+              `update ac_world_ranking_players
+                  set world_ranking_id = $2, changed_at = $3
+                where name = $1`,
+              [name, worldRankingId, at ?? clock()],
+            )
+          ).rowCount === 1
         );
       },
+      associationCroquetPlayers: async () =>
+        (
+          await pool.query<{
+            name: string;
+            id: string;
+            world_ranking_id: number;
+            changed_at: Date;
+            archived_at: Date | null;
+          }>(
+            `select name, ac_world_ranking_id as id, world_ranking_id,
+                    changed_at, archived_at
+               from ac_world_ranking_players order by name`,
+          )
+        ).rows.map((row) => ({
+          name: row.name,
+          id: row.id,
+          worldRankingId: row.world_ranking_id,
+          changedAt: row.changed_at.toISOString(),
+          archivedAt: row.archived_at?.toISOString() ?? null,
+        })),
       writeFailedSignIns: async (comparable, ipAddress, times, minutesAgo) => {
         const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
         for (let each = 0; each < times; each++) {

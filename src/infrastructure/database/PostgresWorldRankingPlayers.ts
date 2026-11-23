@@ -9,10 +9,12 @@ import {
   type WorldRankingSport,
 } from "../../application/services/WorldRankingLists.js";
 import type {
+  AssociationCroquetPlayersKept,
+  KeptAssociationCroquetPlayer,
   WorldRankingPlayerNames,
   WorldRankingPlayers,
 } from "../../application/services/WorldRankingPlayers.js";
-import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
+import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "./UnitOfWork.js";
 
 // Written out rather than made from the sport, so that nothing a caller says
@@ -32,7 +34,10 @@ const literally = (typed: string): string =>
   typed.replace(/[\\%_]/g, (character) => `\\${character}`);
 
 export class PostgresWorldRankingPlayers
-  implements WorldRankingPlayers, WorldRankingPlayerNames
+  implements
+    WorldRankingPlayers,
+    WorldRankingPlayerNames,
+    AssociationCroquetPlayersKept
 {
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
@@ -155,5 +160,37 @@ export class PostgresWorldRankingPlayers
         [name],
       );
     return rows[0]?.found === true;
+  }
+
+  // A few thousand rows at most, so all of them are read and the page is cut
+  // from them, as a year's tournaments are. Ordered by name, which is unique,
+  // so that two reads in a row put the players in the same order.
+  async changedAfter(
+    changedSince: ReadOnlyDate | undefined,
+  ): Promise<readonly KeptAssociationCroquetPlayer[]> {
+    const { rows } = await this.unitOfWork.connection().query<{
+      id: string;
+      world_ranking_id: number;
+      name: string;
+      changed_at: Date;
+      archived_at: Date | null;
+    }>(
+      `select ac_world_ranking_id as id, world_ranking_id, name,
+              changed_at, archived_at
+         from ${TABLES.ac}
+        where $1::timestamptz is null or changed_at > $1
+        order by name`,
+      [changedSince?.toDate() ?? null],
+    );
+    return rows.map((row) => ({
+      id: row.id,
+      worldRankingId: row.world_ranking_id,
+      name: row.name,
+      changedAt: ReadOnlyDate.from(row.changed_at),
+      archivedAt:
+        row.archived_at === null
+          ? undefined
+          : ReadOnlyDate.from(row.archived_at),
+    }));
   }
 }

@@ -27,3 +27,7 @@ export const standingsHref = (
 /** Where the API tells of a competition's games. */
 export const gamesHref = (tournament: string, competition: string): string =>
   `${competitionHref(tournament, competition)}/games`;
+
+/** Where the API tells of an association croquet world ranking player's games. */
+export const worldRankingPlayerGamesHref = (player: string): string =>
+  `/api/v0/ac/world-ranking-players/${bare(player)}/games`;

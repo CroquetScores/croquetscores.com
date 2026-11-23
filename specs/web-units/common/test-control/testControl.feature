@@ -381,6 +381,103 @@ Feature: A site over a database the specs made can be controlled by a token
       When the golf croquet world ranking players are asked for
       Then the players told are "Keith Aiton"
 
+    # The association croquet players are kept by the number the rankings give
+    # them and by an id of the site's own, with the moments they changed and
+    # were archived, so a scenario about what an app is told of them has to be
+    # able to say each of those.
+    Scenario: An association croquet world ranking player can be given with its number
+      Given a site given the token "open sesame"
+      When the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      Then the site answers that it was made
+      And the site tells the id it gave the player
+
+    Scenario: The association croquet world ranking players a site holds are told with their numbers
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      When the association croquet world ranking players are asked for
+      Then the players told are "Ann Archer"
+      And the world ranking number told for "Ann Archer" is 11
+
+    Scenario: A player is given the moment the site's clock reads as the moment it changed
+      Given a site given the token "open sesame"
+      And the clock is set to "2026-03-01T10:00:00Z"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      When the association croquet world ranking players are asked for
+      Then the moment told that "Ann Archer" changed is "2026-03-01T10:00:00.000Z"
+
+    Scenario: A player can be archived
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      And the clock is set to "2026-03-02T10:00:00Z"
+      When the association croquet world ranking player "Ann Archer" is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A player archived is told archived at the moment the site's clock reads
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      And the clock is set to "2026-03-02T10:00:00Z"
+      And the association croquet world ranking player "Ann Archer" is archived through the control
+      When the association croquet world ranking players are asked for
+      Then the moment told that "Ann Archer" was archived is "2026-03-02T10:00:00.000Z"
+      And the moment told that "Ann Archer" changed is "2026-03-02T10:00:00.000Z"
+
+    Scenario: A player's number can be changed
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      And the clock is set to "2026-03-02T10:00:00Z"
+      When the association croquet world ranking player "Ann Archer" is given the world ranking number 99 through the control
+      And the association croquet world ranking players are asked for
+      Then the world ranking number told for "Ann Archer" is 99
+      And the moment told that "Ann Archer" changed is "2026-03-02T10:00:00.000Z"
+
+    Scenario: A player's number changed leaves the id it was given
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      And the association croquet world ranking players are asked for
+      And the id told for "Ann Archer" is kept
+      When the association croquet world ranking player "Ann Archer" is given the world ranking number 99 through the control
+      And the association croquet world ranking players are asked for
+      Then the id told for "Ann Archer" is the one kept
+
+    Scenario: A player archived again keeps the moment it was first archived
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      And the clock is set to "2026-03-02T10:00:00Z"
+      And the association croquet world ranking player "Ann Archer" is archived through the control
+      And the clock is set to "2026-03-09T10:00:00Z"
+      And the association croquet world ranking player "Ann Archer" is archived through the control
+      When the association croquet world ranking players are asked for
+      Then the moment told that "Ann Archer" was archived is "2026-03-02T10:00:00.000Z"
+
+    Scenario: A player cannot be given again with another number
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      When the association croquet world ranking player "Ann Archer" with the world ranking number 12 is given through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A player cannot be given the number another has
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      When the association croquet world ranking player "Bea Bishop" with the world ranking number 11 is given through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A player cannot be given the number another has by changing it
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      And the association croquet world ranking player "Bea Bishop" with the world ranking number 12 is given through the control
+      When the association croquet world ranking player "Bea Bishop" is given the world ranking number 11 through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A player who is not there cannot be archived
+      Given a site given the token "open sesame"
+      When the association croquet world ranking player "Nobody" is archived through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A player who is not there cannot be given another number
+      Given a site given the token "open sesame"
+      When the association croquet world ranking player "Nobody" is given the world ranking number 99 through the control
+      Then the site answers that the request was wrong
+
     Scenario: A block that was archived can be restored
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control
