@@ -38,6 +38,9 @@ import { GamesOfCompetition } from "../../../application/operations/competitions
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
 import { AddPair } from "../../../application/operations/tournaments/AddPair.js";
 import { AddPlayers } from "../../../application/operations/tournaments/AddPlayers.js";
+import { EnterPlayers } from "../../../application/operations/competitions/EnterPlayers.js";
+import { DeleteTournament } from "../../../application/operations/tournaments/DeleteTournament.js";
+import { RemoveNotableStatus } from "../../../application/operations/tournaments/RemoveNotableStatus.js";
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
 import { UpdatePlayer } from "../../../application/operations/tournaments/UpdatePlayer.js";
 import { DeleteManagerNote } from "../../../application/operations/tournaments/DeleteManagerNote.js";
@@ -295,6 +298,51 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
     },
   );
 
+  // An administrator's judgements of a tournament, asked by the admin's own
+  // pages and by no app (administratorActions.feature): they were offered at
+  // /api/v0 for a while, and are not now.
+  //
+  // Its notable status taken away, who judges it neither national nor
+  // international.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/remove-notable-status",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new RemoveNotableStatus(
+          reader.value,
+          `tournament/${request.params.id}`,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A test tournament deleted, as an administrator judges it: its managers
+  // told what was written, and the tournament archived where `archive` is
+  // true. Only the administrator's words are taken from the body, and the
+  // tournament is the address's.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/delete",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const body = request.body as Record<string, unknown> | null;
+      await request.server.mediator.send(
+        new DeleteTournament(
+          reader.value,
+          `tournament/${request.params.id}`,
+          textOf(body, "message"),
+          body?.["archive"] === true,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
   // A tournament's competitions, as its manager lists them, in the
   // tournament's order.
   server.get<{ Params: { id: string } }>(
@@ -409,6 +457,45 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         flag: flag === undefined ? undefined : flagAsSeen(request, flag),
       }));
       return reply.header("cache-control", "no-store").send({ players });
+    },
+  );
+
+  // Several of the tournament's players entered at once, by the parts of their
+  // ids after "tournament-player/", and answered with their ids in the
+  // competition, in the order they were given. Whole or nothing unless
+  // "enterWhatCan" is true, which is sent once the manager has been told which
+  // of them cannot be and has chosen to enter the rest. Asked by the Add
+  // Players dialog and by no app (competitionPlayers.feature).
+  server.post<{ Params: { id: string; competition: string } }>(
+    "/tournaments/:id/competitions/:competition/players/many",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const body = request.body as {
+        players?: unknown;
+        enterWhatCan?: unknown;
+      } | null;
+      const entered = await request.server.mediator.send(
+        new EnterPlayers(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+          // Whatever is not a list of text is as good as nobody listed, and is
+          // refused as that is.
+          Array.isArray(body?.players)
+            ? (body.players as unknown[]).map(
+                (each) =>
+                  `tournament-player/${typeof each === "string" ? each : ""}`,
+              )
+            : [],
+          body?.enterWhatCan === true,
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ ids: entered.entered, refused: entered.refused });
     },
   );
 
