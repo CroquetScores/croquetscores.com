@@ -108,9 +108,8 @@ export interface KeptWorldRankingPlayerGame {
 export interface WorldRankingPlayerGamesKept {
   /**
    * The games of the player the site gave `playerId`, archived and withdrawn
-   * ones too, in the order their competitions last changed and then the order
-   * they were added in, and only those that changed after `changedSince`
-   * where one is given. Nothing where the site has no such player, which is
+   * ones too, in the order they were added in, and only those that changed
+   * after `changedSince` where one is given. Nothing where the site has no such player, which is
    * not the same as a player with no games.
    */
   changedAfter(

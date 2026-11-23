@@ -22,10 +22,12 @@ Feature: An app lists the games of an association croquet world ranking player
   ranking player, and by the name the tournament keeps them under where not,
   so that an app can show a name for every opponent.
 
-  The games are in the order their competitions last changed, and in the order
-  they were added within each, so that two reads in a row put them in the same
-  order. Archived and withdrawn games are listed and say so, since an app that
-  kept one needs to be told it no longer counts.
+  The games are in the order they were added, whatever competition each is in
+  and whenever that competition last changed, so that a game added later never
+  comes before one added earlier. A game that was added before the website
+  kept when, of which there are some, comes first. Archived and withdrawn games
+  are listed and say so, since an app that kept one needs to be told it no
+  longer counts.
 
   The list follows the conventions of the other reads
   (`worldRankingPlayers.feature`): pages of at most 100, what changed since a
@@ -280,13 +282,13 @@ Feature: An app lists the games of an association croquet world ranking player
       Then the API answers 404
       And the API's code is "WorldRankingPlayers.NotFound"
 
-  Rule: The games are in the order their competitions last changed
+  Rule: The games are in the order they were added
 
     The background makes its competition on the default day, so the moments
-    here are later than that and no later than now, since a competition is
-    never given a moment in the future.
+    here are later than that and no later than now, since a game is never given
+    a moment in the future.
 
-    Scenario: The games of the competition that changed earlier come first
+    Scenario: The game added earlier comes first, in whatever competition
       Given the server's clock reads "2026-10-10T10:00:00Z"
       And "Bea Bishop" has beaten "Ann Archer" 26 to 12 in "Block A" of "Spring Open"
       And the server's clock reads "2026-10-11T10:00:00Z"
@@ -301,7 +303,7 @@ Feature: An app lists the games of an association croquet world ranking player
       Then the first game listed is in "Block A"
       And the second game listed is in "Summer Block"
 
-    Scenario: A competition that changed again comes after one that did not
+    Scenario: A competition that changed again does not move the game added before
       Given the server's clock reads "2026-10-10T10:00:00Z"
       And "Bea Bishop" has beaten "Ann Archer" 26 to 12 in "Block A" of "Spring Open"
       And the server's clock reads "2026-10-11T10:00:00Z"
@@ -315,11 +317,14 @@ Feature: An app lists the games of an association croquet world ranking player
       And the server's clock reads "2026-10-12T10:00:00Z"
       And "Ann Archer" has beaten "Bea Bishop" 26 to 3 in "Block A" of "Spring Open"
       When the games of the world ranking player "Ann Archer" are asked with that key
-      Then the first game listed is in "Summer Block"
-      And the second game listed is in "Block A"
+      Then the first game listed is in "Block A"
+      And the second game listed is in "Summer Block"
+      And the third game listed is in "Block A"
 
     Scenario: The games of one competition are in the order they were added
-      Given "Ann Archer" has beaten "Bea Bishop" 26 to 10 in "Block A" of "Spring Open"
+      Given the server's clock reads "2026-10-10T10:00:00Z"
+      And "Ann Archer" has beaten "Bea Bishop" 26 to 10 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-11T10:00:00Z"
       And "Bea Bishop" has beaten "Ann Archer" 26 to 12 in "Block A" of "Spring Open"
       When the games of the world ranking player "Ann Archer" are asked with that key
       Then the first game says the player won

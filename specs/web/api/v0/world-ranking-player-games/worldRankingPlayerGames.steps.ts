@@ -131,7 +131,7 @@ const listed = (world: WebWorld): readonly Said[] => {
   return games as Said[];
 };
 
-const places = ["first", "second"] as const;
+const places = ["first", "second", "third"] as const;
 
 const gameAt = (world: WebWorld, place: (typeof places)[number]): Said => {
   const found = listed(world)[places.indexOf(place)];
@@ -284,7 +284,7 @@ const inCompetition = (
 };
 
 Then(
-  /^the (first|second) game listed is in "([^"]*)"$/,
+  /^the (first|second|third) game listed is in "([^"]*)"$/,
   function (this: WebWorld, place: (typeof places)[number], name: string) {
     inCompetition(this, place, name);
   },

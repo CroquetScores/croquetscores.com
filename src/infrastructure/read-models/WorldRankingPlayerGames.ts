@@ -43,6 +43,10 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
     // players of one world ranking name can make, the winner's side is the
     // one told of, so that the game is listed once.
     //
+    // In the order the games were added, and by nothing else, so that an app
+    // that reads them in pages meets a game later than every one it has read.
+    // One added before the website kept when has none, and is the oldest.
+    //
     // A game of an archived competition or tournament says it is archived and
     // changed when that was done, so that an app that kept it is told it no
     // longer counts. A competition is only given a moment when something
@@ -81,7 +85,6 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
                 greatest(g.changed_at,
                          case when c.archived then c.changed_at end,
                          t.archived_at) as told_changed_at,
-                c.changed_at as competition_changed_at,
                 me.side_id = g.winner_id as is_winner,
                 case when me.side_id = g.winner_id
                      then g.loser_id else g.winner_id end as other_id
@@ -117,8 +120,7 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
          left join ac_world_ranking_players opponent
            on opponent.name = other.world_ranking_name
         where $2::timestamptz is null or told.told_changed_at > $2
-        order by told.competition_changed_at, told.competition_id,
-                 told.position`,
+        order by told.added_at nulls first`,
       [player.name, changedSince?.toDate() ?? null],
     );
     return rows.map((row) => ({
