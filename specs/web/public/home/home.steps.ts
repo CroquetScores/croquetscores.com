@@ -162,7 +162,7 @@ Then(
 );
 
 Then(
-  /^the dates of the (recent results|upcoming tournaments) fit their column$/,
+  /^the dates of the (recent results|upcoming tournaments|visited tournaments) fit their column$/,
   async function (this: WebWorld, name: List) {
     const cell = list(this, name).locator(".tournament-dates").first();
     const [needed, given] = await cell.evaluate((element) => {
@@ -185,7 +185,11 @@ Then(
 // scenarios that measure do (`evaluateWith`), since the specs have no
 // `document` to name.
 const dataListOf = (name: List): string =>
-  name === "recent results" ? "recent" : "upcoming";
+  name === "recent results"
+    ? "recent"
+    : name === "visited tournaments"
+      ? "visited"
+      : "upcoming";
 
 // The dates of one tournament's row, found in the page by its name.
 const findCell = `(tournament, list) => {
@@ -230,7 +234,7 @@ const linesOf = (
   );
 
 Then(
-  /^the dates of "(.*)" in the (recent results|upcoming tournaments) are on (\d+) lines?$/,
+  /^the dates of "(.*)" in the (recent results|upcoming tournaments|visited tournaments) are on (\d+) lines?$/,
   async function (
     this: WebWorld,
     tournament: string,
@@ -243,7 +247,7 @@ Then(
 );
 
 Then(
-  /^the (first|second) line of the dates of "(.*)" in the (recent results|upcoming tournaments) is "(.*)"$/,
+  /^the (first|second) line of the dates of "(.*)" in the (recent results|upcoming tournaments|visited tournaments) is "(.*)"$/,
   async function (
     this: WebWorld,
     place: string,

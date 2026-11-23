@@ -124,6 +124,7 @@ ${table(
     sortedAtFirst: undefined,
     // Each can be a different year's.
     withYear: true,
+    thisYear,
     unsorted: true,
   },
   asked,

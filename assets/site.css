@@ -2227,9 +2227,25 @@ main {
   white-space: nowrap;
 }
 
+/* The year of a tournament in the list of those visited: on a phone it is left
+   out where it is this year's, and otherwise is beneath the dates, so that it
+   does not widen their column. From a tablet's width it is beside them. */
+.tournament-list .date-year {
+  display: block;
+}
+
+.tournament-list .date-year-current {
+  display: none;
+}
+
 @media (min-width: 40rem) {
   .tournament-list .tournament-dates:has(.date-part) {
     white-space: nowrap;
+  }
+
+  .tournament-list .date-year,
+  .tournament-list .date-year-current {
+    display: inline;
   }
 }
 
