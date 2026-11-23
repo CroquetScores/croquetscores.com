@@ -41,6 +41,12 @@ interface Words {
 interface Props {
   /** Where they are listed, and where somebody is given the part or has it taken. */
   readonly at: string;
+  /**
+   * Where what the tab changes is asked, where it is not where the list is
+   * read. A tournament's scorers and managers are changed at /api/v0 and read
+   * at /api/site; the accounts that hold a role are both at /api/site.
+   */
+  readonly changesAt?: string;
   /** What the API lists them under. */
   readonly listedUnder: string;
   /**
@@ -74,6 +80,7 @@ interface Props {
 
 export const People = ({
   at,
+  changesAt: changesAtGiven,
   listedUnder,
   name,
   heading,
@@ -163,13 +170,15 @@ export const People = ({
     words: say(knows(code) ? code : otherwise),
   });
 
+  const changesAt = changesAtGiven ?? at;
+
   const add = async (): Promise<void> => {
     if (adding.current) return;
     adding.current = true;
     setRemoveRefused(undefined);
     setSending((count) => count + 1);
     try {
-      const response = await fetch(at, {
+      const response = await fetch(changesAt, {
         method: "POST",
         headers: {
           accept: "application/json",
@@ -185,12 +194,13 @@ export const People = ({
         field.current?.focus();
       } else {
         const answer = (await response.json()) as {
+          code?: string;
           error?: string;
           broken?: { code: string }[];
         };
         setRefused(
           answer.broken?.map(({ code }) => refusal(code, words.otherwise)) ?? [
-            refusal(answer.error ?? "Unknown", words.otherwise),
+            refusal(answer.code ?? answer.error ?? "Unknown", words.otherwise),
           ],
         );
       }
@@ -206,10 +216,13 @@ export const People = ({
     setRemoveRefused(undefined);
     setSending((count) => count + 1);
     try {
-      const response = await fetch(`${at}/${idInAddress(person.id)}/remove`, {
-        method: "POST",
-        headers: { accept: "application/json" },
-      });
+      const response = await fetch(
+        `${changesAt}/${idInAddress(person.id)}/remove`,
+        {
+          method: "POST",
+          headers: { accept: "application/json" },
+        },
+      );
       if (response.ok) removed?.(person);
       else setRemoveRefused(await refusalOf(response));
     } catch {

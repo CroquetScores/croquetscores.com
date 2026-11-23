@@ -80,14 +80,15 @@ export const CompetitionsTab = ({
     setRefusedCode(undefined);
     try {
       const response = await fetch(
-        `${at}/${idInAddress(competition.id)}/${action}`,
+        `/api/v0/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition.id)}/${action}`,
         { method: "POST" },
       );
       if (!response.ok) {
         const answer = (await response.json().catch(() => ({}))) as {
+          code?: string;
           error?: string;
         };
-        setRefusedCode(answer.error ?? "Unknown");
+        setRefusedCode(answer.code ?? answer.error ?? "Unknown");
       }
     } catch {
       // A request that never arrived is said by the list asked for again.

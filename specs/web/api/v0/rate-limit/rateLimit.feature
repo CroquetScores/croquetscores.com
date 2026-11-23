@@ -108,6 +108,39 @@ Feature: The API holds each caller to an allowance
       When the permissions in "Spring Open" are asked with no key
       Then the API says the allowance was 10
 
+  Rule: What a reader signed in to the website changes is not counted
+
+    The website's own pages call the API to change things, as they called
+    `/api/site` before, which was never counted. A reader's changes are not
+    counted against the address, so that moving a route here does not hold a
+    reader of the website to what an app with no key is held to.
+
+    Scenario: A signed-in reader's changes are not held to the address's allowance
+      Given the caller is signed in as "organiser@example.com"
+      And a tournament with no name has been created 11 times
+      When a tournament with no name is created
+      Then the API answers 422
+
+    Scenario: A caller that is not signed in is held to it
+      Given a tournament with no name has been created 10 times
+      When a tournament with no name is created
+      Then the API answers 429
+
+    Scenario: What a signed-in reader asks of an address there is nothing at is counted
+      Given the caller is signed in as "organiser@example.com"
+      And an address there is nothing at has been posted to 10 times
+      When an address there is nothing at is posted to
+      Then the API answers 429
+
+    Scenario: A key's changes are counted against the key, whoever is signed in
+      Given "organiser@example.com" has made a key that may read and write
+      And the key of "Ollie Organiser" is limited to 3 a minute
+      And the caller is signed in as "organiser@example.com"
+      And the caller sends that key
+      And a tournament with no name has been created 3 times
+      When a tournament with no name is created
+      Then the API answers 429
+
   Rule: A list counts like any other request
 
     Scenario: A list is answered with the allowance of the key

@@ -57,9 +57,12 @@ export const TeamsTab = ({
   const act = async (team: Listed, action: Action): Promise<void> => {
     setActing(true);
     try {
-      await fetch(`${at}/${idInAddress(team.id)}/${action}`, {
-        method: "POST",
-      });
+      await fetch(
+        `${at.replace("/api/site/", "/api/v0/")}/${idInAddress(team.id)}/${action}`,
+        {
+          method: "POST",
+        },
+      );
     } catch {
       // A request that never arrived is said by the list asked for again.
     } finally {

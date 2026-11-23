@@ -10,7 +10,7 @@ export const NewTournament = (): React.JSX.Element => (
     button={say("admin.newTournament.submit")}
     hover={say("admin.hover.dialog.tournament.new")}
     send={(said) =>
-      fetch("/api/site/tournaments", {
+      fetch("/api/v0/tournaments", {
         method: "POST",
         headers: {
           accept: "application/json",

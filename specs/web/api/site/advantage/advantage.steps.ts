@@ -220,7 +220,7 @@ When(
       this,
       host,
       "POST",
-      `/tournaments/${scene.tournaments.get(scene.usual)!}/competitions`,
+      `/api/v0/tournaments/${scene.tournaments.get(scene.usual)!}/competitions`,
       { name, ...shape, ...saying(said) },
     );
   },
@@ -293,7 +293,7 @@ When(
       this,
       host,
       "POST",
-      `/tournaments/${sceneOf(this).tournaments.get(tournament)!}/tests`,
+      `/api/v0/tournaments/${sceneOf(this).tournaments.get(tournament)!}/tests`,
       testBody(this, tournament, first, second, said),
     );
   },
@@ -356,7 +356,9 @@ Then(
   function (this: WebWorld, code: string) {
     const { status, body } = answeredOf(this);
     assert.equal(status, 422, JSON.stringify(body));
-    assert.equal((body as { error?: string }).error, code);
+    // Said as `code` by the public API and as `error` by the website's own.
+    const said = body as { code?: string; error?: string };
+    assert.equal(said.code ?? said.error, code);
   },
 );
 

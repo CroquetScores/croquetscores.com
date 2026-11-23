@@ -167,7 +167,7 @@ export const CompetitionPlayersTab = ({
   const act = (player: Listed, action: Action): Promise<void> =>
     done(() =>
       fetch(
-        `${at}/players/${idInAddress(player.id)}/${action}${
+        `${at.replace("/api/site/", "/api/v0/")}/players/${idInAddress(player.id)}/${action}${
           player.bye ? `?order=${String(player.order)}` : ""
         }`,
         { method: "POST" },
@@ -185,14 +185,17 @@ export const CompetitionPlayersTab = ({
 
   const add = (): Promise<void> =>
     done(async () => {
-      const response = await fetch(`${at}/players`, {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
+      const response = await fetch(
+        `/api/v0/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players`,
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ player: idInAddress(chosen) }),
         },
-        body: JSON.stringify({ player: idInAddress(chosen) }),
-      });
+      );
       if (response.ok) {
         setRefused([]);
         // Back to the drop-down, so that the next can be chosen and added
@@ -203,12 +206,13 @@ export const CompetitionPlayersTab = ({
         return;
       }
       const answer = (await response.json().catch(() => ({}))) as {
+        code?: string;
         error?: string;
         broken?: { code: string }[];
       };
       setRefused(
         answer.broken?.map(({ code }) => refusal(code)) ?? [
-          refusal(answer.error ?? "Unknown"),
+          refusal(answer.code ?? answer.error ?? "Unknown"),
         ],
       );
     });

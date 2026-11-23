@@ -2110,12 +2110,20 @@ export const buildApplication = async (
   const builtAs = buildOf(adminPageBuilt);
   const build = (): string => options.build?.() ?? deployedAs ?? builtAs;
   server.addHook("onSend", (request, reply, payload, done) => {
-    if (request.url.startsWith("/api/site/"))
+    // /api/v0 as well, since the website's own pages call it to change things
+    // and an admin left open across a deploy learns of it from any answer.
+    if (
+      request.url.startsWith("/api/site/") ||
+      request.url.startsWith("/api/v0/")
+    )
       reply.header(adminBuildHeader, build());
     done(null, payload);
   });
   await registerQuestionLimit(server);
-  await server.register(apiV0, { prefix: "/api/v0" });
+  await server.register(apiV0, {
+    prefix: "/api/v0",
+    advantageGolfCroquet: config.advantageGolfCroquet,
+  });
   await server.register(apiSite, {
     prefix: "/api/site",
     assets,

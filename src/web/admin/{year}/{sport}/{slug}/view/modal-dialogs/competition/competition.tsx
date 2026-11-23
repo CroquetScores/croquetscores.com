@@ -274,7 +274,9 @@ export const CompetitionDialog = ({
     setSending(true);
     try {
       const response = await fetch(
-        competition === undefined ? at : `${at}/${idInAddress(competition.id)}`,
+        competition === undefined
+          ? `/api/v0/tournaments/${idInAddress(tournament)}/competitions`
+          : `${at}/${idInAddress(competition.id)}`,
         {
           method: competition === undefined ? "POST" : "PUT",
           headers: {
@@ -328,13 +330,14 @@ export const CompetitionDialog = ({
         nameField.current?.focus();
       } else {
         const answer = (await response.json()) as {
+          code?: string;
           error?: string;
           broken?: { code: string }[];
         };
         setSaid(undefined);
         setRefused(
           answer.broken?.map(({ code }) => refusal(code)) ?? [
-            refusal(answer.error ?? "Unknown"),
+            refusal(answer.code ?? answer.error ?? "Unknown"),
           ],
         );
       }
