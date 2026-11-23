@@ -79,15 +79,6 @@ import { TournamentPage } from "../../../application/operations/tournaments/Tour
 import { TournamentToChange } from "../../../application/operations/tournaments/TournamentToChange.js";
 import { UpdateTournament } from "../../../application/operations/tournaments/UpdateTournament.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import {
-  croquetScoresSports,
-  gateballScoresSports,
-} from "../../../domain/aggregates/tournaments/value-objects/sports.js";
-import {
-  croquetScoresFormats,
-  gateballScoresFormats,
-} from "../../../domain/aggregates/tournaments/value-objects/tournamentFormats.js";
-import { countriesSpokenIn } from "../../common/countryList.js";
 import { speakingOf } from "../../common/language.js";
 import { isAdministrator, readerOf } from "../../common/reader.js";
 import { CompetitionNamesOfWebsite } from "../../../application/operations/tournaments/CompetitionNamesOfWebsite.js";
@@ -210,42 +201,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       new TournamentNamesOfWebsite(websiteOf(request).host),
     );
     return reply.header("cache-control", "no-store").send({ names });
-  });
-
-  // What a new tournament can be on the website asked: the sports and formats
-  // its site offers, in the site's order, and every country with its regions.
-  // Each format says whether it is played by teams and whether it draws a
-  // level test unless said not to, so that the form asks about level tests as
-  // creating one decides them.
-  // Asked of the domain rather than written out again here, so that the form
-  // offers exactly what creating a tournament accepts. Each is sent back by
-  // its code, and named in the reader's language: a format by the name the
-  // domain knows it by, since that is what creating one takes. The countries
-  // are in order of their names as the reader's language has them, which is
-  // the order a reader looks for one in. A region is named as it was recorded,
-  // since there are hundreds, most already in their own country's language.
-  server.get("/tournaments/new", (request, reply) => {
-    const reader = signedInOrRefused(request, reply);
-    if (reader === undefined) return reply;
-    const speaking = speakingOf(request);
-    const gateball = websiteOf(request).site === "gateballScores";
-    return reply.header("cache-control", "no-store").send({
-      sports: (gateball ? gateballScoresSports : croquetScoresSports).map(
-        (sport) => ({
-          code: sport.code,
-          name: speaking.say(`sport.${sport.code}`),
-        }),
-      ),
-      formats: (gateball ? gateballScoresFormats : croquetScoresFormats).map(
-        (format) => ({
-          code: format.name,
-          name: speaking.say(`format.${format.code}`),
-          teams: format.isTeamFormat,
-          drawsLevelTests: format.drawsLevelTests,
-        }),
-      ),
-      countries: countriesSpokenIn(speaking),
-    });
   });
 
   // The tournament found at an address, now or before, as the reader would

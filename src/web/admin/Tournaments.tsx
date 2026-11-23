@@ -8,6 +8,7 @@ import { say } from "./words.js";
 import { GroupedOptions } from "./GroupedOptions.js";
 import { Years } from "./Years.js";
 import { idInAddress } from "./api.js";
+import { askedWhatIsNamed, type Offered } from "./offered.js";
 import "./tournaments.css";
 import { Pencil } from "./Pencil.js";
 import { TrashCan } from "./TrashCan.js";
@@ -33,19 +34,6 @@ interface Listed {
   readonly national: boolean;
   readonly international: boolean;
   readonly part: "manager" | "scorer" | "rankingOfficer";
-}
-
-/** What names the countries, their regions and the sports, as the API gives them. */
-interface Names {
-  readonly countries: readonly {
-    readonly code: string;
-    readonly name: string;
-    readonly regions: readonly {
-      readonly code: string;
-      readonly name: string;
-    }[];
-  }[];
-  readonly sports: readonly { readonly code: string; readonly name: string }[];
 }
 
 /**
@@ -210,7 +198,9 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
   const question = `${String(year)} ${String(asking)}`;
   // The names of what the filter offers, asked for once. Until they come, or
   // if they never do, a choice is named by its code, which still works.
-  const [names, setNames] = useState<Names | undefined>();
+  const [names, setNames] = useState<
+    Pick<Offered, "sports" | "countries"> | undefined
+  >();
   // What is in the address after the year, which is where the choices are
   // kept, so that the back button undoes one.
   const [search, setSearch] = useState(window.location.search);
@@ -236,7 +226,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
 
   useEffect(() => {
     let current = true;
-    void asked<Names>("/api/site/tournaments/new").then((answer) => {
+    void askedWhatIsNamed().then((answer) => {
       if (current) setNames(answer);
     });
     const moved = (): void => {

@@ -141,6 +141,38 @@ Feature: The API holds each caller to an allowance
       When a tournament with no name is created
       Then the API answers 429
 
+  Rule: The lists a reader signed in to the website chooses from are not counted
+
+    The website's forms ask for the sports, the formats and the countries each
+    time they are opened, and asked `/api/site` for them before, which was never
+    counted. A reader signed in, with no key, is not held to the address's
+    allowance for these three, since a few openings of a form in a minute would
+    otherwise use it up, as would a few readers behind one address. Nothing else
+    is let through for them: every other list counts as it does for anybody.
+
+    Scenario Outline: A signed-in reader's asking for a list of choices is not held to the address's allowance
+      Given the caller is signed in as "organiser@example.com"
+      And the <list> have been asked 11 times by the caller
+      When the <list> are asked by the caller
+      Then the API answers 200
+
+      Examples:
+        | list      |
+        | sports    |
+        | formats   |
+        | countries |
+
+    Scenario: A caller that is not signed in is held to it
+      Given the sports have been asked 10 times by the caller
+      When the sports are asked by the caller
+      Then the API answers 429
+
+    Scenario: What else a signed-in reader reads is counted
+      Given the caller is signed in as "organiser@example.com"
+      And the tournaments have been asked 10 times by the caller
+      When the tournaments are asked by the caller
+      Then the API answers 429
+
   Rule: A list counts like any other request
 
     Scenario: A list is answered with the allowance of the key
