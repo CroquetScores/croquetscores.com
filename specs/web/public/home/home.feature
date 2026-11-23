@@ -1579,6 +1579,66 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then the dates of the upcoming tournaments fit their column
 
+  Rule: On a phone the dates' column is as wide as a weekend's dates, and the names have the rest
+
+    A phone has room for little, and the names are what a reader came for. The
+    dates' column is wide enough for the dates that are written on one line,
+    which are a day, "19 Nov", and days of one month, "19-21 Nov". Days that
+    are in two months, "29 Oct-03 Dec", are longer than that, so they are
+    broken on to a second line before their hyphen, with the hyphen
+    beginning it, rather than a column made wide for them alone. The names'
+    column is what is left. Where there is room, from a tablet's width, the
+    dates are on one line as they were (`40rem`, as for the navigation in
+    `navigation.feature`).
+
+    Background:
+      Given a viewport 375 pixels wide
+      And the server's clock reads "2026-10-01T10:00:00Z"
+      And "organiser@example.com" has created the tournament "One Day Open"
+      And the tournament "One Day Open" starts on "2026-11-19"
+      And the tournament "One Day Open" finishes on "2026-11-19"
+      And "organiser@example.com" has created the tournament "Weekend Open"
+      And the tournament "Weekend Open" starts on "2026-11-19"
+      And the tournament "Weekend Open" finishes on "2026-11-21"
+      And "organiser@example.com" has created the tournament "Long Dates Open"
+      And the tournament "Long Dates Open" starts on "2026-10-29"
+      And the tournament "Long Dates Open" finishes on "2026-12-03"
+
+    Scenario: A day is on one line
+      When the home page is opened
+      Then the dates of "One Day Open" in the upcoming tournaments are on 1 line
+
+    Scenario: Days of one month are on one line
+      When the home page is opened
+      Then the dates of "Weekend Open" in the upcoming tournaments are on 1 line
+
+    Scenario: Days of two months are on two lines
+      When the home page is opened
+      Then the dates of "Long Dates Open" in the upcoming tournaments are on 2 lines
+
+    Scenario: Days of two months are broken before the hyphen
+      When the home page is opened
+      Then the first line of the dates of "Long Dates Open" in the upcoming tournaments is "29 Oct"
+      And the second line of the dates of "Long Dates Open" in the upcoming tournaments is "-03 Dec"
+
+    Scenario: The dates' column is narrower than days of two months on one line
+      When the home page is opened
+      Then the dates' column of the upcoming tournaments is narrower than the dates of "Long Dates Open" on one line
+
+    Scenario: The dates fit their column
+      When the home page is opened
+      Then the dates of the upcoming tournaments fit their column
+
+    Scenario: The names have the rest of the table
+      When the home page is opened
+      Then the names' column of the upcoming tournaments begins where the dates' column ends
+      And the names' column of the upcoming tournaments ends where the table does
+
+    Scenario: From a tablet's width the dates are on one line
+      Given a viewport 768 pixels wide
+      When the home page is opened
+      Then the dates of "Long Dates Open" in the upcoming tournaments are on 1 line
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). What is nobody's language

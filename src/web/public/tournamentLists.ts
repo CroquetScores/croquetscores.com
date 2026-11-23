@@ -24,6 +24,20 @@ import { ValidationError } from "../../domain/common/validation/ValidationError.
 import type { Assets } from "../common/assets.js";
 import { inCountryGroups } from "../common/countryOrder.js";
 import { dated, datedWithYear } from "../common/dates.js";
+
+// Dates that run from one month into another, as "29 Oct-03 Dec", are the only
+// ones too long for the narrow column a phone gives them. They may be broken
+// before the hyphen that joins the two ends, and nowhere else, so that each
+// end stays whole and the second line begins with the hyphen that says it is
+// the other end. The dates of one month, "19-21 Nov", have no space before
+// their hyphen and are left whole, which is how the column comes to be as
+// wide as they are and no wider (assets/site.css).
+const datesBroken = (written: string): string => {
+  const hyphen = written.indexOf("-");
+  if (hyphen < 0 || !written.slice(0, hyphen).includes(" "))
+    return `<span class="date-part">${escape(written)}</span>`;
+  return `<span class="date-part">${escape(written.slice(0, hyphen))}</span><wbr><span class="date-part">${escape(written.slice(hyphen))}</span>`;
+};
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
@@ -457,7 +471,7 @@ export const table = (
       (
         tournament,
       ) => `                <tr${tournament.national || tournament.international ? " data-bold" : ""}>
-                  <td class="tournament-dates">${escape((listing.withYear === true ? datedWithYear : dated)(tournament.starts, tournament.finishes, speaking.language.tag))}</td>
+                  <td class="tournament-dates">${datesBroken((listing.withYear === true ? datedWithYear : dated)(tournament.starts, tournament.finishes, speaking.language.tag))}</td>
                   <td class="tournament-sport"><span class="sport-code sport-${escape(tournament.sport)}">${escape(tournament.sport.toUpperCase())}</span></td>
                   <td class="tournament-flag">${flagOf(tournament)}</td>
                   <td><a class="tournament-name" href="/${escape(tournament.address)}">${escape(tournament.name)}</a></td>
