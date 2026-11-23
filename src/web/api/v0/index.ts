@@ -19,6 +19,7 @@ import { tournamentOfApps } from "./tournament.js";
 import { archivedTournamentsOfApps } from "./archived.js";
 import { tournamentsChangedYearOfApps } from "./changedYear.js";
 import { tournamentsOfApps } from "./tournaments.js";
+import { worldRankingPlayersOfApps } from "./worldRankingPlayers.js";
 import { formatsOfApps } from "./formats.js";
 import { sportsOfApps } from "./sports.js";
 import { countriesOfApps } from "./countries.js";
@@ -127,6 +128,7 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
       });
 
       await day.register(tournamentsOfApps);
+      await day.register(worldRankingPlayersOfApps);
       await day.register(formatsOfApps);
       await day.register(countriesOfApps);
       await day.register(tournamentsChangedYearOfApps);
