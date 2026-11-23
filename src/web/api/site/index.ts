@@ -12,6 +12,7 @@ import { PassThrough } from "node:stream";
 
 import { helpSearchRoute } from "./helpSearch.js";
 import {
+  playerFrom,
   teamFrom,
   teamPlayerFrom,
   testFrom,
@@ -35,7 +36,6 @@ import { CompetitionsOfTournament } from "../../../application/operations/tourna
 import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
-import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
 import { AddPair } from "../../../application/operations/tournaments/AddPair.js";
 import { AddPlayers } from "../../../application/operations/tournaments/AddPlayers.js";
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
@@ -944,44 +944,6 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         flag: flag === undefined ? undefined : flagAsSeen(request, flag),
       }));
       return reply.header("cache-control", "no-store").send({ players });
-    },
-  );
-
-  // What a player is, as the player dialog sends it. What they represent,
-  // their handicap, their flag and their world ranking name are left out where nothing was
-  // said.
-  const playerFrom = (body: unknown) => {
-    const representing = textOf(body, "representing");
-    const handicap = textOf(body, "handicap");
-    const flag = textOf(body, "flag");
-    const worldRankingName = textOf(body, "worldRankingName");
-    return {
-      name: textOf(body, "name"),
-      ...(representing === "" ? {} : { representing }),
-      ...(handicap === "" ? {} : { handicap }),
-      ...(flag === "" ? {} : { flag }),
-      ...(worldRankingName === "" ? {} : { worldRankingName }),
-    };
-  };
-
-  // A player added, and answered with their id.
-  server.post<{ Params: { id: string } }>(
-    "/tournaments/:id/players",
-    async (request, reply) => {
-      const reader = signedInOrRefused(request, reply);
-      if (reader === undefined) return reply;
-      const added = await request.server.mediator.send(
-        new AddPlayer(
-          reader.value,
-          `tournament/${request.params.id}`,
-          playerFrom(request.body),
-          request.requestedAt,
-        ),
-      );
-      return reply
-        .code(201)
-        .header("cache-control", "no-store")
-        .send({ id: added.value });
     },
   );
 
