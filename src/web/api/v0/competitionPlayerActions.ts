@@ -11,6 +11,7 @@ import { MoveCompetitionPlayer } from "../../../application/operations/competiti
 import { RemovePlayer } from "../../../application/operations/competitions/RemovePlayer.js";
 import { ReverseWithdrawal } from "../../../application/operations/competitions/ReverseWithdrawal.js";
 import { WithdrawPlayer } from "../../../application/operations/competitions/WithdrawPlayer.js";
+import { refusal } from "./errors.js";
 import { writerOf } from "./writer.js";
 
 export const competitionPlayerActionsOfApps: FastifyPluginAsync = (server) => {
@@ -38,7 +39,18 @@ export const competitionPlayerActionsOfApps: FastifyPluginAsync = (server) => {
         ] as const;
         const at = request.requestedAt;
         // Every bye has the same id, so a bye is named by its order too.
+        // Read strictly, since Number reads an empty one as 0 and a word as
+        // NaN, and either would be taken for a bye's order that was never
+        // sent.
         const { order } = request.query;
+        if (order !== undefined && !/^\d+$/.test(order))
+          return refusal(
+            reply,
+            422,
+            "Request.Invalid",
+            "The order of a bye is a whole number.",
+            "order",
+          );
         const byeOrder = order === undefined ? undefined : Number(order);
         await request.server.mediator.send(
           action === "withdraw"

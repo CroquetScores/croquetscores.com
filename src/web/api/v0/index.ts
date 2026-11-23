@@ -98,6 +98,30 @@ export const apiV0: FastifyPluginAsync<ApiV0Options> = async (
         },
       );
 
+      // Every id in an address is one segment, so that the id a route builds
+      // from it is the one asked for. Fastify decodes %2F to a slash, which
+      // would otherwise make "a%2Fb" the id "competition/a/b". The rest of an
+      // address nothing is at is not an id, so it is let through to be
+      // answered as that.
+      day.addHook("onRequest", (request, reply) => {
+        const params = request.params as Record<string, unknown>;
+        const sliced = Object.entries(params).some(
+          ([name, value]) =>
+            name !== "*" && typeof value === "string" && value.includes("/"),
+        );
+        // Answering is what stops the request, whether or not it is awaited.
+        if (sliced)
+          return Promise.resolve(
+            refusal(
+              reply,
+              404,
+              "Route.NotFound",
+              "There is nothing at that address.",
+            ),
+          );
+        return Promise.resolve();
+      });
+
       await day.register(tournamentsOfApps);
       await day.register(tournamentsChangedYearOfApps);
       await day.register(archivedTournamentsOfApps);

@@ -92,6 +92,28 @@ When(
   },
 );
 
+// The same, with the order of a bye said in the address as it was typed, which
+// is how a caller sends one that is not a number.
+When(
+  new RegExp(
+    `^the player "([^"]*)" in "([^"]*)" of "([^"]*)" is (${done}) with the order "([^"]*)"$`,
+  ),
+  async function (
+    this: WebWorld,
+    player: string,
+    competition: string,
+    tournament: string,
+    what: string,
+    order: string,
+  ) {
+    await told(
+      this,
+      "POST",
+      `${addressOf(this, player, competition, tournament, actions[what]!, "/api/v0")}?order=${encodeURIComponent(order)}`,
+    );
+  },
+);
+
 // What the website's own page lists of a competition's players, which is how a
 // manager sees them.
 const listedPlayers = (
@@ -110,4 +132,8 @@ Then(
 
 Then("the site lists one player", function (this: WebWorld) {
   assert.equal(listedPlayers(this).length, 1);
+});
+
+Then("the site lists {int} players", function (this: WebWorld, count: number) {
+  assert.equal(listedPlayers(this).length, count);
 });

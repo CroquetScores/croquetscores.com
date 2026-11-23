@@ -177,3 +177,33 @@ Feature: A competition's player is moved, withdrawn and removed through the API
       Given the caller is signed in as "organiser@example.com"
       When the player "Ann Archer" in "Block A" of "Spring Open" is removed at the address it was at
       Then the API answers 404
+
+  Rule: A bye is named by a whole number
+
+    The order of a bye is the only thing that tells it from the other byes, so
+    a word, a fraction or nothing at all is refused where it is given, and is
+    not taken as some other order. Without it, asking for a bye with no order
+    would have removed the first one.
+
+    Scenario Outline: An order that is not a whole number is refused
+      Given the caller is signed in as "organiser@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is removed with the order "<order>"
+      Then the API answers 422
+      And the API's code is "Request.Invalid"
+      And the API says the field at fault is "order"
+      When the players of "Block A" in "Spring Open" are listed to the caller
+      Then the site lists 2 players
+
+      Examples:
+        | order |
+        |       |
+        | abc   |
+        | 1.5   |
+        | -1    |
+
+    Scenario: An order that is not a whole number is refused for a move too
+      Given the caller is signed in as "organiser@example.com"
+      When the player "Ann Archer" in "Block A" of "Spring Open" is moved up with the order "abc"
+      Then the API answers 422
+      And the API's code is "Request.Invalid"
+      And the API says the field at fault is "order"
