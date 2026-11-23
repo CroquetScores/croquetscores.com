@@ -6,6 +6,7 @@ import { GroupedOptions } from "../GroupedOptions.js";
 import { HelpLink } from "../HelpLink.js";
 import { standardHelp, teamsHelp } from "../helpAddress.js";
 import { go } from "../navigation.js";
+import { askedWhatIsOffered, type Offered } from "../offered.js";
 import { useNameSuggestions } from "../useNameSuggestions.js";
 import { knows, say } from "../words.js";
 import "./tournamentForm.css";
@@ -17,26 +18,6 @@ import { Tick } from "../RulesTicks.js";
 // rather than knowing, so that it offers exactly what creating or changing a
 // tournament accepts, and names each choice in the reader's language as it
 // offers it.
-
-interface Offered {
-  readonly sports: readonly { readonly code: string; readonly name: string }[];
-  readonly formats: readonly {
-    readonly code: string;
-    readonly name: string;
-    /** Whether it is played by teams, and so has tests to draw. */
-    readonly teams: boolean;
-    /** Whether a tournament in it draws a level test unless said not to. */
-    readonly drawsLevelTests: boolean;
-  }[];
-  readonly countries: readonly {
-    readonly code: string;
-    readonly name: string;
-    readonly regions: readonly {
-      readonly code: string;
-      readonly name: string;
-    }[];
-  }[];
-}
 
 // The field each of the tournament's own refusals is about, since it names a
 // rule of the values together rather than a field. One not here is said above
@@ -186,30 +167,29 @@ export const TournamentForm = ({
   const form = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    void fetch("/api/site/tournaments/new", {
-      headers: { accept: "application/json" },
-    })
-      .then(async (response) =>
-        response.ok ? ((await response.json()) as Offered) : undefined,
-      )
-      .then((answer) => {
-        if (answer === undefined) return;
-        setOffered(answer);
-        // A new tournament begins in the first sport the site offers, and the
-        // first format, which is Standard on both sites; one being changed
-        // begins as it is.
-        if (begins !== undefined) return;
-        // Read once, so that a clock that crosses into the next month between
-        // two reads cannot give a start and a finish in different ones.
-        const monthBegins = thisMonthBegins();
-        setStarts(monthBegins);
-        setFinishes(monthBegins);
-        setSport(answer.sports[0]?.code ?? "");
-        setFormat(answer.formats[0]?.code ?? "");
-      })
-      .catch(() => {
-        // Nothing to offer, and so no form: there is nothing it could create.
-      });
+    // An answer that arrives after the form has gone, or been asked to begin
+    // as something else, is not used: it would set the sport, the format and
+    // the dates over what the reader or the newer question had set.
+    let current = true;
+    // Nothing to offer is no form: there is nothing it could create.
+    void askedWhatIsOffered().then((answer) => {
+      if (!current || answer === undefined) return;
+      setOffered(answer);
+      // A new tournament begins in the first sport the site offers, and the
+      // first format, which is Standard on both sites; one being changed
+      // begins as it is.
+      if (begins !== undefined) return;
+      // Read once, so that a clock that crosses into the next month between
+      // two reads cannot give a start and a finish in different ones.
+      const monthBegins = thisMonthBegins();
+      setStarts(monthBegins);
+      setFinishes(monthBegins);
+      setSport(answer.sports[0]?.code ?? "");
+      setFormat(answer.formats[0]?.code ?? "");
+    });
+    return () => {
+      current = false;
+    };
   }, [begins]);
 
   // The reader is taken to the first field that needs attention, as every

@@ -6,7 +6,14 @@ import { strict as assert } from "node:assert";
 
 import { sessionFor } from "../../../support/control.js";
 import type { WebWorld } from "../../../support/world.js";
-import { answered, asIfFrom, asked, bearer, keyMade } from "../apiOfApps.js";
+import {
+  answered,
+  asIfFrom,
+  asked,
+  bearer,
+  keyMade,
+  sceneOf,
+} from "../apiOfApps.js";
 import { permissionsOf, bare } from "../permissions/permissions.steps.js";
 
 interface KeyListed {
@@ -171,3 +178,43 @@ Then("none of the answers was 429", function (this: WebWorld) {
   assert.ok(seen !== undefined && seen.length > 0, "Nothing was asked.");
   assert.ok(!seen.includes(429), `Some were refused: ${seen.join(", ")}.`);
 });
+
+// What the website's own forms ask of the API as a reader signed in, which is
+// the session and no key: the way the browser sends it. Each scenario's reader
+// is the one it signed in, and asked as nobody where none was.
+const listAddresses: Readonly<Record<string, string>> = {
+  sports: "/api/v0/tournaments/sports",
+  formats: "/api/v0/tournaments/formats",
+  countries: "/api/v0/countries",
+  tournaments: "/api/v0/tournaments",
+};
+
+const askedByTheCaller = async (
+  world: WebWorld,
+  list: string,
+): Promise<void> => {
+  const { session } = sceneOf(world);
+  await asked(
+    world,
+    listAddresses[list] ?? list,
+    session === undefined
+      ? {}
+      : { cookie: `session=${session}`, "sec-fetch-site": "same-origin" },
+  );
+};
+
+Given(
+  /^the (sports|formats|countries|tournaments) have been asked (\d+) times by the caller$/,
+  async function (this: WebWorld, list: string, times: string) {
+    for (let each = 0; each < Number(times); each++) {
+      await askedByTheCaller(this, list);
+    }
+  },
+);
+
+When(
+  /^the (sports|formats|countries|tournaments) are asked by the caller$/,
+  async function (this: WebWorld, list: string) {
+    await askedByTheCaller(this, list);
+  },
+);

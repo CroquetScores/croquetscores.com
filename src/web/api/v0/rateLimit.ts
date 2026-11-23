@@ -33,6 +33,21 @@ const changing: ReadonlySet<string> = new Set([
   "DELETE",
 ]);
 
+// The lists a form of the website offers its choices from, by the address each
+// is registered at under /api/v0.
+const listsFormsChooseFrom: ReadonlySet<string> = new Set([
+  "/tournaments/sports",
+  "/tournaments/formats",
+  "/countries",
+]);
+
+const formsChooseFrom = (request: FastifyRequest): boolean => {
+  const url = request.routeOptions.url ?? "";
+  return [...listsFormsChooseFrom].some((list) =>
+    url.endsWith(`/api/v0${list}`),
+  );
+};
+
 /** What a caller with no key may ask for, a minute and, unless the site is told less, a day. */
 export const requestsAMinuteWithNoKey = 10;
 export const requestsADayWithNoKeyUsually = 500;
@@ -111,9 +126,13 @@ export const counting = async (
     // whoever is signed in, and what only reads is counted as ever.
     // Only the methods that change something, and not what answers an address
     // there is nothing at, which is for any caller to ask of and is counted.
+    // The three lists the website's forms choose from are the one read that
+    // is let through the same way, since a form asks for them each time it is
+    // opened, as it asked /api/site before; no other read is.
     allowList: (request) =>
-      changing.has(request.method) &&
-      request.routeOptions.url?.endsWith("/*") !== true &&
+      (changing.has(request.method)
+        ? request.routeOptions.url?.endsWith("/*") !== true
+        : request.method === "GET" && formsChooseFrom(request)) &&
       !callerOf(request).carriedKey &&
       readerOf(request) !== undefined,
     cache: 100_000,
