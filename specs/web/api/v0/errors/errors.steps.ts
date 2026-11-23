@@ -15,3 +15,15 @@ When(
     await asked(this, "/api/v0/nothing-here", bearer(keyMade(this)));
   },
 );
+
+When(
+  "the API is asked for a tournament whose id has a slash in it",
+  async function (this: WebWorld) {
+    // %2F is a slash that is part of the segment and not between two.
+    await asked(
+      this,
+      "/api/v0/tournaments/spring%2Fopen/permissions",
+      bearer(keyMade(this)),
+    );
+  },
+);

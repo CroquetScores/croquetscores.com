@@ -54,3 +54,11 @@ Feature: Every error the API answers has the same shape
     Scenario: An address there is nothing at says a sentence
       When the API is asked for an address there is nothing at
       Then the API says a sentence
+
+    Scenario: An id with a slash in it is answered not found
+      The ids in an address are each one segment, so an encoded slash makes
+      the address one that nothing is at, and not an id of some other kind.
+
+      When the API is asked for a tournament whose id has a slash in it
+      Then the API answers 404
+      And the API's code is "Route.NotFound"
