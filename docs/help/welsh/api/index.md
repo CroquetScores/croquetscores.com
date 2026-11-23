@@ -24,11 +24,13 @@ Mae pob twrnamaint mewn rhestr hefyd yn cario `etag` ei hun, wedi'i wneud o'r hy
 
 Mae rhestr o dwrnameintiau blwyddyn yn cymryd `changedSince`, wedi'i ysgrifennu fel `2026-03-01T10:00:00Z`, fel y gall ap sy'n ailddarllen blwyddyn ofyn am yr hyn a newidiodd yn unig. Tudalen o 100 ar y mwyaf yw rhestr, gyda'r ffordd i'r nesaf, ac mae'n cymryd `page` a `pageSize`.
 
-Mae'r hyn y mae pob cyfeiriad yn ei ateb yn [nherfynbwyntiau'r API](endpoints.md).
+Mae'r hyn y mae pob cyfeiriad yn ei ateb yn y [terfynbwyntiau GET](get-endpoints.md), ac mae'r hyn y mae pob un sy'n newid rhywbeth yn ei gymryd yn y [terfynbwyntiau POST](post-endpoints.md).
 
 ## Allweddi {#keys}
 
 Mae darllen i bawb: atebir cais heb allwedd fel un ag allwedd. Mae allwedd yn dweud pa lwfans y cyfrifir cais yn ei erbyn, a beth y caiff yr un sy'n galw ei wneud y tu hwnt i ddarllen.
+
+Gwneir allwedd i ddarllen, neu i ddarllen ac ysgrifennu. Caiff allwedd sy'n ysgrifennu wneud mewn twrnamaint yr hyn y caiff y cyfrif y gwnaed hi ar ei gyfer ei wneud, sy'n fwy i reolwr nag i sgoriwr (gweler [pwy a gaiff ysgrifennu](post-endpoints.md#who-may-write)), a gellir cyfyngu allwedd i un twrnamaint.
 
 Gwnewch allwedd yn eich cyfrif, o dan **Allweddi API**, gyda **Gwneud allwedd**. Anfonwch hi gyda phob cais fel tocyn cludydd (bearer token):
 

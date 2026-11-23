@@ -24,11 +24,13 @@ Cada torneo de una lista lleva además un `etag` propio, hecho de lo que dice. U
 
 Una lista de los torneos de un año acepta `changedSince`, escrito como `2026-03-01T10:00:00Z`, para que una aplicación que vuelve a leer un año pida solo lo que cambió. Una lista es una página de 100 como máximo, con el camino a la siguiente, y acepta `page` y `pageSize`.
 
-Lo que responde cada dirección está en [los puntos de acceso de la API](endpoints.md).
+Lo que responde cada dirección está en [los puntos finales GET](get-endpoints.md), y lo que recibe cada una que cambia algo está en [los puntos finales POST](post-endpoints.md).
 
 ## Claves {#keys}
 
 Leer es para cualquiera: una petición sin clave se responde como una con clave. Una clave dice contra el límite de quién se cuenta una petición y qué puede hacer quien llama, además de leer.
+
+Una clave se crea para leer, o para leer y escribir. Una clave que escribe puede hacer en un torneo lo que puede hacer la cuenta para la que se creó, que es más para un gestor que para un anotador (consulta [quién puede escribir](post-endpoints.md#who-may-write)); y una clave se puede limitar a un torneo.
 
 Crea una clave en tu cuenta, en **Claves de API**, con **Crear una clave**. Envíala con cada petición como un token de portador (bearer token):
 

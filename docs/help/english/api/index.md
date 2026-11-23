@@ -24,11 +24,13 @@ Each tournament in a list also carries an `etag` of its own, made of what it say
 
 A list of a year's tournaments takes `changedSince`, written as `2026-03-01T10:00:00Z`, so that an app that reads a year again asks only for what changed. A list is a page of at most 100, with the way to the next, and takes `page` and `pageSize`.
 
-What each address answers is in [the API's endpoints](endpoints.md).
+What each address answers is in [the GET endpoints](get-endpoints.md), and what each one that changes something takes is in [the POST endpoints](post-endpoints.md).
 
 ## Keys {#keys}
 
 Reading is for anybody: a request with no key is answered as one with a key is. A key says whose allowance a request is counted against, and what the caller may do beyond reading.
+
+A key is made to read, or to read and write. A key that writes may do what the account it was made for may do in a tournament, which is more for a manager than for a scorer (see [who may write](post-endpoints.md#who-may-write)), and a key may be limited to one tournament.
 
 Make a key in your account, under **API Keys**, with **Make a key**. Send it with each request as a bearer token:
 

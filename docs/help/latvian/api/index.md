@@ -24,11 +24,13 @@ Katrs turnīrs sarakstā nes arī savu `etag`, veidotu no tā, ko tas saka. Liet
 
 Viena gada turnīru saraksts pieņem `changedSince`, rakstītu kā `2026-03-01T10:00:00Z`, lai lietotne, kas gadu lasa vēlreiz, prasītu tikai to, kas mainījies. Saraksts ir lapa ar ne vairāk kā 100 ierakstiem un ceļu uz nākamo, un tas pieņem `page` un `pageSize`.
 
-Ko katra adrese atbild, ir rakstīts [API galapunktos](endpoints.md).
+Ko atbild katra adrese, ir [GET galapunktos](get-endpoints.md), un ko pieņem katra, kas kaut ko maina, ir [POST galapunktos](post-endpoints.md).
 
 ## Atslēgas {#keys}
 
 Lasīt drīkst ikviens: pieprasījums bez atslēgas tiek atbildēts tāpat kā ar atslēgu. Atslēga nosaka, kura limits pieprasījumam tiek skaitīts, un ko izsaucējs drīkst papildus lasīšanai.
+
+Atslēgu izveido lasīšanai vai lasīšanai un rakstīšanai. Atslēga, kas raksta, turnīrā drīkst to, ko drīkst konts, kuram tā izveidota, un pārvaldniekam tas ir vairāk nekā rezultātu ievadītājam (skatiet [kas drīkst rakstīt](post-endpoints.md#who-may-write)); atslēgu var arī ierobežot ar vienu turnīru.
 
 Izveidojiet atslēgu savā kontā sadaļā **API atslēgas** ar **Izveidot atslēgu**. Sūtiet to ar katru pieprasījumu kā nesēja pilnvaru (bearer token):
 

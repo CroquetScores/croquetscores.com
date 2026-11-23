@@ -24,11 +24,13 @@ Cada torneio de uma lista traz também um `etag` próprio, feito do que ele diz.
 
 Uma lista dos torneios de um ano aceita `changedSince`, escrito como `2026-03-01T10:00:00Z`, para que um aplicativo que relê um ano peça só o que mudou. Uma lista é uma página de no máximo 100, com o caminho para a próxima, e aceita `page` e `pageSize`.
 
-O que cada endereço responde está nos [endpoints da API](endpoints.md).
+O que cada endereço responde está nos [endpoints GET](get-endpoints.md), e o que cada um que muda algo recebe está nos [endpoints POST](post-endpoints.md).
 
 ## Chaves {#keys}
 
 Ler é para qualquer pessoa: uma requisição sem chave é respondida como uma com chave. Uma chave diz contra a cota de quem a requisição é contada e o que quem chama pode fazer além de ler.
+
+Uma chave é criada para ler, ou para ler e escrever. Uma chave que escreve pode, em um torneio, fazer o que a conta para a qual foi criada pode fazer, o que é mais para um organizador do que para um anotador (veja [quem pode escrever](post-endpoints.md#who-may-write)); e uma chave pode ser limitada a um torneio.
 
 Crie uma chave na sua conta, em **Chaves de API**, com **Criar uma chave**. Envie-a com cada requisição como um token de portador (bearer token):
 
