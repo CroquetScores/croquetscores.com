@@ -9,7 +9,10 @@ import {
   assertOnOneLine,
 } from "../../support/placed.js";
 import type { WebWorld } from "../../support/world.js";
-import { isStruckThrough } from "../../support/struckThrough.js";
+import {
+  isMetaDataStruckThrough,
+  isStruckThrough,
+} from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -261,6 +264,18 @@ Then(
       row.locator(".block-summary-withdrawn"),
       row.locator(".player-meta-data"),
       "The mark",
+    );
+  },
+);
+
+Then(
+  /^the row of "(.*)" in the summary (has|does not have) its meta-data struck through$/,
+  async function (this: WebWorld, name: string, has: string) {
+    assert.equal(
+      await isMetaDataStruckThrough(
+        rowOf(this, name).locator(".player-meta-data"),
+      ),
+      has === "has",
     );
   },
 );

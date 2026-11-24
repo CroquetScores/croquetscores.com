@@ -24,3 +24,20 @@ export const isStruckThrough = async (found: Locator): Promise<boolean> =>
 /** Whether `found` is drawn underlined, as a link is. */
 export const isUnderlined = async (found: Locator): Promise<boolean> =>
   /underline/.test(await decorationLinesOf(found));
+
+/**
+ * Whether a player's meta-data, which is a box of its own that a line of text
+ * decoration does not run through, is drawn with a line across it instead.
+ */
+export const isMetaDataStruckThrough = (found: Locator): Promise<boolean> =>
+  found.first().evaluate((element: unknown) => {
+    const style = (
+      globalThis as unknown as {
+        getComputedStyle(
+          element: unknown,
+          pseudo: string,
+        ): { content: string; borderTopWidth: string };
+      }
+    ).getComputedStyle(element, "::after");
+    return style.content !== "none" && parseFloat(style.borderTopWidth) > 0;
+  });

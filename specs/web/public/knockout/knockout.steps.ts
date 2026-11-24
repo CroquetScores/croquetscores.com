@@ -9,7 +9,10 @@ import {
   assertOnOneLine,
 } from "../../support/placed.js";
 import type { WebWorld } from "../../support/world.js";
-import { isStruckThrough } from "../../support/struckThrough.js";
+import {
+  isMetaDataStruckThrough,
+  isStruckThrough,
+} from "../../support/struckThrough.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
 // once the page has loaded: nothing here waits for it to be drawn again.
@@ -782,6 +785,25 @@ Then(
       found.locator(".knockout-withdrawn"),
       found.locator(".player-meta-data"),
       "The mark",
+    );
+  },
+);
+
+Then(
+  new RegExp(`^${SIDE} (has|does not have) its meta-data struck through$`),
+  async function (
+    this: WebWorld,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+    has: string,
+  ) {
+    assert.equal(
+      await isMetaDataStruckThrough(
+        sideAt(this, side, match, round, view).locator(".player-meta-data"),
+      ),
+      has === "has",
     );
   },
 );

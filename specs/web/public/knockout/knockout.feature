@@ -23,9 +23,9 @@ Feature: A knockout's grid draws its draw round by round
   tournament's other pages show one, their name leading to their own page, a
   bye, said as "Bye", or a place not yet known, left empty until the match
   before it is decided. A withdrawn player says they have withdrawn, and
-  their name is struck through, as a block's grid strikes it. Their scores
-  are not, since each of their games decided a match that stands
-  (`PublicKnockoutOfTournament.feature`). Beside
+  their name is struck through, as a block's grid strikes it, and so are
+  their scores and what is known of them, the handicap, what they represent and
+  their flag. Beside
   each side is a cell for each game the match is the best of, holding the
   side's score in that game as it was typed, oldest first, and empty for a
   game not played. Each score is marked as won or lost, as the block's grid
@@ -262,11 +262,11 @@ Feature: A knockout's grid draws its draw round by round
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then the first score of the first side of the first match of the first round in the grid is "26tp"
 
-    Scenario: A withdrawn player's score is not struck through
+    Scenario: A withdrawn player's score is struck through
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       And "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
-      Then the first score of the second side of the first match of the first round in the grid is not struck through
+      Then the first score of the second side of the first match of the first round in the grid is struck through
 
     Scenario: A withdrawn player's score is not said to be withdrawn
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
@@ -659,3 +659,30 @@ Feature: A knockout's grid draws its draw round by round
       And "organiser@example.com" has withdrawn the player "Kim Fifth" from "Plate" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/plate" is opened
       Then the second side of the second match of the first round in the grid has the mark that they have withdrawn above its meta-data
+
+    Scenario: A withdrawn player's meta-data is struck through
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Kim Fifth" from "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has its meta-data struck through
+
+    Scenario: A player who has not withdrawn has no line through their meta-data
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid does not have its meta-data struck through

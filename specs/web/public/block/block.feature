@@ -834,3 +834,22 @@ Feature: A block's page shows its results as a grid
       And "organiser@example.com" has withdrawn the player "Chris Third" from "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       Then the row of "Chris Third" in the grid has the mark that they have withdrawn above its meta-data
+
+    Scenario: A withdrawn player's meta-data is struck through
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Chris Third" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the row of "Chris Third" in the grid has its meta-data struck through
+
+    Scenario: A player who has not withdrawn has no line through their meta-data
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the row of "Chris Third" in the grid does not have its meta-data struck through

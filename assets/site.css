@@ -2717,6 +2717,34 @@ main {
   }
 }
 
+/* A line of text decoration does not run through a box of its own, as the
+   meta-data is, nor to the parts of a flex line, nor through a flag, so what
+   is struck through for a player who has withdrawn, and for a game that
+   counts for nothing, is struck through here: the name and the score on
+   their own, and the meta-data with a line across all of it, the flag too. */
+.game[data-withdrawn] .game-line > :not(.game-meta-data) {
+  text-decoration-line: line-through;
+}
+
+.player-meta-data[data-withdrawn],
+.game[data-withdrawn] .game-meta-data {
+  position: relative;
+  width: fit-content;
+}
+
+.player-meta-data[data-withdrawn]::after,
+.game[data-withdrawn] .game-meta-data::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  border-top: 1px solid currentcolor;
+}
+
+.knockout-score[data-withdrawn] {
+  text-decoration-line: line-through;
+}
+
 /* A tournament's players, one to a line, each name leading to the player's
    own page, set as a block's summary is: headed in the section bar's colours,
    and the rows banded, every other one on the page's tint, so that a long

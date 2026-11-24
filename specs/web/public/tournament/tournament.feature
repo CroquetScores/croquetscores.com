@@ -314,6 +314,29 @@ Feature: A tournament's page lists its games, the most recent first
       When the page at "/2026/ac/spring-open" is opened
       Then the second line of the first game has its score beside the name
 
+  Rule: A game that counts for nothing has its players' names, scores and meta-data struck through
+
+    Background:
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Chris Third" beating "Sam Someone" in "Block A" of "Spring Open"
+
+    Scenario: A withdrawn game's name is struck through
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its name struck through
+
+    Scenario: A withdrawn game's score is struck through
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its score struck through
+
+    Scenario: A withdrawn game's meta-data is struck through
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data struck through
+
   Rule: A drawn game says the two drew
 
     Scenario: A drawn game says "drew with"

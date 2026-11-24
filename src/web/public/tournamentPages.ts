@@ -207,7 +207,7 @@ export const playerShown = (
   // breaks between the name and it, and never inside either.
   return metaData.length === 0
     ? `${shown}${after}`
-    : `${shown}${after} <span class="${kind}-meta-data">${metaData.join(" ")}</span>`;
+    : `${shown}${after} <span class="${kind}-meta-data"${marked}>${metaData.join(" ")}</span>`;
 };
 
 // How long ago `then` was, as a reader would say it: seconds under a minute,

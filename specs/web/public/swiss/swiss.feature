@@ -509,3 +509,22 @@ Feature: A Swiss's grid ranks its players with their results
       And "organiser@example.com" has withdrawn the player "Kim Fourth" from "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then the row of "Kim Fourth" in the Swiss has the mark that they have withdrawn above its meta-data
+
+    Scenario: A withdrawn player's meta-data is struck through
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fourth" in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Kim Fourth" from "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the row of "Kim Fourth" in the Swiss has its meta-data struck through
+
+    Scenario: A player who has not withdrawn has no line through their meta-data
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fourth" in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the row of "Kim Fourth" in the Swiss does not have its meta-data struck through

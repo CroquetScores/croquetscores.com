@@ -8,7 +8,10 @@ import {
   assertOnOneLine,
 } from "../../support/placed.js";
 import type { WebWorld } from "../../support/world.js";
-import { isStruckThrough } from "../../support/struckThrough.js";
+import {
+  isMetaDataStruckThrough,
+  isStruckThrough,
+} from "../../support/struckThrough.js";
 import { unmarkedWithin } from "../../support/marks.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -397,6 +400,26 @@ Then(
       lineOf(this, line, which).locator(".game-score"),
       lineOf(this, line, which).locator(".game-name"),
       "The score",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its (name|score) struck through$/,
+  async function (this: WebWorld, line: string, which: string, part: string) {
+    assert.ok(
+      await isStruckThrough(lineOf(this, line, which).locator(`.game-${part}`)),
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its meta-data struck through$/,
+  async function (this: WebWorld, line: string, which: string) {
+    assert.ok(
+      await isMetaDataStruckThrough(
+        lineOf(this, line, which).locator(".game-meta-data"),
+      ),
     );
   },
 );
