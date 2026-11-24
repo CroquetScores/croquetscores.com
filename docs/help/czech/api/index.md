@@ -1,10 +1,8 @@
 # Nápověda pro vývojáře aplikací
 
-Croquet Scores má veřejné API, aby aplikace mohla sledovat turnaje daného sportu, aniž by četla stránky webu. Odpovídá ve formátu JSON a během vývoje je na adrese `/api/v0`. Až bude vydáno, bude na adrese `/api/v1`.
+Croquet Scores má veřejné API, aby aplikace mohla sledovat turnaje daného sportu, aniž by četla stránky webu. Odpovídá ve formátu JSON a je na adrese `/api/v1`.
 
 ## Jak to s ním je {#where-it-stands}
-
-API je ve vývoji, a proto je označeno `v0`. Až ho všichni, kterých se týká, přijmou, stane se z něj `v1`.
 
 Změna, která by aplikaci rozbila, se nikdy neprovede ve stávající verzi. Provede se jako nová verze vedle staré, takže aplikace napsaná pro `v1` funguje dál, i když přijde `v2`. Co se za rozbití nepovažuje, říkáme dále, aby s tím mohla aplikace počítat.
 

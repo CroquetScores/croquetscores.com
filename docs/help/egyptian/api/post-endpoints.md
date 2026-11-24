@@ -1,6 +1,6 @@
 # نقاط وصول POST في الـ API
 
-العناوين دي بتغيّر حاجة. اللي بتقرا بس موجودة في [نقاط وصول GET](get-endpoints.md). كل عنوان هنا تحت `/api/v0` على الموقع، واللي صفحات الموقع نفسها بتغيّره بتغيّره نفس العناوين دي، فالتطبيق مش معاه مجموعة أصغر من اللي معاها الموقع. اللي بيسري على الكل، زي المفاتيح والحصص والأخطاء، موجود في [المساعدة لمطوّري التطبيقات](index.md)؛ ومين يقدر يكتب موجود [تحت](#who-may-write).
+العناوين دي بتغيّر حاجة. اللي بتقرا بس موجودة في [نقاط وصول GET](get-endpoints.md). كل عنوان هنا تحت `/api/v1` على الموقع، واللي صفحات الموقع نفسها بتغيّره بتغيّره نفس العناوين دي، فالتطبيق مش معاه مجموعة أصغر من اللي معاها الموقع. اللي بيسري على الكل، زي المفاتيح والحصص والأخطاء، موجود في [المساعدة لمطوّري التطبيقات](index.md)؛ ومين يقدر يكتب موجود [تحت](#who-may-write).
 
 البطولة والمسابقة وباقي الحاجات بتتسمّى في العنوان بالجزء من الـ id بتاعها اللي بعد الشرطة المايلة: لـ `tournament/4f2a…` العنوان بيقول `4f2a…`. محتوى الطلب بيسمّي الحاجات التانية بنفس الطريقة، زي ما `player` بيعمل تحت، إلا لو قال إنه الـ id كله.
 
@@ -16,7 +16,7 @@
 - مسجّلين النتايج في البطولة يقدروا يعملوا اللي بيتعمل في النتايج، ومش أي حاجة تانية: يضيفوا لعبة، يصحّحوها، ينقلوها، يأرشفوها، يرجّعوها، يسحبوها ويلغوا سحبها. أي حاجة تانية في البطولة بتتترفض لهم بـ `Tournament.NotAManager`.
 - أي حد تاني بيتترفض بـ `Tournament.NotAManager`، أو بـ `Tournament.NotAManagerOrScorer` في المكان اللي كان مسجّل النتايج هيتقبل فيه.
 
-`GET /api/v0/tournaments/{id}/permissions` بيقول المفتاح له إيه دوره في البطولة (شوف [المفتاح يقدر يعمل إيه](get-endpoints.md#permissions))، عشان التطبيق يقدر يقول ليه الكتابة هتتترفض قبل ما يبعتها.
+`GET /api/v1/tournaments/{id}/permissions` بيقول المفتاح له إيه دوره في البطولة (شوف [المفتاح يقدر يعمل إيه](get-endpoints.md#permissions))، عشان التطبيق يقدر يقول ليه الكتابة هتتترفض قبل ما يبعتها.
 
 ## الرد بيبقى إيه {#answers}
 
@@ -28,35 +28,35 @@
 
 ### إنشاء بطولة {#create-tournament}
 
-`POST /api/v0/tournaments`
+`POST /api/v1/tournaments`
 
 بياخد `name` و`starts` و`finishes` (مكتوبين زي `2026-10-03T00:00:00Z`) و`format` (كود، شوف [الأشكال](get-endpoints.md#formats)) و`sport` (كود، شوف [الرياضات](get-endpoints.md#sports)) و`country` (كود زي `au`، شوف [البلاد](get-endpoints.md#countries))، ولو عايز `region` (كود من كودات البلد، من نفس القايمة) و`subtitle` و`levelTestsDrawn` و`national` و`international`، وكل واحد من التلاتة الأخيرين `true` أو `false`. بيرد بـ `201` ومعاه `id` و`address`، وهو المكان اللي الموقع بيعرضها فيه.
 
 ### أرشفة بطولة أو استرجاعها {#tournament-actions}
 
-`POST /api/v0/tournaments/{id}/archive`
+`POST /api/v1/tournaments/{id}/archive`
 
-`POST /api/v0/tournaments/{id}/restore`
+`POST /api/v1/tournaments/{id}/restore`
 
 مابياخدوش محتوى وبيردّوا بـ `204`.
 
 ### إضافة ملحوظة مدير {#notes}
 
-`POST /api/v0/tournaments/{id}/notes`
+`POST /api/v1/tournaments/{id}/notes`
 
 بياخد `title` و`description`. بيرد بـ `201` ومعاه `id` الملحوظة. الوصف ممكن يوصل لـ 750,000 حرف، والطلب ممكن يبقى كبير زي ما ده محتاج.
 
 ## الناس اللي ليهم دور في بطولة {#people}
 
-`POST /api/v0/tournaments/{id}/scorers`
+`POST /api/v1/tournaments/{id}/scorers`
 
-`POST /api/v0/tournaments/{id}/managers`
+`POST /api/v1/tournaments/{id}/managers`
 
 بيخلّوا حد مسجّل نتايج أو مدير. بياخدوا `emailAddress`، عنوان الإيميل بتاع حسابه، وبيردّوا بـ `204`.
 
-`POST /api/v0/tournaments/{id}/scorers/{account}/remove`
+`POST /api/v1/tournaments/{id}/scorers/{account}/remove`
 
-`POST /api/v0/tournaments/{id}/managers/{account}/remove`
+`POST /api/v1/tournaments/{id}/managers/{account}/remove`
 
 بيشيلوا مسجّل نتايج أو مدير. مابياخدوش محتوى وبيردّوا بـ `204`. الـ `account` هو الجزء من id الحساب اللي بعد `account/`.
 
@@ -64,7 +64,7 @@
 
 ### إضافة مسابقة {#add-competition}
 
-`POST /api/v0/tournaments/{id}/competitions`
+`POST /api/v1/tournaments/{id}/competitions`
 
 بياخد `kind`، واحد من `block` أو `swiss` أو `knockout` أو `losers-knockout`، و`name`، وبعدين اللي نوعها ليه:
 
@@ -77,19 +77,19 @@
 
 ### إضافة لقاء {#add-test}
 
-`POST /api/v0/tournaments/{id}/tests`
+`POST /api/v1/tournaments/{id}/tests`
 
 اللقاء هو المباراة بين فريقين في بطولة فرق. بياخد `firstTeam` و`secondTeam`، كل واحد id فريق بعد `team/`، و`starts` و`finishes` و`expectedMatches` و`bestOf` و`group` ونفس القواعد اللي المسابقة ممكن تاخدها. بيرد بـ `201` ومعاه `id` بتاعه، وهو id مسابقة.
 
 ### نقل مسابقة أو أرشفتها أو استرجاعها {#competition-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/restore`
 
 بيطلّعوها أو بينزّلوها مكان واحد في قايمة البطولة، أو بيأرشفوها، أو بيرجّعوها. مابياخدوش محتوى وبيردّوا بـ `204`. اللقاء كمان بيتنقل وبيتأرشف وبيترجّع بيهم.
 
@@ -97,21 +97,21 @@
 
 ### تسجيل لاعب {#enter-player}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players`
 
 بيسجّل واحد من لاعبين البطولة في المسابقة. بياخد `player`، الجزء من id لاعب البطولة اللي بعد `tournament-player/`. بيرد بـ `201` ومعاه `id`، وهو id اللاعب في المسابقة مش في البطولة.
 
 ### نقل لاعب أو سحبه أو رجوعه أو شيله {#competition-player-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/remove`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/remove`
 
 بيطلّعوا لاعب أو بينزّلوه مكان واحد، أو بيسحبوه، أو بيلغوا سحبه، أو بيشيلوه من المسابقة. الـ `player` هو الجزء من id بتاعه في المسابقة اللي بعد `competition-player/`. مابياخدوش محتوى وبيردّوا بـ `204`.
 
@@ -121,7 +121,7 @@
 
 ### إضافة لعبة {#add-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games`
 
 بياخد `winner` و`loser`، كل واحد الجزء من id لاعب المسابقة اللي بعد `competition-player/`، والنتايج. لاعبين اللقاء مش بتوعه، فلو لقاء كل واحد هو الـ id كله للاعب في فريق من فرقه، زي `team-player/…`.
 
@@ -134,23 +134,23 @@
 
 ### تصحيح لعبة {#correct-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/correct`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/correct`
 
 بياخد النتايج زي إضافة لعبة، ولو اتغيّروا، `winner` و`loser`. اللاعب اللي مابيتبعتش هو اللي اللعبة معاها أصلًا. الـ `game` هو الجزء من id بتاعها اللي بعد `game/`. بيرد بـ `204`.
 
 ### نقل لعبة أو أرشفتها أو استرجاعها أو سحبها {#game-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/restore`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
 
 بيطلّعوا نتيجة لقاء أو بينزّلوها مكان واحد، أو بيأرشفوا لعبة أو بيرجّعوها، أو بيسحبوها (اتلعبت ومابتتحسبش) أو بيلغوا سحبها. مابياخدوش محتوى وبيردّوا بـ `204`. دول، واللي فوقهم، هم اللي مسجّل النتايج يقدر يعملهم.
 
@@ -158,19 +158,19 @@
 
 ### إضافة لاعب {#add-tournament-player}
 
-`POST /api/v0/tournaments/{id}/players`
+`POST /api/v1/tournaments/{id}/players`
 
 بيضيف لاعب للبطولة. بياخد `name`، وممكن ياخد `representing` و`handicap` و`flag` و`worldRankingName`؛ واللي ما اتبعتش أو فاضي بيفضل من غير ما يتقال. بيرد بـ `201` ومعاه `id` اللاعب، وهو الـ id بتاعه كله زي ما نقاط وصول GET بتقوله. اللاعب من غير اسم، أو باسم لاعب موجود أصلاً، بيترفض. اللاعب بيتسجّل في مسابقة [بالتسجيل](#enter-player) بالجزء من الـ `id` ده اللي بعد `tournament-player/`.
 
 ### نقل لاعب أو أرشفته أو استرجاعه {#tournament-player-actions}
 
-`POST /api/v0/tournaments/{id}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/players/{player}/restore`
 
 بيطلّعوا واحد من لاعبين البطولة أو بينزّلوه مكان واحد، أو بيأرشفوه أو بيرجّعوه. الـ `player` هو الجزء من id بتاعه اللي بعد `tournament-player/`. مابياخدوش محتوى وبيردّوا بـ `204`.
 
@@ -178,36 +178,36 @@
 
 ### إضافة فريق {#add-team}
 
-`POST /api/v0/tournaments/{id}/teams`
+`POST /api/v1/tournaments/{id}/teams`
 
 بياخد `name` و`shortName`، وممكن ياخد `flag`. بيرد بـ `201` ومعاه `id` الفريق.
 
 ### إضافة لاعب لفريق {#add-team-player}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players`
+`POST /api/v1/tournaments/{id}/teams/{team}/players`
 
 بياخد `name`، وممكن ياخد `worldRankingName`. بيرد بـ `201` ومعاه `id` اللاعب.
 
 ### نقل فريق أو أرشفته أو استرجاعه {#team-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/restore`
 
 مابياخدوش محتوى وبيردّوا بـ `204`.
 
 ### نقل لاعب فريق أو أرشفته أو استرجاعه {#team-player-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/restore`
 
 الـ `player` هو الجزء من id بتاعه اللي بعد `team-player/`. مابياخدوش محتوى وبيردّوا بـ `204`.

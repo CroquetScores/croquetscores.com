@@ -1,6 +1,6 @@
 -- The year each tournament is in, and the year it was in before it came into
 -- that one, so that an app can be told which tournaments have changed year
--- (GET /api/v0/tournaments/changed-year).
+-- (GET /api/v1/tournaments/changed-year).
 --
 -- A read model, made again from the events: it is empty until the read models
 -- are made again, and lists nothing till then. It cannot be had from the

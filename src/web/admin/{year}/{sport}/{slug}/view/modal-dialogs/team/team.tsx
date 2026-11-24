@@ -97,7 +97,7 @@ export const TeamDialog = ({
     try {
       const response = await fetch(
         team === undefined
-          ? at.replace("/api/site/", "/api/v0/")
+          ? at.replace("/api/site/", "/api/v1/")
           : `${at}/${idInAddress(team.id)}`,
         {
           method: team === undefined ? "POST" : "PUT",

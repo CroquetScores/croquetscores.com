@@ -220,7 +220,7 @@ When(
       this,
       host,
       "POST",
-      `/api/v0/tournaments/${scene.tournaments.get(scene.usual)!}/competitions`,
+      `/api/v1/tournaments/${scene.tournaments.get(scene.usual)!}/competitions`,
       { name, ...shape, ...saying(said) },
     );
   },
@@ -293,7 +293,7 @@ When(
       this,
       host,
       "POST",
-      `/api/v0/tournaments/${sceneOf(this).tournaments.get(tournament)!}/tests`,
+      `/api/v1/tournaments/${sceneOf(this).tournaments.get(tournament)!}/tests`,
       testBody(this, tournament, first, second, said),
     );
   },

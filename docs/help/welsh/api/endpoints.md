@@ -1,6 +1,6 @@
 # Terfynbwyntiau'r API
 
-Mae pob cyfeiriad o dan `/api/v0` ar y wefan, ac mae pob ateb yn JSON. Mae'r hyn sy'n wir am bob un, fel allweddi, lwfansau, gwallau a gofyn yn rhad, yn y [cymorth i ddatblygwyr apiau](index.md).
+Mae pob cyfeiriad o dan `/api/v1` ar y wefan, ac mae pob ateb yn JSON. Mae'r hyn sy'n wir am bob un, fel allweddi, lwfansau, gwallau a gofyn yn rhad, yn y [cymorth i ddatblygwyr apiau](index.md).
 
 Mae dau fath, a thudalen i bob un:
 

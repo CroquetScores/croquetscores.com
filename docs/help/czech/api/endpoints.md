@@ -1,6 +1,6 @@
 # Koncové body API
 
-Každá adresa je pod `/api/v0` na webu a každá odpověď je JSON. Co platí pro všechny, jako klíče, limity, chyby a levné dotazování, je v [nápovědě pro vývojáře aplikací](index.md).
+Každá adresa je pod `/api/v1` na webu a každá odpověď je JSON. Co platí pro všechny, jako klíče, limity, chyby a levné dotazování, je v [nápovědě pro vývojáře aplikací](index.md).
 
 Jsou dva druhy a každý má svou stránku:
 

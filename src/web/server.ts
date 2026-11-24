@@ -6,8 +6,10 @@ import { ChangeTeamPlayerWorldRankingNameHandler } from "../application/operatio
 import { ChangeTeamPlayerWorldRankingNameValidator } from "../application/operations/tournaments/ChangeTeamPlayerWorldRankingNameValidator.js";
 import Fastify, {
   type FastifyInstance,
+  type FastifyReply,
   type FastifyRequest,
   type FastifyServerOptions,
+  type HTTPMethods,
 } from "fastify";
 import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
@@ -428,7 +430,7 @@ import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
 import { registerForgotPasswordPage } from "./public/forgotPassword.js";
 import { registerForgetAccountPage } from "./public/forgetAccount.js";
-import { apiV0 } from "./api/v0/index.js";
+import { apiV1 } from "./api/v1/index.js";
 import { registerApiKeysPage } from "./public/apiKeys.js";
 import { registerChangeNamePage } from "./public/changeName.js";
 import { registerChangePasswordPage } from "./public/changePassword.js";
@@ -2242,18 +2244,39 @@ export const buildApplication = async (
   const builtAs = buildOf(adminPageBuilt);
   const build = (): string => options.build?.() ?? deployedAs ?? builtAs;
   server.addHook("onSend", (request, reply, payload, done) => {
-    // /api/v0 as well, since the website's own pages call it to change things
+    // /api/v1 as well, since the website's own pages call it to change things
     // and an admin left open across a deploy learns of it from any answer.
     if (
       request.url.startsWith("/api/site/") ||
-      request.url.startsWith("/api/v0/")
+      request.url.startsWith("/api/v1/")
     )
       reply.header(adminBuildHeader, build());
     done(null, payload);
   });
   await registerQuestionLimit(server);
-  await server.register(apiV0, {
-    prefix: "/api/v0",
+  // The API's first address, kept as a redirect for the apps already calling
+  // it (movedFromV0.feature). 308 so that a POST is sent again as a POST. Only
+  // whole segments: /api/v0-notes is not the API (testControlEventStore.ts).
+  // Not OPTIONS: a browser refuses a redirect in answer to a preflight, and
+  // /api/v1 answers none, so the old address is left to say what the new one does.
+  const movedFromV0 = (request: FastifyRequest, reply: FastifyReply) =>
+    reply.redirect(request.url.replace(/^\/api\/v0/, "/api/v1"), 308);
+  const movedMethods: HTTPMethods[] = [
+    "GET",
+    "HEAD",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+  ];
+  server.route({ method: movedMethods, url: "/api/v0", handler: movedFromV0 });
+  server.route({
+    method: movedMethods,
+    url: "/api/v0/*",
+    handler: movedFromV0,
+  });
+  await server.register(apiV1, {
+    prefix: "/api/v1",
     advantageGolfCroquet: config.advantageGolfCroquet,
   });
   await server.register(apiSite, {

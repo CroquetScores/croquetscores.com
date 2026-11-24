@@ -1,12 +1,12 @@
 # Die API se GET-eindpunte
 
-Hierdie adresse lees en verander niks nie; dié wat iets verander, staan in [die POST-eindpunte](post-endpoints.md). Elke adres hier is onder `/api/v0` op die webwerf, en elke antwoord is JSON. Wat vir almal geld, soos sleutels, kwotas, foute en hoe om goedkoop navraag te doen, staan in die [hulp vir toepassingontwikkelaars](index.md). Velde kan sonder 'n nuwe weergawe by enige antwoord gevoeg word (kyk [velde kan bygevoeg word](index.md#fields-may-be-added)), so ignoreer wat jy nie ken nie.
+Hierdie adresse lees en verander niks nie; dié wat iets verander, staan in [die POST-eindpunte](post-endpoints.md). Elke adres hier is onder `/api/v1` op die webwerf, en elke antwoord is JSON. Wat vir almal geld, soos sleutels, kwotas, foute en hoe om goedkoop navraag te doen, staan in die [hulp vir toepassingontwikkelaars](index.md). Velde kan sonder 'n nuwe weergawe by enige antwoord gevoeg word (kyk [velde kan bygevoeg word](index.md#fields-may-be-added)), so ignoreer wat jy nie ken nie.
 
 'n Toernooi, of 'n kompetisie, word in 'n adres genoem met die deel van sy id wat ná die skuinsstreep kom: vir `tournament/4f2a…` sê die adres `4f2a…`. Elke antwoord sê waar om te vind waarvan dit vertel in 'n `href`, en waar die webwerf dit wys in 'n `uri`, 'n pad wat met 'n skuinsstreep begin.
 
 ## 'n Jaar se toernooie {#tournaments}
 
-`GET /api/v0/tournaments?year=2026`
+`GET /api/v1/tournaments?year=2026`
 
 Neem:
 
@@ -27,7 +27,7 @@ en `total`, `page`, `pageSize` en `next`, wat sê waar die volgende bladsy is, o
 
 ## Een toernooi {#tournament}
 
-`GET /api/v0/tournaments/{id}`
+`GET /api/v1/tournaments/{id}`
 
 Sê wat die lys daarvan sê, en:
 
@@ -43,37 +43,37 @@ Drie lyste sê wat 'n toernooi kan wees op die webwerf wat gevra word: sy sports
 
 ### Die sportsoorte {#sports}
 
-`GET /api/v0/tournaments/sports`
+`GET /api/v1/tournaments/sports`
 
 Antwoord met `sports`, elk met `code` en `name`. Die `sport` wat 'n toernooi sê, en waarvoor 'n lys gevra kan word, is een van hierdie kodes. Croquet Scores bied `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) en `gb` (Gateball); Gateball Scores bied net Gateball. 'n Sportsoort kan in die toekoms bygevoeg word, soos 'n veld (kyk [velde kan bygevoeg word](index.md#fields-may-be-added)), so 'n toepassing moet 'n kode kan hanteer wat dit nie ken nie.
 
 ### Die formate {#formats}
 
-`GET /api/v0/tournaments/formats`
+`GET /api/v1/tournaments/formats`
 
 Antwoord met `formats`, elk met `code`, die naam waarmee 'n toernooi gemaak word, `name`, `teams`, of dit deur spanne gespeel word, en `drawsLevelTests`, of 'n toernooi daarin 'n gelykopstoets trek tensy dit sê dat dit dit nie doen nie.
 
 ### Die lande {#countries}
 
-`GET /api/v0/countries`
+`GET /api/v1/countries`
 
 Antwoord met `countries`, elk met `code` (soos `au`), `name` en `regions`, elk met `code` en `name`. Hulle is in die volgorde van hul name in die taal wat gevra word. 'n Streek word genoem soos dit aangeteken is, meestal in sy eie land se taal. 'n Land wat nie verdeel is nie, het een streek, wat homself is.
 
 ## Een kompetisie {#competition}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}`
+`GET /api/v1/tournaments/{id}/competitions/{id}`
 
 Sê die kompetisie se `name`, `kind`, `href`, `uri`, `changedAt`, en waar die API van sy spelle vertel (`games`) en, vir 'n blok en 'n Switserse kompetisie, wat die enigste is wat dit het, van sy stand (`standings`).
 
 ## Die stand van 'n blok of 'n Switserse kompetisie {#standings}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/standings`
+`GET /api/v1/tournaments/{id}/competitions/{id}/standings`
 
 Sê die kompetisie, en `standings`: vir elke speler `playerId`, `name`, `withdrawn`, `played`, `won`, `netHoops`, `position` (of `null`) en `shared`, of die posisie gedeel word. 'n Blok voeg `lost`, `gamesWon` en `netGames` by, wat 'n Switserse kompetisie nie sê nie.
 
 ## 'n Kompetisie se spelle {#games}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/games`
+`GET /api/v1/tournaments/{id}/competitions/{id}/games`
 
 Sê die kompetisie en sy spelle. Elke spel het 'n `id`, 'n `winner` en 'n `loser`, `drawn`, `withdrawn` (gespeel maar tel vir niks), `round` (van 'n uitklopkompetisie, waar die eerste 1 is, en `null` elders) en `changedAt`. Elke kant sê die speler se `playerId`, hul `name` en hul `score` soos dit ingetik is, soos `26tp`. Waar 'n spel gelykop was, is dit net die volgorde waarin hulle ingetik is wat bepaal watter kant die wenner genoem word.
 
@@ -81,25 +81,25 @@ Sê die kompetisie en sy spelle. Elke spel het 'n `id`, 'n `winner` en 'n `loser
 
 ## Wat 'n sleutel mag doen {#permissions}
 
-`GET /api/v0/tournaments/{id}/permissions`
+`GET /api/v1/tournaments/{id}/permissions`
 
 Het 'n sleutel nodig en sê wat daardie sleutel in die toernooi mag doen: `part`, wat die rol is wat sy rekening het (`manager`, `scorer` of `neither`), `mayRead` en `mayWrite`. 'n Toepassing kan sê hoekom 'n skryfaksie geweier sou word voordat dit een stuur. Die antwoord is vir die sleutel wat gevra het, so dit word nooit bewaar nie (`Cache-Control: no-store`).
 
 ## Toernooie wat van jaar verander het {#changed-year}
 
-`GET /api/v0/tournaments/changed-year`
+`GET /api/v1/tournaments/changed-year`
 
 Lys die toernooie wat in 'n ander jaar gekom het as dié waarin hulle was, sodat 'n toepassing kan skuif wat dit bewaar. Neem `changedSince`, `page` en `pageSize`. Elkeen het `tournamentId`, `previousYear` en `newYear`.
 
 ## Toernooie wat geargiveer is {#archived}
 
-`GET /api/v0/tournaments/archived`
+`GET /api/v1/tournaments/archived`
 
 Lys die toernooie wat geargiveer is, sodat 'n toepassing kan ophou om hulle te wys. Neem `archivedSince`, geskryf as `2026-03-01T10:00:00Z`, `page` en `pageSize`. Elkeen het `tournamentId` en `archivedAt`.
 
 ## Wêreldranglysspelers {#world-ranking-players}
 
-`GET /api/v0/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players`
 
 Lys die Association Croquet-spelers wat die wêreldranglyste ken. Neem `changedSince`, geskryf as `2026-03-01T10:00:00Z`, `page` en `pageSize`, waar 'n bladsy hoogstens 100 is. Antwoord met `worldRankingPlayers`, elk met:
 
@@ -113,7 +113,7 @@ en `total`, `page`, `pageSize` en `next`, soos 'n jaar se toernooie dit het. Die
 
 ## 'n Wêreldranglysspeler se spelle {#world-ranking-player-games}
 
-`GET /api/v0/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games`
 
 Die `id` is die deel van die speler se `id` ná die skuinsstreep, soos `games` in die lys hierbo dit gee. Lys die Association Croquet-spelle wat die speler gespeel het, hetsy in 'n blok, 'n Switserse stelsel, 'n uitklopkompetisie of 'n toets, en hetsy hy vir homself of vir 'n span gespeel het. Neem `changedSince`, `page` en `pageSize` soos die lys van spelers, en antwoord met `games`, in die volgorde waarin hulle bygevoeg is, elk vanuit die speler se kant:
 

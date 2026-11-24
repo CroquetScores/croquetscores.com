@@ -31,7 +31,7 @@ export const ManagersTab = ({
 }): React.JSX.Element => (
   <People
     at={`/api/site/tournaments/${idInAddress(tournament)}/managers`}
-    changesAt={`/api/v0/tournaments/${idInAddress(tournament)}/managers`}
+    changesAt={`/api/v1/tournaments/${idInAddress(tournament)}/managers`}
     listedUnder="managers"
     name="managers"
     fieldAbove

@@ -80,7 +80,7 @@ export const CompetitionsTab = ({
     setRefusedCode(undefined);
     try {
       const response = await fetch(
-        `/api/v0/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition.id)}/${action}`,
+        `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition.id)}/${action}`,
         { method: "POST" },
       );
       if (!response.ok) {

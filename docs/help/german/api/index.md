@@ -1,10 +1,8 @@
 # Hilfe für App-Entwickler
 
-Croquet Scores hat eine öffentliche API, damit eine App die Turniere einer Sportart verfolgen kann, ohne die Seiten der Website zu lesen. Sie antwortet in JSON und ist während der Entwicklung unter `/api/v0` erreichbar. Wenn sie freigegeben wird, ist sie unter `/api/v1` erreichbar.
+Croquet Scores hat eine öffentliche API, damit eine App die Turniere einer Sportart verfolgen kann, ohne die Seiten der Website zu lesen. Sie antwortet in JSON und ist unter `/api/v1` erreichbar.
 
 ## Wo sie steht {#where-it-stands}
-
-Die API ist in Entwicklung, deshalb heißt sie `v0`. Wenn alle Beteiligten sie angenommen haben, wird sie `v1`.
 
 Eine Änderung, die eine App zerbricht, wird nie an einer bestehenden Version vorgenommen. Sie wird als neue Version neben der alten gemacht, sodass eine App, die für `v1` geschrieben wurde, weiterläuft, wenn `v2` erscheint. Was nicht als Bruch zählt, steht weiter unten, damit eine App darauf eingerichtet werden kann.
 

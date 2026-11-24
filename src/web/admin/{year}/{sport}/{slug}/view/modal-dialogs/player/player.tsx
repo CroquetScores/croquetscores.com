@@ -186,7 +186,7 @@ export const PlayerDialog = ({
         worldRankingName.trim() === "" ? name : worldRankingName;
       const response = await fetch(
         player === undefined
-          ? at.replace("/api/site/", "/api/v0/")
+          ? at.replace("/api/site/", "/api/v1/")
           : `${at}/${idInAddress(player.id)}${onlyWorldRankingName ? "/world-ranking-name" : ""}`,
         {
           method: player === undefined ? "POST" : "PUT",

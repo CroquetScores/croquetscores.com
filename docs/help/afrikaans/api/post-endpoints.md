@@ -1,6 +1,6 @@
 # Die API se POST-eindpunte
 
-Hierdie adresse verander iets. Dié wat net lees, staan in [die GET-eindpunte](get-endpoints.md). Elke adres hier is onder `/api/v0` op die webwerf, en wat die webwerf se eie bladsye verander, word deur dieselfde adresse verander, so 'n toepassing het nie 'n kleiner stel as die webwerf nie. Wat vir almal geld, soos sleutels, kwotas en foute, staan in die [hulp vir toepassingontwikkelaars](index.md); wie mag skryf, staan [hieronder](#who-may-write).
+Hierdie adresse verander iets. Dié wat net lees, staan in [die GET-eindpunte](get-endpoints.md). Elke adres hier is onder `/api/v1` op die webwerf, en wat die webwerf se eie bladsye verander, word deur dieselfde adresse verander, so 'n toepassing het nie 'n kleiner stel as die webwerf nie. Wat vir almal geld, soos sleutels, kwotas en foute, staan in die [hulp vir toepassingontwikkelaars](index.md); wie mag skryf, staan [hieronder](#who-may-write).
 
 'n Toernooi, 'n kompetisie en die res word in 'n adres genoem met die deel van hul id wat ná die skuinsstreep kom: vir `tournament/4f2a…` sê die adres `4f2a…`. 'n Liggaam noem 'n ander ding op dieselfde manier, soos `player` hieronder doen, behalwe waar dit sê dit is die hele id.
 
@@ -16,7 +16,7 @@ Stuur 'n liggaam as JSON, met `Content-Type: application/json`. 'n Veld wat uitg
 - 'n Toernooi se telers mag doen wat met tellings gedoen word, en niks anders nie: 'n spel byvoeg, dit korrigeer, skuif, argiveer, herstel, onttrek en die onttrekking omkeer. Enigiets anders van die toernooi word hulle met `Tournament.NotAManager` geweier.
 - Enigiemand anders word met `Tournament.NotAManager` geweier, of met `Tournament.NotAManagerOrScorer` waar 'n teler toegelaat sou gewees het.
 
-`GET /api/v0/tournaments/{id}/permissions` sê watter rol 'n sleutel in 'n toernooi het (kyk [wat 'n sleutel mag doen](get-endpoints.md#permissions)), sodat 'n toepassing kan sê hoekom 'n skryfaksie geweier sou word voordat dit een stuur.
+`GET /api/v1/tournaments/{id}/permissions` sê watter rol 'n sleutel in 'n toernooi het (kyk [wat 'n sleutel mag doen](get-endpoints.md#permissions)), sodat 'n toepassing kan sê hoekom 'n skryfaksie geweier sou word voordat dit een stuur.
 
 ## Wat 'n antwoord is {#answers}
 
@@ -28,35 +28,35 @@ Om 'n versoek twee keer te stuur, is nie dieselfde as een keer nie: 'n spel wat 
 
 ### Maak 'n toernooi {#create-tournament}
 
-`POST /api/v0/tournaments`
+`POST /api/v1/tournaments`
 
 Neem `name`, `starts` en `finishes` (geskryf as `2026-10-03T00:00:00Z`), `format` ('n kode, kyk [die formate](get-endpoints.md#formats)), `sport` ('n kode, kyk [die sportsoorte](get-endpoints.md#sports)), `country` ('n kode soos `au`, kyk [die lande](get-endpoints.md#countries)), en, as dit verlang word, `region` ('n kode van die land, uit dieselfde lys), `subtitle`, `levelTestsDrawn`, `national` en `international`, waar elk van die laaste drie `true` of `false` is. Antwoord met `201` met `id` en `address`, wat is waar die webwerf dit wys.
 
 ### Argiveer of herstel 'n toernooi {#tournament-actions}
 
-`POST /api/v0/tournaments/{id}/archive`
+`POST /api/v1/tournaments/{id}/archive`
 
-`POST /api/v0/tournaments/{id}/restore`
+`POST /api/v1/tournaments/{id}/restore`
 
 Neem geen liggaam nie, en antwoord met `204`.
 
 ### Voeg 'n bestuurdernota by {#notes}
 
-`POST /api/v0/tournaments/{id}/notes`
+`POST /api/v1/tournaments/{id}/notes`
 
 Neem `title` en `description`. Antwoord met `201` met die nota se `id`. 'n Beskrywing mag tot 750 000 karakters wees, en die versoek mag so groot wees as wat dit neem.
 
 ## Die mense wat 'n rol in 'n toernooi het {#people}
 
-`POST /api/v0/tournaments/{id}/scorers`
+`POST /api/v1/tournaments/{id}/scorers`
 
-`POST /api/v0/tournaments/{id}/managers`
+`POST /api/v1/tournaments/{id}/managers`
 
 Maak iemand 'n teler, of 'n bestuurder. Neem `emailAddress`, die e-posadres van hul rekening, en antwoord met `204`.
 
-`POST /api/v0/tournaments/{id}/scorers/{account}/remove`
+`POST /api/v1/tournaments/{id}/scorers/{account}/remove`
 
-`POST /api/v0/tournaments/{id}/managers/{account}/remove`
+`POST /api/v1/tournaments/{id}/managers/{account}/remove`
 
 Neem 'n teler of 'n bestuurder af. Hulle neem geen liggaam nie en antwoord met `204`. Die `account` is die deel van die rekening se id wat ná `account/` kom.
 
@@ -64,7 +64,7 @@ Neem 'n teler of 'n bestuurder af. Hulle neem geen liggaam nie en antwoord met `
 
 ### Voeg 'n kompetisie by {#add-competition}
 
-`POST /api/v0/tournaments/{id}/competitions`
+`POST /api/v1/tournaments/{id}/competitions`
 
 Neem `kind`, een van `block`, `swiss`, `knockout` of `losers-knockout`, en 'n `name`, dan wat sy soort het:
 
@@ -77,19 +77,19 @@ Neem `kind`, een van `block`, `swiss`, `knockout` of `losers-knockout`, en 'n `n
 
 ### Voeg 'n toets by {#add-test}
 
-`POST /api/v0/tournaments/{id}/tests`
+`POST /api/v1/tournaments/{id}/tests`
 
 'n Toets is die wedstryd tussen twee spanne van 'n spantoernooi. Neem `firstTeam` en `secondTeam`, elk 'n span se id ná `team/`, `starts` en `finishes`, `expectedMatches`, `bestOf`, `group`, en dieselfde reëls as 'n kompetisie kan neem. Antwoord met `201` met sy `id`, wat 'n kompetisie s'n is.
 
 ### Skuif, argiveer of herstel 'n kompetisie {#competition-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/restore`
 
 Skuif dit een plek op of af in die toernooi se lys, of argiveer dit, of herstel dit. Hulle neem geen liggaam nie en antwoord met `204`. 'n Toets word hiermee ook geskuif, geargiveer en herstel.
 
@@ -97,21 +97,21 @@ Skuif dit een plek op of af in die toernooi se lys, of argiveer dit, of herstel 
 
 ### Skryf 'n speler in {#enter-player}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players`
 
 Skryf een van die toernooi se spelers in die kompetisie in. Neem `player`, die deel van die toernooispeler se id ná `tournament-player/`. Antwoord met `201` met `id`, wat die speler se id in die kompetisie is en nie die toernooi s'n nie.
 
 ### Skuif, onttrek, bring terug of verwyder 'n speler {#competition-player-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/remove`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/remove`
 
 Skuif 'n speler een plek op of af, onttrek hulle, keer hul onttrekking om, of neem hulle uit die kompetisie. Die `player` is die deel van hul id in die kompetisie wat ná `competition-player/` kom. Hulle neem geen liggaam nie en antwoord met `204`.
 
@@ -121,7 +121,7 @@ Elke bye in 'n kompetisie het dieselfde id, so 'n bye word onderskei deur `order
 
 ### Voeg 'n spel by {#add-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games`
 
 Neem die `winner` en die `loser`, elk die deel van 'n kompetisiespeler se id ná `competition-player/`, en die tellings. 'n Toets se spelers is nie sy eie nie, so vir 'n toets is elkeen die hele id van 'n speler in een van sy spanne, soos `team-player/…`.
 
@@ -134,23 +134,23 @@ Die tellings is soos die kompetisie dit hou:
 
 ### Korrigeer 'n spel {#correct-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/correct`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/correct`
 
 Neem die tellings soos om 'n spel by te voeg, en, waar hulle verander het, `winner` en `loser`. 'n Speler wat nie gestuur word nie, is die spel se eie. Die `game` is die deel van sy id ná `game/`. Antwoord met `204`.
 
 ### Skuif, argiveer, herstel of onttrek 'n spel {#game-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/restore`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
 
 Skuif 'n toets se telling een plek op of af, argiveer 'n spel of herstel dit, onttrek dit (dit is gespeel, en tel vir niks) of keer sy onttrekking om. Hulle neem geen liggaam nie en antwoord met `204`. Dit, en die twee hierbo, is wat 'n teler mag doen.
 
@@ -158,19 +158,19 @@ Skuif 'n toets se telling een plek op of af, argiveer 'n spel of herstel dit, on
 
 ### Voeg 'n speler by {#add-tournament-player}
 
-`POST /api/v0/tournaments/{id}/players`
+`POST /api/v1/tournaments/{id}/players`
 
 Voeg 'n speler by die toernooi. Neem `name`, en kan `representing`, `handicap`, `flag` en `worldRankingName` neem; wat weggelaat of leeg is, bly ongesê. Antwoord met `201` met die speler se `id`, wat sy hele id is, soos die GET-eindpunte dit sê. 'n Speler sonder 'n naam, of met die naam van een wat reeds daar is, word geweier. 'n Speler word in 'n kompetisie [ingeskryf](#enter-player) met die deel van hierdie `id` ná `tournament-player/`.
 
 ### Skuif, argiveer of herstel 'n speler {#tournament-player-actions}
 
-`POST /api/v0/tournaments/{id}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/players/{player}/restore`
 
 Skuif een van die toernooi se spelers een plek op of af, of argiveer of herstel hulle. Die `player` is die deel van hul id ná `tournament-player/`. Hulle neem geen liggaam nie en antwoord met `204`.
 
@@ -178,36 +178,36 @@ Skuif een van die toernooi se spelers een plek op of af, of argiveer of herstel 
 
 ### Voeg 'n span by {#add-team}
 
-`POST /api/v0/tournaments/{id}/teams`
+`POST /api/v1/tournaments/{id}/teams`
 
 Neem `name` en `shortName`, en kan `flag` neem. Antwoord met `201` met die span se `id`.
 
 ### Voeg 'n speler by 'n span {#add-team-player}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players`
+`POST /api/v1/tournaments/{id}/teams/{team}/players`
 
 Neem `name`, en kan `worldRankingName` neem. Antwoord met `201` met die speler se `id`.
 
 ### Skuif, argiveer of herstel 'n span {#team-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/restore`
 
 Hulle neem geen liggaam nie en antwoord met `204`.
 
 ### Skuif, argiveer of herstel 'n span se speler {#team-player-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/restore`
 
 Die `player` is die deel van hul id ná `team-player/`. Hulle neem geen liggaam nie en antwoord met `204`.

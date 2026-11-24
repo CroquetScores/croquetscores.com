@@ -1,6 +1,6 @@
 # Die API se eindpunte
 
-Elke adres is onder `/api/v0` op die webwerf, en elke antwoord is JSON. Wat vir almal geld, soos sleutels, kwotas, foute en hoe om goedkoop navraag te doen, staan in die [hulp vir toepassingontwikkelaars](index.md).
+Elke adres is onder `/api/v1` op die webwerf, en elke antwoord is JSON. Wat vir almal geld, soos sleutels, kwotas, foute en hoe om goedkoop navraag te doen, staan in die [hulp vir toepassingontwikkelaars](index.md).
 
 Daar is twee soorte, en 'n bladsy vir elk:
 

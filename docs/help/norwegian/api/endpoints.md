@@ -1,6 +1,6 @@
 # API-ets endepunkter
 
-Hver adresse ligger under `/api/v0` på nettstedet, og hvert svar er JSON. Det som gjelder alle, som nøkler, kvoter, feil og hvordan man spør billig, står i [hjelpen for apputviklere](index.md).
+Hver adresse ligger under `/api/v1` på nettstedet, og hvert svar er JSON. Det som gjelder alle, som nøkler, kvoter, feil og hvordan man spør billig, står i [hjelpen for apputviklere](index.md).
 
 Det er to slag, og en side for hvert:
 

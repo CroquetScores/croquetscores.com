@@ -1,5 +1,5 @@
 -- When a tournament was archived, so that an app can be told which have been
--- (GET /api/v0/tournaments/archived). Nothing for one that is not archived,
+-- (GET /api/v1/tournaments/archived). Nothing for one that is not archived,
 -- and nothing again for one restored.
 --
 -- A read model, made again from the events. A tournament already archived is

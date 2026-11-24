@@ -1,12 +1,12 @@
 # Die GET-Endpunkte der API
 
-Diese Adressen lesen und ändern nichts; die, die etwas ändern, stehen in den [POST-Endpunkten](post-endpoints.md). Jede Adresse hier liegt unter `/api/v0` der Website, und jede Antwort ist JSON. Was für alle gilt, wie Schlüssel, Kontingente, Fehler und sparsames Fragen, steht in der [Hilfe für App-Entwickler](index.md). Jeder Antwort können Felder ohne neue Version hinzugefügt werden (siehe [Felder können hinzukommen](index.md#fields-may-be-added)), ignorieren Sie also, was Sie nicht kennen.
+Diese Adressen lesen und ändern nichts; die, die etwas ändern, stehen in den [POST-Endpunkten](post-endpoints.md). Jede Adresse hier liegt unter `/api/v1` der Website, und jede Antwort ist JSON. Was für alle gilt, wie Schlüssel, Kontingente, Fehler und sparsames Fragen, steht in der [Hilfe für App-Entwickler](index.md). Jeder Antwort können Felder ohne neue Version hinzugefügt werden (siehe [Felder können hinzukommen](index.md#fields-may-be-added)), ignorieren Sie also, was Sie nicht kennen.
 
 Ein Turnier oder ein Wettbewerb wird in einer Adresse mit dem Teil seiner Id benannt, der nach dem Schrägstrich steht: Für `tournament/4f2a…` steht in der Adresse `4f2a…`. Jede Antwort sagt in einem `href`, wo das zu finden ist, wovon sie erzählt, und in einer `uri`, wo die Website es zeigt, als Pfad, der mit einem Schrägstrich beginnt.
 
 ## Die Turniere eines Jahres {#tournaments}
 
-`GET /api/v0/tournaments?year=2026`
+`GET /api/v1/tournaments?year=2026`
 
 Nimmt an:
 
@@ -27,7 +27,7 @@ und `total`, `page`, `pageSize` und `next`, das sagt, wo die nächste Seite ist,
 
 ## Ein Turnier {#tournament}
 
-`GET /api/v0/tournaments/{id}`
+`GET /api/v1/tournaments/{id}`
 
 Sagt, was die Liste darüber sagt, und:
 
@@ -43,37 +43,37 @@ Drei Listen sagen, was ein Turnier auf der gefragten Website sein kann: ihre Spo
 
 ### Die Sportarten {#sports}
 
-`GET /api/v0/tournaments/sports`
+`GET /api/v1/tournaments/sports`
 
 Antwortet mit `sports`, jede mit `code` und `name`. Die `sport`, die ein Turnier nennt und für die eine Liste erfragt werden kann, ist einer dieser Codes. Croquet Scores bietet `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) und `gb` (Gateball); Gateball Scores bietet nur Gateball. Eine Sportart kann in Zukunft hinzukommen, wie ein Feld (siehe [Felder können hinzukommen](index.md#fields-may-be-added)), eine App sollte also mit einem Code zurechtkommen, den sie nicht kennt.
 
 ### Die Formate {#formats}
 
-`GET /api/v0/tournaments/formats`
+`GET /api/v1/tournaments/formats`
 
 Antwortet mit `formats`, jedes mit `code`, dem Namen, unter dem ein Turnier angelegt wird, `name`, `teams`, ob es von Mannschaften gespielt wird, und `drawsLevelTests`, ob ein Turnier in diesem Format einen Gleichstandstest auslost, wenn es nicht sagt, dass es das nicht tut.
 
 ### Die Länder {#countries}
 
-`GET /api/v0/countries`
+`GET /api/v1/countries`
 
 Antwortet mit `countries`, jedes mit `code` (wie `au`), `name` und `regions`, jede mit `code` und `name`. Sie stehen in der Reihenfolge ihrer Namen in der gefragten Sprache. Eine Region wird so benannt, wie sie erfasst wurde, meist in der Sprache ihres eigenen Landes. Ein Land, das nicht unterteilt ist, hat eine Region, nämlich sich selbst.
 
 ## Ein Wettbewerb {#competition}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}`
+`GET /api/v1/tournaments/{id}/competitions/{id}`
 
 Sagt `name`, `kind`, `href`, `uri` und `changedAt` des Wettbewerbs und wo die API von seinen Spielen erzählt (`games`) und, bei einem Block und einem Schweizer System, die als einzige sie haben, von seinem Stand (`standings`).
 
 ## Der Stand eines Blocks oder eines Schweizer Systems {#standings}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/standings`
+`GET /api/v1/tournaments/{id}/competitions/{id}/standings`
 
 Sagt den Wettbewerb und `standings`: für jeden Spieler `playerId`, `name`, `withdrawn`, `played`, `won`, `netHoops`, `position` (oder `null`) und `shared`, ob der Platz geteilt wird. Ein Block fügt `lost`, `gamesWon` und `netGames` hinzu, die ein Schweizer System nicht sagt.
 
 ## Die Spiele eines Wettbewerbs {#games}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/games`
+`GET /api/v1/tournaments/{id}/competitions/{id}/games`
 
 Sagt den Wettbewerb und seine Spiele. Jedes Spiel hat eine `id`, einen `winner` und einen `loser`, `drawn`, `withdrawn` (gespielt, aber ohne Wertung), `round` (bei einem K.-o.-System, wo die erste 1 ist, und sonst `null`) und `changedAt`. Jede Seite sagt die `playerId` des Spielers, seinen `name` und sein `score`, wie es eingegeben wurde, etwa `26tp`. Wo ein Spiel unentschieden endete, entscheidet nur die Reihenfolge der Eingabe, welche Seite der Gewinner heißt.
 
@@ -81,25 +81,25 @@ Ein Test, das Match zwischen zwei Mannschaften, sagt `matches` und nicht `games`
 
 ## Was ein Schlüssel darf {#permissions}
 
-`GET /api/v0/tournaments/{id}/permissions`
+`GET /api/v1/tournaments/{id}/permissions`
 
 Braucht einen Schlüssel und sagt, was dieser Schlüssel im Turnier darf: `part`, die Rolle seines Kontos (`manager`, `scorer` oder `neither`), `mayRead` und `mayWrite`. Eine App kann so sagen, warum ein Schreibzugriff abgewiesen würde, bevor sie einen sendet. Die Antwort gilt für den Schlüssel, der gefragt hat, und wird deshalb nie aufbewahrt (`Cache-Control: no-store`).
 
 ## Turniere, die das Jahr gewechselt haben {#changed-year}
 
-`GET /api/v0/tournaments/changed-year`
+`GET /api/v1/tournaments/changed-year`
 
 Listet die Turniere auf, die in ein anderes Jahr gekommen sind als das, in dem sie waren, damit eine App verschieben kann, was sie aufbewahrt. Nimmt `changedSince`, `page` und `pageSize` an. Jedes hat `tournamentId`, `previousYear` und `newYear`.
 
 ## Turniere, die archiviert wurden {#archived}
 
-`GET /api/v0/tournaments/archived`
+`GET /api/v1/tournaments/archived`
 
 Listet die Turniere auf, die archiviert wurden, damit eine App aufhören kann, sie zu zeigen. Nimmt `archivedSince`, geschrieben als `2026-03-01T10:00:00Z`, `page` und `pageSize` an. Jedes hat `tournamentId` und `archivedAt`.
 
 ## Weltranglistenspieler {#world-ranking-players}
 
-`GET /api/v0/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players`
 
 Listet die Association-Croquet-Spieler, die die Weltranglisten kennen. Nimmt `changedSince`, geschrieben als `2026-03-01T10:00:00Z`, `page` und `pageSize`, wobei eine Seite höchstens 100 hat. Antwortet mit `worldRankingPlayers`, jeder mit:
 
@@ -113,7 +113,7 @@ und `total`, `page`, `pageSize` und `next`, wie bei den Turnieren eines Jahres. 
 
 ## Die Spiele eines Weltranglistenspielers {#world-ranking-player-games}
 
-`GET /api/v0/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games`
 
 Die `id` ist der Teil der `id` des Spielers nach dem Schrägstrich, wie ihn `games` in der obigen Liste nennt. Listet die Association-Croquet-Spiele, die der Spieler gespielt hat, ob in einem Block, einem Schweizer System, einem K.-o.-System oder einem Test, und ob er für sich selbst oder für ein Team spielte. Nimmt `changedSince`, `page` und `pageSize` wie die Liste der Spieler und antwortet mit `games`, in der Reihenfolge, in der sie hinzugefügt wurden, jedes aus der Sicht des Spielers:
 

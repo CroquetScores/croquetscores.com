@@ -2,7 +2,7 @@
 // trusted to have typed what a field is for, so each reader gives what the
 // field holds where it is of the kind wanted and what the application will
 // refuse where it is not, and none of them throws. They are the API's, shared
-// by /api/site and /api/v0 so that a route moved from the one to the other
+// by /api/site and /api/v1 so that a route moved from the one to the other
 // reads its body as it did.
 import type { LosersKnockoutSaid } from "../../application/operations/tournaments/AddKnockout.js";
 import type { TestRequest } from "../../application/operations/tournaments/testOperations.js";

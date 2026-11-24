@@ -1,6 +1,6 @@
 # API galapunkti
 
-Katra adrese atrodas zem `/api/v0` vietnē, un katra atbilde ir JSON. Kas attiecas uz visām, piemēram, atslēgas, limiti, kļūdas un lēta pieprasīšana, ir rakstīts [palīdzībā lietotņu izstrādātājiem](index.md).
+Katra adrese atrodas zem `/api/v1` vietnē, un katra atbilde ir JSON. Kas attiecas uz visām, piemēram, atslēgas, limiti, kļūdas un lēta pieprasīšana, ir rakstīts [palīdzībā lietotņu izstrādātājiem](index.md).
 
 Ir divi veidi, un katram sava lapa:
 

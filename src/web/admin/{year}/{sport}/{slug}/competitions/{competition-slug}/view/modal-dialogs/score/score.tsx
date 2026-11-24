@@ -408,8 +408,8 @@ export const ScoreDialog = ({
     try {
       const response = await fetch(
         correcting === undefined
-          ? `${at.replace("/api/site/", "/api/v0/")}/games`
-          : `${at.replace("/api/site/", "/api/v0/")}/games/${idInAddress(correcting.id)}/correct`,
+          ? `${at.replace("/api/site/", "/api/v1/")}/games`
+          : `${at.replace("/api/site/", "/api/v1/")}/games/${idInAddress(correcting.id)}/correct`,
         {
           method: "POST",
           headers: {
@@ -500,7 +500,7 @@ export const ScoreDialog = ({
     setAskingAboutWalkover(false);
     try {
       const response = await fetch(
-        `${at.replace("/api/site/", "/api/v0/")}/players/${idInAddress(said.loser)}/withdraw`,
+        `${at.replace("/api/site/", "/api/v1/")}/players/${idInAddress(said.loser)}/withdraw`,
         { method: "POST", headers: { accept: "application/json" } },
       );
       if (response.ok) {

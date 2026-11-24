@@ -1,0 +1,174 @@
+@postgres
+Feature: An app lists the tournaments that have been archived
+
+  An organiser can archive a tournament, which sets it aside: it is no longer in
+  the list of its year (`tournaments.feature`) and is answered not found where
+  the API is asked for it (`tournament.feature`). An app that keeps a year's
+  tournaments would go on holding one that was archived, so it asks the API which
+  tournaments have been archived, at `/api/v1/tournaments/archived`.
+
+  Each is told by its id (`tournamentId`, the one the list gives), the moment it
+  was archived (`archivedAt`) and an `etag` of what is said of it, as the rows of
+  the other lists have. A tournament that is restored is not archived any more,
+  and is not listed; one archived again says the moment it was archived last.
+
+  An app that reads this again asks only for what was archived since the last
+  time, with `archivedSince`. The answer is a page of at most 100, with the way
+  to the next, and follows the conventions of the list: a caller with no key is
+  answered as one with a key is, a key that does not work is refused, and every
+  answer carries an `ETag` and a `Last-Modified`, so that one the app already has
+  is answered `304`.
+
+  No browser is needed: these scenarios send plain requests.
+
+  Background:
+    Given a site served as "croquetscores.com"
+    And "organiser@example.com" has an account, confirmed, called "Ollie Organiser"
+    And "reader@example.com" has an account, confirmed, called "Rae Reader"
+    And "reader@example.com" has made a key that may only read
+
+  Rule: A tournament archived is listed
+
+    Scenario: A tournament archived is listed
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with that key
+      Then the API answers 200
+      And the archived tournaments are "Spring Open"
+
+    Scenario: A tournament says which one it is
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with that key
+      Then the archived tournament "Spring Open" says its id
+
+    Scenario: A tournament says when it was archived
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the server's clock reads "2026-03-02T10:00:00Z"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with that key
+      Then the archived tournament "Spring Open" says it was archived at "2026-03-02T10:00:00.000Z"
+
+    Scenario: A tournament archived carries a mark of itself
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with that key
+      Then the archived tournament "Spring Open" says a mark of itself
+
+    Scenario: A tournament not archived is not listed
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      When the archived tournaments are asked with that key
+      Then no tournaments are listed as archived
+
+    Scenario: A tournament restored is not listed
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      And "organiser@example.com" has restored the tournament "Spring Open"
+      When the archived tournaments are asked with that key
+      Then no tournaments are listed as archived
+
+    Scenario: A tournament archived again says when it was archived last
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      And "organiser@example.com" has restored the tournament "Spring Open"
+      And the server's clock reads "2026-03-03T10:00:00Z"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with that key
+      Then the archived tournament "Spring Open" says it was archived at "2026-03-03T10:00:00.000Z"
+
+    Scenario: The archived tournaments are listed with no key
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with no key
+      Then the API answers 200
+      And the archived tournaments are "Spring Open"
+
+    Scenario: A key that does not work is refused
+      When the archived tournaments are asked with the key "cs_notakey"
+      Then the API answers 401
+      And the API's code is "ApiKey.Invalid"
+
+  Rule: An app asks only for what has been archived since
+
+    Scenario: A tournament archived since a moment is listed
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the server's clock reads "2026-03-02T10:00:00Z"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with that key archived since "2026-03-01T12:00:00Z"
+      Then the archived tournaments are "Spring Open"
+
+    Scenario: A tournament archived before a moment is not listed
+      Given the server's clock reads "2026-03-01T10:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with that key archived since "2026-03-01T12:00:00Z"
+      Then no tournaments are listed as archived
+
+    Scenario: A tournament archived at the very moment asked about is not listed again
+      Given the server's clock reads "2026-03-01T10:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the archived tournaments are asked with that key archived since "2026-03-01T10:00:00.000Z"
+      Then no tournaments are listed as archived
+
+    Scenario: A moment with no zone is refused
+      When the archived tournaments are asked with that key archived since "2026-03-01T10:00:00"
+      Then the API answers 400
+      And the API's code is "Tournaments.ArchivedSinceNotAMoment"
+      And the API says the field at fault is "archivedSince"
+
+  Rule: An answer is a page of at most 100
+
+    Scenario: A page says how many tournaments there are in all
+      Given "organiser@example.com" has created 3 tournaments
+      And every tournament has been archived
+      When the archived tournaments are asked with that key and a page size of 2
+      Then the page lists 2 archived tournaments
+      And the API says there are 3 tournaments in all
+
+    Scenario: A page says where the next one is
+      Given "organiser@example.com" has created 3 tournaments
+      And every tournament has been archived
+      When the archived tournaments are asked with that key and a page size of 2
+      Then the API says the next page is 2
+
+    Scenario: The last page says there is no next one
+      Given "organiser@example.com" has created 3 tournaments
+      And every tournament has been archived
+      When the archived tournaments are asked for page 2 with that key and a page size of 2
+      Then the page lists 1 archived tournaments
+      And the API says there is no next page
+
+    Scenario: A page size over 100 is 100
+      When the archived tournaments are asked with that key and a page size of 500
+      Then the API says the page size is 100
+
+    Scenario: A page that is not a whole number is refused
+      When the archived tournaments are asked for page "first" with that key
+      Then the API answers 400
+      And the API's code is "Tournaments.PageNotWhole"
+      And the API says the field at fault is "page"
+
+    Scenario: A page size that is not a whole number is refused
+      When the archived tournaments are asked with that key and a page size of "many"
+      Then the API answers 400
+      And the API's code is "Tournaments.PageSizeNotWhole"
+      And the API says the field at fault is "pageSize"
+
+  Rule: An answer unchanged is answered not modified, by its mark
+
+    Scenario: An answer carries a mark of what it said
+      When the archived tournaments are asked with that key
+      Then the API gives a mark of its answer
+
+    Scenario: The same question is answered not modified once its mark is sent
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      And the archived tournaments are asked with that key
+      When the archived tournaments are asked again with that key and the mark it gave
+      Then the API answers 304
+      And the API says nothing more
+
+    Scenario: The answer is kept by the app and not by anybody between
+      When the archived tournaments are asked with that key
+      Then the API says the answer is for the app to keep and to check before it uses it

@@ -1,6 +1,6 @@
 # Los puntos finales de la API
 
-Cada dirección está bajo `/api/v0` en el sitio, y cada respuesta es JSON. Lo que vale para todas, como las claves, los límites, los errores y cómo preguntar con economía, está en la [ayuda para desarrolladores de aplicaciones](index.md).
+Cada dirección está bajo `/api/v1` en el sitio, y cada respuesta es JSON. Lo que vale para todas, como las claves, los límites, los errores y cómo preguntar con economía, está en la [ayuda para desarrolladores de aplicaciones](index.md).
 
 Hay dos clases, y una página para cada una:
 

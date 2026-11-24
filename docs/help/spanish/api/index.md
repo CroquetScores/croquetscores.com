@@ -1,10 +1,8 @@
 # Ayuda para desarrolladores de aplicaciones
 
-Croquet Scores tiene una API pública, para que una aplicación pueda seguir los torneos de un deporte sin leer las páginas del sitio. Responde en JSON y, durante el desarrollo, está en `/api/v0`. Cuando se publique, estará en `/api/v1`.
+Croquet Scores tiene una API pública, para que una aplicación pueda seguir los torneos de un deporte sin leer las páginas del sitio. Responde en JSON y está en `/api/v1`.
 
 ## En qué punto está {#where-it-stands}
-
-La API está en desarrollo, y por eso es `v0`. Cuando todos los interesados la acepten, pasará a ser `v1`.
 
 Un cambio que rompe una aplicación nunca se hace en una versión que ya existe. Se hace como una versión nueva junto a la antigua, de modo que una aplicación escrita para `v1` sigue funcionando cuando llegue `v2`. Lo que no cuenta como romper se dice a continuación, para que una aplicación pueda escribirse esperándolo.
 

@@ -88,7 +88,7 @@ export const asked = async (
 ): Promise<void> => {
   const session = world.apiSession;
   // An address under /api is already whole, as a route that has moved from
-  // /api/site to /api/v0 is asked at where it is now.
+  // /api/site to /api/v1 is asked at where it is now.
   const answer = await fetch(
     `${world.baseUrl!}${path.startsWith("/api/") ? "" : "/api/site"}${path}`,
     {

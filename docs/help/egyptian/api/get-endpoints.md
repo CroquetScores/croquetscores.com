@@ -1,12 +1,12 @@
 # نقاط وصول GET في الـ API
 
-العناوين دي بتقرا وماتغيّرش حاجة؛ اللي بتغيّر حاجة موجودة في [نقاط وصول POST](post-endpoints.md). كل عنوان هنا تحت `/api/v0` على الموقع، وكل رد JSON. اللي بيسري على الكل، زي المفاتيح والحصص والأخطاء وإزاي تسأل بالرخيص، موجود في [المساعدة لمطوّري التطبيقات](index.md). ممكن تتضاف حقول لأي رد من غير نسخة جديدة (شوف [ممكن تتضاف حقول](index.md#fields-may-be-added))، فتجاهل اللي ما تعرفوش.
+العناوين دي بتقرا وماتغيّرش حاجة؛ اللي بتغيّر حاجة موجودة في [نقاط وصول POST](post-endpoints.md). كل عنوان هنا تحت `/api/v1` على الموقع، وكل رد JSON. اللي بيسري على الكل، زي المفاتيح والحصص والأخطاء وإزاي تسأل بالرخيص، موجود في [المساعدة لمطوّري التطبيقات](index.md). ممكن تتضاف حقول لأي رد من غير نسخة جديدة (شوف [ممكن تتضاف حقول](index.md#fields-may-be-added))، فتجاهل اللي ما تعرفوش.
 
 البطولة، أو المسابقة، بتتسمّى في العنوان بالجزء من الـ id بتاعها اللي بعد الشرطة المايلة: لـ `tournament/4f2a…` العنوان بيقول `4f2a…`. كل رد بيقول في `href` فين تلاقي اللي بيتكلم عنه، وفي `uri` فين الموقع بيعرضه، كمسار بيبدأ بشرطة مايلة.
 
 ## بطولات سنة {#tournaments}
 
-`GET /api/v0/tournaments?year=2026`
+`GET /api/v1/tournaments?year=2026`
 
 بتاخد:
 
@@ -27,7 +27,7 @@
 
 ## بطولة واحدة {#tournament}
 
-`GET /api/v0/tournaments/{id}`
+`GET /api/v1/tournaments/{id}`
 
 بتقول اللي القايمة بتقوله عنها، و:
 
@@ -43,37 +43,37 @@
 
 ### الرياضات {#sports}
 
-`GET /api/v0/tournaments/sports`
+`GET /api/v1/tournaments/sports`
 
 بيرد بـ `sports`، كل واحدة فيها `code` و`name`. الـ `sport` اللي البطولة بتقوله، واللي ينفع تتطلب قايمة ليه، واحد من الأكواد دي. Croquet Scores بيقدّم `ac` (Association Croquet) و`gc` (Golf Croquet) و`a6w` (American 6 Wicket) و`rc` (Ricochet) و`gb` (Gateball)؛ و Gateball Scores بيقدّم Gateball بس. ممكن تتضاف رياضة في المستقبل، زي الحقل (شوف [ممكن تتضاف حقول](index.md#fields-may-be-added))، فالتطبيق لازم يتعامل مع كود ما يعرفوش.
 
 ### الأشكال {#formats}
 
-`GET /api/v0/tournaments/formats`
+`GET /api/v1/tournaments/formats`
 
 بيرد بـ `formats`، كل واحد فيه `code`، وهو الاسم اللي البطولة بتتعمل بيه، و`name` و`teams`، يعني بتتلعب بفرق ولا لأ، و`drawsLevelTests`، يعني البطولة اللي بالشكل ده بتسحب اختبار تعادل إلا لو قالت إنها مش هتسحبه.
 
 ### البلاد {#countries}
 
-`GET /api/v0/countries`
+`GET /api/v1/countries`
 
 بيرد بـ `countries`، كل واحدة فيها `code` (زي `au`) و`name` و`regions`، كل واحدة فيها `code` و`name`. مترتّبة بترتيب أسمائها باللغة المطلوبة. المنطقة بتتسمّى زي ما اتسجّلت، ومعظمها بلغة بلدها. البلد اللي مش متقسّم ليه منطقة واحدة، وهي نفسه.
 
 ## مسابقة واحدة {#competition}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}`
+`GET /api/v1/tournaments/{id}/competitions/{id}`
 
 بتقول `name` و`kind` و`href` و`uri` و`changedAt` للمسابقة، وفين الـ API بتتكلم عن ألعابها (`games`) وللبلوك والسويسري، اللي هما الوحيدين اللي عندهم ترتيب، عن ترتيبها (`standings`).
 
 ## ترتيب بلوك أو سويسري {#standings}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/standings`
+`GET /api/v1/tournaments/{id}/competitions/{id}/standings`
 
 بتقول المسابقة، و`standings`: لكل لاعب `playerId` و`name` و`withdrawn` و`played` و`won` و`netHoops` و`position` (أو `null`) و`shared`، يعني المركز متقسّم ولا لأ. البلوك بيزوّد `lost` و`gamesWon` و`netGames`، اللي السويسري ما بيقولهمش.
 
 ## ألعاب مسابقة {#games}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/games`
+`GET /api/v1/tournaments/{id}/competitions/{id}/games`
 
 بتقول المسابقة وألعابها. كل لعبة فيها `id` و`winner` و`loser` و`drawn` و`withdrawn` (اتلعبت بس مبتتحسبش) و`round` (في الإقصائي، والأولى فيه 1، و`null` في غيره) و`changedAt`. كل جانب بيقول `playerId` بتاع اللاعب و`name` بتاعه و`score` بتاعه زي ما اتكتب، زي `26tp`. لو اللعبة خلصت تعادل، ترتيب الكتابة بس هو اللي بيحدّد أنهي جانب بيتسمّى الفايز.
 
@@ -81,25 +81,25 @@
 
 ## إيه اللي المفتاح يقدر يعمله {#permissions}
 
-`GET /api/v0/tournaments/{id}/permissions`
+`GET /api/v1/tournaments/{id}/permissions`
 
 محتاجة مفتاح، وبتقول المفتاح ده يقدر يعمل إيه في البطولة: `part`، وهو دور حسابه (`manager` أو `scorer` أو `neither`)، و`mayRead` و`mayWrite`. التطبيق يقدر يقول ليه الكتابة هتترفض قبل ما يبعت واحدة. الرد لحساب المفتاح اللي سأل، فعمره ما بيتحفظ (`Cache-Control: no-store`).
 
 ## بطولات غيّرت سنتها {#changed-year}
 
-`GET /api/v0/tournaments/changed-year`
+`GET /api/v1/tournaments/changed-year`
 
 بتعرض البطولات اللي بقت في سنة غير السنة اللي كانت فيها، علشان التطبيق ينقل اللي محتفظ بيه. بتاخد `changedSince` و`page` و`pageSize`. كل واحدة فيها `tournamentId` و`previousYear` و`newYear`.
 
 ## بطولات اتأرشفت {#archived}
 
-`GET /api/v0/tournaments/archived`
+`GET /api/v1/tournaments/archived`
 
 بتعرض البطولات اللي اتأرشفت، علشان التطبيق يبطّل يعرضها. بتاخد `archivedSince`، مكتوب زي `2026-03-01T10:00:00Z`، و`page` و`pageSize`. كل واحدة فيها `tournamentId` و`archivedAt`.
 
 ## لاعبين التصنيف العالمي {#world-ranking-players}
 
-`GET /api/v0/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players`
 
 بيعرض لاعبين Association Croquet اللي التصنيفات العالمية تعرفهم. بياخد `changedSince`، مكتوب زي `2026-03-01T10:00:00Z`، و`page` و`pageSize`، والصفحة فيها 100 على الأكتر. بيرد بـ `worldRankingPlayers`، كل واحد فيه:
 
@@ -113,7 +113,7 @@
 
 ## ألعاب لاعب في التصنيف العالمي {#world-ranking-player-games}
 
-`GET /api/v0/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games`
 
 الـ `id` هو الجزء من `id` اللاعب اللي بعد الشرطة المايلة، زي ما `games` في القايمة اللي فوق بتقوله. بيعرض ألعاب Association Croquet اللي اللاعب لعبها، سواء في بلوك أو نظام سويسري أو إقصائي أو اختبار، وسواء لعب لنفسه أو لفريق. بياخد `changedSince` و`page` و`pageSize` زي قايمة اللاعبين، وبيرد بـ `games`، بالترتيب اللي اتضافت بيه، كل لعبة من ناحية اللاعب:
 
