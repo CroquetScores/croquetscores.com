@@ -105,6 +105,11 @@ export const asked = async (
   path: string,
   headers: Record<string, string>,
 ): Promise<Answer> => {
+  // An address of its own, as `told` has, so that a caller with no key or a key
+  // that does not work, who is counted by address, is not counted with every
+  // other scenario asking at the same moment: they would use up its allowance
+  // between them and be answered 429 where the scenario expects 401.
+  sceneOf(world).address ??= nextAddress();
   const answer = await fetch(`${world.baseUrl!}${path}`, {
     headers: { ...asIfFrom(world), ...headers },
   });
