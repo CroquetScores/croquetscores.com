@@ -1,5 +1,19 @@
 # Novidades para organizadores de torneios
 
+## Lançado em 2026-11-25
+
+### O torneio
+
+- **Pergunta-se antes de guardar um torneio com nome de teste.** Ao criar um torneio com a palavra inteira "test", "testing", "trial", "fake" ou "dummy" no nome, abre-se primeiro uma caixa que diz que o torneio será guardado e listado para todos, e que liga ao site de experiências, onde um teste deve ficar. **Guardar este torneio** cria-o, e **Cancelar** deixa o formulário como o escreveu. Não se pergunta num site de experiências, nem quando um torneio é alterado.
+
+### Competições
+
+- **Uma vitória por falta de comparência escrita como resultado pergunta se o adversário deve ser retirado.** Ao premir **Adicionar jogo** num resultado com "w/o", abre-se uma caixa que nomeia o perdedor: **Retirar adversário**, **Adicionar resultado** ou **Cancelar**. Retirar o adversário não acrescenta nenhum jogo e esvazia a caixa do resultado para o seguinte. Um jogador retirado não joga mais, e os jogos que não jogou são decididos sem ele, o que conta melhor do que um jogo que nunca se jogou. Só se pergunta para um resultado novo, e não numa competição de teste nem Advantage.
+
+### Aplicativos
+
+- **A API é agora `v1`.** Os endereços de um aplicativo estão em `/api/v1`, onde estavam em `/api/v0`. Um aplicativo que ainda chame `/api/v0` é enviado para o novo endereço por um redirecionamento e por isso continua a funcionar, mas deve ser alterado, pois o redirecionamento pode ser retirado.
+
 ## Lançado em 2026-11-24
 
 ### Competições

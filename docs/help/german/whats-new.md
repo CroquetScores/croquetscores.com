@@ -1,5 +1,11 @@
 # Was ist neu
 
+## Veröffentlicht am 25.11.2026
+
+- **Auf dem Handy hat die Seite mehr Platz.** Die weiße Fläche, die eine Seite trägt, reicht von einem Rand des Bildschirms zum anderen, und der Text sowie die Leisten darüber und darunter sitzen 10 statt 41 Pixel vom Rand entfernt. Ein Formular auf der grünen Seite behält seinen Rand. Breitere Bildschirme sind wie zuvor.
+
+- **Ein Name in der Übersicht eines K.-o.-Turniers wird nie mitten im Wort getrennt.** Er bricht nur an seinen Leerzeichen um. Ist ein Wort breiter als der Platz neben den Ergebnissen, lässt sich die Übersicht innerhalb der Seite seitlich verschieben, statt die Seite aufzuweiten.
+
 ## Veröffentlicht am 24.11.2026
 
 - **Die Übersicht eines Blocks nennt auch die Spieldifferenz.** Wo die Begegnungen eines Blocks auf mehr als ein Spiel gehen, nennt seine Übersicht Siege, Niederlagen, Spieldifferenz und Tordifferenz, da die Spieldifferenz bei Gleichstand vor der Tordifferenz entscheidet. Ein Block aus Einzelspielen nennt wie bisher Siege, Niederlagen und Tordifferenz. Die Übersicht sagt nicht mehr, wie ihre Spieler eingestuft werden.

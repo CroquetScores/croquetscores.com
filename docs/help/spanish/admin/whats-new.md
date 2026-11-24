@@ -1,5 +1,19 @@
 # Novedades para los gestores de torneo
 
+## Publicado el 2026-11-25
+
+### El torneo
+
+- **Se pregunta antes de guardar un torneo con nombre de prueba.** Al crear un torneo con la palabra entera "test", "testing", "trial", "fake" o "dummy" en su nombre, se abre primero un cuadro que dice que el torneo se guardará y se mostrará a todos, y que enlaza con el sitio de pruebas, que es donde va una prueba. **Guardar este torneo** lo crea, y **Cancelar** deja el formulario como lo escribió. No se pregunta en un sitio de pruebas ni cuando se cambia un torneo.
+
+### Competiciones
+
+- **Un walkover escrito como resultado pregunta si se retira al rival.** Al pulsar **Añadir partida** en un resultado con "w/o", se abre un cuadro que nombra al perdedor: **Retirar al rival**, **Añadir resultado** o **Cancelar**. Retirar al rival no añade ninguna partida y vacía el cuadro del resultado para el siguiente. Un jugador retirado ya no juega, y las partidas que no ha jugado se deciden sin él, lo que cuenta mejor que una partida que nunca se jugó. Solo se pregunta por un resultado nuevo, y no en una competición de prueba ni Advantage.
+
+### Aplicaciones
+
+- **La API es ahora `v1`.** Las direcciones de una aplicación están en `/api/v1`, donde estaban en `/api/v0`. Una aplicación que aún llame a `/api/v0` es enviada a la nueva dirección por una redirección y sigue funcionando, pero debe cambiarse, ya que la redirección puede retirarse.
+
 ## Publicado el 2026-11-24
 
 ### Competiciones

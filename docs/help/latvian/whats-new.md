@@ -1,5 +1,11 @@
 # Kas jauns
 
+## Izlaists 2026-11-25
+
+- **Tālrunī lapai ir vairāk vietas.** Baltais panelis, kas satur lapu, stiepjas no vienas ekrāna malas līdz otrai, un teksts un joslas virs un zem tā ir 10 pikseļu attālumā no malas, nevis 41. Veidlapa uz zaļās lapas saglabā savu malu. Platāki ekrāni ir tādi, kādi bija.
+
+- **Vārds izslēgšanas turnīra kopsavilkumā nekad netiek pārtraukts vārda vidū.** Tas lauzās tikai pie atstarpēm. Ja vārds ir platāks par vietu blakus rezultātiem, kopsavilkums ritinās uz sāniem lapas iekšienē, nevis bīda lapu ārā.
+
 ## Izlaists 2026-11-24
 
 - **Bloka kopsavilkums norāda arī partiju starpību.** Ja bloka mači ir labākie no vairāk nekā vienas partijas, tā kopsavilkums norāda uzvaras, zaudējumus, partiju starpību un vārtiņu starpību, jo partiju starpība neizšķirtu rezultātu izšķir pirms vārtiņiem. Bloks ar vienām partijām norāda uzvaras, zaudējumus un vārtiņu starpību kā agrāk. Kopsavilkums vairs nesaka, kā tā spēlētāji tiek ranžēti.

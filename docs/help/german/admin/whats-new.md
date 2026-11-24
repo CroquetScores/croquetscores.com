@@ -1,5 +1,19 @@
 # Was ist neu für Verantwortliche
 
+## Veröffentlicht am 2026-11-25
+
+### Das Turnier
+
+- **Vor dem Speichern eines Turniers, das wie ein Test heißt, wird nachgefragt.** Wer ein Turnier anlegt, in dessen Namen das ganze Wort „test“, „testing“, „trial“, „fake“ oder „dummy“ vorkommt, sieht zuerst einen Dialog. Er sagt, dass das Turnier für alle aufbewahrt und aufgelistet wird, und verweist auf die Testwebsite, wo ein Test hingehört. **Dieses Turnier speichern** legt es an, **Abbrechen** lässt das Formular so, wie Sie es eingegeben haben. Auf einer Testwebsite wird nicht gefragt, und auch nicht, wenn ein Turnier geändert wird.
+
+### Wettbewerbe
+
+- **Ein als Ergebnis getipptes Walkover fragt, ob der Gegner zurückgezogen werden soll.** Wer bei einem Ergebnis mit „w/o“ auf **Spiel hinzufügen** drückt, sieht einen Dialog, der den Verlierer nennt: **Gegner zurückziehen**, **Ergebnis hinzufügen** oder **Abbrechen**. Den Gegner zurückzuziehen fügt kein Spiel hinzu und leert den Ergebnisdialog für das nächste. Ein zurückgezogener Spieler spielt nicht mehr, und die Spiele, die er nicht gespielt hat, werden ohne ihn entschieden, was besser zählt als ein Spiel, das nie stattfand. Gefragt wird nur bei einem neuen Ergebnis und nicht in einem Test- oder Advantage-Wettbewerb.
+
+### Apps
+
+- **Die API ist jetzt `v1`.** Die Adressen einer App liegen unter `/api/v1`, wo sie unter `/api/v0` lagen. Eine App, die noch `/api/v0` aufruft, wird durch eine Weiterleitung an die neue Adresse geschickt und funktioniert so weiter, sollte aber geändert werden, da die Weiterleitung entfallen kann.
+
 ## Veröffentlicht am 2026-11-24
 
 ### Wettbewerbe

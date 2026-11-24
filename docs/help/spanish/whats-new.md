@@ -1,5 +1,11 @@
 # Novedades
 
+## Publicado el 2026-11-25
+
+- **En un teléfono la página tiene más espacio.** El panel blanco que contiene una página va de un borde de la pantalla al otro, y el texto y las barras por encima y por debajo quedan a 10 píxeles del borde, donde antes quedaban a 41. Un formulario en la página verde conserva su margen. Las pantallas más anchas siguen como estaban.
+
+- **Un nombre en el resumen de una eliminatoria nunca se parte a mitad de palabra.** Solo salta de línea en sus espacios. Donde una palabra es más ancha que el espacio junto a los resultados, el resumen se desplaza hacia un lado dentro de la página, en vez de empujar la página hacia fuera.
+
 ## Publicado el 2026-11-24
 
 - **El resumen de un bloque dice también las partidas netas.** Donde los encuentros de un bloque son al mejor de más de una partida, su resumen dice victorias, derrotas, partidas netas y aros netos, ya que las partidas netas desempatan antes que los aros. Un bloque de partidas únicas dice victorias, derrotas y aros netos como antes. El resumen ya no dice cómo se clasifican sus jugadores.

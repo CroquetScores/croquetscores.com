@@ -1,5 +1,11 @@
 # Nytt
 
+## Släppt 2026-11-25
+
+- **På en telefon har sidan mer utrymme.** Den vita panelen som håller en sida går från ena kanten av skärmen till den andra, och texten och fälten ovanför och under den står 10 pixlar från kanten där de stod 41. Ett formulär på den gröna sidan behåller sin marginal. Bredare skärmar är som förut.
+
+- **Ett namn i en utslagsturnerings sammanfattning bryts aldrig mitt i ett ord.** Det bryts bara vid sina mellanslag. Där ett ord är bredare än utrymmet bredvid resultaten rullar sammanfattningen i sidled inom sidan i stället för att trycka ut sidan.
+
 ## Släppt 2026-11-24
 
 - **Ett blocks sammanställning säger också nettopartier.** Där ett blocks matcher är bäst av fler än ett parti säger sammanställningen vinster, förluster, nettopartier och nettobågar, eftersom nettopartier avgör ett oavgjort läge före bågar. Ett block med enstaka partier säger vinster, förluster och nettobågar som förut. Sammanställningen säger inte längre hur dess spelare rankas.

@@ -1,5 +1,19 @@
 # Wat is nuut vir toernooibestuurders
 
+## Vrygestel 2026-11-25
+
+### Die toernooi
+
+- **Daar word gevra voordat 'n toernooi met 'n toetsagtige naam gestoor word.** As jy 'n toernooi maak met die hele woord "test", "testing", "trial", "fake" of "dummy" in sy naam, gaan daar eers 'n dialoog oop wat sê die toernooi sal vir almal bewaar en gelys word, en wat skakel na die probeerwebwerf, waar 'n toets tuishoort. **Stoor hierdie toernooi** maak dit, en **Kanselleer** laat die vorm soos jy dit getik het. Dit word nie op 'n probeerwebwerf gevra nie, en ook nie as 'n toernooi verander word nie.
+
+### Kompetisies
+
+- **'n Walkover wat as 'n uitslag getik is, vra of die teenstander teruggetrek moet word.** As jy **Voeg spel by** druk op 'n uitslag met "w/o" daarin, gaan 'n dialoog oop wat die verloorder noem: **Trek teenstander terug**, **Voeg uitslag by** of **Kanselleer**. Die teenstander terugtrek voeg geen spel by nie en maak die uitslagdialoog leeg vir die volgende een. 'n Teruggetrokke speler speel nie meer nie, en die spelle wat hy nie gespeel het nie word sonder hom besluit, wat beter tel as 'n spel wat nooit gespeel is nie. Daar word net gevra vir 'n nuwe uitslag, en nie in 'n toets- of Advantage-kompetisie nie.
+
+### Toepassings
+
+- **Die API is nou `v1`.** 'n Toepassing se adresse is by `/api/v1` waar hulle by `/api/v0` was. 'n Toepassing wat reeds `/api/v0` roep, word deur 'n aanstuur na die nuwe adres gestuur en werk dus voort, maar dit moet verander word, want die aanstuur kan weggeneem word.
+
 ## Vrygestel 2026-11-24
 
 ### Kompetisies

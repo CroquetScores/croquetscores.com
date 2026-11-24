@@ -1,5 +1,11 @@
 # Novidades
 
+## Lançado em 2026-11-25
+
+- **No telemóvel a página tem mais espaço.** O painel branco que contém uma página vai de uma margem do ecrã à outra, e o texto e as barras por cima e por baixo dele ficam a 10 pixéis da margem, onde ficavam a 41. Um formulário na página verde mantém a sua margem. Os ecrãs mais largos ficam como estavam.
+
+- **Um nome no resumo de um eliminatório nunca é partido a meio de uma palavra.** Só muda de linha nos espaços. Onde uma palavra é mais larga do que o espaço ao lado dos resultados, o resumo desloca-se para o lado dentro da página, em vez de empurrar a página para fora.
+
 ## Lançado em 2026-11-24
 
 - **O resumo de um bloco diz também o saldo de jogos.** Onde as partidas de um bloco são a melhor de mais de um jogo, o resumo diz vitórias, derrotas, saldo de jogos e saldo de arcos, já que o saldo de jogos desempata antes dos arcos. Um bloco de jogos únicos diz vitórias, derrotas e saldo de arcos como antes. O resumo já não diz como os seus jogadores são classificados.

@@ -1,5 +1,19 @@
 # Hva er nytt for turneringsarrangører
 
+## Lansert 2026-11-25
+
+### Turneringen
+
+- **Det spørres før en turnering med et navn som ligner en test lagres.** Lager du en turnering med hele ordet «test», «testing», «trial», «fake» eller «dummy» i navnet, åpnes først en dialog som sier at turneringen blir beholdt og listet for alle, og som lenker til prøvenettstedet, der en test hører hjemme. **Lagre denne turneringen** lager den, og **Avbryt** lar skjemaet stå som du skrev det. Det spørres ikke på et prøvenettsted, og heller ikke når en turnering endres.
+
+### Konkurranser
+
+- **En walkover skrevet som resultat spør om motstanderen skal trekkes.** Trykker du **Legg til parti** på et resultat med «w/o» i, åpnes en dialog som nevner taperen: **Trekk motstanderen**, **Legg til resultat** eller **Avbryt**. Å trekke motstanderen legger ikke til noe parti og tømmer resultatdialogen for det neste. En spiller som er trukket, spiller ikke mer, og partiene vedkommende ikke har spilt, avgjøres uten vedkommende, noe som teller bedre enn et parti som aldri ble spilt. Det spørres bare for et nytt resultat, og ikke i en testkonkurranse eller en Advantage-konkurranse.
+
+### Apper
+
+- **API-et er nå `v1`.** En apps adresser er på `/api/v1` der de var på `/api/v0`. En app som fortsatt kaller `/api/v0`, sendes til den nye adressen med en omdirigering og virker derfor videre, men den bør endres, siden omdirigeringen kan bli fjernet.
+
 ## Lansert 2026-11-24
 
 ### Konkurranser

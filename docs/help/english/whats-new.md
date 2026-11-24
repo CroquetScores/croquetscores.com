@@ -1,5 +1,11 @@
 # What's new
 
+## Released 2026-11-25
+
+- **On a phone the page has more room.** The white panel that holds a page runs from one edge of the screen to the other, and the text and the bars above and below it are held in from the edge by 10 pixels where they were held in by 41. A form on the green page keeps its margin. Wider screens are as they were.
+
+- **A name in a knockout's summary is never broken part-way along a word.** It wraps only at its spaces. Where a word is wider than the room beside the scores, the summary scrolls across within the page rather than pushing the page out.
+
 ## Released 2026-11-24
 
 - **A block's summary gives net games as well as net hoops.** Where a block's matches are the best of more than one game, its summary gives wins, losses, net games and net hoops, since net games decide a tie before hoops do. A block of single games gives wins, losses and net hoops as it did. The summary no longer says how its players are ranked.

@@ -1,5 +1,19 @@
 # What's new for Tournament Managers
 
+## Released 2026-11-25
+
+### The tournament
+
+- **A tournament named like a test is asked about before it is saved.** Making a tournament with the whole word "test", "testing", "trial", "fake" or "dummy" in its name opens a dialog first, which says the tournament will be kept and listed for everybody and links to the try website, where a test belongs. **Save This Tournament** makes it, and **Cancel** leaves the form as you typed it. It is not asked on a try website, nor when a tournament is changed.
+
+### Competitions
+
+- **A walkover typed as a score asks whether to withdraw the opponent.** Pressing **Add Game** on a score with "w/o" in it opens a dialog naming the loser: **Withdraw opponent**, **Add score** or **Cancel**. Withdrawing the opponent adds no game and clears the score dialog for the next one. A withdrawn player plays no more, and the games they have not played are decided without them, which counts better than a game that was never played. It is asked only for a new score, and not in a test or Advantage competition.
+
+### Apps
+
+- **The API is now `v1`.** An app's addresses are at `/api/v1` where they were at `/api/v0`. An app already calling `/api/v0` is sent to the new address by a redirect, so it keeps working, but it should be changed, since the redirect may be taken away.
+
 ## Released 2026-11-24
 
 ### Competitions

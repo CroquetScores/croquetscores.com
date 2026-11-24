@@ -1,5 +1,11 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-25
+
+- **Op 'n foon het die bladsy meer plek.** Die wit paneel wat 'n bladsy hou, loop van een kant van die skerm tot die ander, en die teks en die balke bo en onder dit word 10 piksels van die rand af gehou waar dit voorheen 41 was. 'n Vorm op die groen bladsy hou sy rand. Wyer skerms bly soos hulle was.
+
+- **'n Naam in 'n uitskakelingstoernooi se opsomming word nooit halfpad deur 'n woord gebreek nie.** Dit word net by sy spasies gebreek. Waar 'n woord wyer is as die plek langs die tellings, rol die opsomming binne die bladsy opsy eerder as om die bladsy uit te stoot.
+
 ## Vrygestel 2026-11-24
 
 - **'n Blok se opsomming gee ook netto spelle.** Waar 'n blok se wedstryde die beste van meer as een spel is, gee sy opsomming oorwinnings, verliese, netto spelle en netto hoepels, want netto spelle besluit 'n gelykopuitslag voor hoepels. 'n Blok van enkelspelle gee oorwinnings, verliese en netto hoepels soos voorheen. Die opsomming sê nie meer hoe sy spelers gerangskik word nie.
