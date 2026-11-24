@@ -1,5 +1,27 @@
 # Hva som er nytt
 
+## Utgitt 2026-11-24
+
+- **Oversikten for en blokk sier også nettopartier.** Der kampene i en blokk er det beste av mer enn ett parti, sier oversikten seiere, tap, nettopartier og nettobuer, siden nettopartier avgjør en uavgjort stilling før buer. En blokk med enkeltpartier sier seiere, tap og nettobuer som før. Oversikten sier ikke lenger hvordan spillerne rangeres.
+
+- **Flisen til en konkurranse i seksjonslinjen er like bred som navnet.** Et kort navn som "Block A" hadde en flis like bred som et langt, så linjen gikk tom for plass før det var nødvendig.
+
+- **På en telefon tar datoene på startsiden mindre plass.** Datokolonnen er så bred som datoene til en helg, som "19-21 Nov", og navnene får resten. Datoer som går fra én måned til neste, brytes før bindestreken, så den andre linjen begynner med den. Under **Dine nylige turneringer** sier en turnering fra i år ikke noe år, og en fra et annet år sier det under datoene sine.
+
+### For apputviklere
+
+- **En app kan endre ting, med en nøkkel som er laget for å skrive.** Det nettstedets egne sider endrer, endres av de samme adressene under `/api/v0`: å lage en turnering, konkurransene, spillerne, lagene og partiene dens, og hvem som kan lede den og føre resultater. En nøkkel kan gjøre det kontoen den ble laget for kan gjøre, og en poengførers nøkkel kan gjøre det som gjøres med resultater og ingenting annet. Hjelpesiden **API-ets POST-endepunkter** sier hva hver adresse tar og svarer. De settes fortsatt, og noen vil bli tatt bort.
+
+- **En app kan spørre hva en turnering kan være.** Idrettene, formatene og landene med regionene sine er på `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` og `/api/v0/countries`, på språket appen ber om, så det den lager en turnering med, er det nettstedet tilbyr.
+
+- **En app kan lese spillerne på verdensrankingen og partiene deres.** Association Croquet-spillerne verdensrankingene kjenner, er på `/api/v0/ac/world-ranking-players`, og hver spillers partier, i den rekkefølgen de ble lagt til, er på adressen spilleren oppgir. Navnene oppdateres fra rankingene når listen spørres om fra begynnelsen, høyst én gang i timen.
+
+- **API-ets endepunkter er to sider i hjelpen, én for GET-endepunktene og én for POST-endepunktene,** på alle språk.
+
+### Verdensrangeringsansvarlige
+
+- **En spiller i Association Croquet-rankingene føres etter nummeret rankingene gir dem.** En spiller rankingene gir nytt navn, er samme spiller, en som faller av listen, arkiveres og glemmes ikke, og en som listes igjen, er ikke lenger arkivert. En liste som gir ett navn til to spillere eller ett nummer til to navn, avvises i sin helhet og ingenting endres, og administratoren får beskjed på e-post.
+
 ## Utgitt 2026-11-22
 
 - **Startsiden husker turneringene du har sett på i det siste.** Når du åpner en turnering, havner den først under **Dine nylige turneringer**, mellom filteret og de siste resultatene, opptil fem av dem, slik at du kan gå tilbake til de du følger uten å lete i listene. De lagres på din egen enhet, i en informasjonskapsel som bare inneholder turneringenes adresser, og listen vises ikke i det hele tatt før du har åpnet en turnering. Hjelpen sier hva informasjonskapselen er.

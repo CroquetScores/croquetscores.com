@@ -1,5 +1,27 @@
 # Kas jauns
 
+## Izlaists 2026-11-24
+
+- **Bloka kopsavilkums norāda arī partiju starpību.** Ja bloka mači ir labākie no vairāk nekā vienas partijas, tā kopsavilkums norāda uzvaras, zaudējumus, partiju starpību un vārtiņu starpību, jo partiju starpība neizšķirtu rezultātu izšķir pirms vārtiņiem. Bloks ar vienām partijām norāda uzvaras, zaudējumus un vārtiņu starpību kā agrāk. Kopsavilkums vairs nesaka, kā tā spēlētāji tiek ranžēti.
+
+- **Sacensību flīzīte sadaļu joslā ir tikpat plata kā tās nosaukums.** Īss nosaukums, piemēram, "Block A", bija ar tikpat platu flīzīti kā garš, tāpēc joslai vieta beidzās ātrāk, nekā vajadzēja.
+
+- **Tālrunī sākumlapas datumi aizņem mazāk vietas.** Datumu kolonna ir tik plata kā nedēļas nogales datumi, piemēram, "19-21 Nov", un nosaukumiem ir pārējais. Datumi, kas iet no viena mēneša otrā, tiek pārnesti pirms defises, tāpēc otra rinda ar to sākas. Sadaļā **Jūsu nesenie turnīri** šā gada turnīrs gadu nenorāda, bet cita gada turnīrs to norāda zem saviem datumiem.
+
+### Lietotņu izstrādātājiem
+
+- **Lietotne var kaut ko mainīt ar atslēgu, kas izveidota rakstīšanai.** To, ko maina pašas vietnes lapas, maina tās pašas adreses `/api/v0`: izveidot turnīru, tā sacensības, spēlētājus, komandas un partijas, un to, kas to drīkst pārvaldīt un ievadīt rezultātus. Atslēga drīkst darīt to, ko drīkst konts, kam tā izveidota, un rezultātu ievadītāja atslēga drīkst darīt to, ko dara ar rezultātiem, un neko citu. Lapa **API POST galapunkti** palīdzībā saka, ko katra adrese pieņem un atbild. Tie vēl tiek nostiprināti, un daži tiks noņemti.
+
+- **Lietotne var pajautāt, kas var būt turnīrs.** Sporta veidi, formāti un valstis ar to reģioniem ir `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` un `/api/v0/countries`, valodā, ko lietotne pieprasa, tāpēc tas, ar ko tā izveido turnīru, ir tas, ko piedāvā vietne.
+
+- **Lietotne var lasīt pasaules ranga spēlētājus un viņu partijas.** Association Croquet spēlētāji, ko pazīst pasaules ranga saraksti, ir `/api/v0/ac/world-ranking-players`, un katra spēlētāja partijas, secībā, kādā tās pievienotas, ir adresē, ko norāda spēlētājs. Vārdi tiek atjaunināti no rangu sarakstiem, kad saraksts tiek pieprasīts no sākuma, ne biežāk kā reizi stundā.
+
+- **API galapunkti palīdzībā ir divas lapas, viena GET galapunktiem un viena POST galapunktiem,** katrā valodā.
+
+### Pasaules ranga atbildīgie
+
+- **Association Croquet ranga spēlētāju tur pēc numura, ko viņam dod ranga saraksti.** Spēlētājs, ko ranga saraksti pārdēvē, ir tas pats spēlētājs, tas, kas izkrīt no saraksta, tiek arhivēts un netiek aizmirsts, un tas, kas atkal tiek uzskaitīts, vairs nav arhivēts. Saraksts, kas vienu vārdu piešķir diviem spēlētājiem vai vienu numuru diviem vārdiem, tiek noraidīts pilnībā un nekas netiek mainīts, un administrators tiek informēts pa e-pastu.
+
 ## Izlaists 2026-11-22
 
 - **Sākumlapa atceras turnīrus, ko nesen skatījāties.** Kad atverat turnīru, tas kļūst par pirmo sadaļā **Jūsu nesenie turnīri**, starp filtru un nesenajiem rezultātiem, līdz pieciem, lai varētu atgriezties pie tiem, kurus sekojat, nemeklējot tos sarakstos. Tie tiek glabāti jūsu pašu ierīcē sīkdatnē, kurā ir tikai turnīru adreses, un saraksts netiek rādīts vispār, līdz esat atvēruši kādu. Palīdzība pasaka, kas ir šī sīkdatne.

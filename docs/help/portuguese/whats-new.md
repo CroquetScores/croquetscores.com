@@ -1,5 +1,27 @@
 # Novidades
 
+## Lançado em 2026-11-24
+
+- **O resumo de um bloco diz também o saldo de jogos.** Onde as partidas de um bloco são a melhor de mais de um jogo, o resumo diz vitórias, derrotas, saldo de jogos e saldo de arcos, já que o saldo de jogos desempata antes dos arcos. Um bloco de jogos únicos diz vitórias, derrotas e saldo de arcos como antes. O resumo já não diz como os seus jogadores são classificados.
+
+- **O bloco de uma competição na barra de seções é tão largo quanto o seu nome.** Um nome curto como "Block A" tinha um bloco tão largo quanto o de um nome longo, e a barra ficava sem espaço mais cedo do que o necessário.
+
+- **No celular as datas da página inicial ocupam menos espaço.** A coluna das datas é tão larga quanto as datas de um fim de semana, como "19-21 Nov", e os nomes ficam com o resto. As datas que passam de um mês para o seguinte quebram antes do hífen, de modo que a segunda linha começa com ele. Em **Os seus torneios recentes**, um torneio deste ano não diz o ano, e um de outro ano o diz embaixo das suas datas.
+
+### Para desenvolvedores de aplicativos
+
+- **Um aplicativo pode mudar coisas, com uma chave feita para escrever.** O que as próprias páginas do site mudam é mudado pelos mesmos endereços em `/api/v0`: fazer um torneio, as suas competições, jogadores, equipes e jogos, e quem pode geri-lo e anotar os resultados. Uma chave pode fazer o que a conta para a qual foi feita pode fazer, e a chave de um anotador pode fazer o que se faz com os resultados e nada mais. **Os endpoints POST da API**, na ajuda, dizem o que cada endereço recebe e responde. Ainda estão sendo acertados, e alguns serão retirados.
+
+- **Um aplicativo pode perguntar o que um torneio pode ser.** Os esportes, os formatos e os países com as suas regiões estão em `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` e `/api/v0/countries`, no idioma que o aplicativo pedir, de modo que aquilo com que ele faz um torneio é o que o site oferece.
+
+- **Um aplicativo pode ler os jogadores do ranking mundial e os seus jogos.** Os jogadores de Association Croquet que os rankings mundiais conhecem estão em `/api/v0/ac/world-ranking-players`, e os jogos de cada jogador, na ordem em que foram adicionados, estão no endereço que o jogador diz. Os nomes são atualizados a partir dos rankings quando a lista é pedida desde o início, no máximo uma vez por hora.
+
+- **Os endpoints da API são duas páginas na ajuda, uma para os endpoints GET e uma para os endpoints POST,** em todos os idiomas.
+
+### Responsáveis pelo ranking mundial
+
+- **Um jogador dos rankings de Association Croquet é guardado pelo número que os rankings lhe dão.** Um jogador que os rankings renomeiam é o mesmo jogador, o que sai da lista é arquivado e não esquecido, e o que volta a ser listado deixa de estar arquivado. Uma lista que dá um nome a dois jogadores, ou um número a dois nomes, é recusada por inteiro e nada é mudado, e o administrador é avisado por e-mail.
+
 ## Lançado em 2026-11-22
 
 - **A página inicial guarda os torneios que você viu recentemente.** Ao abrir um torneio, ele passa a ser o primeiro em **Os seus torneios recentes**, entre o filtro e os resultados recentes, até cinco deles, para que você possa voltar aos que acompanha sem procurá-los nas listas. Eles ficam guardados no seu próprio aparelho, num cookie que contém apenas os endereços dos torneios, e a lista nem aparece até você abrir um. A ajuda diz o que é o cookie.

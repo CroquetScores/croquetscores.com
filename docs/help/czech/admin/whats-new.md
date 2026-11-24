@@ -1,5 +1,17 @@
 # Novinky pro organizátory turnajů
 
+## Vydáno 2026-11-24
+
+### Soutěže
+
+- **Souhrn bloku uvádí i rozdíl her.** Kde se zápasy bloku hrají na více než jednu hru, souhrn uvádí výhry, prohry, rozdíl her a rozdíl branek, protože rozdíl her rozhoduje při shodě dřív než branky. Souhrn už neříká, jak se jeho hráči řadí.
+
+- **Dlaždice soutěže v liště oddílů je tak široká jako její název.** Krátký název už nemá dlaždici stejně širokou jako dlouhý.
+
+### Aplikace
+
+- **Klíč teď může něco měnit.** Klíč vytvořený ke čtení a zápisu smí v turnaji dělat to, co smí účet, pro který byl vytvořen: klíč organizátora všechno, klíč zapisovatele to, co se dělá se skóre, a nic jiného. Vytvořte ho v části **Klíče API** ve svém účtu, podle potřeby ho omezte na jeden turnaj a kdykoli ho zrušte. **Koncové body API pro POST** v nápovědě říkají, co smí aplikace poslat. Stále se ladí a některé budou odebrány. Klíč uchovávejte v tajnosti jako heslo.
+
 ## Vydáno 2026-11-22
 
 ### Turnaj

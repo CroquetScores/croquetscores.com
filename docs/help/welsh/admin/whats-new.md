@@ -1,5 +1,17 @@
 # Beth sy'n newydd i Reolwyr Twrnameintiau
 
+## Rhyddhawyd 2026-11-24
+
+### Cystadlaethau
+
+- **Mae crynodeb bloc yn dweud y gemau net hefyd.** Lle mae gemau bloc yn orau o fwy nag un gêm, mae'r crynodeb yn dweud buddugoliaethau, colledion, gemau net a chylchau net, gan fod gemau net yn penderfynu ar gyfartal cyn cylchau. Nid yw'r crynodeb yn dweud mwyach sut y rhestrir ei chwaraewyr.
+
+- **Mae teilsen cystadleuaeth yn y bar adrannau mor llydan â'i henw.** Nid oes gan enw byr deilsen mor llydan ag un hir mwyach.
+
+### Apiau
+
+- **Gall allwedd newid pethau bellach.** Caiff allwedd a wnaed i ddarllen ac ysgrifennu wneud mewn twrnamaint yr hyn y caiff y cyfrif y gwnaed hi ar ei gyfer ei wneud: allwedd rheolwr bopeth, ac allwedd sgorwr yr hyn a wneir â sgorau, a dim arall. Gwnewch un yn **Allweddi API** yn eich cyfrif, cyfyngwch hi i un twrnamaint os dymunwch, a dirymwch hi unrhyw bryd. Mae'r dudalen **Terfynbwyntiau POST yr API** yn y cymorth yn dweud beth y caiff ap ei anfon. Maent yn dal i gael eu setlo, a bydd rhai yn cael eu tynnu. Cadwch allwedd mor gyfrinachol â chyfrinair.
+
 ## Rhyddhawyd 2026-11-22
 
 ### Y twrnamaint

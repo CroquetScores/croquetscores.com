@@ -1,5 +1,17 @@
 # Wat is nuut vir toernooibestuurders
 
+## Vrygestel 2026-11-24
+
+### Kompetisies
+
+- **'n Blok se opsomming gee ook netto spelle.** Waar 'n blok se wedstryde die beste van meer as een spel is, gee die opsomming oorwinnings, verliese, netto spelle en netto hoepels, want netto spelle besluit 'n gelykopuitslag voor hoepels. Die opsomming sê nie meer hoe sy spelers gerangskik word nie.
+
+- **'n Kompetisie se teël in die afdelingsbalk is so breed soos sy naam.** 'n Kort naam het nie meer 'n teël so breed soos 'n lang een nie.
+
+### Toepassings
+
+- **'n Sleutel kan nou dinge verander.** 'n Sleutel wat gemaak is om te lees en te skryf, mag in 'n toernooi doen wat die rekening waarvoor dit gemaak is, mag doen: 'n bestuurder se sleutel alles, en 'n teler se sleutel wat met tellings gedoen word en niks anders nie. Maak een onder **API-sleutels** in jou rekening, beperk dit tot een toernooi as jy wil, en herroep dit enige tyd. **Die API se POST-eindpunte** in die hulp sê wat 'n toepassing mag stuur. Hulle word nog gevestig, en sommige sal weggeneem word. Hou 'n sleutel so geheim soos 'n wagwoord.
+
 ## Vrygestel 2026-11-22
 
 ### Die toernooi

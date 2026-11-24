@@ -1,5 +1,27 @@
 # Was ist neu
 
+## Veröffentlicht am 24.11.2026
+
+- **Die Übersicht eines Blocks nennt auch die Spieldifferenz.** Wo die Begegnungen eines Blocks auf mehr als ein Spiel gehen, nennt seine Übersicht Siege, Niederlagen, Spieldifferenz und Tordifferenz, da die Spieldifferenz bei Gleichstand vor der Tordifferenz entscheidet. Ein Block aus Einzelspielen nennt wie bisher Siege, Niederlagen und Tordifferenz. Die Übersicht sagt nicht mehr, wie ihre Spieler eingestuft werden.
+
+- **Die Kachel eines Wettbewerbs in der Leiste der Bereiche ist so breit wie sein Name.** Ein kurzer Name wie „Block A“ hatte eine Kachel so breit wie ein langer, sodass der Leiste früher der Platz ausging, als nötig.
+
+- **Auf einem Smartphone brauchen die Daten der Startseite weniger Platz.** Die Spalte der Daten ist so breit wie die Daten eines Wochenendes, etwa „19-21 Nov“, und die Namen haben den Rest. Daten, die von einem Monat in den nächsten reichen, brechen vor dem Bindestrich um, sodass die zweite Zeile mit ihm beginnt. Unter **Zuletzt besuchte Turniere** nennt ein Turnier dieses Jahres kein Jahr, und eines aus einem anderen Jahr nennt es unter seinen Daten.
+
+### Für App-Entwickler
+
+- **Eine App kann mit einem Schlüssel, der zum Schreiben gemacht wurde, etwas ändern.** Was die eigenen Seiten der Website ändern, ändern dieselben Adressen unter `/api/v0`: ein Turnier, seine Wettbewerbe, Spieler, Teams und Spiele anlegen und festlegen, wer es leiten und Ergebnisse erfassen darf. Ein Schlüssel darf tun, was das Konto tun darf, für das er gemacht wurde, und der Schlüssel eines Ergebniserfassers darf tun, was mit Ergebnissen getan wird, und sonst nichts. **Die POST-Endpunkte der API** in der Hilfe sagen, was jede Adresse nimmt und beantwortet. Sie werden noch festgelegt, und einige werden wieder entfernt.
+
+- **Eine App kann fragen, was ein Turnier sein kann.** Die Sportarten, die Formate und die Länder mit ihren Regionen stehen unter `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` und `/api/v0/countries`, in der Sprache, die die App verlangt, sodass das, womit sie ein Turnier anlegt, das ist, was die Website anbietet.
+
+- **Eine App kann die Weltranglistenspieler und ihre Spiele lesen.** Die Association-Croquet-Spieler, die die Weltranglisten kennen, stehen unter `/api/v0/ac/world-ranking-players`, und die Spiele jedes Spielers, in der Reihenfolge, in der sie hinzugefügt wurden, unter der Adresse, die der Spieler nennt. Die Namen werden nach den Ranglisten aktualisiert, wenn die Liste von Anfang an erfragt wird, höchstens einmal in der Stunde.
+
+- **Die Endpunkte der API sind zwei Seiten in der Hilfe, eine für die GET-Endpunkte und eine für die POST-Endpunkte,** in jeder Sprache.
+
+### Weltranglistenbeauftragte
+
+- **Ein Spieler der Association-Croquet-Ranglisten wird unter der Nummer geführt, die die Ranglisten ihm geben.** Ein Spieler, den die Ranglisten umbenennen, ist derselbe Spieler, einer, der von der Liste fällt, wird archiviert und nicht vergessen, und einer, der wieder aufgeführt wird, ist nicht mehr archiviert. Eine Liste, die zwei Spielern einen Namen oder einem Namen zwei Nummern gibt, wird ganz abgewiesen und nichts wird geändert, und der Administrator wird per E-Mail benachrichtigt.
+
 ## Veröffentlicht am 22.11.2026
 
 - **Die Startseite merkt sich die Turniere, die Sie zuletzt angesehen haben.** Wenn Sie ein Turnier öffnen, steht es unter **Zuletzt besuchte Turniere** an erster Stelle, zwischen dem Filter und den neuesten Ergebnissen, bis zu fünf, damit Sie zu denen zurückkehren können, die Sie verfolgen, ohne sie in den Listen zu suchen. Sie werden auf Ihrem eigenen Gerät gespeichert, in einem Cookie, das nur die Adressen der Turniere enthält, und die Liste wird gar nicht angezeigt, bis Sie eines geöffnet haben. Die Hilfe sagt, was das Cookie ist.
