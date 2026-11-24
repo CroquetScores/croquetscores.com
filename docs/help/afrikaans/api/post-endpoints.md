@@ -1,7 +1,5 @@
 # Die API se POST-eindpunte
 
-**NOTA: Dit is 'n konsep. Daar is 'n paar eindpunte wat, soos ek weet, verwyder sal word.**
-
 Hierdie adresse verander iets. Dié wat net lees, staan in [die GET-eindpunte](get-endpoints.md). Elke adres hier is onder `/api/v0` op die webwerf, en wat die webwerf se eie bladsye verander, word deur dieselfde adresse verander, so 'n toepassing het nie 'n kleiner stel as die webwerf nie. Wat vir almal geld, soos sleutels, kwotas en foute, staan in die [hulp vir toepassingontwikkelaars](index.md); wie mag skryf, staan [hieronder](#who-may-write).
 
 'n Toernooi, 'n kompetisie en die res word in 'n adres genoem met die deel van hul id wat ná die skuinsstreep kom: vir `tournament/4f2a…` sê die adres `4f2a…`. 'n Liggaam noem 'n ander ding op dieselfde manier, soos `player` hieronder doen, behalwe waar dit sê dit is die hele id.
@@ -32,23 +30,15 @@ Om 'n versoek twee keer te stuur, is nie dieselfde as een keer nie: 'n spel wat 
 
 `POST /api/v0/tournaments`
 
-Neem `name`, `starts` en `finishes` (geskryf as `2026-10-03T00:00:00Z`), `format`, `sport` ('n kode, kyk [die sportsoorte](get-endpoints.md#sports)), `country` ('n kode soos `au`), en, as dit verlang word, `region`, `subtitle`, `levelTestsDrawn`, `national` en `international`, waar elk van die laaste drie `true` of `false` is. Antwoord met `201` met `id` en `address`, wat is waar die webwerf dit wys.
+Neem `name`, `starts` en `finishes` (geskryf as `2026-10-03T00:00:00Z`), `format` ('n kode, kyk [die formate](get-endpoints.md#formats)), `sport` ('n kode, kyk [die sportsoorte](get-endpoints.md#sports)), `country` ('n kode soos `au`, kyk [die lande](get-endpoints.md#countries)), en, as dit verlang word, `region` ('n kode van die land, uit dieselfde lys), `subtitle`, `levelTestsDrawn`, `national` en `international`, waar elk van die laaste drie `true` of `false` is. Antwoord met `201` met `id` en `address`, wat is waar die webwerf dit wys.
 
-### Argiveer, herstel of neem notabele status weg {#tournament-actions}
+### Argiveer of herstel 'n toernooi {#tournament-actions}
 
 `POST /api/v0/tournaments/{id}/archive`
 
 `POST /api/v0/tournaments/{id}/restore`
 
-`POST /api/v0/tournaments/{id}/remove-notable-status`
-
-Neem geen liggaam nie, en antwoord met `204`. Om notabele status weg te neem, wat sê die toernooi is nóg 'n nasionale nóg 'n internasionale een, is 'n administrateur se taak.
-
-### Vee 'n toetstoernooi uit {#delete-tournament}
-
-`POST /api/v0/tournaments/{id}/delete`
-
-'n Administrateur se taak, wat geoordeel het die toernooi is 'n toets. Neem `message`, wat aan die toernooi se bestuurders gesê word, en `archive`, `true` om die toernooi ook te argiveer. Antwoord met `204`.
+Neem geen liggaam nie, en antwoord met `204`.
 
 ### Voeg 'n bestuurdernota by {#notes}
 
@@ -111,12 +101,6 @@ Skuif dit een plek op of af in die toernooi se lys, of argiveer dit, of herstel 
 
 Skryf een van die toernooi se spelers in die kompetisie in. Neem `player`, die deel van die toernooispeler se id ná `tournament-player/`. Antwoord met `201` met `id`, wat die speler se id in die kompetisie is en nie die toernooi s'n nie.
 
-### Skryf baie spelers in {#enter-players}
-
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/many`
-
-Neem `players`, 'n lys toernooispelers soos `player` hierbo, en `enterWhatCan`. Gewoonlik word almal ingeskryf of niemand nie. Waar sommige nie kan nie, sê die antwoord watter en skryf niemand in nie, sodat die bestuurder kan kies; stuur `enterWhatCan` as `true` om die res in te skryf. Antwoord met `201` met `ids`, in die volgorde waarin die spelers gegee is, en `refused`.
-
 ### Skuif, onttrek, bring terug of verwyder 'n speler {#competition-player-actions}
 
 `POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
@@ -171,6 +155,14 @@ Neem die tellings soos om 'n spel by te voeg, en, waar hulle verander het, `winn
 Skuif 'n toets se telling een plek op of af, argiveer 'n spel of herstel dit, onttrek dit (dit is gespeel, en tel vir niks) of keer sy onttrekking om. Hulle neem geen liggaam nie en antwoord met `204`. Dit, en die twee hierbo, is wat 'n teler mag doen.
 
 ## 'n Toernooi se spelers {#tournament-players}
+
+### Voeg 'n speler by {#add-tournament-player}
+
+`POST /api/v0/tournaments/{id}/players`
+
+Voeg 'n speler by die toernooi. Neem `name`, en kan `representing`, `handicap`, `flag` en `worldRankingName` neem; wat weggelaat of leeg is, bly ongesê. Antwoord met `201` met die speler se `id`, wat sy hele id is, soos die GET-eindpunte dit sê. 'n Speler sonder 'n naam, of met die naam van een wat reeds daar is, word geweier. 'n Speler word in 'n kompetisie [ingeskryf](#enter-player) met die deel van hierdie `id` ná `tournament-player/`.
+
+### Skuif, argiveer of herstel 'n speler {#tournament-player-actions}
 
 `POST /api/v0/tournaments/{id}/players/{player}/up`
 

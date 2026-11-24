@@ -1,7 +1,5 @@
 # The API's POST endpoints
 
-**NOTE: This is a draft. There are a few endpoints I know will be removed.**
-
 These addresses change something. The ones that only read are in [the GET endpoints](get-endpoints.md). Every address here is under `/api/v0` on the site, and what the site's own pages change is changed by these same addresses, so an app has no lesser set than the website has. What applies to all of them, such as keys, allowances and errors, is in [help for app developers](index.md); who may write is [below](#who-may-write).
 
 A tournament, a competition and the rest are named in an address by the part of their id after the slash: for `tournament/4f2a…` the address says `4f2a…`. A body names another thing the same way, as `player` below does, except where it says it is the whole id.
@@ -32,23 +30,15 @@ Sending a request twice is not the same as sending it once: a game added twice i
 
 `POST /api/v0/tournaments`
 
-Takes `name`, `starts` and `finishes` (written as `2026-10-03T00:00:00Z`), `format`, `sport` (a code, see [the sports](get-endpoints.md#sports)), `country` (a code such as `au`), and, if wanted, `region`, `subtitle`, `levelTestsDrawn`, `national` and `international`, each of the last three `true` or `false`. Answers `201` with `id` and `address`, which is where the site shows it.
+Takes `name`, `starts` and `finishes` (written as `2026-10-03T00:00:00Z`), `format` (a code, see [the formats](get-endpoints.md#formats)), `sport` (a code, see [the sports](get-endpoints.md#sports)), `country` (a code such as `au`, see [the countries](get-endpoints.md#countries)), and, if wanted, `region` (a code of the country's, from the same list), `subtitle`, `levelTestsDrawn`, `national` and `international`, each of the last three `true` or `false`. Answers `201` with `id` and `address`, which is where the site shows it.
 
-### Archive, restore or take away notable status {#tournament-actions}
+### Archive or restore a tournament {#tournament-actions}
 
 `POST /api/v0/tournaments/{id}/archive`
 
 `POST /api/v0/tournaments/{id}/restore`
 
-`POST /api/v0/tournaments/{id}/remove-notable-status`
-
-Take no body, and answer `204`. Removing notable status, which says the tournament is neither a national nor an international one, is an administrator's.
-
-### Delete a test tournament {#delete-tournament}
-
-`POST /api/v0/tournaments/{id}/delete`
-
-An administrator's, who has judged the tournament to be a test. Takes `message`, which the tournament's managers are told, and `archive`, `true` to archive the tournament as well. Answers `204`.
+Take no body, and answer `204`.
 
 ### Add a manager note {#notes}
 
@@ -111,12 +101,6 @@ Move it a place up or down in the tournament's list, or archive it, or restore i
 
 Enters one of the tournament's players in the competition. Takes `player`, the part of the tournament player's id after `tournament-player/`. Answers `201` with `id`, which is the player's id in the competition and not the tournament's.
 
-### Enter many players {#enter-players}
-
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/many`
-
-Takes `players`, a list of tournament players as `player` above, and `enterWhatCan`. By default all are entered or none are. Where some cannot be, the answer says which and enters none, so that the manager can choose; send `enterWhatCan` as `true` to enter the rest. Answers `201` with `ids`, in the order the players were given, and `refused`.
-
 ### Move, withdraw, bring back or remove a player {#competition-player-actions}
 
 `POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
@@ -171,6 +155,14 @@ Takes the scores as adding a game does, and, where they changed, `winner` and `l
 Move a test's score a place up or down, archive a game or restore it, withdraw it (it was played, and counts for nothing) or reverse its withdrawal. They take no body and answer `204`. These, and the two above, are what a scorer may do.
 
 ## A tournament's players {#tournament-players}
+
+### Add a player {#add-tournament-player}
+
+`POST /api/v0/tournaments/{id}/players`
+
+Adds a player to the tournament. Takes `name`, and may take `representing`, `handicap`, `flag` and `worldRankingName`; one left out or empty is left unsaid. Answers `201` with the player's `id`, which is the whole of their id as the GET endpoints say it. A player with no name, or with the name of one already there, is refused. A player is entered in a competition by [entering them](#enter-player), by the part of this `id` after `tournament-player/`.
+
+### Move, archive or restore a player {#tournament-player-actions}
 
 `POST /api/v0/tournaments/{id}/players/{player}/up`
 

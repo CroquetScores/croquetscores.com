@@ -4,5 +4,5 @@ Hver adresse ligger under `/api/v0` på nettstedet, og hvert svar er JSON. Det s
 
 Det er to slag, og en side for hvert:
 
-- [GET-endepunktene](get-endpoints.md) leser: et års turneringer, en turnering, en konkurranse, dens stilling og partier, hva en nøkkel kan gjøre, og hva som er endret eller arkivert.
+- [GET-endepunktene](get-endpoints.md) leser: et års turneringer, en turnering, en konkurranse, stillingen og partiene dens, idrettene, formatene og landene en turnering kan ha, spillerne på verdensrankingen og partiene deres, hva en nøkkel får gjøre, og hva som er endret eller arkivert.
 - [POST-endepunktene](post-endpoints.md) endrer noe: å opprette en turnering, dens konkurranser, spillere, lag og partier, og hvem som kan lede den og føre poeng.

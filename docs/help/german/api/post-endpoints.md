@@ -1,7 +1,5 @@
 # Die POST-Endpunkte der API
 
-**HINWEIS: Dies ist ein Entwurf. Einige Endpunkte werden, wie ich weiß, wieder entfernt.**
-
 Diese Adressen ändern etwas. Die, die nur lesen, stehen in den [GET-Endpunkten](get-endpoints.md). Jede Adresse hier liegt unter `/api/v0` der Website, und was die eigenen Seiten der Website ändern, ändern dieselben Adressen, sodass eine App keinen kleineren Satz hat als die Website. Was für alle gilt, wie Schlüssel, Kontingente und Fehler, steht in der [Hilfe für App-Entwickler](index.md); wer schreiben darf, steht [weiter unten](#who-may-write).
 
 Ein Turnier, ein Wettbewerb und das Übrige werden in einer Adresse mit dem Teil ihrer ID nach dem Schrägstrich benannt: Für `tournament/4f2a…` steht in der Adresse `4f2a…`. Ein Body benennt andere Dinge ebenso, wie es `player` unten tut, außer wo es heißt, es sei die ganze ID.
@@ -32,23 +30,15 @@ Eine Anfrage zweimal zu senden ist nicht dasselbe wie einmal: Ein zweimal hinzug
 
 `POST /api/v0/tournaments`
 
-Nimmt `name`, `starts` und `finishes` (geschrieben als `2026-10-03T00:00:00Z`), `format`, `sport` (ein Code, siehe [die Sportarten](get-endpoints.md#sports)), `country` (ein Code wie `au`) und, falls gewünscht, `region`, `subtitle`, `levelTestsDrawn`, `national` und `international`, wobei jedes der letzten drei `true` oder `false` ist. Antwortet mit `201` mit `id` und `address`, also dem Ort, an dem die Website es zeigt.
+Nimmt `name`, `starts` und `finishes` (geschrieben als `2026-10-03T00:00:00Z`), `format` (ein Code, siehe [die Formate](get-endpoints.md#formats)), `sport` (ein Code, siehe [die Sportarten](get-endpoints.md#sports)), `country` (ein Code wie `au`, siehe [die Länder](get-endpoints.md#countries)) und, falls gewünscht, `region` (ein Code des Landes, aus derselben Liste), `subtitle`, `levelTestsDrawn`, `national` und `international`, wobei jedes der letzten drei `true` oder `false` ist. Antwortet mit `201` mit `id` und `address`, also dem Ort, an dem die Website es zeigt.
 
-### Archivieren, wiederherstellen oder den besonderen Status entfernen {#tournament-actions}
+### Ein Turnier archivieren oder wiederherstellen {#tournament-actions}
 
 `POST /api/v0/tournaments/{id}/archive`
 
 `POST /api/v0/tournaments/{id}/restore`
 
-`POST /api/v0/tournaments/{id}/remove-notable-status`
-
-Nehmen keinen Body und antworten mit `204`. Den besonderen Status zu entfernen, der sagt, dass das Turnier weder ein nationales noch ein internationales ist, ist Sache eines Administrators.
-
-### Ein Testturnier löschen {#delete-tournament}
-
-`POST /api/v0/tournaments/{id}/delete`
-
-Sache eines Administrators, der das Turnier als Test beurteilt hat. Nimmt `message`, was den Verantwortlichen des Turniers mitgeteilt wird, und `archive`, `true`, um das Turnier auch zu archivieren. Antwortet mit `204`.
+Nehmen keinen Body und antworten mit `204`.
 
 ### Eine Notiz für Verantwortliche hinzufügen {#notes}
 
@@ -111,12 +101,6 @@ Verschieben ihn in der Liste des Turniers einen Platz nach oben oder unten, arch
 
 Meldet einen der Spieler des Turniers im Wettbewerb an. Nimmt `player`, den Teil der ID des Turnierspielers nach `tournament-player/`. Antwortet mit `201` mit `id`, der ID des Spielers im Wettbewerb und nicht im Turnier.
 
-### Viele Spieler anmelden {#enter-players}
-
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/many`
-
-Nimmt `players`, eine Liste von Turnierspielern wie `player` oben, und `enterWhatCan`. Standardmäßig werden alle angemeldet oder keiner. Wo einige nicht angemeldet werden können, sagt die Antwort, welche, und meldet keinen an, damit der Verantwortliche wählen kann; senden Sie `enterWhatCan` als `true`, um die übrigen anzumelden. Antwortet mit `201` mit `ids`, in der Reihenfolge, in der die Spieler angegeben wurden, und `refused`.
-
 ### Einen Spieler verschieben, zurückziehen, zurückholen oder entfernen {#competition-player-actions}
 
 `POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
@@ -171,6 +155,14 @@ Nimmt die Ergebnisse wie das Hinzufügen eines Spiels und, wo sie sich geändert
 Verschieben das Ergebnis eines Tests einen Platz nach oben oder unten, archivieren ein Spiel oder stellen es wieder her, ziehen es zurück (es wurde gespielt und zählt nicht) oder heben seinen Rückzug auf. Sie nehmen keinen Body und antworten mit `204`. Diese und die beiden oben darf ein Ergebniserfasser.
 
 ## Die Spieler eines Turniers {#tournament-players}
+
+### Einen Spieler hinzufügen {#add-tournament-player}
+
+`POST /api/v0/tournaments/{id}/players`
+
+Fügt dem Turnier einen Spieler hinzu. Nimmt `name` und kann `representing`, `handicap`, `flag` und `worldRankingName` nehmen; was fehlt oder leer ist, bleibt ungesagt. Antwortet mit `201` mit der `id` des Spielers, die seine ganze ID ist, wie die GET-Endpunkte sie nennen. Ein Spieler ohne Namen oder mit dem Namen eines Spielers, der schon da ist, wird abgewiesen. Ein Spieler wird in einem Wettbewerb [angemeldet](#enter-player) mit dem Teil dieser `id` nach `tournament-player/`.
+
+### Einen Spieler verschieben, archivieren oder wiederherstellen {#tournament-player-actions}
 
 `POST /api/v0/tournaments/{id}/players/{player}/up`
 

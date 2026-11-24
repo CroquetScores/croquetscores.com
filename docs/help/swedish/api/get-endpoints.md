@@ -37,19 +37,27 @@ Säger det listan säger om den, och:
 
 En nyckel som gjorts för en turnering läser den och ingen annan, och avvisas för varje annan med `ApiKey.LimitedToAnotherTournament`. Svaret blir `304` där den `ETag` eller `Last-Modified` som skickades är aktuell.
 
-## Sporterna {#sports}
+## Vad en turnering kan vara {#choices}
 
-Den `sport` en turnering säger, och den en lista kan efterfrågas för, är en av de här koderna:
+Tre listor säger vad en turnering kan vara på webbplatsen som frågas: dess sporter, dess format och de länder den kan spelas i. Det är vad webbplatsens eget formulär för en ny turnering erbjuder, så en turnering som skapas med en kod från en av dem godtas av [att skapa en turnering](post-endpoints.md#create-tournament). De behöver ingen nyckel. Var och en tar `language`, ett språks kod som `de`, för att namnge sina val på det språket; en kod som webbplatsen inte erbjuder nekas med `400`, och dess `code` säger vilken lista som nekade den: `Sports.LanguageNotOffered`, `Formats.LanguageNotOffered` eller `Countries.LanguageUnknown`. Utan den namnges sporterna och länderna på engelska, och formaten på det språk som webbläsaren eller webbplatsens kaka säger; ange alltså ett `language` där namnen visas. Varje svar bär ett `ETag` och besvaras med `304` där det är oförändrat.
 
-| Kod   | Sport               |
-| ----- | ------------------- |
-| `ac`  | Association Croquet |
-| `gc`  | Golf Croquet        |
-| `a6w` | American 6 Wicket   |
-| `rc`  | Ricochet            |
-| `gb`  | Gateball            |
+### Sporterna {#sports}
 
-En sport kan läggas till i framtiden, på samma sätt som ett fält (se [fält kan läggas till](index.md#fields-may-be-added)), så en app bör klara en kod den inte känner till.
+`GET /api/v0/tournaments/sports`
+
+Svarar med `sports`, var och en med `code` och `name`. Den `sport` en turnering säger, och den en lista kan efterfrågas för, är en av de här koderna. Croquet Scores erbjuder `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) och `gb` (Gateball); Gateball Scores erbjuder bara Gateball. En sport kan läggas till i framtiden, liksom ett fält kan (se [fält kan läggas till](index.md#fields-may-be-added)), så en app bör klara en kod den inte känner till.
+
+### Formaten {#formats}
+
+`GET /api/v0/tournaments/formats`
+
+Svarar med `formats`, var och en med `code`, namnet en turnering skapas med, `name`, `teams`, om det spelas av lag, och `drawsLevelTests`, om en turnering i det lottar ett avgörande test om den inte säger att den inte gör det.
+
+### Länderna {#countries}
+
+`GET /api/v0/countries`
+
+Svarar med `countries`, var och en med `code` (som `au`), `name` och `regions`, var och en med `code` och `name`. De står i ordning efter sina namn på det språk som efterfrågas. En region namnges så som den registrerades, för det mesta på sitt eget lands språk. Ett land som inte är indelat har en region, som är landet självt.
 
 ## En tävling {#competition}
 
@@ -88,3 +96,33 @@ Listar de turneringar som hamnat i ett annat år än det de var i, så att en ap
 `GET /api/v0/tournaments/archived`
 
 Listar de turneringar som har arkiverats, så att en app kan sluta visa dem. Tar `archivedSince`, skriven som `2026-03-01T10:00:00Z`, `page` och `pageSize`. Var och en har `tournamentId` och `archivedAt`.
+
+## Spelare i världsrankingen {#world-ranking-players}
+
+`GET /api/v0/ac/world-ranking-players`
+
+Listar de Association Croquet-spelare som världsrankingarna känner till. Tar `changedSince`, skrivet som `2026-03-01T10:00:00Z`, `page` och `pageSize`, där en sida är högst 100. Svarar med `worldRankingPlayers`, var och en med:
+
+- `id` och `worldRankingId`, numret rankingarna ger spelaren
+- `name`, så som rankingarna namnger dem
+- `games`, där API:et berättar om spelarens partier (se [en spelares partier](#world-ranking-player-games))
+- `archivedAt`, när spelaren arkiverades, eller `null`
+- `changedAt` och `etag`, gjort av det spelaren säger
+
+och `total`, `page`, `pageSize` och `next`, som ett års turneringar har. Listan efterfrågas igen med det `ETag` den skickade, och besvaras med `304` där inget har ändrats. En förfrågan som nekas, nekas med en `code` som börjar med `WorldRankingPlayers.`, som `WorldRankingPlayers.PageNotWhole`, och ett `field`.
+
+## En spelares partier i världsrankingen {#world-ranking-player-games}
+
+`GET /api/v0/ac/world-ranking-players/{id}/games`
+
+`id` är den del av spelarens `id` som står efter snedstrecket, så som `games` i listan ovan ger det. Listar de Association Croquet-partier spelaren har spelat, vare sig i ett block, ett schweiziskt system, en utslagning eller ett test, och vare sig de spelade för sig själva eller för ett lag. Tar `changedSince`, `page` och `pageSize` som listan över spelare, och svarar med `games`, i den ordning de lades till, var och en från spelarens sida:
+
+- `id`, `tournamentId` och `competitionId`
+- `won`, om spelaren vann, vilket är `false` vid oavgjort, och `drawn`
+- `score`, spelarens, och `opponentScore`, båda så som de skrevs, till exempel `26tp`
+- `opponentName`, så som rankingarna namnger dem där motståndaren är en spelare i världsrankingen och annars så som turneringen för dem, och `opponentId`, motståndarens `id` i listan ovan, eller `null` där de inte är en
+- `archived` och `withdrawn`: ett parti i en arkiverad tävling eller turnering, eller ett arkiverat eller återkallat parti, listas och säger det, så att en app som har behållit det kan sluta räkna det
+- `addedAt`, eller `null` för ett parti som lades till innan webbplatsen noterade när, och `changedAt`
+- `etag`
+
+och `total`, `page`, `pageSize` och `next`. En spelare som webbplatsen inte känner till nekas med `404` och `WorldRankingPlayers.NotFound`, vilket inte är detsamma som en spelare utan partier, som har en tom lista.

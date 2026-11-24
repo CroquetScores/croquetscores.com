@@ -4,5 +4,5 @@ Todo endereço fica sob `/api/v0` no site, e toda resposta é JSON. O que vale p
 
 Há dois tipos, e uma página para cada:
 
-- Os [endpoints GET](get-endpoints.md) leem: os torneios de um ano, um torneio, uma competição, sua classificação e seus jogos, o que uma chave pode fazer e o que mudou ou foi arquivado.
+- Os [endpoints GET](get-endpoints.md) leem: os torneios de um ano, um torneio, uma competição, sua classificação e seus jogos, os esportes, formatos e países que um torneio pode ter, os jogadores do ranking mundial e seus jogos, o que uma chave pode fazer e o que mudou ou foi arquivado.
 - Os [endpoints POST](post-endpoints.md) mudam algo: criar um torneio, suas competições, jogadores, equipes e jogos, e quem pode organizá-lo e anotar os resultados.

@@ -1,7 +1,5 @@
 # Los puntos finales POST de la API
 
-**NOTA: Esto es un borrador. Hay algunos puntos finales que sé que se eliminarán.**
-
 Estas direcciones cambian algo. Las que solo leen están en [los puntos finales GET](get-endpoints.md). Cada dirección de aquí está bajo `/api/v0` en el sitio, y lo que cambian las propias páginas del sitio lo cambian esas mismas direcciones, de modo que una aplicación no tiene un conjunto menor que el del sitio. Lo que vale para todas, como las claves, los límites y los errores, está en la [ayuda para desarrolladores de aplicaciones](index.md); quién puede escribir está [más abajo](#who-may-write).
 
 Un torneo, una competición y el resto se nombran en una dirección con la parte de su id que va después de la barra: para `tournament/4f2a…` la dirección dice `4f2a…`. Un cuerpo nombra otras cosas del mismo modo, como hace `player` más abajo, salvo donde dice que es el id completo.
@@ -32,23 +30,15 @@ Enviar una petición dos veces no es lo mismo que enviarla una: una partida aña
 
 `POST /api/v0/tournaments`
 
-Recibe `name`, `starts` y `finishes` (escritos como `2026-10-03T00:00:00Z`), `format`, `sport` (un código, consulta [los deportes](get-endpoints.md#sports)), `country` (un código como `au`) y, si quieres, `region`, `subtitle`, `levelTestsDrawn`, `national` e `international`, cada uno de los tres últimos `true` o `false`. Responde `201` con `id` y `address`, que es donde el sitio lo muestra.
+Recibe `name`, `starts` y `finishes` (escritos como `2026-10-03T00:00:00Z`), `format` (un código, consulta [los formatos](get-endpoints.md#formats)), `sport` (un código, consulta [los deportes](get-endpoints.md#sports)), `country` (un código como `au`, consulta [los países](get-endpoints.md#countries)) y, si quieres, `region` (un código del país, de la misma lista), `subtitle`, `levelTestsDrawn`, `national` e `international`, cada uno de los tres últimos `true` o `false`. Responde `201` con `id` y `address`, que es donde el sitio lo muestra.
 
-### Archivar, restaurar o quitar el estatus destacado {#tournament-actions}
+### Archivar o restaurar un torneo {#tournament-actions}
 
 `POST /api/v0/tournaments/{id}/archive`
 
 `POST /api/v0/tournaments/{id}/restore`
 
-`POST /api/v0/tournaments/{id}/remove-notable-status`
-
-No reciben cuerpo y responden `204`. Quitar el estatus destacado, que dice que el torneo no es ni nacional ni internacional, es cosa de un administrador.
-
-### Eliminar un torneo de prueba {#delete-tournament}
-
-`POST /api/v0/tournaments/{id}/delete`
-
-Es cosa de un administrador, que ha juzgado que el torneo es de prueba. Recibe `message`, que se les dice a los gestores del torneo, y `archive`, `true` para archivar también el torneo. Responde `204`.
+No reciben cuerpo y responden `204`.
 
 ### Añadir una nota de gestor {#notes}
 
@@ -111,12 +101,6 @@ La suben o la bajan un lugar en la lista del torneo, o la archivan, o la restaur
 
 Inscribe en la competición a uno de los jugadores del torneo. Recibe `player`, la parte del id del jugador del torneo que va después de `tournament-player/`. Responde `201` con `id`, que es el id del jugador en la competición y no en el torneo.
 
-### Inscribir a muchos jugadores {#enter-players}
-
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/many`
-
-Recibe `players`, una lista de jugadores del torneo como `player` más arriba, y `enterWhatCan`. Por defecto se inscribe a todos o a ninguno. Donde algunos no pueden inscribirse, la respuesta dice cuáles y no inscribe a nadie, para que el gestor pueda elegir; envía `enterWhatCan` como `true` para inscribir a los demás. Responde `201` con `ids`, en el orden en que se dieron los jugadores, y `refused`.
-
 ### Mover, retirar, reincorporar o quitar a un jugador {#competition-player-actions}
 
 `POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
@@ -171,6 +155,14 @@ Recibe los resultados como al añadir una partida y, donde cambiaron, `winner` y
 Suben o bajan el resultado de un test un lugar, archivan una partida o la restauran, la retiran (se jugó y no cuenta) o deshacen su retirada. No reciben cuerpo y responden `204`. Estos, y los dos de arriba, son lo que puede hacer un anotador.
 
 ## Los jugadores de un torneo {#tournament-players}
+
+### Añadir un jugador {#add-tournament-player}
+
+`POST /api/v0/tournaments/{id}/players`
+
+Añade un jugador al torneo. Recibe `name`, y puede recibir `representing`, `handicap`, `flag` y `worldRankingName`; lo que falta o está vacío queda sin decir. Responde `201` con el `id` del jugador, que es su id entero, como lo dicen los puntos finales GET. Se rechaza un jugador sin nombre, o con el nombre de uno que ya está. Un jugador se [inscribe](#enter-player) en una competición con la parte de este `id` que va después de `tournament-player/`.
+
+### Mover, archivar o restaurar un jugador {#tournament-player-actions}
 
 `POST /api/v0/tournaments/{id}/players/{player}/up`
 

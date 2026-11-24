@@ -37,19 +37,27 @@ Sê wat die lys daarvan sê, en:
 
 'n Sleutel wat vir een toernooi gemaak is, lees dié een en geen ander nie, en word vir enige ander met `ApiKey.LimitedToAnotherTournament` geweier. Die antwoord is `304` waar die `ETag` of `Last-Modified` wat gestuur is, steeds geldig is.
 
-## Die sportsoorte {#sports}
+## Wat 'n toernooi kan wees {#choices}
 
-Die `sport` wat 'n toernooi sê, en waarvoor 'n lys gevra kan word, is een van hierdie kodes:
+Drie lyste sê wat 'n toernooi kan wees op die webwerf wat gevra word: sy sportsoorte, sy formate en die lande waarin dit kan wees. Dit is wat die webwerf se eie vorm vir 'n nuwe toernooi bied, so 'n toernooi wat met 'n kode uit een van hulle gemaak word, word aanvaar deur [Maak 'n toernooi](post-endpoints.md#create-tournament). Hulle het geen sleutel nodig nie. Elkeen neem `language`, die kode van 'n taal soos `de`, om sy keuses in daardie taal te noem; 'n kode wat die webwerf nie bied nie, word geweier met `400`, en sy `code` sê watter lys dit geweier het: `Sports.LanguageNotOffered`, `Formats.LanguageNotOffered` of `Countries.LanguageUnknown`. Sonder een word die sportsoorte en die lande in Engels genoem, en die formate in die taal wat die blaaier of die webwerf se koekie sê; gee dus 'n `language` waar die name gewys word. Elke antwoord dra 'n `ETag` en word met `304` beantwoord waar dit onveranderd is.
 
-| Kode  | Sportsoort          |
-| ----- | ------------------- |
-| `ac`  | Association Croquet |
-| `gc`  | Golf Croquet        |
-| `a6w` | American 6 Wicket   |
-| `rc`  | Ricochet            |
-| `gb`  | Gateball            |
+### Die sportsoorte {#sports}
 
-'n Sportsoort kan in die toekoms bygevoeg word, soos 'n veld (kyk [velde kan bygevoeg word](index.md#fields-may-be-added)), so 'n toepassing moet 'n kode kan hanteer wat dit nie ken nie.
+`GET /api/v0/tournaments/sports`
+
+Antwoord met `sports`, elk met `code` en `name`. Die `sport` wat 'n toernooi sê, en waarvoor 'n lys gevra kan word, is een van hierdie kodes. Croquet Scores bied `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) en `gb` (Gateball); Gateball Scores bied net Gateball. 'n Sportsoort kan in die toekoms bygevoeg word, soos 'n veld (kyk [velde kan bygevoeg word](index.md#fields-may-be-added)), so 'n toepassing moet 'n kode kan hanteer wat dit nie ken nie.
+
+### Die formate {#formats}
+
+`GET /api/v0/tournaments/formats`
+
+Antwoord met `formats`, elk met `code`, die naam waarmee 'n toernooi gemaak word, `name`, `teams`, of dit deur spanne gespeel word, en `drawsLevelTests`, of 'n toernooi daarin 'n gelykopstoets trek tensy dit sê dat dit dit nie doen nie.
+
+### Die lande {#countries}
+
+`GET /api/v0/countries`
+
+Antwoord met `countries`, elk met `code` (soos `au`), `name` en `regions`, elk met `code` en `name`. Hulle is in die volgorde van hul name in die taal wat gevra word. 'n Streek word genoem soos dit aangeteken is, meestal in sy eie land se taal. 'n Land wat nie verdeel is nie, het een streek, wat homself is.
 
 ## Een kompetisie {#competition}
 
@@ -88,3 +96,33 @@ Lys die toernooie wat in 'n ander jaar gekom het as dié waarin hulle was, sodat
 `GET /api/v0/tournaments/archived`
 
 Lys die toernooie wat geargiveer is, sodat 'n toepassing kan ophou om hulle te wys. Neem `archivedSince`, geskryf as `2026-03-01T10:00:00Z`, `page` en `pageSize`. Elkeen het `tournamentId` en `archivedAt`.
+
+## Wêreldranglysspelers {#world-ranking-players}
+
+`GET /api/v0/ac/world-ranking-players`
+
+Lys die Association Croquet-spelers wat die wêreldranglyste ken. Neem `changedSince`, geskryf as `2026-03-01T10:00:00Z`, `page` en `pageSize`, waar 'n bladsy hoogstens 100 is. Antwoord met `worldRankingPlayers`, elk met:
+
+- `id`, en `worldRankingId`, die nommer wat die ranglyste die speler gee
+- `name`, soos die ranglyste hom noem
+- `games`, waar die API van die speler se spelle vertel (kyk ['n speler se spelle](#world-ranking-player-games))
+- `archivedAt`, wanneer die speler geargiveer is, of `null`
+- `changedAt`, en `etag`, saamgestel uit wat die speler sê
+
+en `total`, `page`, `pageSize` en `next`, soos 'n jaar se toernooie dit het. Die lys word weer gevra met die `ETag` wat dit gestuur het, en met `304` beantwoord waar niks verander het nie. 'n Versoek wat geweier word, word geweier met 'n `code` wat met `WorldRankingPlayers.` begin, soos `WorldRankingPlayers.PageNotWhole`, en 'n `field`.
+
+## 'n Wêreldranglysspeler se spelle {#world-ranking-player-games}
+
+`GET /api/v0/ac/world-ranking-players/{id}/games`
+
+Die `id` is die deel van die speler se `id` ná die skuinsstreep, soos `games` in die lys hierbo dit gee. Lys die Association Croquet-spelle wat die speler gespeel het, hetsy in 'n blok, 'n Switserse stelsel, 'n uitklopkompetisie of 'n toets, en hetsy hy vir homself of vir 'n span gespeel het. Neem `changedSince`, `page` en `pageSize` soos die lys van spelers, en antwoord met `games`, in die volgorde waarin hulle bygevoeg is, elk vanuit die speler se kant:
+
+- `id`, `tournamentId` en `competitionId`
+- `won`, of die speler gewen het, wat `false` is vir 'n gelykopuitslag, en `drawn`
+- `score`, die speler s'n, en `opponentScore`, albei soos hulle ingetik is, soos `26tp`
+- `opponentName`, soos die ranglyste hom noem waar die opponent 'n wêreldranglysspeler is en andersins soos die toernooi hom hou, en `opponentId`, die opponent se `id` in die lys hierbo, of `null` waar hy nie een is nie
+- `archived` en `withdrawn`: 'n spel van 'n geargiveerde kompetisie of toernooi, of 'n geargiveerde of onttrokke een, word gelys en sê so, sodat 'n toepassing wat dit gehou het, kan ophou om dit te tel
+- `addedAt`, of `null` vir 'n spel wat bygevoeg is voordat die webwerf onthou het wanneer, en `changedAt`
+- `etag`
+
+en `total`, `page`, `pageSize` en `next`. 'n Speler wat die webwerf nie ken nie, word geweier met `404` en `WorldRankingPlayers.NotFound`, wat nie dieselfde is as 'n speler sonder spelle nie, wat 'n leë lys het.
