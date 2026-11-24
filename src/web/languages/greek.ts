@@ -661,6 +661,10 @@ export const greek: Language = {
     "admin.tournament.national": "Εθνικού επιπέδου διοργάνωση",
     "admin.tournament.international": "Διεθνούς επιπέδου διοργάνωση",
     "admin.tournament.optional": "Προαιρετικό",
+    "admin.tournament.testTitle": "Είναι δοκιμή;",
+    "admin.tournament.testQuestion":
+      "Το όνομα αυτού του τουρνουά μοιάζει με δοκιμή. Ένα τουρνουά που αποθηκεύεται εδώ διατηρείται και εμφανίζεται στη λίστα για όλους. Για να δοκιμάσετε τον ιστότοπο, χρησιμοποιήστε τον δοκιμαστικό ιστότοπο, όπου ό,τι εισαχθεί μπορεί να αφαιρεθεί οποιαδήποτε στιγμή.",
+    "admin.tournament.testSave": "Αποθήκευση αυτού του τουρνουά",
     // Μια άρνηση χωρίς δικά της λόγια, πάνω από τα πεδία.
     "admin.tournament.otherwise": "Αυτό δεν μπορεί να γίνει δεκτό ως έχει.",
     "admin.newTournament.title": "Νέο τουρνουά",
@@ -949,6 +953,8 @@ export const greek: Language = {
       "Διατήρηση της διόρθωσης σε αυτό το αποτέλεσμα",
     "admin.hover.dialog.carryForward.save":
       "Μεταφορά των αποτελεσμάτων αυτού του παίκτη",
+    "admin.hover.dialog.tournament.testSave":
+      "Αποθήκευση αυτού του τουρνουά εδώ, παρότι το όνομά του μοιάζει με δοκιμή",
     "admin.hover.dialog.tournament.new": "Δημιουργία αυτού του τουρνουά",
     "admin.hover.dialog.tournament.edit":
       "Διατήρηση των αλλαγών σε αυτό το τουρνουά",

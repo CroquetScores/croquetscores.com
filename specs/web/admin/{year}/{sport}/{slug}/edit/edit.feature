@@ -188,6 +188,12 @@ Feature: A tournament is changed in the admin
       When "Update Tournament" is pressed
       Then the tournament "Spring Open" is kept in no region
 
+    Scenario: A tournament renamed with the word test is not asked about
+      Given the page to edit "Spring Open" is open
+      And "Spring Open Test" is typed as the "Name"
+      When "Update Tournament" is pressed
+      Then the address is "/admin/2026/ac/spring-open"
+
     Scenario: What is left alone is kept as it was
       Given the tournament "Spring Open" has the subtitle "Lawns open at nine."
       And the page to edit "Spring Open" is open

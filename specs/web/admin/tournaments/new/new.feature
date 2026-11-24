@@ -589,6 +589,140 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then the address is "/admin/2026/gc/spring-open"
 
+  Rule: A name that suggests a test is asked about before the tournament is made
+
+    Somebody learning the site often makes a tournament on the real website
+    that was only ever a test, and it is then kept and listed for everybody to
+    see. The try website is where a reader is sent to make one, since what is
+    entered there may be removed at any time (`layout.feature`). So a new
+    tournament named with the word "test", "testing", "trial", "fake" or
+    "dummy" is not made at once: a modal dialog says so, links to the try
+    website, and asks whether to save it here all the same. The words are
+    looked for as whole words in any capitals, so "Contest Open" is left alone,
+    and only in English, which is what somebody learning the site types.
+
+    Saving it makes the tournament as if nothing had been asked. Cancelling,
+    or Escape, makes nothing and leaves the form as it was typed, so that the
+    name can be changed. Nothing is asked on a try website, where a test is
+    what is wanted, nor of a tournament being changed (`edit.feature`), since
+    somebody who has been through a name once chose it.
+
+    Scenario Outline: A tournament named <name> is asked about
+      Given the new tournament page is open
+      And "<name>" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Fiji" is chosen
+      When the form is sent as it is
+      Then the modal dialog titled "Is this a test?" is open
+
+      Examples:
+        | name             |
+        | Test Open        |
+        | Testing Cup      |
+        | Spring Trial     |
+        | Fake Open        |
+        | My dummy event   |
+        | Spring TEST Open |
+        | Open (test)      |
+
+    Scenario Outline: A tournament named <name> is not asked about
+      Given the new tournament page is open
+      And "<name>" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Fiji" is chosen
+      When "Create Tournament" is pressed
+      Then the address is "<address>"
+
+      Examples:
+        | name         | address                     |
+        | Spring Open  | /admin/2026/ac/spring-open  |
+        | Contest Open | /admin/2026/ac/contest-open |
+        | Attest Cup   | /admin/2026/ac/attest-cup   |
+        | Trialist Cup | /admin/2026/ac/trialist-cup |
+
+    Scenario: Asking makes no tournament
+      Given the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Fiji" is chosen
+      And the form is sent as it is
+      When the admin is opened
+      Then the list says there are no tournaments
+
+    Scenario: The dialog says what the try website is for
+      Given the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      When the form is sent as it is
+      Then the modal dialog links to "https://try.croquetscores.com"
+
+    Scenario: The link opens in another tab, so that what was typed stays
+      Given the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      When the form is sent as it is
+      Then the modal dialog's link opens in another tab
+
+    Scenario: The dialog offers to save, and Cancel
+      Given the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      When the form is sent as it is
+      Then the modal dialog's first button is "Save This Tournament"
+      And the modal dialog's second button is "Cancel"
+
+    Scenario: Saving makes the tournament
+      Given the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Fiji" is chosen
+      And the form is sent as it is
+      When "Save This Tournament" is pressed in the modal dialog
+      Then the address is "/admin/2026/ac/test-open"
+
+    Scenario: Cancelling makes no tournament
+      Given the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Fiji" is chosen
+      And the form is sent as it is
+      And "Cancel" is pressed in the modal dialog
+      When the admin is opened
+      Then the list says there are no tournaments
+
+    Scenario: Cancelling leaves the form as it was typed
+      Given the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      And the form is sent as it is
+      When "Cancel" is pressed in the modal dialog
+      Then "Name" says "Test Open"
+
+    Scenario: Escape does what Cancel does
+      Given the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      And the form is sent as it is
+      When Escape is pressed
+      Then no modal dialog is open
+
+    Scenario: Nothing is asked on a try website
+      Given a site served as "try.croquetscores.com"
+      And the new tournament page is open
+      And "Test Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Fiji" is chosen
+      When "Create Tournament" is pressed
+      Then the address is "/admin/2026/ac/test-open"
+
+    Scenario: The dialog is in the reader's language
+      Given a browser that asks for "en-XA"
+      And the new tournament page is open
+      And "Test Open" is typed as the name in the form
+      When the form is sent as it is
+      Then every word in the question about a test is in the test locale
+
   Rule: What is refused is said beside the field it is about
 
     Scenario Outline: A value that breaks a rule is refused beside its field

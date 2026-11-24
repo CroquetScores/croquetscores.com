@@ -623,6 +623,10 @@ export const swedish: Language = {
     "admin.tournament.national": "Nationell tävling",
     "admin.tournament.international": "Internationell tävling",
     "admin.tournament.optional": "Valfritt",
+    "admin.tournament.testTitle": "Är det här ett test?",
+    "admin.tournament.testQuestion":
+      "Turneringens namn ser ut som ett test. En turnering som sparas här behålls och visas i listan för alla. För att prova webbplatsen, använd provwebbplatsen, där allt som skrivs in kan tas bort när som helst.",
+    "admin.tournament.testSave": "Spara turneringen",
     // Ett avslag utan egna ord, ovanför fälten.
     "admin.tournament.otherwise": "Det här kan inte godtas som det är.",
     "admin.newTournament.title": "Ny turnering",
@@ -888,6 +892,8 @@ export const swedish: Language = {
     "admin.hover.dialog.score.add": "Lägg till resultatet i tävlingen",
     "admin.hover.dialog.score.save": "Spara rättelsen av resultatet",
     "admin.hover.dialog.carryForward.save": "För spelarens resultat vidare",
+    "admin.hover.dialog.tournament.testSave":
+      "Spara turneringen här, trots att namnet ser ut som ett test",
     "admin.hover.dialog.tournament.new": "Skapa turneringen",
     "admin.hover.dialog.tournament.edit": "Spara ändringarna för turneringen",
     "admin.hover.modal.cancel": "Stäng utan att spara något",

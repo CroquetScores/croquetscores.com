@@ -622,6 +622,10 @@ export const latvian: Language = {
     "admin.tournament.national": "Nacionāla līmeņa pasākums",
     "admin.tournament.international": "Starptautiska līmeņa pasākums",
     "admin.tournament.optional": "Neobligāti",
+    "admin.tournament.testTitle": "Vai šī ir pārbaude?",
+    "admin.tournament.testQuestion":
+      "Šī turnīra nosaukums izskatās pēc pārbaudes. Šeit saglabāts turnīrs tiek paturēts un parādīts sarakstā visiem. Lai izmēģinātu vietni, izmantojiet izmēģinājuma vietni, kurā viss ievadītais jebkurā brīdī var tikt noņemts.",
+    "admin.tournament.testSave": "Saglabāt šo turnīru",
     // Atteikums bez savu vārdu, virs laukiem.
     "admin.tournament.otherwise": "To nevar pieņemt tādu, kāds tas ir.",
     "admin.newTournament.title": "Jauns turnīrs",
@@ -883,6 +887,8 @@ export const latvian: Language = {
     "admin.hover.dialog.score.add": "Pievienot šo rezultātu sacensībām",
     "admin.hover.dialog.score.save": "Saglabāt šī rezultāta labojumu",
     "admin.hover.dialog.carryForward.save": "Pārnest šī spēlētāja rezultātus",
+    "admin.hover.dialog.tournament.testSave":
+      "Saglabāt šo turnīru šeit, kaut gan tā nosaukums izskatās pēc pārbaudes",
     "admin.hover.dialog.tournament.new": "Izveidot šo turnīru",
     "admin.hover.dialog.tournament.edit": "Saglabāt izmaiņas šim turnīram",
     "admin.hover.modal.cancel": "Aizvērt šo, neko nesaglabājot",

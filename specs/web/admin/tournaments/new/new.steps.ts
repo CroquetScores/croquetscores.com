@@ -729,3 +729,45 @@ Then(
     });
   },
 );
+
+// The name, found by its id and not its label, which is in whatever language
+// the page is in.
+Given(
+  "{string} is typed as the name in the form",
+  async function (this: WebWorld, words: string) {
+    await drawn(this);
+    await this.browserPage.locator(`${forms} #field-name`).fill(words);
+  },
+);
+
+// The dialog that asks whether a tournament named like a test is to be saved
+// here (new.feature).
+Then(
+  "the modal dialog links to {string}",
+  async function (this: WebWorld, address: string) {
+    const link = this.browserPage.locator("dialog[open] a");
+    await link.first().waitFor();
+    assert.equal(await link.first().getAttribute("href"), address);
+  },
+);
+
+// Not the shared step of the same kind, which waits for a tab to settle and
+// this page has none.
+Then(
+  "every word in the question about a test is in the test locale",
+  async function (this: WebWorld) {
+    await this.browserPage.locator("dialog[open]").waitFor();
+    // The try website's address is an address and nobody's language.
+    assert.deepEqual(await unmarkedWithin(this, "dialog[open]", ["a"]), []);
+  },
+);
+
+Then(
+  "the modal dialog's link opens in another tab",
+  async function (this: WebWorld) {
+    const link = this.browserPage.locator("dialog[open] a").first();
+    await link.waitFor();
+    assert.equal(await link.getAttribute("target"), "_blank");
+    assert.match((await link.getAttribute("rel")) ?? "", /noopener/);
+  },
+);

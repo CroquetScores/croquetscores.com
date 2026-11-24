@@ -626,6 +626,11 @@ export const english: Language = {
     "admin.tournament.national": "National‑level event",
     "admin.tournament.international": "International‑level event",
     "admin.tournament.optional": "Optional",
+    // Asked of a new tournament named like a test, over the form.
+    "admin.tournament.testTitle": "Is this a test?",
+    "admin.tournament.testQuestion":
+      "The name of this tournament looks like a test. A tournament saved here is kept and listed for everybody to see. To try the site out, use the try website, where what you enter may be removed at any time.",
+    "admin.tournament.testSave": "Save This Tournament",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "This cannot be accepted as it is.",
     "admin.newTournament.title": "New Tournament",
@@ -983,6 +988,8 @@ export const english: Language = {
     "admin.hover.dialog.score.save": "Keep the correction to this score",
     "admin.hover.dialog.carryForward.save":
       "Carry this player's results forward",
+    "admin.hover.dialog.tournament.testSave":
+      "Save this tournament here, though its name looks like a test",
     "admin.hover.dialog.tournament.new": "Create this tournament",
     "admin.hover.dialog.tournament.edit": "Keep the changes to this tournament",
     "admin.hover.modal.cancel": "Close this without keeping anything",

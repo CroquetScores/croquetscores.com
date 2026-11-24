@@ -622,6 +622,10 @@ export const norwegian: Language = {
     "admin.tournament.national": "Arrangement på nasjonalt nivå",
     "admin.tournament.international": "Arrangement på internasjonalt nivå",
     "admin.tournament.optional": "Valgfritt",
+    "admin.tournament.testTitle": "Er dette en test?",
+    "admin.tournament.testQuestion":
+      "Navnet på denne turneringen ser ut som en test. En turnering som lagres her, blir beholdt og vist i listen for alle. For å prøve ut nettstedet, bruk prøvenettstedet, der alt du skriver inn kan fjernes når som helst.",
+    "admin.tournament.testSave": "Lagre denne turneringen",
     // Et avslag uten egne ord, over feltene.
     "admin.tournament.otherwise": "Dette kan ikke godtas som det er.",
     "admin.newTournament.title": "Ny turnering",
@@ -885,6 +889,8 @@ export const norwegian: Language = {
     "admin.hover.dialog.score.save": "Behold rettelsen av dette resultatet",
     "admin.hover.dialog.carryForward.save":
       "Før denne spillerens resultater videre",
+    "admin.hover.dialog.tournament.testSave":
+      "Lagre denne turneringen her, selv om navnet ser ut som en test",
     "admin.hover.dialog.tournament.new": "Opprett denne turneringen",
     "admin.hover.dialog.tournament.edit":
       "Behold endringene for denne turneringen",

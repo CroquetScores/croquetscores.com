@@ -632,6 +632,10 @@ export const spanish: Language = {
     "admin.tournament.national": "Evento de nivel nacional",
     "admin.tournament.international": "Evento de nivel internacional",
     "admin.tournament.optional": "Opcional",
+    "admin.tournament.testTitle": "¿Es una prueba?",
+    "admin.tournament.testQuestion":
+      "El nombre de este torneo parece el de una prueba. Un torneo guardado aquí se conserva y aparece en la lista para todos. Para probar el sitio, usa el sitio de pruebas, donde todo lo que se introduzca puede eliminarse en cualquier momento.",
+    "admin.tournament.testSave": "Guardar este torneo",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "Esto no se puede aceptar tal como está.",
     "admin.newTournament.title": "Nuevo torneo",
@@ -903,6 +907,8 @@ export const spanish: Language = {
     "admin.hover.dialog.score.save": "Guardar la corrección de este resultado",
     "admin.hover.dialog.carryForward.save":
       "Trasladar los resultados de este jugador",
+    "admin.hover.dialog.tournament.testSave":
+      "Guardar este torneo aquí, aunque su nombre parezca el de una prueba",
     "admin.hover.dialog.tournament.new": "Crear este torneo",
     "admin.hover.dialog.tournament.edit": "Guardar los cambios de este torneo",
     "admin.hover.modal.cancel": "Cerrar esto sin guardar nada",

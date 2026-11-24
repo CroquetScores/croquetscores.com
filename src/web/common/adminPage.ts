@@ -62,6 +62,7 @@ const adminWords = (
   administratorEmailAddress: string,
   siteName: string,
   tryAddress: string,
+  isTry: boolean,
 ): string => {
   const first = speaking.offered[0];
   const keys = Object.keys(first?.words ?? {}).filter((key) =>
@@ -87,6 +88,9 @@ const adminWords = (
     // from says of the site, which only the server knows.
     "admin.site.name": siteName,
     "admin.site.tryAddress": tryAddress,
+    // Whether this is a try website, from the website and not from the page's
+    // markup, which a restyle could change.
+    "admin.site.isTry": isTry ? "yes" : "no",
   };
   return `<script type="application/json" id="${adminWordsId}">${JSON.stringify(
     words,
@@ -192,7 +196,7 @@ export const adminPage = (
           currentPath: "/admin/",
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),
-        })}${alertBar(alert)}${adminWords(speaking, administratorName, administratorEmailAddress, siteName, tryAddressOf(websiteOf(request)))}${adminBuild(build)}`;
+        })}${alertBar(alert)}${adminWords(speaking, administratorName, administratorEmailAddress, siteName, tryAddressOf(websiteOf(request)), websiteOf(request).isTry)}${adminBuild(build)}`;
       })
       // Back to the address the admin was opened at, as a choice made on a
       // public page returns to that page.
