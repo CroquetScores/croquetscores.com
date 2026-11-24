@@ -48,6 +48,8 @@ import { SearchHelpHandler } from "../application/operations/help/SearchHelpHand
 import type { HelpPagesToSearch } from "../application/services/HelpSearchIndex.js";
 import { PostgresHelpSearchIndex } from "../infrastructure/database/PostgresHelpSearchIndex.js";
 import { helpPagesToSearchIn } from "./common/helpPagesToSearch.js";
+import { WorldRankingPlayerGamesForAppsHandler } from "../application/operations/world-rankings/WorldRankingPlayerGamesForAppsHandler.js";
+import { WorldRankingPlayerGames } from "../infrastructure/read-models/WorldRankingPlayerGames.js";
 import { WorldRankingPlayersForAppsHandler } from "../application/operations/world-rankings/WorldRankingPlayersForAppsHandler.js";
 import { WorldRankingPlayersMatchingHandler } from "../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import { ImportErrorKeptHandler } from "../application/operations/import-errors/ImportErrorKeptHandler.js";
@@ -1376,6 +1378,11 @@ export const buildApplication = async (
   );
   mediator.handleQuery(
     new WorldRankingPlayersForAppsHandler(worldRankingPlayers),
+  );
+  mediator.handleQuery(
+    new WorldRankingPlayerGamesForAppsHandler(
+      new WorldRankingPlayerGames(unitOfWork),
+    ),
   );
   const helpSearchIndex = new PostgresHelpSearchIndex(unitOfWork);
   mediator.handleQuery(new SearchHelpHandler(helpSearchIndex));

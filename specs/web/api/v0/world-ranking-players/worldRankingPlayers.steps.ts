@@ -108,7 +108,7 @@ When(
 // each is kept by name, since it is the site's and the scenario cannot say it.
 const idsMade = new WeakMap<WebWorld, Map<string, string>>();
 
-const idOf = (world: WebWorld, name: string): string => {
+export const idOf = (world: WebWorld, name: string): string => {
   const id = idsMade.get(world)?.get(name);
   assert.ok(id !== undefined, `No world ranking player ${name} was made.`);
   return id;

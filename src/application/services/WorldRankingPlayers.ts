@@ -78,3 +78,42 @@ export interface AssociationCroquetPlayersKept {
     changedSince: ReadOnlyDate | undefined,
   ): Promise<readonly KeptAssociationCroquetPlayer[]>;
 }
+
+/** One game of an association croquet world ranking player, told from their side. */
+export interface KeptWorldRankingPlayerGame {
+  readonly id: string;
+  readonly tournamentId: string;
+  readonly competitionId: string;
+  /** Nobody won a drawn game, whichever of the two was typed as the winner. */
+  readonly won: boolean;
+  readonly score: string;
+  readonly opponentScore: string;
+  /** Empty where the opponent is not a world ranking player. */
+  readonly opponentId: string | undefined;
+  /** As the rankings name the opponent where they know them, else as the tournament does. */
+  readonly opponentName: string;
+  readonly drawn: boolean;
+  readonly archived: boolean;
+  readonly withdrawn: boolean;
+  /** Empty for a game kept before the moment it was added was. */
+  readonly addedAt: ReadOnlyDate | undefined;
+  readonly changedAt: ReadOnlyDate;
+}
+
+/**
+ * Where an association croquet world ranking player's games are read, for an
+ * app that lists them (worldRankingPlayerGames.feature, through the API that
+ * lists them). Read from the read models and never from the events.
+ */
+export interface WorldRankingPlayerGamesKept {
+  /**
+   * The games of the player the site gave `playerId`, archived and withdrawn
+   * ones too, in the order they were added in, and only those that changed
+   * after `changedSince` where one is given. Nothing where the site has no such player, which is
+   * not the same as a player with no games.
+   */
+  changedAfter(
+    playerId: string,
+    changedSince: ReadOnlyDate | undefined,
+  ): Promise<readonly KeptWorldRankingPlayerGame[] | undefined>;
+}
