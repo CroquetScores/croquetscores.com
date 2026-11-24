@@ -635,3 +635,53 @@ Then(
     );
   },
 );
+
+// A word is broken where a line wraps within it, which a range over the word
+// then has two tops for where an unbroken one has one (blockSummary.steps.ts
+// does the same for a block's). The page is asked as a whole expression, since
+// a function given as text is not called.
+Then(
+  "no word of any name in the knockout summary is broken",
+  async function (this: WebWorld) {
+    const broken = await this.browserPage.evaluate(`(() => {
+      const split = [];
+      for (const name of document.querySelectorAll("main .knockout-summary .player-name")) {
+        const texts = document.createTreeWalker(name, NodeFilter.SHOW_TEXT);
+        for (let at = texts.nextNode(); at !== null; at = texts.nextNode()) {
+          for (const word of (at.textContent ?? "").matchAll(/\\S+/gu)) {
+            const range = document.createRange();
+            range.setStart(at, word.index);
+            range.setEnd(at, word.index + word[0].length);
+            const tops = new Set(
+              [...range.getClientRects()].map((box) => Math.round(box.top)),
+            );
+            if (tops.size > 1) split.push(word[0]);
+          }
+        }
+      }
+      return split;
+    })()`);
+    assert.deepEqual(broken, []);
+  },
+);
+
+for (const [said, scrolls] of [
+  ["scrolls", true],
+  ["does not scroll", false],
+] as const) {
+  Then(
+    `the knockout summary ${said} sideways`,
+    async function (this: WebWorld) {
+      // Whether it scrolls, or nothing where there is no region to scroll,
+      // so that a summary that has lost it is not taken for one that fits.
+      const found = await this.browserPage.evaluate(
+        `(() => {
+          const found = document.querySelector("main .knockout-summary-scroll");
+          return found === null ? undefined : found.scrollWidth > found.clientWidth;
+        })()`,
+      );
+      assert.notEqual(found, undefined, "The summary has no region to scroll.");
+      assert.equal(found, scrolls);
+    },
+  );
+}

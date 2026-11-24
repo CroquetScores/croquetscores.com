@@ -191,6 +191,39 @@ Feature: A knockout's summary lists its matches round by round
       When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
       Then the page is no wider than the window
 
+  Rule: A name wraps between its words and a word is never broken
+
+    A phone's row is narrow, so a name that is too long for it wraps where it
+    has spaces, as a block's summary does (`blockSummary.feature`), and a word
+    is not broken part-way along to fit: "Montgomery" is never "Montgome" over
+    "ry". Where a word is wider than the room beside the scores, the summary
+    is wider than the window and scrolls across within the page, as the grid
+    does, rather than pushing the page out.
+
+    Scenario: A name too long for a phone's row wraps between its words
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has renamed the player "Pat Fourth" in "Spring Open" to "Bartholomew Montgomery Featherstone"
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then no word of any name in the knockout summary is broken
+
+    Scenario: A word wider than a phone's row is not broken
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has renamed the player "Pat Fourth" in "Spring Open" to "Wolfeschlegelsteinhausenbergerdorff"
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then no word of any name in the knockout summary is broken
+
+    Scenario: A summary wider than a phone scrolls across within the page
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has renamed the player "Pat Fourth" in "Spring Open" to "Wolfeschlegelsteinhausenbergerdorff"
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then the knockout summary scrolls sideways
+      And the page does not scroll sideways
+
+    Scenario: A summary that fits does not need to scroll
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then the knockout summary does not scroll sideways
+
   Rule: The knockout's three views are offered, the summary marked
 
     Scenario: The summary is marked as the view being read
