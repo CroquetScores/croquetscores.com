@@ -20,6 +20,23 @@ import { Tick } from "../RulesTicks.js";
 // tournament accepts, and names each choice in the reader's language as it
 // offers it.
 
+// Where the try website is, as the page says, made again from its parts and
+// only where it is a web address: the page's words are text, and a link made
+// of text that was something else, as a "javascript:" address, would run it.
+// Nothing where it is not one, and the dialog then says no more than its words.
+const tryWebsiteOf = (
+  said: string,
+): { readonly origin: string; readonly host: string } | undefined => {
+  try {
+    const { protocol, origin, host } = new URL(said);
+    return protocol === "https:" || protocol === "http:"
+      ? { origin, host }
+      : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 // Whole words, in any capitals, so that "Contest Open" is left alone, and only
 // the English ones, which are what somebody learning the site types. A little
 // wider than the words the administrator is emailed about
@@ -211,6 +228,8 @@ export const TournamentForm = ({
   }, [refused]);
 
   if (offered === undefined) return <main id="content" />;
+
+  const tryWebsite = tryWebsiteOf(say("admin.site.tryAddress"));
 
   const regions =
     offered.countries.find(({ code }) => code === country)?.regions ?? [];
@@ -568,18 +587,16 @@ export const TournamentForm = ({
           }}
         >
           <p>{say("admin.tournament.testQuestion")}</p>
-          <p>
-            {/* Another tab, so that what was typed stays, as the help
-                icon's does. The address without its scheme is an address,
-                and nobody's language. */}
-            <a
-              href={say("admin.site.tryAddress")}
-              target="_blank"
-              rel="noopener"
-            >
-              {say("admin.site.tryAddress").replace(/^https?:\/\//, "")}
-            </a>
-          </p>
+          {tryWebsite === undefined ? null : (
+            <p>
+              {/* Another tab, so that what was typed stays, as the help
+                  icon's does. The address without its scheme is an address,
+                  and nobody's language. */}
+              <a href={tryWebsite.origin} target="_blank" rel="noopener">
+                {tryWebsite.host}
+              </a>
+            </p>
+          )}
         </ModalDialog>
       ) : null}
     </main>
