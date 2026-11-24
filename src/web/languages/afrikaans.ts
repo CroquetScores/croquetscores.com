@@ -628,6 +628,10 @@ export const afrikaans: Language = {
     "admin.tournament.national": "Byeenkoms op nasionale vlak",
     "admin.tournament.international": "Byeenkoms op internasionale vlak",
     "admin.tournament.optional": "Opsioneel",
+    "admin.tournament.testTitle": "Is dit 'n toets?",
+    "admin.tournament.testQuestion":
+      "Die naam van hierdie toernooi lyk soos 'n toets. 'n Toernooi wat hier gestoor word, word behou en vir almal om te sien gelys. Gebruik die proefwebwerf om die werf uit te probeer, waar enigiets wat jy invoer enige tyd verwyder kan word.",
+    "admin.tournament.testSave": "Stoor hierdie toernooi",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "Dit kan nie so aanvaar word nie.",
     "admin.newTournament.title": "Nuwe toernooi",
@@ -899,6 +903,8 @@ export const afrikaans: Language = {
     "admin.hover.dialog.score.save":
       "Behou die regstelling van hierdie uitslag",
     "admin.hover.dialog.carryForward.save": "Dra hierdie speler se uitslae oor",
+    "admin.hover.dialog.tournament.testSave":
+      "Stoor hierdie toernooi hier, al lyk sy naam soos 'n toets",
     "admin.hover.dialog.tournament.new": "Skep hierdie toernooi",
     "admin.hover.dialog.tournament.edit":
       "Behou die veranderinge aan hierdie toernooi",

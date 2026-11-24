@@ -4,6 +4,7 @@ import { inCountryGroups } from "../../common/countryOrder.js";
 import { Field, type Refusal } from "../Field.js";
 import { GroupedOptions } from "../GroupedOptions.js";
 import { HelpLink } from "../HelpLink.js";
+import { ModalDialog } from "../ModalDialog.js";
 import { standardHelp, teamsHelp } from "../helpAddress.js";
 import { go } from "../navigation.js";
 import { askedWhatIsOffered, type Offered } from "../offered.js";
@@ -18,6 +19,30 @@ import { Tick } from "../RulesTicks.js";
 // rather than knowing, so that it offers exactly what creating or changing a
 // tournament accepts, and names each choice in the reader's language as it
 // offers it.
+
+// Where the try website is, as the page says, made again from its parts and
+// only where it is a web address: the page's words are text, and a link made
+// of text that was something else, as a "javascript:" address, would run it.
+// Nothing where it is not one, and the dialog then says no more than its words.
+const tryWebsiteOf = (
+  said: string,
+): { readonly origin: string; readonly host: string } | undefined => {
+  try {
+    const { protocol, origin, host } = new URL(said);
+    return protocol === "https:" || protocol === "http:"
+      ? { origin, host }
+      : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+// Whole words, in any capitals, so that "Contest Open" is left alone, and only
+// the English ones, which are what somebody learning the site types. A little
+// wider than the words the administrator is emailed about
+// (possibleTestTournament.ts): that is a tournament already kept, and this is
+// the reader's own chance to say it is a test before it is.
+const looksLikeATest = /\b(?:test|testing|trial|fake|dummy)\b/i;
 
 // The field each of the tournament's own refusals is about, since it names a
 // rule of the values together rather than a field. One not here is said above
@@ -160,6 +185,8 @@ export const TournamentForm = ({
     own: begins?.name,
   });
   const [sending, setSending] = useState(false);
+  // Whether the reader is being asked about a name that looks like a test.
+  const [askingAboutATest, setAskingAboutATest] = useState(false);
   // What stops a second send, where `sending` only says one is under way. A
   // double click or a second Enter can arrive before the form has drawn itself
   // again, and so before `sending` has changed for it; a ref is changed at once.
@@ -201,6 +228,8 @@ export const TournamentForm = ({
   }, [refused]);
 
   if (offered === undefined) return <main id="content" />;
+
+  const tryWebsite = tryWebsiteOf(say("admin.site.tryAddress"));
 
   const regions =
     offered.countries.find(({ code }) => code === country)?.regions ?? [];
@@ -277,6 +306,17 @@ export const TournamentForm = ({
             aria-busy={sending}
             onSubmit={(event) => {
               event.preventDefault();
+              // Only a new tournament, whose name nobody has been through
+              // before; and not on a try website, where a test is what is
+              // wanted.
+              if (
+                begins === undefined &&
+                looksLikeATest.test(name) &&
+                say("admin.site.isTry") !== "yes"
+              ) {
+                setAskingAboutATest(true);
+                return;
+              }
               void save();
             }}
           >
@@ -533,6 +573,32 @@ export const TournamentForm = ({
           </form>
         </section>
       </div>
+      {askingAboutATest ? (
+        <ModalDialog
+          title={say("admin.tournament.testTitle")}
+          action={say("admin.tournament.testSave")}
+          hover={say("admin.hover.dialog.tournament.testSave")}
+          act={() => {
+            setAskingAboutATest(false);
+            void save();
+          }}
+          cancel={() => {
+            setAskingAboutATest(false);
+          }}
+        >
+          <p>{say("admin.tournament.testQuestion")}</p>
+          {tryWebsite === undefined ? null : (
+            <p>
+              {/* Another tab, so that what was typed stays, as the help
+                  icon's does. The address without its scheme is an address,
+                  and nobody's language. */}
+              <a href={tryWebsite.origin} target="_blank" rel="noopener">
+                {tryWebsite.host}
+              </a>
+            </p>
+          )}
+        </ModalDialog>
+      ) : null}
     </main>
   );
 };

@@ -617,6 +617,10 @@ export const czech: Language = {
     "admin.tournament.national": "Akce na národní úrovni",
     "admin.tournament.international": "Akce na mezinárodní úrovni",
     "admin.tournament.optional": "Nepovinné",
+    "admin.tournament.testTitle": "Je to zkouška?",
+    "admin.tournament.testQuestion":
+      "Název tohoto turnaje vypadá jako test. Turnaj uložený zde se uchová a zobrazí v seznamu pro všechny. Pokud si chcete web jen vyzkoušet, použijte zkušební web, kde může být vše, co zadáte, kdykoli odstraněno.",
+    "admin.tournament.testSave": "Uložit tento turnaj",
     // Odmítnutí bez vlastních slov, nad poli.
     "admin.tournament.otherwise": "Toto nelze přijmout tak, jak to je.",
     "admin.newTournament.title": "Nový turnaj",
@@ -881,6 +885,8 @@ export const czech: Language = {
     "admin.hover.dialog.score.save": "Uložit opravu tohoto skóre",
     "admin.hover.dialog.carryForward.save":
       "Převést výsledky tohoto hráče do dalšího kola",
+    "admin.hover.dialog.tournament.testSave":
+      "Uložit tento turnaj zde, ačkoli jeho název vypadá jako test",
     "admin.hover.dialog.tournament.new": "Vytvořit tento turnaj",
     "admin.hover.dialog.tournament.edit": "Uložit změny tohoto turnaje",
     "admin.hover.modal.cancel": "Zavřít bez uložení čehokoli",

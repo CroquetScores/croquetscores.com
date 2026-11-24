@@ -602,6 +602,10 @@ export const welsh: Language = {
     "admin.tournament.national": "Digwyddiad lefel genedlaethol",
     "admin.tournament.international": "Digwyddiad lefel ryngwladol",
     "admin.tournament.optional": "Dewisol",
+    "admin.tournament.testTitle": "Ai prawf yw hwn?",
+    "admin.tournament.testQuestion":
+      "Mae enw'r twrnamaint hwn yn edrych fel prawf. Mae twrnamaint a gedwir yma yn cael ei gadw a'i restru i bawb ei weld. I roi cynnig ar y wefan, defnyddiwch y wefan brawf, lle gellir dileu unrhyw beth a roddir ar unrhyw adeg.",
+    "admin.tournament.testSave": "Cadw'r twrnamaint hwn",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "Ni ellir derbyn hyn fel y mae.",
     "admin.newTournament.title": "Twrnamaint newydd",
@@ -866,6 +870,8 @@ export const welsh: Language = {
     "admin.hover.dialog.score.save": "Cadw'r cywiriad i'r sgôr hwn",
     "admin.hover.dialog.carryForward.save":
       "Cario canlyniadau'r chwaraewr hwn ymlaen",
+    "admin.hover.dialog.tournament.testSave":
+      "Cadw'r twrnamaint hwn yma, er bod ei enw'n edrych fel prawf",
     "admin.hover.dialog.tournament.new": "Creu'r twrnamaint hwn",
     "admin.hover.dialog.tournament.edit":
       "Cadw'r newidiadau i'r twrnamaint hwn",

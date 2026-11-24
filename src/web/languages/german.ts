@@ -650,6 +650,10 @@ export const german: Language = {
     "admin.tournament.national": "Veranstaltung auf nationaler Ebene",
     "admin.tournament.international": "Veranstaltung auf internationaler Ebene",
     "admin.tournament.optional": "Optional",
+    "admin.tournament.testTitle": "Ist das ein Test?",
+    "admin.tournament.testQuestion":
+      "Der Name dieses Turniers sieht nach einem Test aus. Ein Turnier, das hier gespeichert wird, bleibt erhalten und ist für alle in der Liste zu sehen. Zum Ausprobieren der Website nutzen Sie die Testwebsite, auf der alles, was eingegeben wird, jederzeit entfernt werden kann.",
+    "admin.tournament.testSave": "Dieses Turnier speichern",
     // Eine Ablehnung ohne eigene Worte, über den Feldern.
     "admin.tournament.otherwise": "Das kann so nicht angenommen werden.",
     "admin.newTournament.title": "Neues Turnier",
@@ -938,6 +942,8 @@ export const german: Language = {
       "Die Korrektur dieses Ergebnisses behalten",
     "admin.hover.dialog.carryForward.save":
       "Die Ergebnisse dieses Spielers übertragen",
+    "admin.hover.dialog.tournament.testSave":
+      "Dieses Turnier hier speichern, obwohl sein Name nach einem Test aussieht",
     "admin.hover.dialog.tournament.new": "Dieses Turnier anlegen",
     "admin.hover.dialog.tournament.edit":
       "Die Änderungen an diesem Turnier behalten",

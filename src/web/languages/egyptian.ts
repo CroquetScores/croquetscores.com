@@ -576,6 +576,10 @@ export const egyptian: Language = {
     "admin.tournament.national": "حدث على المستوى الوطني",
     "admin.tournament.international": "حدث على المستوى الدولي",
     "admin.tournament.optional": "اختياري",
+    "admin.tournament.testTitle": "ده تجربة؟",
+    "admin.tournament.testQuestion":
+      "اسم البطولة دي شكله تجربة. البطولة اللي بتتحفظ هنا بتفضل ومتعرضة في القايمة لكل الناس. لو عايز تجرّب الموقع، استخدم الموقع التجريبي، اللي أي حاجة تدخلها فيه ممكن تتمسح في أي وقت.",
+    "admin.tournament.testSave": "احفظ البطولة دي",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "مينفعش نقبل ده زي ما هو.",
     "admin.newTournament.title": "بطولة جديدة",
@@ -820,6 +824,8 @@ export const egyptian: Language = {
     "admin.hover.dialog.score.addScore": "ضيف اللعبة دي زي ما اتكتبت",
     "admin.hover.dialog.score.save": "احفظ تصحيح النتيجة دي",
     "admin.hover.dialog.carryForward.save": "رحّل نتايج اللاعب ده",
+    "admin.hover.dialog.tournament.testSave":
+      "احفظ البطولة دي هنا مع إن اسمها شكله تجربة",
     "admin.hover.dialog.tournament.new": "أنشئ البطولة دي",
     "admin.hover.dialog.tournament.edit": "احفظ التغييرات على البطولة دي",
     "admin.hover.modal.cancel": "اقفل ده من غير ما تحفظ حاجة",
