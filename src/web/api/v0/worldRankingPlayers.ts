@@ -9,6 +9,8 @@ import {
   WorldRankingPlayersForApps,
   type WorldRankingPlayersForAppsPage,
 } from "../../../application/operations/world-rankings/WorldRankingPlayersForApps.js";
+import { RefreshAssociationCroquetPlayerNames } from "../../../application/operations/world-rankings/RefreshAssociationCroquetPlayerNames.js";
+import { websiteOf } from "../../common/site.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { marked, sendConditionally } from "./conditional.js";
@@ -108,6 +110,18 @@ export const worldRankingPlayersOfApps: FastifyPluginAsync = (server) => {
       }
       if (pageSize !== undefined && !wholeNumber.test(pageSize)) {
         return refusedAs(reply, "WorldRankingPlayersForApps.PageSizeNotWhole");
+      }
+
+      // Asked for from the start, the names are refreshed first, so that the
+      // list an app reads is the rankings' as they are now. Only after the
+      // asking has been checked, so that a refused request reads nothing.
+      if (page === undefined) {
+        await request.server.mediator.send(
+          new RefreshAssociationCroquetPlayerNames(
+            request.requestedAt,
+            websiteOf(request).host,
+          ),
+        );
       }
 
       let answer: WorldRankingPlayersForAppsPage;

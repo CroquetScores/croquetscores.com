@@ -45,9 +45,12 @@ export const importWorldRankingPlayers = async (
   parts: WorldRankingImportParts,
   report: (report: ImportReport) => void,
   at: ReadOnlyDate,
+  // Both, unless whoever asks wants only one: the refresh a list of players
+  // does of its own sport's names has no use for the other's.
+  sports: readonly WorldRankingSport[] = worldRankingSports,
 ): Promise<void> => {
   const { lists, players, transactions } = parts;
-  for (const sport of worldRankingSports) {
+  for (const sport of sports) {
     report({ kind: "reading", sport });
     // What is read, and how it is kept: golf croquet's replaces what was
     // kept, and association croquet's is kept by number, at `at`.
