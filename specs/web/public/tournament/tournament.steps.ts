@@ -104,10 +104,14 @@ Then(
   /^the (first|second|third) game is struck through$/,
   async function (this: WebWorld, which: string) {
     for (const line of ["first", "second"]) {
-      assert.ok(
-        await isStruckThrough(lineOf(this, line, which)),
-        `The ${line} line is not struck through.`,
-      );
+      for (const part of ["name", "score"]) {
+        assert.ok(
+          await isStruckThrough(
+            lineOf(this, line, which).locator(`.game-${part}`).first(),
+          ),
+          `The ${part} of the ${line} line is not struck through.`,
+        );
+      }
     }
   },
 );

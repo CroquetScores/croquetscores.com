@@ -78,7 +78,15 @@ const sideNamed = (
       const withdrawn = player.withdrawn
         ? ` <span class="knockout-withdrawn">${escape(say("block.withdrawn"))}</span>`
         : "";
-      return `${playerShown(player, "player", speaking, assets, `/${player.address}`, player.withdrawn, withdrawn)}`;
+      return playerShown(
+        player,
+        "player",
+        speaking,
+        assets,
+        `/${player.address}`,
+        player.withdrawn,
+        withdrawn,
+      );
     }
     case "bye":
       return `<span class="knockout-bye">${escape(say("knockout.bye"))}</span>`;

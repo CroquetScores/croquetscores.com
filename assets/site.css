@@ -2648,15 +2648,10 @@ main {
   text-align: end;
 }
 
-/* Wraps rather than pushing out past the panel. */
+/* A name is never broken, so a line with one wider than the window scrolls
+   across within itself rather than pushing the page out past the panel. */
 .game-line {
-  overflow-wrap: anywhere;
-}
-
-/* A game withdrawn was played, but counts for nothing, so its lines are
-   struck through, as a block's grid strikes it. */
-.game[data-withdrawn] .game-line {
-  text-decoration: line-through;
+  overflow-x: auto;
 }
 
 /* Lighter than the name, since the names are what a reader is looking for,
@@ -2721,7 +2716,10 @@ main {
    meta-data is, nor to the parts of a flex line, nor through a flag, so what
    is struck through for a player who has withdrawn, and for a game that
    counts for nothing, is struck through here: the name and the score on
-   their own, and the meta-data with a line across all of it, the flag too. */
+   their own, and the meta-data with a line across all of it, the flag too.
+   One rule, for every width, so that a line is never struck by two. The
+   meta-data's is drawn at the middle of its box, which is a flag's height
+   where there is a flag, since a flag cannot be struck any other way. */
 .game[data-withdrawn] .game-line > :not(.game-meta-data) {
   text-decoration-line: line-through;
 }

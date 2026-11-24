@@ -337,6 +337,31 @@ Feature: A tournament's page lists its games, the most recent first
       When the page at "/2026/ac/spring-open" is opened
       Then the first line of the first game has its meta-data struck through
 
+    Scenario: A withdrawn game's name is struck through on a phone
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its name struck through
+
+    Scenario: A withdrawn game's score is struck through on a phone
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its score struck through
+
+    Scenario: A withdrawn game's meta-data is struck through on a phone
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data struck through
+
+  Rule: A name too long for a phone is not broken and does not widen the page
+
+    Scenario: A name longer than a phone is wide leaves the page no wider than the window
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has added the player "Bartholomew Featherstonehaugh Wolstenholme" to "Spring Open"
+      And "organiser@example.com" has entered the player "Bartholomew Featherstonehaugh Wolstenholme" in "Block A" of "Spring Open"
+      And "Bartholomew Featherstonehaugh Wolstenholme" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the page is no wider than the window
+
   Rule: A drawn game says the two drew
 
     Scenario: A drawn game says "drew with"
