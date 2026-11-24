@@ -1,5 +1,11 @@
 # Hva som er nytt
 
+## Utgitt 2026-11-25
+
+- **På en telefon har siden mer plass.** Det hvite panelet som holder en side går fra den ene kanten av skjermen til den andre, og teksten og linjene over og under det står 10 piksler fra kanten der de sto 41. Et skjema på den grønne siden beholder marginen sin. Bredere skjermer er som de var.
+
+- **Et navn i sammendraget til en utslagsturnering brytes aldri midt i et ord.** Det brytes bare ved mellomrommene. Der et ord er bredere enn plassen ved siden av resultatene, ruller sammendraget sideveis innenfor siden i stedet for å skyve siden ut.
+
 ## Utgitt 2026-11-24
 
 - **Oversikten for en blokk sier også nettopartier.** Der kampene i en blokk er det beste av mer enn ett parti, sier oversikten seiere, tap, nettopartier og nettobuer, siden nettopartier avgjør en uavgjort stilling før buer. En blokk med enkeltpartier sier seiere, tap og nettobuer som før. Oversikten sier ikke lenger hvordan spillerne rangeres.

@@ -1,5 +1,19 @@
 # Novinky pro organizátory turnajů
 
+## Vydáno 2026-11-25
+
+### Turnaj
+
+- **Před uložením turnaje s názvem jako test se systém zeptá.** Když vytvoříte turnaj, který má v názvu celé slovo „test“, „testing“, „trial“, „fake“ nebo „dummy“, otevře se nejprve dialog, který říká, že turnaj bude uložen a zveřejněn pro všechny, a odkazuje na zkušební web, kam test patří. **Uložit tento turnaj** turnaj vytvoří a **Zrušit** nechá formulář tak, jak jste ho vyplnili. Na zkušebním webu se neptá, ani při změně turnaje.
+
+### Soutěže
+
+- **Kontumace zapsaná jako skóre se zeptá, zda soupeře nechat odstoupit.** Když stisknete **Přidat hru** u skóre, které obsahuje „w/o“, otevře se dialog s názvem poraženého: **Nechat soupeře odstoupit**, **Přidat skóre** nebo **Zrušit**. Odstoupení soupeře nepřidá žádnou hru a vyprázdní dialog skóre pro další. Hráč, který odstoupil, už nehraje a hry, které neodehrál, se rozhodnou bez něj, což je lepší než započítat hru, která se nikdy nehrála. Ptá se jen u nového skóre a ne v testovací soutěži ani v soutěži Advantage.
+
+### Aplikace
+
+- **API je nyní `v1`.** Adresy aplikace jsou na `/api/v1`, kde byly na `/api/v0`. Aplikaci, která stále volá `/api/v0`, přesměrování pošle na novou adresu, takže dál funguje, ale měla by se změnit, protože přesměrování může být zrušeno.
+
 ## Vydáno 2026-11-24
 
 ### Soutěže

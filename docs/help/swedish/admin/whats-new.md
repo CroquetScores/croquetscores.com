@@ -1,5 +1,19 @@
 # Nytt för arrangörer
 
+## Släppt 2026-11-25
+
+### Turneringen
+
+- **Det frågas innan en turnering med ett namn som liknar ett test sparas.** Skapar du en turnering med hela ordet ”test”, ”testing”, ”trial”, ”fake” eller ”dummy” i namnet öppnas först en dialog som säger att turneringen sparas och listas för alla, och som länkar till provwebbplatsen, där ett test hör hemma. **Spara turneringen** skapar den, och **Avbryt** låter formuläret stå som du skrev det. Det frågas inte på en provwebbplats, och inte heller när en turnering ändras.
+
+### Tävlingar
+
+- **En walkover skriven som resultat frågar om motståndaren ska dras tillbaka.** Trycker du på **Lägg till parti** för ett resultat med ”w/o” i öppnas en dialog som nämner förloraren: **Dra tillbaka motståndaren**, **Lägg till resultat** eller **Avbryt**. Att dra tillbaka motståndaren lägger inte till något parti och tömmer resultatdialogen för nästa. En spelare som dragits tillbaka spelar inte mer, och de partier som hen inte har spelat avgörs utan hen, vilket räknas bättre än ett parti som aldrig spelades. Det frågas bara för ett nytt resultat, och inte i en testtävling eller en Advantage-tävling.
+
+### Appar
+
+- **API:et är nu `v1`.** En apps adresser finns på `/api/v1` där de fanns på `/api/v0`. En app som fortfarande anropar `/api/v0` skickas till den nya adressen med en omdirigering och fungerar därför vidare, men den bör ändras, eftersom omdirigeringen kan tas bort.
+
 ## Släppt 2026-11-24
 
 ### Tävlingar

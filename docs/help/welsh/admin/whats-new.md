@@ -1,5 +1,19 @@
 # Beth sy'n newydd i Reolwyr Twrnameintiau
 
+## Rhyddhawyd 2026-11-25
+
+### Y twrnamaint
+
+- **Gofynnir cyn cadw twrnamaint sydd ag enw tebyg i brawf.** Pan fyddwch yn gwneud twrnamaint sydd â'r gair cyfan "test", "testing", "trial", "fake" neu "dummy" yn ei enw, mae deialog yn agor yn gyntaf sy'n dweud y bydd y twrnamaint yn cael ei gadw a'i restru i bawb, ac sy'n cysylltu â'r wefan brofi, lle mae prawf yn perthyn. Mae **Cadw'r twrnamaint hwn** yn ei wneud, ac mae **Diddymu** yn gadael y ffurflen fel y teipioch chi hi. Ni ofynnir ar wefan brofi, nac wrth newid twrnamaint.
+
+### Cystadlaethau
+
+- **Mae walkover a deipiwyd fel sgôr yn gofyn a ddylid tynnu'r gwrthwynebydd yn ôl.** Pan fyddwch yn pwyso **Ychwanegu gêm** ar sgôr sydd â "w/o" ynddi, mae deialog yn agor sy'n enwi'r collwr: **Tynnu'r gwrthwynebydd yn ôl**, **Ychwanegu sgôr** neu **Diddymu**. Nid yw tynnu'r gwrthwynebydd yn ôl yn ychwanegu gêm ac mae'n gwagio'r ddeialog sgôr ar gyfer y nesaf. Nid yw chwaraewr a dynnwyd yn ôl yn chwarae mwy, ac mae'r gemau nad yw wedi'u chwarae yn cael eu penderfynu hebddo, sy'n cyfrif yn well na gêm na chafodd ei chwarae erioed. Gofynnir am sgôr newydd yn unig, ac nid mewn cystadleuaeth brawf nac Advantage.
+
+### Apiau
+
+- **Mae'r API bellach yn `v1`.** Mae cyfeiriadau ap yn `/api/v1` lle roedden nhw yn `/api/v0`. Anfonir ap sy'n dal i alw `/api/v0` i'r cyfeiriad newydd gan ailgyfeiriad ac felly mae'n dal i weithio, ond dylid ei newid, gan y gellir tynnu'r ailgyfeiriad ymaith.
+
 ## Rhyddhawyd 2026-11-24
 
 ### Cystadlaethau

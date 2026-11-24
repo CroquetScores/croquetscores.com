@@ -1,5 +1,19 @@
 # Kas jauns turnīru pārvaldniekiem
 
+## Izdots 2026-11-25
+
+### Turnīrs
+
+- **Pirms turnīra, kura nosaukums izskatās pēc testa, tiek jautāts.** Veidojot turnīru, kura nosaukumā ir viss vārds „test“, „testing“, „trial“, „fake“ vai „dummy“, vispirms atveras dialogs, kas saka, ka turnīrs tiks saglabāts un uzskaitīts visiem, un kas ved uz izmēģinājuma vietni, kur testam ir īstā vieta. **Saglabāt šo turnīru** to izveido, un **Atcelt** atstāj veidlapu tādu, kādu to ievadījāt. Izmēģinājuma vietnē neprasa, nedz arī tad, kad turnīru maina.
+
+### Sacensības
+
+- **Rezultātā ierakstīta nespēlēta uzvara jautā, vai pretinieku izstādīt.** Nospiežot **Pievienot partiju** pie rezultāta ar „w/o“, atveras dialogs, kas nosauc zaudētāju: **Izstādīt pretinieku**, **Pievienot rezultātu** vai **Atcelt**. Pretinieka izstādīšana nepievieno partiju un iztukšo rezultāta dialogu nākamajam. Izstādīts spēlētājs vairs nespēlē, un partijas, ko viņš nav izspēlējis, tiek izšķirtas bez viņa, kas skaitās labāk nekā partija, kas nekad nav notikusi. Jautā tikai par jaunu rezultātu un ne testa vai Advantage sacensībās.
+
+### Lietotnes
+
+- **API tagad ir `v1`.** Lietotnes adreses ir `/api/v1` tur, kur tās bija `/api/v0`. Lietotni, kas joprojām izsauc `/api/v0`, pāradresācija nosūta uz jauno adresi, tāpēc tā turpina darboties, taču tā jāmaina, jo pāradresāciju var noņemt.
+
 ## Izdots 2026-11-24
 
 ### Sacensības

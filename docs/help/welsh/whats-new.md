@@ -1,5 +1,11 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-25
+
+- **Ar ffôn mae mwy o le i'r dudalen.** Mae'r panel gwyn sy'n dal tudalen yn ymestyn o un ymyl y sgrin i'r llall, ac mae'r testun a'r bariau uwch ei ben a than ei draed 10 picsel o'r ymyl lle roedden nhw 41. Mae ffurflen ar y dudalen werdd yn cadw ei hymyl. Mae sgriniau lletach fel yr oeddent.
+
+- **Ni thorrir enw yng nghrynodeb cystadleuaeth ddileu byth yng nghanol gair.** Mae'n torri wrth ei fylchau yn unig. Lle mae gair yn lletach na'r lle wrth ymyl y sgorau, mae'r crynodeb yn sgrolio ar draws o fewn y dudalen yn lle gwthio'r dudalen allan.
+
 ## Rhyddhawyd 2026-11-24
 
 - **Mae crynodeb bloc yn dweud y gemau net hefyd.** Lle mae gemau bloc yn orau o fwy nag un gêm, mae ei grynodeb yn dweud buddugoliaethau, colledion, gemau net a chylchau net, gan fod gemau net yn penderfynu ar gyfartal cyn cylchau. Mae bloc o gemau sengl yn dweud buddugoliaethau, colledion a chylchau net fel o'r blaen. Nid yw'r crynodeb yn dweud mwyach sut y rhestrir ei chwaraewyr.

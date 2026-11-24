@@ -1,5 +1,11 @@
 # Co je nového
 
+## Vydáno 2026-11-25
+
+- **Na telefonu má stránka víc místa.** Bílý panel, který stránku drží, sahá od jednoho okraje obrazovky k druhému a text i lišty nad ním a pod ním jsou od okraje odsazeny o 10 pixelů místo dřívějších 41. Formulář na zelené stránce si svůj okraj ponechává. Širší obrazovky zůstávají, jak byly.
+
+- **Jméno v souhrnu vyřazovacího turnaje se už nikdy nezlomí uprostřed slova.** Zalamuje se jen u mezer. Kde je slovo širší než místo vedle skóre, souhrn se uvnitř stránky posouvá do strany, místo aby stránku roztahoval.
+
 ## Vydáno 2026-11-24
 
 - **Souhrn bloku uvádí i rozdíl her.** Kde se zápasy bloku hrají na více než jednu hru, souhrn uvádí výhry, prohry, rozdíl her a rozdíl branek, protože rozdíl her rozhoduje při shodě dřív než branky. Blok jednotlivých her uvádí výhry, prohry a rozdíl branek jako dřív. Souhrn už neříká, jak se jeho hráči řadí.
