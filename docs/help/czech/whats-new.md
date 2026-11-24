@@ -1,5 +1,27 @@
 # Co je nového
 
+## Vydáno 2026-11-24
+
+- **Souhrn bloku uvádí i rozdíl her.** Kde se zápasy bloku hrají na více než jednu hru, souhrn uvádí výhry, prohry, rozdíl her a rozdíl branek, protože rozdíl her rozhoduje při shodě dřív než branky. Blok jednotlivých her uvádí výhry, prohry a rozdíl branek jako dřív. Souhrn už neříká, jak se jeho hráči řadí.
+
+- **Dlaždice soutěže v liště oddílů je tak široká jako její název.** Krátký název jako „Block A“ měl dlaždici stejně širokou jako dlouhý, takže liště došlo místo dřív, než bylo třeba.
+
+- **Na telefonu zabírají data na úvodní stránce méně místa.** Sloupec s daty je tak široký jako data víkendu, například „19-21 Nov“, a jména mají zbytek. Data, která přecházejí z jednoho měsíce do druhého, se zalomí před spojovníkem, takže druhý řádek jím začíná. V části **Vaše nedávné turnaje** turnaj tohoto roku neuvádí rok a turnaj z jiného roku ho uvádí pod svými daty.
+
+### Pro vývojáře aplikací
+
+- **Aplikace může něco měnit klíčem, který byl vytvořen pro zápis.** Co mění vlastní stránky webu, mění stejné adresy na `/api/v0`: vytvoření turnaje, jeho soutěží, hráčů, týmů a her a to, kdo ho smí řídit a zapisovat. Klíč smí dělat to, co smí účet, pro který byl vytvořen, a klíč zapisovatele smí dělat to, co se dělá se skóre, a nic jiného. **Koncové body API pro POST** v nápovědě říkají, co každá adresa přijímá a čím odpovídá. Stále se ladí a některé budou odebrány.
+
+- **Aplikace se může zeptat, čím může turnaj být.** Sporty, formáty a země s jejich regiony jsou na `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` a `/api/v0/countries`, v jazyce, o který aplikace požádá, takže to, s čím turnaj vytvoří, je to, co web nabízí.
+
+- **Aplikace může číst hráče světového žebříčku a jejich hry.** Hráči Association Croquet, které světové žebříčky znají, jsou na `/api/v0/ac/world-ranking-players` a hry každého hráče, v pořadí, v jakém byly přidány, na adrese, kterou hráč uvádí. Jména se aktualizují podle žebříčků, když se seznam žádá od začátku, nejvýše jednou za hodinu.
+
+- **Koncové body API jsou v nápovědě dvě stránky, jedna pro koncové body pro GET a jedna pro koncové body pro POST,** v každém jazyce.
+
+### Správci světového žebříčku
+
+- **Hráč žebříčků Association Croquet se vede podle čísla, které mu žebříčky dávají.** Hráč, kterého žebříčky přejmenují, je stejný hráč, ten, kdo vypadne ze seznamu, se archivuje a nezapomíná, a ten, kdo je uveden znovu, už není archivován. Seznam, který dává jedno jméno dvěma hráčům nebo jedno číslo dvěma jménům, se odmítne celý a nic se nezmění, a administrátor je informován e-mailem.
+
 ## Vydáno 2026-11-22
 
 - **Úvodní stránka si pamatuje turnaje, na které jste se nedávno dívali.** Když otevřete turnaj, objeví se jako první v **Vaše nedávné turnaje**, mezi filtrem a nedávnými výsledky, nejvýše pět, abyste se mohli vrátit k těm, které sledujete, aniž byste je hledali v seznamech. Ukládá se na vašem vlastním zařízení v cookie, která obsahuje jen adresy turnajů, a seznam se nezobrazí vůbec, dokud nějaký turnaj neotevřete. Nápověda říká, co ta cookie je.

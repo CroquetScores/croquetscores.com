@@ -1,5 +1,17 @@
 # Nytt för arrangörer
 
+## Släppt 2026-11-24
+
+### Tävlingar
+
+- **Ett blocks sammanställning säger också nettopartier.** Där ett blocks matcher är bäst av fler än ett parti säger sammanställningen vinster, förluster, nettopartier och nettobågar, eftersom nettopartier avgör ett oavgjort läge före bågar. Sammanställningen säger inte längre hur dess spelare rankas.
+
+- **En tävlings bricka i sektionsfältet är lika bred som dess namn.** Ett kort namn har inte längre en bricka lika bred som ett långt.
+
+### Appar
+
+- **En nyckel kan nu ändra saker.** En nyckel som gjorts för att läsa och skriva får i en turnering göra det kontot den gjordes för får göra: en arrangörs nyckel allt, och en resultatförares nyckel det som görs med resultat och inget annat. Skapa en under **API-nycklar** i ditt konto, begränsa den till en turnering om du vill, och återkalla den när som helst. Sidan **API:ets POST-slutpunkter** i hjälpen säger vad en app får skicka. De är ännu inte färdigställda, och några kommer att tas bort. Håll en nyckel lika hemlig som ett lösenord.
+
 ## Släppt 2026-11-22
 
 ### Turneringen

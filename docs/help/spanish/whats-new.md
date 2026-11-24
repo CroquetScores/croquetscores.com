@@ -1,5 +1,27 @@
 # Novedades
 
+## Publicado el 2026-11-24
+
+- **El resumen de un bloque dice también las partidas netas.** Donde los encuentros de un bloque son al mejor de más de una partida, su resumen dice victorias, derrotas, partidas netas y aros netos, ya que las partidas netas desempatan antes que los aros. Un bloque de partidas únicas dice victorias, derrotas y aros netos como antes. El resumen ya no dice cómo se clasifican sus jugadores.
+
+- **La ficha de una competición en la barra de secciones es tan ancha como su nombre.** Un nombre corto como "Block A" tenía una ficha tan ancha como la de uno largo, y la barra se quedaba sin espacio antes de lo necesario.
+
+- **En un teléfono las fechas de la página de inicio ocupan menos espacio.** La columna de las fechas es tan ancha como las fechas de un fin de semana, como "19-21 Nov", y los nombres tienen el resto. Las fechas que pasan de un mes al siguiente se parten antes del guion, de modo que la segunda línea empieza con él. En **Tus torneos recientes**, un torneo de este año no dice el año, y uno de otro año lo dice debajo de sus fechas.
+
+### Para desarrolladores de aplicaciones
+
+- **Una aplicación puede cambiar cosas, con una clave hecha para escribir.** Lo que cambian las propias páginas del sitio lo cambian las mismas direcciones de `/api/v0`: hacer un torneo, sus competiciones, jugadores, equipos y partidas, y quién puede gestionarlo y anotar los resultados. Una clave puede hacer lo que puede hacer la cuenta para la que se hizo, y la clave de un anotador puede hacer lo que se hace con los resultados y nada más. **Los puntos finales POST de la API**, en la ayuda, dicen qué recibe y qué responde cada dirección. Aún se están asentando, y algunos se quitarán.
+
+- **Una aplicación puede preguntar qué puede ser un torneo.** Los deportes, los formatos y los países con sus regiones están en `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` y `/api/v0/countries`, en el idioma que pida la aplicación, de modo que aquello con lo que hace un torneo es lo que ofrece el sitio.
+
+- **Una aplicación puede leer los jugadores del ranking mundial y sus partidas.** Los jugadores de Association Croquet que conocen los rankings mundiales están en `/api/v0/ac/world-ranking-players`, y las partidas de cada jugador, en el orden en que se añadieron, en la dirección que dice el jugador. Los nombres se actualizan desde los rankings cuando la lista se pide desde el principio, como mucho una vez por hora.
+
+- **Los puntos finales de la API son dos páginas en la ayuda, una para los puntos finales GET y otra para los puntos finales POST,** en todos los idiomas.
+
+### Responsables del ranking mundial
+
+- **Un jugador de los rankings de Association Croquet se guarda por el número que le dan los rankings.** Un jugador al que los rankings cambian el nombre es el mismo jugador, el que sale de la lista se archiva y no se olvida, y el que vuelve a figurar deja de estar archivado. Una lista que da un nombre a dos jugadores, o un número a dos nombres, se rechaza entera y no se cambia nada, y se avisa al administrador por correo electrónico.
+
 ## Publicado el 2026-11-22
 
 - **La página de inicio recuerda los torneos que has mirado hace poco.** Al abrir un torneo, pasa a ser el primero en **Tus torneos recientes**, entre el filtro y los resultados recientes, hasta cinco, para que puedas volver a los que sigues sin buscarlos en las listas. Se guardan en tu propio dispositivo, en una cookie que solo contiene las direcciones de los torneos, y la lista no se muestra hasta que hayas abierto uno. La ayuda dice qué es la cookie.

@@ -1,5 +1,17 @@
 # Kas jauns turnīru pārvaldniekiem
 
+## Izdots 2026-11-24
+
+### Sacensības
+
+- **Bloka kopsavilkums norāda arī partiju starpību.** Ja bloka mači ir labākie no vairāk nekā vienas partijas, kopsavilkums norāda uzvaras, zaudējumus, partiju starpību un vārtiņu starpību, jo partiju starpība neizšķirtu rezultātu izšķir pirms vārtiņiem. Kopsavilkums vairs nesaka, kā tā spēlētāji tiek ranžēti.
+
+- **Sacensību flīzīte sadaļu joslā ir tikpat plata kā tās nosaukums.** Īsam nosaukumam vairs nav tikpat platas flīzītes kā garam.
+
+### Lietotnes
+
+- **Atslēga tagad var kaut ko mainīt.** Atslēga, kas izveidota lasīšanai un rakstīšanai, turnīrā drīkst darīt to, ko drīkst konts, kam tā izveidota: pārvaldnieka atslēga visu, rezultātu ievadītāja atslēga to, ko dara ar rezultātiem, un neko citu. Izveidojiet vienu sadaļā **API atslēgas** savā kontā, ja vēlaties, ierobežojiet to ar vienu turnīru un atsauciet to jebkurā laikā. Lapa **API POST galapunkti** palīdzībā saka, ko lietotne drīkst sūtīt. Tie vēl tiek nostiprināti, un daži tiks noņemti. Glabājiet atslēgu tikpat slepenībā kā paroli.
+
 ## Izdots 2026-11-22
 
 ### Turnīrs

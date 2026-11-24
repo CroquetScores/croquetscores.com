@@ -1,5 +1,17 @@
 # Was ist neu für Verantwortliche
 
+## Veröffentlicht am 2026-11-24
+
+### Wettbewerbe
+
+- **Die Übersicht eines Blocks nennt auch die Spieldifferenz.** Wo die Begegnungen eines Blocks auf mehr als ein Spiel gehen, nennt die Übersicht Siege, Niederlagen, Spieldifferenz und Tordifferenz, da die Spieldifferenz bei Gleichstand vor der Tordifferenz entscheidet. Die Übersicht sagt nicht mehr, wie ihre Spieler eingestuft werden.
+
+- **Die Kachel eines Wettbewerbs in der Leiste der Bereiche ist so breit wie sein Name.** Ein kurzer Name hat keine Kachel mehr, die so breit ist wie die eines langen.
+
+### Apps
+
+- **Ein Schlüssel kann jetzt etwas ändern.** Ein Schlüssel, der zum Lesen und Schreiben gemacht wurde, darf in einem Turnier tun, was das Konto tun darf, für das er gemacht wurde: der Schlüssel eines Verantwortlichen alles, der eines Ergebniserfassers, was mit Ergebnissen getan wird, und sonst nichts. Legen Sie unter **API-Schlüssel** in Ihrem Konto einen an, beschränken Sie ihn nach Wunsch auf ein Turnier und widerrufen Sie ihn jederzeit. **Die POST-Endpunkte der API** in der Hilfe sagen, was eine App senden darf. Sie werden noch festgelegt, und einige werden wieder entfernt. Halten Sie einen Schlüssel so geheim wie ein Passwort.
+
 ## Veröffentlicht am 2026-11-22
 
 ### Das Turnier

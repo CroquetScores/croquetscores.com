@@ -1,5 +1,17 @@
 # Novidades para organizadores de torneios
 
+## Lançado em 2026-11-24
+
+### Competições
+
+- **O resumo de um bloco diz também o saldo de jogos.** Onde as partidas de um bloco são a melhor de mais de um jogo, o resumo diz vitórias, derrotas, saldo de jogos e saldo de arcos, já que o saldo de jogos desempata antes dos arcos. O resumo já não diz como os seus jogadores são classificados.
+
+- **O bloco de uma competição na barra de seções é tão largo quanto o seu nome.** Um nome curto já não tem um bloco tão largo quanto o de um nome longo.
+
+### Aplicativos
+
+- **Uma chave agora pode mudar coisas.** Uma chave feita para ler e escrever pode fazer, num torneio, o que a conta para a qual foi feita pode fazer: a chave de um organizador tudo, e a de um anotador o que se faz com os resultados e nada mais. Faça uma em **Chaves de API** na sua conta, limite-a a um torneio se quiser e revogue-a quando quiser. **Os endpoints POST da API**, na ajuda, dizem o que um aplicativo pode enviar. Ainda estão sendo acertados, e alguns serão retirados. Guarde uma chave tão em segredo quanto uma senha.
+
 ## Lançado em 2026-11-22
 
 ### O torneio

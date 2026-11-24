@@ -1,5 +1,17 @@
 # Novedades para los gestores de torneo
 
+## Publicado el 2026-11-24
+
+### Competiciones
+
+- **El resumen de un bloque dice también las partidas netas.** Donde los encuentros de un bloque son al mejor de más de una partida, el resumen dice victorias, derrotas, partidas netas y aros netos, ya que las partidas netas desempatan antes que los aros. El resumen ya no dice cómo se clasifican sus jugadores.
+
+- **La ficha de una competición en la barra de secciones es tan ancha como su nombre.** Un nombre corto ya no tiene una ficha tan ancha como la de uno largo.
+
+### Aplicaciones
+
+- **Una clave ahora puede cambiar cosas.** Una clave hecha para leer y escribir puede hacer en un torneo lo que puede hacer la cuenta para la que se hizo: la clave de un gestor todo, y la de un anotador lo que se hace con los resultados y nada más. Haz una en **Claves de API** de tu cuenta, limítala a un torneo si quieres y revócala cuando quieras. **Los puntos finales POST de la API**, en la ayuda, dicen qué puede enviar una aplicación. Aún se están asentando, y algunos se quitarán. Guarda una clave tan en secreto como una contraseña.
+
 ## Publicado el 2026-11-22
 
 ### El torneo

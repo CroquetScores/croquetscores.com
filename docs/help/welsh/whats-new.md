@@ -1,5 +1,27 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-24
+
+- **Mae crynodeb bloc yn dweud y gemau net hefyd.** Lle mae gemau bloc yn orau o fwy nag un gêm, mae ei grynodeb yn dweud buddugoliaethau, colledion, gemau net a chylchau net, gan fod gemau net yn penderfynu ar gyfartal cyn cylchau. Mae bloc o gemau sengl yn dweud buddugoliaethau, colledion a chylchau net fel o'r blaen. Nid yw'r crynodeb yn dweud mwyach sut y rhestrir ei chwaraewyr.
+
+- **Mae teilsen cystadleuaeth yn y bar adrannau mor llydan â'i henw.** Roedd gan enw byr fel "Block A" deilsen mor llydan ag un hir, felly roedd y bar yn rhedeg allan o le yn gynt nag oedd angen.
+
+- **Ar ffôn, mae dyddiadau'r hafan yn cymryd llai o le.** Mae colofn y dyddiadau mor llydan â dyddiadau penwythnos, fel "19-21 Nov", a'r enwau sy'n cael y gweddill. Mae dyddiadau sy'n mynd o un mis i'r nesaf yn torri cyn y cysylltnod, fel bod yr ail linell yn dechrau ag ef. Yn **Eich twrnameintiau diweddar**, nid yw twrnamaint o'r flwyddyn hon yn dweud blwyddyn, ac mae un o flwyddyn arall yn ei dweud o dan ei ddyddiadau.
+
+### I ddatblygwyr apiau
+
+- **Gall ap newid pethau, ag allwedd a wnaed i ysgrifennu.** Mae'r hyn y mae tudalennau'r wefan ei hun yn ei newid yn cael ei newid gan yr un cyfeiriadau yn `/api/v0`: gwneud twrnamaint, ei gystadlaethau, ei chwaraewyr, ei dimau a'i gemau, a phwy a gaiff ei reoli a chadw'r sgorau. Caiff allwedd wneud yr hyn y caiff y cyfrif y gwnaed hi ar ei gyfer ei wneud, a chaiff allwedd sgorwr wneud yr hyn a wneir â sgorau, a dim arall. Mae'r dudalen **Terfynbwyntiau POST yr API** yn y cymorth yn dweud beth y mae pob cyfeiriad yn ei gymryd ac yn ei ateb. Maent yn dal i gael eu setlo, a bydd rhai yn cael eu tynnu.
+
+- **Gall ap ofyn beth y gall twrnamaint fod.** Mae'r campau, y fformatau a'r gwledydd â'u rhanbarthau yn `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` a `/api/v0/countries`, yn yr iaith y mae'r ap yn gofyn amdani, fel mai'r hyn y mae'n gwneud twrnamaint ag ef yw'r hyn y mae'r wefan yn ei gynnig.
+
+- **Gall ap ddarllen chwaraewyr safleoedd y byd a'u gemau.** Mae'r chwaraewyr Association Croquet y mae safleoedd y byd yn eu hadnabod yn `/api/v0/ac/world-ranking-players`, a gemau pob chwaraewr, yn y drefn yr ychwanegwyd hwy, yn y cyfeiriad y mae'r chwaraewr yn ei ddweud. Mae'r enwau'n cael eu diweddaru o'r safleoedd pan ofynnir am y rhestr o'r dechrau, unwaith yr awr ar y mwyaf.
+
+- **Mae terfynbwyntiau'r API yn ddwy dudalen yn y cymorth, un ar gyfer y terfynbwyntiau GET ac un ar gyfer y terfynbwyntiau POST,** ym mhob iaith.
+
+### Swyddogion detholion y byd
+
+- **Cedwir chwaraewr safleoedd Association Croquet wrth y rhif y mae'r safleoedd yn ei roi iddo.** Mae chwaraewr y mae'r safleoedd yn ei ailenwi yr un chwaraewr, caiff un sy'n disgyn oddi ar y rhestr ei archifo ac nid ei anghofio, ac nid yw un a restrir eto wedi'i archifo mwyach. Gwrthodir rhestr sy'n rhoi un enw i ddau chwaraewr, neu un rhif i ddau enw, yn gyfan a newidir dim, a rhoddir gwybod i'r gweinyddwr drwy e-bost.
+
 ## Rhyddhawyd 2026-11-22
 
 - **Mae'r hafan yn cofio'r twrnameintiau yr edrychoch arnynt yn ddiweddar.** Pan fyddwch yn agor twrnamaint, mae'n dod yn gyntaf yn **Eich twrnameintiau diweddar**, rhwng yr hidlydd a'r canlyniadau diweddar, hyd at bump ohonynt, fel y gallwch fynd yn ôl at y rhai rydych yn eu dilyn heb chwilio amdanynt yn y rhestrau. Fe'u cedwir ar eich dyfais eich hun, mewn cwci sy'n cynnwys cyfeiriadau'r twrnameintiau a dim byd arall, ac nid yw'r rhestr yn cael ei dangos o gwbl nes eich bod wedi agor un. Mae'r cymorth yn dweud beth yw'r cwci.

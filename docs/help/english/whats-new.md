@@ -1,5 +1,25 @@
 # What's new
 
+## Released 2026-11-24
+
+- **A block's summary gives net games as well as net hoops.** Where a block's matches are the best of more than one game, its summary gives wins, losses, net games and net hoops, since net games decide a tie before hoops do. A block of single games gives wins, losses and net hoops as it did. The summary no longer says how its players are ranked.
+
+- **A competition's tile in the section bar is as wide as its name.** A short name such as "Block A" had a tile as wide as a long one, so the bar ran out of room sooner than it had to.
+
+- **On a phone the home page's dates take less room.** The dates' column is as wide as a weekend's dates, such as "19-21 Nov", and the names have the rest. Dates that run from one month into another break before the hyphen, so the second line begins with it. In **Your Recent Tournaments** a tournament of this year says no year, and one of another year says it beneath its dates.
+
+### For app developers
+
+- **An app can change things, with a key made to write.** What the website's own pages change is changed by the same addresses at `/api/v0`: making a tournament, its competitions, players, teams and games, and who may manage and score it. A key may do what the account it was made for may do, and a scorer's key may do what is done with scores and nothing else. **The API's POST endpoints** in the help say what each address takes and answers. They are still being settled, and some will be taken away.
+
+- **An app can ask what a tournament can be.** The sports, the formats and the countries with their regions are at `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` and `/api/v0/countries`, in the language the app asks for, so that what it makes a tournament with is what the website offers.
+
+- **An app can read the world ranking players and their games.** The Association Croquet players the world rankings know are at `/api/v0/ac/world-ranking-players`, and each player's games, in the order they were added, are at the address the player says. The names are brought up to date from the rankings when the list is asked for from its start, at most once an hour.
+
+- **The API's endpoints are two pages in the help, one for the GET endpoints and one for the POST endpoints,** in every language.
+
+- **A player of the Association Croquet rankings is kept by the number the rankings give them.** A player the rankings rename is the same player, one that drops off the list is archived and not forgotten, and one listed again is no longer archived. A list that gives one name to two players, or one number to two names, is refused whole and nothing is changed, and the administrator is told by email.
+
 ## Released 2026-11-22
 
 - **The home page keeps the tournaments you looked at lately.** Opening a tournament puts it first in **Your Recent Tournaments**, between the filter and the recent results, up to five of them, so that you can go back to the ones you follow without finding them in the lists. It is kept on your own device, in a cookie that holds the addresses of the tournaments and nothing else, and the list is not shown at all until you have opened one. The help says what the cookie is.

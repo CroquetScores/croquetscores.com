@@ -1,5 +1,17 @@
 # Hva er nytt for turneringsarrangører
 
+## Lansert 2026-11-24
+
+### Konkurranser
+
+- **Oversikten for en blokk sier også nettopartier.** Der kampene i en blokk er det beste av mer enn ett parti, sier oversikten seiere, tap, nettopartier og nettobuer, siden nettopartier avgjør en uavgjort stilling før buer. Oversikten sier ikke lenger hvordan spillerne rangeres.
+
+- **Flisen til en konkurranse i seksjonslinjen er like bred som navnet.** Et kort navn har ikke lenger en flis like bred som et langt.
+
+### Apper
+
+- **En nøkkel kan nå endre ting.** En nøkkel laget for å lese og skrive kan i en turnering gjøre det kontoen den ble laget for kan gjøre: en leders nøkkel alt, og en poengførers nøkkel det som gjøres med resultater og ingenting annet. Lag en under **API-nøkler** i kontoen din, begrens den til én turnering om du vil, og trekk den tilbake når som helst. Hjelpesiden **API-ets POST-endepunkter** sier hva en app kan sende. De settes fortsatt, og noen vil bli tatt bort. Hold en nøkkel like hemmelig som et passord.
+
 ## Lansert 2026-11-22
 
 ### Turneringen

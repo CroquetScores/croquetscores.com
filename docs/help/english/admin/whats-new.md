@@ -1,5 +1,17 @@
 # What's new for Tournament Managers
 
+## Released 2026-11-24
+
+### Competitions
+
+- **A block's summary gives net games as well as net hoops.** Where a block's matches are the best of more than one game, the summary gives wins, losses, net games and net hoops, since net games decide a tie before hoops do. The summary no longer says how its players are ranked.
+
+- **A competition's tile in the section bar is as wide as its name.** A short name no longer has a tile as wide as a long one.
+
+### Apps
+
+- **A key can now change things.** A key made to read and write may do in a tournament what the account it was made for may do: a manager's key everything, and a scorer's key what is done with scores and nothing else. Make one under **API Keys** in your account, limit it to one tournament if you like, and revoke it at any time. **The API's POST endpoints** in the help say what an app may send. They are still being settled, and some will be taken away. Keep a key as secret as a password.
+
 ## Released 2026-11-22
 
 ### The tournament

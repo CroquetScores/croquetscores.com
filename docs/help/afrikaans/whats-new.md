@@ -1,5 +1,27 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-24
+
+- **'n Blok se opsomming gee ook netto spelle.** Waar 'n blok se wedstryde die beste van meer as een spel is, gee sy opsomming oorwinnings, verliese, netto spelle en netto hoepels, want netto spelle besluit 'n gelykopuitslag voor hoepels. 'n Blok van enkelspelle gee oorwinnings, verliese en netto hoepels soos voorheen. Die opsomming sê nie meer hoe sy spelers gerangskik word nie.
+
+- **'n Kompetisie se teël in die afdelingsbalk is so breed soos sy naam.** 'n Kort naam soos "Block A" het 'n teël so breed soos 'n lang een gehad, sodat die balk vroeër ruimte kortgekom het as wat nodig was.
+
+- **Op 'n foon neem die tuisblad se datums minder ruimte in.** Die datumkolom is so breed soos 'n naweek se datums, soos "19-21 Nov", en die name het die res. Datums wat van een maand in die volgende loop, breek voor die koppelteken, sodat die tweede reël daarmee begin. In **Jou onlangse toernooie** sê 'n toernooi van hierdie jaar geen jaar nie, en een van 'n ander jaar sê dit onder sy datums.
+
+### Vir toepassingontwikkelaars
+
+- **'n Toepassing kan dinge verander, met 'n sleutel wat gemaak is om te skryf.** Wat die webwerf se eie bladsye verander, word deur dieselfde adresse by `/api/v0` verander: 'n toernooi maak, sy kompetisies, spelers, spanne en spelle, en wie dit mag bestuur en tellings mag hou. 'n Sleutel mag doen wat die rekening waarvoor dit gemaak is, mag doen, en 'n teler se sleutel mag doen wat met tellings gedoen word en niks anders nie. **Die API se POST-eindpunte** in die hulp sê wat elke adres neem en antwoord. Hulle word nog gevestig, en sommige sal weggeneem word.
+
+- **'n Toepassing kan vra wat 'n toernooi kan wees.** Die sportsoorte, die formate en die lande met hul streke is by `/api/v0/tournaments/sports`, `/api/v0/tournaments/formats` en `/api/v0/countries`, in die taal wat die toepassing vra, sodat wat dit 'n toernooi mee maak, is wat die webwerf bied.
+
+- **'n Toepassing kan die wêreldranglysspelers en hul spelle lees.** Die Association Croquet-spelers wat die wêreldranglyste ken, is by `/api/v0/ac/world-ranking-players`, en elke speler se spelle, in die volgorde waarin hulle bygevoeg is, is by die adres wat die speler sê. Die name word aangevul uit die ranglyste wanneer die lys van die begin af gevra word, hoogstens een keer 'n uur.
+
+- **Die API se eindpunte is twee bladsye in die hulp, een vir die GET-eindpunte en een vir die POST-eindpunte,** in elke taal.
+
+### Wêreldranglysbeamptes
+
+- **'n Speler van die Association Croquet-ranglyste word gehou by die nommer wat die ranglyste hom gee.** 'n Speler wat die ranglyste hernoem, is dieselfde speler, een wat van die lys afval, word geargiveer en nie vergeet nie, en een wat weer gelys word, is nie meer geargiveer nie. 'n Lys wat een naam aan twee spelers gee, of een nommer aan twee name, word heeltemal geweier en niks word verander nie, en die administrateur word per e-pos ingelig.
+
 ## Vrygestel 2026-11-22
 
 - **Die tuisblad onthou die toernooie waarna jy onlangs gekyk het.** Wanneer jy 'n toernooi oopmaak, kom dit eerste onder **Jou onlangse toernooie**, tussen die filter en die onlangse uitslae, tot vyf van hulle, sodat jy terug kan gaan na dié wat jy volg sonder om hulle in die lyste te soek. Dit word op jou eie toestel bewaar, in 'n koekie wat net die toernooie se adresse bevat, en die lys word glad nie gewys voordat jy een oopgemaak het nie. Die hulp sê wat die koekie is.
