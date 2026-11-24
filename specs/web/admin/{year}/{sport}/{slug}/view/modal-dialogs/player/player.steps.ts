@@ -291,7 +291,7 @@ When(
     const answered = this.browserPage.waitForResponse(
       (response) =>
         ["POST", "PUT"].includes(response.request().method()) &&
-        /^\/api\/(?:site|v0)\/tournaments\//.test(
+        /^\/api\/(?:site|v1)\/tournaments\//.test(
           new URL(response.url()).pathname,
         ),
     );

@@ -58,7 +58,7 @@ export const TeamsTab = ({
     setActing(true);
     try {
       await fetch(
-        `${at.replace("/api/site/", "/api/v0/")}/${idInAddress(team.id)}/${action}`,
+        `${at.replace("/api/site/", "/api/v1/")}/${idInAddress(team.id)}/${action}`,
         {
           method: "POST",
         },

@@ -1,6 +1,6 @@
 # Los puntos finales POST de la API
 
-Estas direcciones cambian algo. Las que solo leen están en [los puntos finales GET](get-endpoints.md). Cada dirección de aquí está bajo `/api/v0` en el sitio, y lo que cambian las propias páginas del sitio lo cambian esas mismas direcciones, de modo que una aplicación no tiene un conjunto menor que el del sitio. Lo que vale para todas, como las claves, los límites y los errores, está en la [ayuda para desarrolladores de aplicaciones](index.md); quién puede escribir está [más abajo](#who-may-write).
+Estas direcciones cambian algo. Las que solo leen están en [los puntos finales GET](get-endpoints.md). Cada dirección de aquí está bajo `/api/v1` en el sitio, y lo que cambian las propias páginas del sitio lo cambian esas mismas direcciones, de modo que una aplicación no tiene un conjunto menor que el del sitio. Lo que vale para todas, como las claves, los límites y los errores, está en la [ayuda para desarrolladores de aplicaciones](index.md); quién puede escribir está [más abajo](#who-may-write).
 
 Un torneo, una competición y el resto se nombran en una dirección con la parte de su id que va después de la barra: para `tournament/4f2a…` la dirección dice `4f2a…`. Un cuerpo nombra otras cosas del mismo modo, como hace `player` más abajo, salvo donde dice que es el id completo.
 
@@ -16,7 +16,7 @@ Una petición que cambia algo la hace una clave creada para escribir (consulta [
 - Los anotadores de un torneo pueden hacer lo que se hace con los resultados, y nada más: añadir una partida, corregirla, moverla, archivarla, restaurarla, retirarla y deshacer su retirada. Cualquier otra cosa del torneo se les rechaza con `Tournament.NotAManager`.
 - Cualquier otra persona se rechaza con `Tournament.NotAManager`, o con `Tournament.NotAManagerOrScorer` donde se habría admitido a un anotador.
 
-`GET /api/v0/tournaments/{id}/permissions` dice qué papel tiene una clave en un torneo (consulta [qué puede hacer una clave](get-endpoints.md#permissions)), para que una aplicación pueda decir por qué se rechazaría una escritura antes de enviarla.
+`GET /api/v1/tournaments/{id}/permissions` dice qué papel tiene una clave en un torneo (consulta [qué puede hacer una clave](get-endpoints.md#permissions)), para que una aplicación pueda decir por qué se rechazaría una escritura antes de enviarla.
 
 ## Qué es una respuesta {#answers}
 
@@ -28,35 +28,35 @@ Enviar una petición dos veces no es lo mismo que enviarla una: una partida aña
 
 ### Crear un torneo {#create-tournament}
 
-`POST /api/v0/tournaments`
+`POST /api/v1/tournaments`
 
 Recibe `name`, `starts` y `finishes` (escritos como `2026-10-03T00:00:00Z`), `format` (un código, consulta [los formatos](get-endpoints.md#formats)), `sport` (un código, consulta [los deportes](get-endpoints.md#sports)), `country` (un código como `au`, consulta [los países](get-endpoints.md#countries)) y, si quieres, `region` (un código del país, de la misma lista), `subtitle`, `levelTestsDrawn`, `national` e `international`, cada uno de los tres últimos `true` o `false`. Responde `201` con `id` y `address`, que es donde el sitio lo muestra.
 
 ### Archivar o restaurar un torneo {#tournament-actions}
 
-`POST /api/v0/tournaments/{id}/archive`
+`POST /api/v1/tournaments/{id}/archive`
 
-`POST /api/v0/tournaments/{id}/restore`
+`POST /api/v1/tournaments/{id}/restore`
 
 No reciben cuerpo y responden `204`.
 
 ### Añadir una nota de gestor {#notes}
 
-`POST /api/v0/tournaments/{id}/notes`
+`POST /api/v1/tournaments/{id}/notes`
 
 Recibe `title` y `description`. Responde `201` con el `id` de la nota. Una descripción puede tener hasta 750 000 caracteres, y la petición puede ser tan grande como eso requiera.
 
 ## Las personas que tienen un papel en un torneo {#people}
 
-`POST /api/v0/tournaments/{id}/scorers`
+`POST /api/v1/tournaments/{id}/scorers`
 
-`POST /api/v0/tournaments/{id}/managers`
+`POST /api/v1/tournaments/{id}/managers`
 
 Hacen a alguien anotador o gestor. Reciben `emailAddress`, la dirección de correo electrónico de su cuenta, y responden `204`.
 
-`POST /api/v0/tournaments/{id}/scorers/{account}/remove`
+`POST /api/v1/tournaments/{id}/scorers/{account}/remove`
 
-`POST /api/v0/tournaments/{id}/managers/{account}/remove`
+`POST /api/v1/tournaments/{id}/managers/{account}/remove`
 
 Quitan a un anotador o a un gestor. No reciben cuerpo y responden `204`. El `account` es la parte del id de la cuenta que va después de `account/`.
 
@@ -64,7 +64,7 @@ Quitan a un anotador o a un gestor. No reciben cuerpo y responden `204`. El `acc
 
 ### Añadir una competición {#add-competition}
 
-`POST /api/v0/tournaments/{id}/competitions`
+`POST /api/v1/tournaments/{id}/competitions`
 
 Recibe `kind`, uno de `block`, `swiss`, `knockout` o `losers-knockout`, y un `name`, y luego lo que tiene su tipo:
 
@@ -77,19 +77,19 @@ Un bloque, un suizo y una eliminatoria también pueden recibir cómo se juegan y
 
 ### Añadir un test {#add-test}
 
-`POST /api/v0/tournaments/{id}/tests`
+`POST /api/v1/tournaments/{id}/tests`
 
 Un test es el partido entre dos equipos de un torneo por equipos. Recibe `firstTeam` y `secondTeam`, cada uno el id de un equipo después de `team/`, `starts` y `finishes`, `expectedMatches`, `bestOf`, `group` y las mismas reglas que puede recibir una competición. Responde `201` con su `id`, que es el de una competición.
 
 ### Mover, archivar o restaurar una competición {#competition-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/restore`
 
 La suben o la bajan un lugar en la lista del torneo, o la archivan, o la restauran. No reciben cuerpo y responden `204`. Un test también se mueve, se archiva y se restaura con estos.
 
@@ -97,21 +97,21 @@ La suben o la bajan un lugar en la lista del torneo, o la archivan, o la restaur
 
 ### Inscribir a un jugador {#enter-player}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players`
 
 Inscribe en la competición a uno de los jugadores del torneo. Recibe `player`, la parte del id del jugador del torneo que va después de `tournament-player/`. Responde `201` con `id`, que es el id del jugador en la competición y no en el torneo.
 
 ### Mover, retirar, reincorporar o quitar a un jugador {#competition-player-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/remove`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/remove`
 
 Suben o bajan a un jugador un lugar, lo retiran, deshacen su retirada o lo sacan de la competición. El `player` es la parte de su id en la competición que va después de `competition-player/`. No reciben cuerpo y responden `204`.
 
@@ -121,7 +121,7 @@ Todo bye de una competición tiene el mismo id, así que un bye se distingue por
 
 ### Añadir una partida {#add-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games`
 
 Recibe el `winner` y el `loser`, cada uno la parte del id de un jugador de la competición que va después de `competition-player/`, y los resultados. Los jugadores de un test no son suyos, así que en un test cada uno es el id completo de un jugador de uno de sus equipos, como `team-player/…`.
 
@@ -134,23 +134,23 @@ Una petición con el tipo de resultado que la competición no guarda se rechaza,
 
 ### Corregir una partida {#correct-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/correct`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/correct`
 
 Recibe los resultados como al añadir una partida y, donde cambiaron, `winner` y `loser`. Un jugador que no se envía es el que la partida ya tiene. El `game` es la parte de su id que va después de `game/`. Responde `204`.
 
 ### Mover, archivar, restaurar o retirar una partida {#game-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/restore`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
 
 Suben o bajan el resultado de un test un lugar, archivan una partida o la restauran, la retiran (se jugó y no cuenta) o deshacen su retirada. No reciben cuerpo y responden `204`. Estos, y los dos de arriba, son lo que puede hacer un anotador.
 
@@ -158,19 +158,19 @@ Suben o bajan el resultado de un test un lugar, archivan una partida o la restau
 
 ### Añadir un jugador {#add-tournament-player}
 
-`POST /api/v0/tournaments/{id}/players`
+`POST /api/v1/tournaments/{id}/players`
 
 Añade un jugador al torneo. Recibe `name`, y puede recibir `representing`, `handicap`, `flag` y `worldRankingName`; lo que falta o está vacío queda sin decir. Responde `201` con el `id` del jugador, que es su id entero, como lo dicen los puntos finales GET. Se rechaza un jugador sin nombre, o con el nombre de uno que ya está. Un jugador se [inscribe](#enter-player) en una competición con la parte de este `id` que va después de `tournament-player/`.
 
 ### Mover, archivar o restaurar un jugador {#tournament-player-actions}
 
-`POST /api/v0/tournaments/{id}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/players/{player}/restore`
 
 Suben o bajan a uno de los jugadores del torneo un lugar, o lo archivan o lo restauran. El `player` es la parte de su id que va después de `tournament-player/`. No reciben cuerpo y responden `204`.
 
@@ -178,36 +178,36 @@ Suben o bajan a uno de los jugadores del torneo un lugar, o lo archivan o lo res
 
 ### Añadir un equipo {#add-team}
 
-`POST /api/v0/tournaments/{id}/teams`
+`POST /api/v1/tournaments/{id}/teams`
 
 Recibe `name` y `shortName`, y puede recibir `flag`. Responde `201` con el `id` del equipo.
 
 ### Añadir un jugador a un equipo {#add-team-player}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players`
+`POST /api/v1/tournaments/{id}/teams/{team}/players`
 
 Recibe `name`, y puede recibir `worldRankingName`. Responde `201` con el `id` del jugador.
 
 ### Mover, archivar o restaurar un equipo {#team-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/restore`
 
 No reciben cuerpo y responden `204`.
 
 ### Mover, archivar o restaurar a un jugador de un equipo {#team-player-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/restore`
 
 El `player` es la parte de su id que va después de `team-player/`. No reciben cuerpo y responden `204`.

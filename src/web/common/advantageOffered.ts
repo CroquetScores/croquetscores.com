@@ -1,6 +1,6 @@
 // Whether the website offers Advantage Golf Croquet, and whether a request
 // would make a competition Advantage where it does not, which is refused. Held
-// once for /api/site and /api/v0, so that a route moved from the one to the
+// once for /api/site and /api/v1, so that a route moved from the one to the
 // other is refused as it was. How the refusal is said is each API's own.
 import type { FastifyRequest } from "fastify";
 

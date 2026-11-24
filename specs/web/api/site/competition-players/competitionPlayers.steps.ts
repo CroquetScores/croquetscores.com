@@ -6,8 +6,8 @@ import { strict as assert } from "node:assert";
 
 import type { WebWorld } from "../../../support/world.js";
 import { within } from "../advantage/apiScene.js";
-import { answered, told } from "../../v0/apiOfApps.js";
-import { bare } from "../../v0/permissions/permissions.steps.js";
+import { answered, told } from "../../v1/apiOfApps.js";
+import { bare } from "../../v1/permissions/permissions.steps.js";
 
 const partOf = (id: string): string => id.slice(id.indexOf("/") + 1);
 

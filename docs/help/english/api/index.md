@@ -1,10 +1,8 @@
 # Help for app developers
 
-Croquet Scores has a public API, so that an app can follow a sport's tournaments without reading the site's pages. It answers in JSON, and it is at `/api/v0` during development or the api, it will be release at `/api/v1`.
+Croquet Scores has a public API, so that an app can follow a sport's tournaments without reading the site's pages. It answers in JSON, at `/api/v1`.
 
 ## Where it stands {#where-it-stands}
-
-The API is in development, which is why it is `v0`. When everyone concerned accepts it, it will become `v1`.
 
 A change that breaks an app is never made to a version in place. It is made as a new version beside the old, so an app written against `v1` keeps working when `v2` arrives. What does not count as breaking is said next, so that an app can be written to expect it.
 

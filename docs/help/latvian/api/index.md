@@ -1,10 +1,8 @@
 # Palīdzība lietotņu izstrādātājiem
 
-Croquet Scores ir atklāta API, lai lietotne varētu sekot sporta veida turnīriem, nelasot vietnes lapas. Tā atbild JSON formātā, un izstrādes laikā tā atrodas adresē `/api/v0`. Kad tā tiks izlaista, tā atradīsies adresē `/api/v1`.
+Croquet Scores ir atklāta API, lai lietotne varētu sekot sporta veida turnīriem, nelasot vietnes lapas. Tā atbild JSON formātā un atrodas adresē `/api/v1`.
 
 ## Kur tā atrodas {#where-it-stands}
-
-API ir izstrādē, tāpēc tā ir `v0`. Kad visi iesaistītie to būs pieņēmuši, tā kļūs par `v1`.
 
 Izmaiņa, kas salauž lietotni, nekad netiek izdarīta esošā versijā. To izdara kā jaunu versiju blakus vecajai, lai lietotne, kas rakstīta `v1`, turpinātu darboties, kad parādīsies `v2`. Kas netiek uzskatīts par salaušanu, ir pateikts tālāk, lai lietotni varētu uzrakstīt tā, ka tā to sagaida.
 

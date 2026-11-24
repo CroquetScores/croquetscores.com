@@ -137,10 +137,10 @@ const gamesAt = (world: WebWorld, block: string): string => {
   return `/tournaments/${scene.tournaments.get(scene.usual)!}/competitions/${bare(blockOf(world, block), "competition")}/games`;
 };
 
-// Adding and correcting a game have moved to /api/v0, while listing the games
+// Adding and correcting a game have moved to /api/v1, while listing the games
 // is still at /api/site, so the two are asked at different addresses.
 const gamesWrittenAt = (world: WebWorld, block: string): string =>
-  `/api/v0${gamesAt(world, block)}`;
+  `/api/v1${gamesAt(world, block)}`;
 
 // A game's players are named in the request by the part of their id in the
 // competition after its kind (`gamePlayerOf`).

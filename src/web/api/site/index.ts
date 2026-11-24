@@ -300,7 +300,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
 
   // An administrator's judgements of a tournament, asked by the admin's own
   // pages and by no app (administratorActions.feature): they were offered at
-  // /api/v0 for a while, and are not now.
+  // /api/v1 for a while, and are not now.
   //
   // Its notable status taken away, who judges it neither national nor
   // international.

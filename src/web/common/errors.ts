@@ -39,10 +39,10 @@ const wantsJson = (request: FastifyRequest): boolean =>
   request.url.startsWith("/api/");
 
 // The public API's errors have one shape, whatever failed (errors.feature for
-// /api/v0), where the website's own interface keeps the one it has. Said in
+// /api/v1), where the website's own interface keeps the one it has. Said in
 // one place so that no failure is shaped by the route that happened to meet it.
 const publicApi = (request: FastifyRequest): boolean =>
-  /^\/api\/v0(?:[/?]|$)/.test(request.url);
+  /^\/api\/v1(?:[/?]|$)/.test(request.url);
 
 // An error page is still a page of this site, so it wears the same shell and
 // speaks the reader's language. Its words are named by what they are for, and

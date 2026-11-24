@@ -1,6 +1,6 @@
 // An event store that can be told to refuse reads for the work that has been
 // marked, and no other work. It is what lets a scenario hold the public API to
-// the read models (specs/web/api/v0/read-models-only/): the API's requests are
+// the read models (specs/web/api/v1/read-models-only/): the API's requests are
 // marked as they arrive, and a read of the events inside one fails that request
 // instead of quietly working.
 //

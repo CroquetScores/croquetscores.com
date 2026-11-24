@@ -217,7 +217,7 @@ export const TestDialog = ({
     try {
       const response = await fetch(
         test === undefined
-          ? `${ofTournament.replace("/api/site/", "/api/v0/")}/tests`
+          ? `${ofTournament.replace("/api/site/", "/api/v1/")}/tests`
           : `${ofTournament}/tests/${idInAddress(test.id)}`,
         {
           method: test === undefined ? "POST" : "PUT",

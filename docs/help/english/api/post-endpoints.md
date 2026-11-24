@@ -1,6 +1,6 @@
 # The API's POST endpoints
 
-These addresses change something. The ones that only read are in [the GET endpoints](get-endpoints.md). Every address here is under `/api/v0` on the site, and what the site's own pages change is changed by these same addresses, so an app has no lesser set than the website has. What applies to all of them, such as keys, allowances and errors, is in [help for app developers](index.md); who may write is [below](#who-may-write).
+These addresses change something. The ones that only read are in [the GET endpoints](get-endpoints.md). Every address here is under `/api/v1` on the site, and what the site's own pages change is changed by these same addresses, so an app has no lesser set than the website has. What applies to all of them, such as keys, allowances and errors, is in [help for app developers](index.md); who may write is [below](#who-may-write).
 
 A tournament, a competition and the rest are named in an address by the part of their id after the slash: for `tournament/4f2a…` the address says `4f2a…`. A body names another thing the same way, as `player` below does, except where it says it is the whole id.
 
@@ -16,7 +16,7 @@ A request that changes something is made by a key that was made to write (see [k
 - A tournament's scorers may do what is done with scores, and nothing else: add a game, correct it, move it, archive it, restore it, withdraw it and reverse its withdrawal. Anything else of the tournament is refused them with `Tournament.NotAManager`.
 - Anybody else is refused with `Tournament.NotAManager`, or with `Tournament.NotAManagerOrScorer` where a scorer would have been let.
 
-`GET /api/v0/tournaments/{id}/permissions` says which part a key has in a tournament (see [what a key may do](get-endpoints.md#permissions)), so that an app can say why a write would be refused before it sends one.
+`GET /api/v1/tournaments/{id}/permissions` says which part a key has in a tournament (see [what a key may do](get-endpoints.md#permissions)), so that an app can say why a write would be refused before it sends one.
 
 ## What an answer is {#answers}
 
@@ -28,35 +28,35 @@ Sending a request twice is not the same as sending it once: a game added twice i
 
 ### Make a tournament {#create-tournament}
 
-`POST /api/v0/tournaments`
+`POST /api/v1/tournaments`
 
 Takes `name`, `starts` and `finishes` (written as `2026-10-03T00:00:00Z`), `format` (a code, see [the formats](get-endpoints.md#formats)), `sport` (a code, see [the sports](get-endpoints.md#sports)), `country` (a code such as `au`, see [the countries](get-endpoints.md#countries)), and, if wanted, `region` (a code of the country's, from the same list), `subtitle`, `levelTestsDrawn`, `national` and `international`, each of the last three `true` or `false`. Answers `201` with `id` and `address`, which is where the site shows it.
 
 ### Archive or restore a tournament {#tournament-actions}
 
-`POST /api/v0/tournaments/{id}/archive`
+`POST /api/v1/tournaments/{id}/archive`
 
-`POST /api/v0/tournaments/{id}/restore`
+`POST /api/v1/tournaments/{id}/restore`
 
 Take no body, and answer `204`.
 
 ### Add a manager note {#notes}
 
-`POST /api/v0/tournaments/{id}/notes`
+`POST /api/v1/tournaments/{id}/notes`
 
 Takes `title` and `description`. Answers `201` with the note's `id`. A description may be up to 750,000 characters, and the request is allowed to be as large as that takes.
 
 ## The people who have a part in a tournament {#people}
 
-`POST /api/v0/tournaments/{id}/scorers`
+`POST /api/v1/tournaments/{id}/scorers`
 
-`POST /api/v0/tournaments/{id}/managers`
+`POST /api/v1/tournaments/{id}/managers`
 
 Make somebody a scorer, or a manager. Take `emailAddress`, the email address of their account, and answer `204`.
 
-`POST /api/v0/tournaments/{id}/scorers/{account}/remove`
+`POST /api/v1/tournaments/{id}/scorers/{account}/remove`
 
-`POST /api/v0/tournaments/{id}/managers/{account}/remove`
+`POST /api/v1/tournaments/{id}/managers/{account}/remove`
 
 Take a scorer or a manager off. They take no body and answer `204`. The `account` is the part of the account's id after `account/`.
 
@@ -64,7 +64,7 @@ Take a scorer or a manager off. They take no body and answer `204`. The `account
 
 ### Add a competition {#add-competition}
 
-`POST /api/v0/tournaments/{id}/competitions`
+`POST /api/v1/tournaments/{id}/competitions`
 
 Takes `kind`, one of `block`, `swiss`, `knockout` or `losers-knockout`, and a `name`, then what its kind has:
 
@@ -77,19 +77,19 @@ A block, a Swiss and a knockout may also take how they are played and counted: `
 
 ### Add a test {#add-test}
 
-`POST /api/v0/tournaments/{id}/tests`
+`POST /api/v1/tournaments/{id}/tests`
 
 A test is the match between two teams of a team tournament. Takes `firstTeam` and `secondTeam`, each a team's id after `team/`, `starts` and `finishes`, `expectedMatches`, `bestOf`, `group`, and the same rules as a competition may take. Answers `201` with its `id`, which is a competition's.
 
 ### Move, archive or restore a competition {#competition-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/restore`
 
 Move it a place up or down in the tournament's list, or archive it, or restore it. They take no body and answer `204`. A test is moved, archived and restored by these too.
 
@@ -97,21 +97,21 @@ Move it a place up or down in the tournament's list, or archive it, or restore i
 
 ### Enter a player {#enter-player}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players`
 
 Enters one of the tournament's players in the competition. Takes `player`, the part of the tournament player's id after `tournament-player/`. Answers `201` with `id`, which is the player's id in the competition and not the tournament's.
 
 ### Move, withdraw, bring back or remove a player {#competition-player-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/remove`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/remove`
 
 Move a player a place up or down, withdraw them, reverse their withdrawal, or take them out of the competition. The `player` is the part of their id in the competition after `competition-player/`. They take no body and answer `204`.
 
@@ -121,7 +121,7 @@ Every bye in a competition has the same id, so a bye is told apart by `order`, a
 
 ### Add a game {#add-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games`
 
 Takes the `winner` and the `loser`, each the part of a competition player's id after `competition-player/`, and the scores. A test's players are not its own, so for a test each is the whole id of a player in one of its teams, as `team-player/…`.
 
@@ -134,23 +134,23 @@ A request with the kind of score the competition does not keep is refused, with 
 
 ### Correct a game {#correct-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/correct`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/correct`
 
 Takes the scores as adding a game does, and, where they changed, `winner` and `loser`. A player that is not sent is the game's own. The `game` is the part of its id after `game/`. Answers `204`.
 
 ### Move, archive, restore or withdraw a game {#game-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/restore`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
 
 Move a test's score a place up or down, archive a game or restore it, withdraw it (it was played, and counts for nothing) or reverse its withdrawal. They take no body and answer `204`. These, and the two above, are what a scorer may do.
 
@@ -158,19 +158,19 @@ Move a test's score a place up or down, archive a game or restore it, withdraw i
 
 ### Add a player {#add-tournament-player}
 
-`POST /api/v0/tournaments/{id}/players`
+`POST /api/v1/tournaments/{id}/players`
 
 Adds a player to the tournament. Takes `name`, and may take `representing`, `handicap`, `flag` and `worldRankingName`; one left out or empty is left unsaid. Answers `201` with the player's `id`, which is the whole of their id as the GET endpoints say it. A player with no name, or with the name of one already there, is refused. A player is entered in a competition by [entering them](#enter-player), by the part of this `id` after `tournament-player/`.
 
 ### Move, archive or restore a player {#tournament-player-actions}
 
-`POST /api/v0/tournaments/{id}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/players/{player}/restore`
 
 Move one of the tournament's players a place up or down, or archive or restore them. The `player` is the part of their id after `tournament-player/`. They take no body and answer `204`.
 
@@ -178,36 +178,36 @@ Move one of the tournament's players a place up or down, or archive or restore t
 
 ### Add a team {#add-team}
 
-`POST /api/v0/tournaments/{id}/teams`
+`POST /api/v1/tournaments/{id}/teams`
 
 Takes `name` and `shortName`, and may take `flag`. Answers `201` with the team's `id`.
 
 ### Add a player to a team {#add-team-player}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players`
+`POST /api/v1/tournaments/{id}/teams/{team}/players`
 
 Takes `name`, and may take `worldRankingName`. Answers `201` with the player's `id`.
 
 ### Move, archive or restore a team {#team-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/restore`
 
 They take no body and answer `204`.
 
 ### Move, archive or restore a team's player {#team-player-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/restore`
 
 The `player` is the part of their id after `team-player/`. They take no body and answer `204`.

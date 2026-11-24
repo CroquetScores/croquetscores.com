@@ -1,6 +1,6 @@
 # Os endpoints da API
 
-Todo endereço fica sob `/api/v0` no site, e toda resposta é JSON. O que vale para todos, como chaves, cotas, erros e perguntar com economia, está na [ajuda para desenvolvedores de aplicativos](index.md).
+Todo endereço fica sob `/api/v1` no site, e toda resposta é JSON. O que vale para todos, como chaves, cotas, erros e perguntar com economia, está na [ajuda para desenvolvedores de aplicativos](index.md).
 
 Há dois tipos, e uma página para cada:
 

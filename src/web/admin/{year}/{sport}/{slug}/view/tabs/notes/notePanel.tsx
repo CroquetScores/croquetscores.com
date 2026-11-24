@@ -176,7 +176,7 @@ export const NotePanel = ({
     try {
       const response = await fetch(
         note === undefined
-          ? at.replace("/api/site/", "/api/v0/")
+          ? at.replace("/api/site/", "/api/v1/")
           : `${at}/${idInAddress(note.id)}`,
         {
           method: note === undefined ? "POST" : "PUT",

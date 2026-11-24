@@ -1,6 +1,6 @@
 // What a new or changed tournament can be on the website being read: its
 // sports and formats, and the countries with their regions. Each is asked of
-// the API that apps use (`/api/v0`) and not of an address of the admin's own,
+// the API that apps use (`/api/v1`) and not of an address of the admin's own,
 // so that the website's forms and an app's choose from the same lists.
 
 export interface Offered {
@@ -45,12 +45,12 @@ export const askedWhatIsOffered = async (): Promise<Offered | undefined> => {
   const language = languageOfThePage();
   try {
     const [sports, formats, countries] = await Promise.all([
-      askedOf<Pick<Offered, "sports">>("/api/v0/tournaments/sports", language),
+      askedOf<Pick<Offered, "sports">>("/api/v1/tournaments/sports", language),
       askedOf<Pick<Offered, "formats">>(
-        "/api/v0/tournaments/formats",
+        "/api/v1/tournaments/formats",
         language,
       ),
-      askedOf<Pick<Offered, "countries">>("/api/v0/countries", language),
+      askedOf<Pick<Offered, "countries">>("/api/v1/countries", language),
     ]);
     return {
       sports: sports.sports,
@@ -70,8 +70,8 @@ export const askedWhatIsNamed = async (): Promise<
   const language = languageOfThePage();
   try {
     const [sports, countries] = await Promise.all([
-      askedOf<Pick<Offered, "sports">>("/api/v0/tournaments/sports", language),
-      askedOf<Pick<Offered, "countries">>("/api/v0/countries", language),
+      askedOf<Pick<Offered, "sports">>("/api/v1/tournaments/sports", language),
+      askedOf<Pick<Offered, "countries">>("/api/v1/countries", language),
     ]);
     return { sports: sports.sports, countries: countries.countries };
   } catch {

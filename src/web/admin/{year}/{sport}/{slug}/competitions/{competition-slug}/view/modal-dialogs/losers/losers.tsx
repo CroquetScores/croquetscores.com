@@ -84,7 +84,7 @@ export const LosersDialog = (props: Props): React.JSX.Element => {
     setSending(true);
     try {
       const response = await fetch(
-        `/api/v0/tournaments/${idInAddress(tournament)}/competitions`,
+        `/api/v1/tournaments/${idInAddress(tournament)}/competitions`,
         {
           method: "POST",
           headers: {

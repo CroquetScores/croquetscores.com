@@ -43,7 +43,7 @@ interface Props {
   readonly at: string;
   /**
    * Where what the tab changes is asked, where it is not where the list is
-   * read. A tournament's scorers and managers are changed at /api/v0 and read
+   * read. A tournament's scorers and managers are changed at /api/v1 and read
    * at /api/site; the accounts that hold a role are both at /api/site.
    */
   readonly changesAt?: string;

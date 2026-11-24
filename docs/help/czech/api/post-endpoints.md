@@ -1,6 +1,6 @@
 # Koncové body API pro POST
 
-Tyto adresy něco mění. Ty, které jen čtou, jsou v [koncových bodech pro GET](get-endpoints.md). Každá adresa zde je pod `/api/v0` na webu a to, co mění stránky samotného webu, mění tytéž adresy, takže aplikace nemá menší sadu než web. Co platí pro všechny, jako klíče, limity a chyby, je v [nápovědě pro vývojáře aplikací](index.md); kdo smí zapisovat, je [níže](#who-may-write).
+Tyto adresy něco mění. Ty, které jen čtou, jsou v [koncových bodech pro GET](get-endpoints.md). Každá adresa zde je pod `/api/v1` na webu a to, co mění stránky samotného webu, mění tytéž adresy, takže aplikace nemá menší sadu než web. Co platí pro všechny, jako klíče, limity a chyby, je v [nápovědě pro vývojáře aplikací](index.md); kdo smí zapisovat, je [níže](#who-may-write).
 
 Turnaj, soutěž a ostatní se v adrese pojmenují částí svého id za lomítkem: u `tournament/4f2a…` je v adrese `4f2a…`. Tělo požadavku pojmenovává jiné věci stejně, jako to dělá `player` níže, kromě případů, kdy se říká, že jde o celé id.
 
@@ -16,7 +16,7 @@ Požadavek, který něco mění, posílá klíč vytvořený k zápisu (viz [kl�
 - Zapisovatelé turnaje smějí dělat to, co se dělá se skóre, a nic jiného: přidat hru, opravit ji, posunout ji, archivovat ji, obnovit ji, neuznat ji a zrušit neuznání. Cokoli jiného v turnaji je jim odmítnuto s `Tournament.NotAManager`.
 - Kdokoli jiný je odmítnut s `Tournament.NotAManager` nebo s `Tournament.NotAManagerOrScorer` tam, kde by zapisovatel prošel.
 
-`GET /api/v0/tournaments/{id}/permissions` říká, jakou roli má klíč v turnaji (viz [co smí klíč](get-endpoints.md#permissions)), aby aplikace mohla říct, proč by byl zápis odmítnut, ještě než ho pošle.
+`GET /api/v1/tournaments/{id}/permissions` říká, jakou roli má klíč v turnaji (viz [co smí klíč](get-endpoints.md#permissions)), aby aplikace mohla říct, proč by byl zápis odmítnut, ještě než ho pošle.
 
 ## Jak vypadá odpověď {#answers}
 
@@ -28,35 +28,35 @@ Poslat požadavek dvakrát není totéž jako jednou: hra přidaná dvakrát jso
 
 ### Vytvoření turnaje {#create-tournament}
 
-`POST /api/v0/tournaments`
+`POST /api/v1/tournaments`
 
 Přijímá `name`, `starts` a `finishes` (zapsané jako `2026-10-03T00:00:00Z`), `format` (kód, viz [formáty](get-endpoints.md#formats)), `sport` (kód, viz [sporty](get-endpoints.md#sports)), `country` (kód, například `au`, viz [země](get-endpoints.md#countries)) a podle potřeby `region` (kód regionu dané země ze stejného seznamu), `subtitle`, `levelTestsDrawn`, `national` a `international`, z nichž každé z posledních tří je `true` nebo `false`. Odpovídá `201` s `id` a `address`, což je místo, kde ho web ukazuje.
 
 ### Archivace nebo obnovení turnaje {#tournament-actions}
 
-`POST /api/v0/tournaments/{id}/archive`
+`POST /api/v1/tournaments/{id}/archive`
 
-`POST /api/v0/tournaments/{id}/restore`
+`POST /api/v1/tournaments/{id}/restore`
 
 Nepřijímají tělo a odpovídají `204`.
 
 ### Přidání poznámky organizátora {#notes}
 
-`POST /api/v0/tournaments/{id}/notes`
+`POST /api/v1/tournaments/{id}/notes`
 
 Přijímá `title` a `description`. Odpovídá `201` s `id` poznámky. Popis smí mít až 750 000 znaků a požadavek smí být tak velký, jak je k tomu třeba.
 
 ## Lidé, kteří mají v turnaji roli {#people}
 
-`POST /api/v0/tournaments/{id}/scorers`
+`POST /api/v1/tournaments/{id}/scorers`
 
-`POST /api/v0/tournaments/{id}/managers`
+`POST /api/v1/tournaments/{id}/managers`
 
 Udělají z někoho zapisovatele nebo organizátora. Přijímají `emailAddress`, e-mailovou adresu jeho účtu, a odpovídají `204`.
 
-`POST /api/v0/tournaments/{id}/scorers/{account}/remove`
+`POST /api/v1/tournaments/{id}/scorers/{account}/remove`
 
-`POST /api/v0/tournaments/{id}/managers/{account}/remove`
+`POST /api/v1/tournaments/{id}/managers/{account}/remove`
 
 Zapisovatele nebo organizátora odeberou. Nepřijímají tělo a odpovídají `204`. `account` je část id účtu za `account/`.
 
@@ -64,7 +64,7 @@ Zapisovatele nebo organizátora odeberou. Nepřijímají tělo a odpovídají `2
 
 ### Přidání soutěže {#add-competition}
 
-`POST /api/v0/tournaments/{id}/competitions`
+`POST /api/v1/tournaments/{id}/competitions`
 
 Přijímá `kind`, jedno z `block`, `swiss`, `knockout` nebo `losers-knockout`, a `name`, a pak to, co má její druh:
 
@@ -77,19 +77,19 @@ Blok, švýcarský systém a pavouk mohou také přijmout, jak se hrají a poč�
 
 ### Přidání testu {#add-test}
 
-`POST /api/v0/tournaments/{id}/tests`
+`POST /api/v1/tournaments/{id}/tests`
 
 Test je zápas mezi dvěma týmy v týmovém turnaji. Přijímá `firstTeam` a `secondTeam`, každé id týmu za `team/`, `starts` a `finishes`, `expectedMatches`, `bestOf`, `group` a stejná pravidla jako soutěž. Odpovídá `201` s jeho `id`, což je id soutěže.
 
 ### Posunutí, archivace nebo obnovení soutěže {#competition-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/restore`
 
 Posunou ji v seznamu turnaje o místo nahoru nebo dolů, archivují ji nebo ji obnoví. Nepřijímají tělo a odpovídají `204`. Test se těmito také posouvá, archivuje a obnovuje.
 
@@ -97,21 +97,21 @@ Posunou ji v seznamu turnaje o místo nahoru nebo dolů, archivují ji nebo ji o
 
 ### Přihlášení hráče {#enter-player}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players`
 
 Přihlásí do soutěže jednoho z hráčů turnaje. Přijímá `player`, část id hráče turnaje za `tournament-player/`. Odpovídá `201` s `id`, což je id hráče v soutěži, ne v turnaji.
 
 ### Posunutí, odstoupení, vrácení nebo odebrání hráče {#competition-player-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/unwithdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/remove`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/players/{player}/remove`
 
 Posunou hráče o místo nahoru nebo dolů, nechají ho odstoupit, zruší jeho odstoupení nebo ho odeberou ze soutěže. `player` je část jeho id v soutěži za `competition-player/`. Nepřijímají tělo a odpovídají `204`.
 
@@ -121,7 +121,7 @@ Každý bye v soutěži má stejné id, takže bye se rozlišuje podle `order`, 
 
 ### Přidání hry {#add-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games`
 
 Přijímá `winner` a `loser`, každého jako část id hráče soutěže za `competition-player/`, a skóre. Hráči testu nejsou jeho vlastní, takže u testu je každý celým id hráče z jednoho z jeho týmů, jako `team-player/…`.
 
@@ -134,23 +134,23 @@ Požadavek s druhem skóre, který soutěž nevede, je odmítnut s `Game.Advanta
 
 ### Oprava hry {#correct-game}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/correct`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/correct`
 
 Přijímá skóre jako přidání hry a tam, kde se změnili, `winner` a `loser`. Hráč, který není poslán, je ten, který ve hře už je. `game` je část jejího id za `game/`. Odpovídá `204`.
 
 ### Posunutí, archivace, obnovení nebo neuznání hry {#game-actions}
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/up`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/up`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/down`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/down`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/archive`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/archive`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/restore`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/restore`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/withdraw`
 
-`POST /api/v0/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
+`POST /api/v1/tournaments/{id}/competitions/{competition}/games/{game}/unwithdraw`
 
 Posunou skóre testu o místo nahoru nebo dolů, archivují hru nebo ji obnoví, neuznají ji (byla odehrána a nic se nepočítá) nebo zruší její neuznání. Nepřijímají tělo a odpovídají `204`. Tyto a dva výše smí zapisovatel.
 
@@ -158,19 +158,19 @@ Posunou skóre testu o místo nahoru nebo dolů, archivují hru nebo ji obnoví,
 
 ### Přidání hráče {#add-tournament-player}
 
-`POST /api/v0/tournaments/{id}/players`
+`POST /api/v1/tournaments/{id}/players`
 
 Přidá do turnaje hráče. Přijímá `name` a může přijmout `representing`, `handicap`, `flag` a `worldRankingName`; co chybí nebo je prázdné, zůstane neuvedeno. Odpovídá `201` s `id` hráče, což je celé jeho id, jak ho uvádějí koncové body pro GET. Hráč bez jména nebo se jménem hráče, který už v turnaji je, je odmítnut. Hráč se do soutěže [přihlásí](#enter-player) částí tohoto `id` za `tournament-player/`.
 
 ### Posunutí, archivace nebo obnovení hráče {#tournament-player-actions}
 
-`POST /api/v0/tournaments/{id}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/players/{player}/restore`
 
 Posunou jednoho z hráčů turnaje o místo nahoru nebo dolů, nebo ho archivují či obnoví. `player` je část jeho id za `tournament-player/`. Nepřijímají tělo a odpovídají `204`.
 
@@ -178,36 +178,36 @@ Posunou jednoho z hráčů turnaje o místo nahoru nebo dolů, nebo ho archivuj�
 
 ### Přidání týmu {#add-team}
 
-`POST /api/v0/tournaments/{id}/teams`
+`POST /api/v1/tournaments/{id}/teams`
 
 Přijímá `name` a `shortName` a může přijmout `flag`. Odpovídá `201` s `id` týmu.
 
 ### Přidání hráče do týmu {#add-team-player}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players`
+`POST /api/v1/tournaments/{id}/teams/{team}/players`
 
 Přijímá `name` a může přijmout `worldRankingName`. Odpovídá `201` s `id` hráče.
 
 ### Posunutí, archivace nebo obnovení týmu {#team-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/restore`
 
 Nepřijímají tělo a odpovídají `204`.
 
 ### Posunutí, archivace nebo obnovení hráče týmu {#team-player-actions}
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/up`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/up`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/down`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/down`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/archive`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/archive`
 
-`POST /api/v0/tournaments/{id}/teams/{team}/players/{player}/restore`
+`POST /api/v1/tournaments/{id}/teams/{team}/players/{player}/restore`
 
 `player` je část jeho id za `team-player/`. Nepřijímají tělo a odpovídají `204`.

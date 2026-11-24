@@ -1,10 +1,8 @@
 # Hulp vir toepassingontwikkelaars
 
-Croquet Scores het 'n openbare API, sodat 'n toepassing 'n sportsoort se toernooie kan volg sonder om die webwerf se bladsye te lees. Dit antwoord in JSON en is tydens ontwikkeling by `/api/v0`. Wanneer dit vrygestel word, sal dit by `/api/v1` wees.
+Croquet Scores het 'n openbare API, sodat 'n toepassing 'n sportsoort se toernooie kan volg sonder om die webwerf se bladsye te lees. Dit antwoord in JSON en is by `/api/v1`.
 
 ## Waar dit staan {#where-it-stands}
-
-Die API is in ontwikkeling, en daarom is dit `v0`. Wanneer almal wat daarby betrokke is dit aanvaar het, word dit `v1`.
 
 'n Verandering wat 'n toepassing breek, word nooit aan 'n bestaande weergawe self gemaak nie. Dit word as 'n nuwe weergawe langs die ou een gemaak, sodat 'n toepassing wat teen `v1` geskryf is, aanhou werk wanneer `v2` kom. Wat nie as breek tel nie, word hieronder gesê, sodat 'n toepassing daarvoor geskryf kan word.
 

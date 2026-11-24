@@ -1,6 +1,6 @@
 # The API's endpoints
 
-Every address is under `/api/v0` on the site, and every answer is JSON. What applies to all of them, such as keys, allowances, errors, and asking cheaply, is in [help for app developers](index.md).
+Every address is under `/api/v1` on the site, and every answer is JSON. What applies to all of them, such as keys, allowances, errors, and asking cheaply, is in [help for app developers](index.md).
 
 There are two kinds, and a page for each:
 

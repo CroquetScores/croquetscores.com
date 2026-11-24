@@ -80,7 +80,7 @@ export const PlayersTab = ({
     setActing(true);
     try {
       await fetch(
-        `${at.replace("/api/site/", "/api/v0/")}/${idInAddress(player.id)}/${action}`,
+        `${at.replace("/api/site/", "/api/v1/")}/${idInAddress(player.id)}/${action}`,
         {
           method: "POST",
         },

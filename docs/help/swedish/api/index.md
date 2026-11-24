@@ -1,10 +1,8 @@
 # Hjälp för apputvecklare
 
-Croquet Scores har ett öppet API, så att en app kan följa en sports turneringar utan att läsa webbplatsens sidor. Det svarar med JSON och finns på `/api/v0` under utvecklingen. När det släpps finns det på `/api/v1`.
+Croquet Scores har ett öppet API, så att en app kan följa en sports turneringar utan att läsa webbplatsens sidor. Det svarar med JSON och finns på `/api/v1`.
 
 ## Var det står {#where-it-stands}
-
-API:et är under utveckling, och därför är det `v0`. När alla berörda har godtagit det blir det `v1`.
 
 En ändring som bryter en app görs aldrig på en version som redan finns. Den görs som en ny version vid sidan av den gamla, så att en app som skrivits mot `v1` fortsätter fungera när `v2` kommer. Vad som inte räknas som ett brott sägs nedan, så att en app kan skrivas för att räkna med det.
 

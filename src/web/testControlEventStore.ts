@@ -1,5 +1,5 @@
 // What lets a scenario hold the public API to the read models: while it is
-// told to, a read of the event store made for a request to /api/v0 fails that
+// told to, a read of the event store made for a request to /api/v1 fails that
 // request, so that an endpoint that goes back to the events is seen to rather
 // than quietly working. Only the API's requests are held to it, and only reads
 // are refused, so the site goes on writing as it does and the scenario can set
@@ -24,10 +24,10 @@ export const markRequestsToTheApi = (
   store: ReadsRefusable,
 ): void => {
   server.addHook("onRequest", (request, _reply, done) => {
-    // The path alone, and whole segments of it: /api/v0-notes is not the API,
+    // The path alone, and whole segments of it: /api/v1-notes is not the API,
     // and a query string does not make a request something else.
     const path = request.url.split("?")[0] ?? "";
-    if (path === "/api/v0" || path.startsWith("/api/v0/")) {
+    if (path === "/api/v1" || path.startsWith("/api/v1/")) {
       store.marked(done);
       return;
     }

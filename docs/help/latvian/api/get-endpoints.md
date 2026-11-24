@@ -1,12 +1,12 @@
 # API GET galapunkti
 
-Šīs adreses lasa un neko nemaina; tās, kas kaut ko maina, ir [POST galapunktos](post-endpoints.md). Katra adrese šeit atrodas zem `/api/v0` vietnē, un katra atbilde ir JSON. Kas attiecas uz visām, piemēram, atslēgas, limiti, kļūdas un lēta pieprasīšana, ir rakstīts [palīdzībā lietotņu izstrādātājiem](index.md). Jebkurai atbildei var tikt pievienoti lauki bez jaunas versijas (skatiet [lauki var tikt pievienoti](index.md#fields-may-be-added)), tāpēc ignorējiet to, ko nepazīstat.
+Šīs adreses lasa un neko nemaina; tās, kas kaut ko maina, ir [POST galapunktos](post-endpoints.md). Katra adrese šeit atrodas zem `/api/v1` vietnē, un katra atbilde ir JSON. Kas attiecas uz visām, piemēram, atslēgas, limiti, kļūdas un lēta pieprasīšana, ir rakstīts [palīdzībā lietotņu izstrādātājiem](index.md). Jebkurai atbildei var tikt pievienoti lauki bez jaunas versijas (skatiet [lauki var tikt pievienoti](index.md#fields-may-be-added)), tāpēc ignorējiet to, ko nepazīstat.
 
 Turnīrs vai sacensību grupa adresē tiek nosaukta ar to sava id daļu, kas ir aiz slīpsvītras: `tournament/4f2a…` adresē ir `4f2a…`. Katra atbilde laukā `href` pasaka, kur atrast to, par ko tā stāsta, un laukā `uri`, kur to rāda vietne, kā ceļu, kas sākas ar slīpsvītru.
 
 ## Viena gada turnīri {#tournaments}
 
-`GET /api/v0/tournaments?year=2026`
+`GET /api/v1/tournaments?year=2026`
 
 Pieņem:
 
@@ -27,7 +27,7 @@ un `total`, `page`, `pageSize` un `next`, kas norāda, kur ir nākamā lapa, vai
 
 ## Viens turnīrs {#tournament}
 
-`GET /api/v0/tournaments/{id}`
+`GET /api/v1/tournaments/{id}`
 
 Saka to, ko saraksts saka par to, un:
 
@@ -43,37 +43,37 @@ Trīs saraksti saka, kas var būt turnīrs vietnē, kas tiek jautāta: tās spor
 
 ### Sporta veidi {#sports}
 
-`GET /api/v0/tournaments/sports`
+`GET /api/v1/tournaments/sports`
 
 Atbild ar `sports`, katrs ar `code` un `name`. `sport`, ko turnīrs min un kuram var pieprasīt sarakstu, ir viens no šiem kodiem. Croquet Scores piedāvā `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) un `gb` (Gateball); Gateball Scores piedāvā tikai Gateball. Sporta veids nākotnē var tikt pievienots, tāpat kā lauks (skatiet [lauki var tikt pievienoti](index.md#fields-may-be-added)), tāpēc lietotnei jāprot tikt galā ar kodu, ko tā nepazīst.
 
 ### Formāti {#formats}
 
-`GET /api/v0/tournaments/formats`
+`GET /api/v1/tournaments/formats`
 
 Atbild ar `formats`, katrs ar `code`, nosaukumu, ar kādu turnīru izveido, `name`, `teams`, vai to spēlē komandas, un `drawsLevelTests`, vai turnīrs tajā izlozē neizšķirta rezultāta testu, ja tas nesaka, ka to nedara.
 
 ### Valstis {#countries}
 
-`GET /api/v0/countries`
+`GET /api/v1/countries`
 
 Atbild ar `countries`, katra ar `code` (piemēram, `au`), `name` un `regions`, katrs ar `code` un `name`. Tās ir to nosaukumu secībā pieprasītajā valodā. Reģions tiek nosaukts tā, kā tas tika ierakstīts, parasti savas valsts valodā. Valstij, kas nav sadalīta, ir viens reģions, kas ir pati valsts.
 
 ## Viena sacensību grupa {#competition}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}`
+`GET /api/v1/tournaments/{id}/competitions/{id}`
 
 Saka sacensību `name`, `kind`, `href`, `uri` un `changedAt`, un kur API stāsta par tās partijām (`games`) un, grupai un Šveices sistēmai, kurām vienīgajām tas ir, par tās kārtību (`standings`).
 
 ## Grupas vai Šveices sistēmas kārtība {#standings}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/standings`
+`GET /api/v1/tournaments/{id}/competitions/{id}/standings`
 
 Saka sacensības un `standings`: katram spēlētājam `playerId`, `name`, `withdrawn`, `played`, `won`, `netHoops`, `position` (vai `null`) un `shared`, vai vieta ir dalīta. Grupa pievieno `lost`, `gamesWon` un `netGames`, ko Šveices sistēma nesaka.
 
 ## Sacensību partijas {#games}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/games`
+`GET /api/v1/tournaments/{id}/competitions/{id}/games`
 
 Saka sacensības un to partijas. Katrai partijai ir `id`, `winner` un `loser`, `drawn`, `withdrawn` (nospēlēta, bet neskaitās), `round` (izslēgšanas turnīra, kur pirmā ir 1, un `null` citur) un `changedAt`. Katra puse saka spēlētāja `playerId`, viņa `name` un `score`, kā tas tika ievadīts, piemēram, `26tp`. Ja partija bija neizšķirta, tikai ievadīšanas secība nosaka, kuru pusi sauc par uzvarētāju.
 
@@ -81,25 +81,25 @@ Tests, divu komandu mačs, saka `matches`, nevis `games`: katrs mačs ar diviem 
 
 ## Ko atslēga drīkst darīt {#permissions}
 
-`GET /api/v0/tournaments/{id}/permissions`
+`GET /api/v1/tournaments/{id}/permissions`
 
 Prasa atslēgu un saka, ko šī atslēga drīkst turnīrā: `part`, kas ir tās konta loma (`manager`, `scorer` vai `neither`), `mayRead` un `mayWrite`. Lietotne tā var pateikt, kāpēc rakstīšana tiktu noraidīta, pirms tā to nosūta. Atbilde ir domāta atslēgai, kas jautāja, tāpēc to nekad neglabā (`Cache-Control: no-store`).
 
 ## Turnīri, kas mainījuši gadu {#changed-year}
 
-`GET /api/v0/tournaments/changed-year`
+`GET /api/v1/tournaments/changed-year`
 
 Uzskaita turnīrus, kas nonākuši citā gadā, nekā tajā, kurā tie bija, lai lietotne varētu pārvietot to, ko tā glabā. Pieņem `changedSince`, `page` un `pageSize`. Katram ir `tournamentId`, `previousYear` un `newYear`.
 
 ## Arhivētie turnīri {#archived}
 
-`GET /api/v0/tournaments/archived`
+`GET /api/v1/tournaments/archived`
 
 Uzskaita turnīrus, kas ir arhivēti, lai lietotne varētu beigt tos rādīt. Pieņem `archivedSince`, rakstītu kā `2026-03-01T10:00:00Z`, `page` un `pageSize`. Katram ir `tournamentId` un `archivedAt`.
 
 ## Pasaules ranga spēlētāji {#world-ranking-players}
 
-`GET /api/v0/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players`
 
 Uzskaita Association Croquet spēlētājus, ko pazīst pasaules ranga saraksti. Pieņem `changedSince`, rakstītu kā `2026-03-01T10:00:00Z`, `page` un `pageSize`, kur lapā ir ne vairāk kā 100 ieraksti. Atbild ar `worldRankingPlayers`, katrs ar:
 
@@ -113,7 +113,7 @@ un `total`, `page`, `pageSize` un `next`, tāpat kā viena gada turnīriem. Sara
 
 ## Pasaules ranga spēlētāja partijas {#world-ranking-player-games}
 
-`GET /api/v0/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games`
 
 `id` ir spēlētāja `id` daļa aiz slīpsvītras, kā to dod `games` iepriekšējā sarakstā. Uzskaita Association Croquet partijas, ko spēlētājs ir nospēlējis, vai nu grupā, vai Šveices sistēmā, vai izslēgšanas turnīrā, vai testā, un vai viņš spēlēja par sevi, vai par komandu. Pieņem `changedSince`, `page` un `pageSize` kā spēlētāju saraksts un atbild ar `games`, secībā, kādā tās pievienotas, katra no spēlētāja puses:
 

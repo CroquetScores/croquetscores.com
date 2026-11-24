@@ -1,10 +1,8 @@
 # Cymorth i ddatblygwyr apiau
 
-Mae gan Croquet Scores API cyhoeddus, fel y gall ap ddilyn twrnameintiau camp heb ddarllen tudalennau'r wefan. Mae'n ateb mewn JSON, ac mae yn `/api/v0` yn ystod y datblygu. Pan gaiff ei ryddhau, bydd yn `/api/v1`.
+Mae gan Croquet Scores API cyhoeddus, fel y gall ap ddilyn twrnameintiau camp heb ddarllen tudalennau'r wefan. Mae'n ateb mewn JSON, ac mae yn `/api/v1`.
 
 ## Ble mae arni {#where-it-stands}
-
-Mae'r API yn cael ei ddatblygu, a dyna pam ei fod yn `v0`. Pan fydd pawb sy'n ymwneud ag ef wedi'i dderbyn, bydd yn dod yn `v1`.
 
 Ni wneir newid sy'n torri ap byth ar fersiwn sy'n bodoli eisoes. Fe'i gwneir fel fersiwn newydd wrth ochr yr hen un, fel bod ap a ysgrifennwyd ar gyfer `v1` yn dal i weithio pan ddaw `v2`. Dywedir isod beth nad yw'n cyfrif fel torri, fel y gellir ysgrifennu ap i ddisgwyl hynny.
 

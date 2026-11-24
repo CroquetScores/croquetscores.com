@@ -157,7 +157,7 @@ export const TestsTab = ({
     // the tests are now.
     try {
       const response = await fetch(
-        `${at.replace("/api/site/", "/api/v0/")}/${idInAddress(test.id)}/${action}`,
+        `${at.replace("/api/site/", "/api/v1/")}/${idInAddress(test.id)}/${action}`,
         {
           method: "POST",
         },

@@ -275,7 +275,7 @@ export const CompetitionDialog = ({
     try {
       const response = await fetch(
         competition === undefined
-          ? `/api/v0/tournaments/${idInAddress(tournament)}/competitions`
+          ? `/api/v1/tournaments/${idInAddress(tournament)}/competitions`
           : `${at}/${idInAddress(competition.id)}`,
         {
           method: competition === undefined ? "POST" : "PUT",

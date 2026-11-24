@@ -1,12 +1,12 @@
 # API-ets GET-endepunkter
 
-Disse adressene leser og endrer ingenting; de som endrer noe, står i [POST-endepunktene](post-endpoints.md). Hver adresse her ligger under `/api/v0` på nettstedet, og hvert svar er JSON. Det som gjelder alle, som nøkler, kvoter, feil og hvordan man spør billig, står i [hjelpen for apputviklere](index.md). Felt kan legges til i et hvilket som helst svar uten en ny versjon (se [felt kan legges til](index.md#fields-may-be-added)), så overse det du ikke kjenner.
+Disse adressene leser og endrer ingenting; de som endrer noe, står i [POST-endepunktene](post-endpoints.md). Hver adresse her ligger under `/api/v1` på nettstedet, og hvert svar er JSON. Det som gjelder alle, som nøkler, kvoter, feil og hvordan man spør billig, står i [hjelpen for apputviklere](index.md). Felt kan legges til i et hvilket som helst svar uten en ny versjon (se [felt kan legges til](index.md#fields-may-be-added)), så overse det du ikke kjenner.
 
 En turnering, eller en konkurranse, oppgis i en adresse med den delen av id-en som står etter skråstreken: for `tournament/4f2a…` står det `4f2a…` i adressen. Hvert svar sier hvor det det handler om, finnes, i en `href`, og hvor nettstedet viser det, i en `uri`, en sti som begynner med en skråstrek.
 
 ## Et års turneringer {#tournaments}
 
-`GET /api/v0/tournaments?year=2026`
+`GET /api/v1/tournaments?year=2026`
 
 Tar:
 
@@ -27,7 +27,7 @@ og `total`, `page`, `pageSize` og `next`, som sier hvor neste side er, eller `nu
 
 ## Én turnering {#tournament}
 
-`GET /api/v0/tournaments/{id}`
+`GET /api/v1/tournaments/{id}`
 
 Sier det listen sier om den, og:
 
@@ -43,37 +43,37 @@ Tre lister sier hva en turnering kan være på nettstedet det spørres om: idret
 
 ### Idrettene {#sports}
 
-`GET /api/v0/tournaments/sports`
+`GET /api/v1/tournaments/sports`
 
 Svarer med `sports`, hver med `code` og `name`. `sport`, som en turnering sier og som en liste kan spørres om, er en av disse kodene. Croquet Scores tilbyr `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) og `gb` (Gateball); Gateball Scores tilbyr bare Gateball. En idrett kan bli lagt til i fremtiden, slik et felt kan (se [felt kan bli lagt til](index.md#fields-may-be-added)), så en app bør tåle en kode den ikke kjenner.
 
 ### Formatene {#formats}
 
-`GET /api/v0/tournaments/formats`
+`GET /api/v1/tournaments/formats`
 
 Svarer med `formats`, hvert med `code`, navnet en turnering lages med, `name`, `teams`, om det spilles av lag, og `drawsLevelTests`, om en turnering i det trekker en uavgjort-test med mindre den sier at den ikke gjør det.
 
 ### Landene {#countries}
 
-`GET /api/v0/countries`
+`GET /api/v1/countries`
 
 Svarer med `countries`, hvert med `code` (som `au`), `name` og `regions`, hver med `code` og `name`. De står i rekkefølgen av navnene sine på språket det spørres på. En region navngis slik den ble registrert, for det meste på sitt eget lands språk. Et land som ikke er delt inn, har én region, som er landet selv.
 
 ## Én konkurranse {#competition}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}`
+`GET /api/v1/tournaments/{id}/competitions/{id}`
 
 Sier konkurransens `name`, `kind`, `href`, `uri` og `changedAt`, og hvor API-et forteller om partiene dens (`games`) og, for en blokk og en sveitsisk, som er de eneste som har det, om stillingen (`standings`).
 
 ## Stillingen i en blokk eller en sveitsisk {#standings}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/standings`
+`GET /api/v1/tournaments/{id}/competitions/{id}/standings`
 
 Sier konkurransen og `standings`: for hver spiller `playerId`, `name`, `withdrawn`, `played`, `won`, `netHoops`, `position` (eller `null`) og `shared`, om plasseringen deles. En blokk legger til `lost`, `gamesWon` og `netGames`, som en sveitsisk ikke sier.
 
 ## En konkurranses partier {#games}
 
-`GET /api/v0/tournaments/{id}/competitions/{id}/games`
+`GET /api/v1/tournaments/{id}/competitions/{id}/games`
 
 Sier konkurransen og partiene dens. Hvert parti har en `id`, en `winner` og en `loser`, `drawn`, `withdrawn` (spilt, men teller ikke), `round` (i en utslagning, der den første er 1, og `null` ellers) og `changedAt`. Hver side sier spillerens `playerId`, `name` og `score` slik den ble skrevet inn, som `26tp`. Der et parti ble uavgjort, er det bare rekkefølgen de ble skrevet inn i, som avgjør hvilken side som kalles vinneren.
 
@@ -81,25 +81,25 @@ En test, kampen mellom to lag, sier `matches` og ikke `games`: hver kamp med de 
 
 ## Hva en nøkkel får gjøre {#permissions}
 
-`GET /api/v0/tournaments/{id}/permissions`
+`GET /api/v1/tournaments/{id}/permissions`
 
 Trenger en nøkkel og sier hva den nøkkelen får gjøre i turneringen: `part`, som er rollen kontoen dens har (`manager`, `scorer` eller `neither`), `mayRead` og `mayWrite`. En app kan si hvorfor en skriving ville bli avvist, før den sender en. Svaret er for nøkkelen som spurte, så det tas aldri vare på (`Cache-Control: no-store`).
 
 ## Turneringer som har byttet år {#changed-year}
 
-`GET /api/v0/tournaments/changed-year`
+`GET /api/v1/tournaments/changed-year`
 
 Lister turneringene som har kommet i et annet år enn det de var i, slik at en app kan flytte det den har. Tar `changedSince`, `page` og `pageSize`. Hver har `tournamentId`, `previousYear` og `newYear`.
 
 ## Turneringer som er arkivert {#archived}
 
-`GET /api/v0/tournaments/archived`
+`GET /api/v1/tournaments/archived`
 
 Lister turneringene som er arkivert, slik at en app kan slutte å vise dem. Tar `archivedSince`, skrevet som `2026-03-01T10:00:00Z`, `page` og `pageSize`. Hver har `tournamentId` og `archivedAt`.
 
 ## Spillere på verdensrankingen {#world-ranking-players}
 
-`GET /api/v0/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players`
 
 Lister Association Croquet-spillerne verdensrankingene kjenner. Tar `changedSince`, skrevet som `2026-03-01T10:00:00Z`, `page` og `pageSize`, der en side er høyst 100. Svarer med `worldRankingPlayers`, hver med:
 
@@ -113,7 +113,7 @@ og `total`, `page`, `pageSize` og `next`, slik et års turneringer har. Listen s
 
 ## Partiene til en spiller på verdensrankingen {#world-ranking-player-games}
 
-`GET /api/v0/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games`
 
 `id` er den delen av spillerens `id` som står etter skråstreken, slik `games` i listen over gir den. Lister Association Croquet-partiene spilleren har spilt, enten i en blokk, et sveitsisk system, en utslagning eller en test, og enten de spilte for seg selv eller for et lag. Tar `changedSince`, `page` og `pageSize` slik listen over spillere gjør, og svarer med `games`, i den rekkefølgen de ble lagt til, hvert fra spillerens side:
 

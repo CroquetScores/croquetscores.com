@@ -167,7 +167,7 @@ export const CompetitionPlayersTab = ({
   const act = (player: Listed, action: Action): Promise<void> =>
     done(() =>
       fetch(
-        `${at.replace("/api/site/", "/api/v0/")}/players/${idInAddress(player.id)}/${action}${
+        `${at.replace("/api/site/", "/api/v1/")}/players/${idInAddress(player.id)}/${action}${
           player.bye ? `?order=${String(player.order)}` : ""
         }`,
         { method: "POST" },
@@ -186,7 +186,7 @@ export const CompetitionPlayersTab = ({
   const add = (): Promise<void> =>
     done(async () => {
       const response = await fetch(
-        `/api/v0/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players`,
+        `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players`,
         {
           method: "POST",
           headers: {

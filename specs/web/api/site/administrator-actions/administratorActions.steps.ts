@@ -6,8 +6,8 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { WebWorld } from "../../../support/world.js";
-import { answered, told } from "../../v0/apiOfApps.js";
-import { bare } from "../../v0/permissions/permissions.steps.js";
+import { answered, told } from "../../v1/apiOfApps.js";
+import { bare } from "../../v1/permissions/permissions.steps.js";
 
 const addressOf = (world: WebWorld, name: string, action: string): string =>
   `/api/site/tournaments/${bare(world, name)}/${action}`;

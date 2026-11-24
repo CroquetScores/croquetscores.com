@@ -1,6 +1,6 @@
 # Die Endpunkte der API
 
-Jede Adresse liegt unter `/api/v0` der Website, und jede Antwort ist JSON. Was für alle gilt, wie Schlüssel, Kontingente, Fehler und sparsames Abfragen, steht in der [Hilfe für App-Entwickler](index.md).
+Jede Adresse liegt unter `/api/v1` der Website, und jede Antwort ist JSON. Was für alle gilt, wie Schlüssel, Kontingente, Fehler und sparsames Abfragen, steht in der [Hilfe für App-Entwickler](index.md).
 
 Es gibt zwei Arten, und für jede eine Seite:
 
