@@ -115,13 +115,23 @@ export const worldRankingPlayersOfApps: FastifyPluginAsync = (server) => {
       // Asked for from the start, the names are refreshed first, so that the
       // list an app reads is the rankings' as they are now. Only after the
       // asking has been checked, so that a refused request reads nothing.
-      if (page === undefined) {
-        await request.server.mediator.send(
-          new RefreshAssociationCroquetPlayerNames(
-            request.requestedAt,
-            websiteOf(request).host,
-          ),
-        );
+      // Not for a HEAD, which is asked only to see what the answer would be.
+      // A refresh that fails is logged and the list is answered as it is kept:
+      // the app asked for the players, not for the refresh.
+      if (page === undefined && request.method === "GET") {
+        try {
+          await request.server.mediator.send(
+            new RefreshAssociationCroquetPlayerNames(
+              request.requestedAt,
+              websiteOf(request).host,
+            ),
+          );
+        } catch (failure) {
+          request.log.error(
+            { err: failure },
+            "The association croquet names could not be refreshed",
+          );
+        }
       }
 
       let answer: WorldRankingPlayersForAppsPage;

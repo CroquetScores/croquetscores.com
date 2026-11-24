@@ -29,6 +29,14 @@ export interface WorldRankingImportParts {
   readonly administrator: string;
   /** The host of the website asked on, which the email says the site by. */
   readonly website: string;
+  /**
+   * Whether the administrator is emailed of a list that is refused for its
+   * names. An administrator who imports is told every time, since they are
+   * the one importing; a refresh done for any reader is not, since it would
+   * tell them every hour for as long as the rankings stay wrong. Either way
+   * it is logged as an error.
+   */
+  readonly emailsAdministrator: boolean;
 }
 
 /**
@@ -101,6 +109,7 @@ const refused = async (
     queue,
     administrator,
     website,
+    emailsAdministrator,
   }: WorldRankingImportParts,
   sport: WorldRankingSport,
   failure: ListRefused,
@@ -134,6 +143,7 @@ const refused = async (
         : undefined;
   if (told === undefined) return;
   errors.error(failure.message, told.details);
+  if (!emailsAdministrator) return;
   // Said and passed over where the administrator cannot be told: the refusal
   // is already reported and logged, and the other sport's list is still to be
   // kept, which an email that would not queue is no reason to stop.

@@ -33,6 +33,19 @@ When(
   },
 );
 
+// Asked for as a browser or a cache asks to see what an answer would be,
+// which is a HEAD and says nothing but its headers.
+When(
+  "the head of the world ranking players is asked for with that key",
+  async function (this: WebWorld) {
+    const answer = await fetch(`${this.baseUrl!}${listPath()}`, {
+      method: "HEAD",
+      headers: withThatKey(this),
+    });
+    assert.equal(answer.status, 200);
+  },
+);
+
 When(
   "the world ranking players are asked for page {int} with that key",
   async function (this: WebWorld, page: number) {

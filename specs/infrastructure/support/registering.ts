@@ -75,6 +75,8 @@ import { LogEntriesHandler } from "../../../src/application/operations/logs/LogE
 import { PruneLogHandler } from "../../../src/application/operations/logs/PruneLogHandler.js";
 import { PostgresServerLog } from "../../../src/infrastructure/database/PostgresServerLog.js";
 import { PostgresKeptImportErrors } from "../../../src/infrastructure/database/PostgresKeptImportErrors.js";
+import type { RefreshAssociationCroquetPlayerNames } from "../../../src/application/operations/world-rankings/RefreshAssociationCroquetPlayerNames.js";
+import { RefreshAssociationCroquetPlayerNamesHandler } from "../../../src/application/operations/world-rankings/RefreshAssociationCroquetPlayerNamesHandler.js";
 import { ImportWorldRankingPlayersHandler } from "../../../src/application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
 import { PostgresWorldRankingPlayers } from "../../../src/infrastructure/database/PostgresWorldRankingPlayers.js";
 import { ChangeNameHandler } from "../../../src/application/operations/accounts/ChangeNameHandler.js";
@@ -607,6 +609,13 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await mediator.send(command);
     },
 
+    async refreshAssociationCroquetPlayerNames(
+      command: RefreshAssociationCroquetPlayerNames,
+    ): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
     async accountsWithRole(
       query: AccountsWithRole,
     ): Promise<readonly AccountWithRole[]> {
@@ -686,23 +695,38 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     // Registered when the scenario says who the administrator is, since that
     // is what the handler is made with, as the site's is made with its config.
     importsWorldRankingPlayersTelling(address) {
+      const players = new PostgresWorldRankingPlayers(unitOfWork);
+      const errors = {
+        error: (message: string, details: Record<string, unknown>): void => {
+          errorsLogged.push(`${message} ${JSON.stringify(details)}`);
+        },
+      };
+      const emails = {
+        queue: (email: Parameters<typeof queue.queue>[0]) =>
+          queueFails
+            ? Promise.reject(new Error("The queue refused it."))
+            : queue.queue(email),
+      };
       mediator.handleCommand(
         new ImportWorldRankingPlayersHandler(
           repository,
           worldRankingLists,
-          new PostgresWorldRankingPlayers(unitOfWork),
+          players,
           unitOfWork,
-          {
-            error: (message, details) => {
-              errorsLogged.push(`${message} ${JSON.stringify(details)}`);
-            },
-          },
-          {
-            queue: (email) =>
-              queueFails
-                ? Promise.reject(new Error("The queue refused it."))
-                : queue.queue(email),
-          },
+          errors,
+          emails,
+          address,
+        ),
+      );
+      // Registered with it, since both are made with where the administrator
+      // is, and a scenario about either says so.
+      mediator.handleCommand(
+        new RefreshAssociationCroquetPlayerNamesHandler(
+          worldRankingLists,
+          players,
+          unitOfWork,
+          errors,
+          emails,
           address,
         ),
       );

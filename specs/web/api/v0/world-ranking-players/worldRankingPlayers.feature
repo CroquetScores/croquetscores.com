@@ -305,6 +305,10 @@ Feature: An app lists the association croquet world ranking players
       When the world ranking players are asked for page 1 with that key and a page size of 100
       Then nothing was asked of the world rankings
 
+    Scenario: A request that only asks for the headers does not read the rankings' site
+      When the head of the world ranking players is asked for with that key
+      Then nothing was asked of the world rankings
+
     Scenario: The golf croquet list is not read
       When the world ranking players are asked with that key
       Then the golf croquet list was not asked for
