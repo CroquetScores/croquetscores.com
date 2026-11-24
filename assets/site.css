@@ -2672,6 +2672,51 @@ main {
   vertical-align: middle;
 }
 
+/* A name is never broken, not even at its spaces, and nor is what is known of
+   the player besides it, their handicap, what they represent and their flag,
+   called their meta-data. Where the two do not fit on a row together on a
+   window wider than a tablet the line breaks between them, so the meta-data
+   goes on a row of its own beneath the name, and where there is room it is
+   beside it. Whatever is wider than its place scrolls or is cut by what holds
+   it, as it did, and is not broken to fit. */
+.game-name,
+.player-name {
+  white-space: nowrap;
+}
+
+.game-meta-data,
+.player-meta-data {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* On a phone or a tablet, up to 68rem, 1088px, wide, it is always on a row of
+   its own beneath the name, so that every name has the width of the window to
+   itself however much is known of the player. A game's line is the name, then
+   its score and what it did, and the meta-data is put last, so that the score
+   stays beside the name where it is read. */
+@media (max-width: 68rem) {
+  .game-meta-data,
+  .player-meta-data {
+    display: block;
+  }
+
+  .game-line {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.35em;
+  }
+
+  .game-line .game-meta-data {
+    order: 1;
+    flex-basis: 100%;
+  }
+
+  li.player .player-meta-data {
+    display: inline-block;
+  }
+}
+
 /* A tournament's players, one to a line, each name leading to the player's
    own page, set as a block's summary is: headed in the section bar's colours,
    and the rows banded, every other one on the page's tint, so that a long

@@ -2,6 +2,12 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import {
+  assertAbove,
+  assertBelow,
+  assertBeside,
+  assertOnOneLine,
+} from "../../support/placed.js";
 import type { WebWorld } from "../../support/world.js";
 import { isStruckThrough } from "../../support/struckThrough.js";
 
@@ -685,3 +691,97 @@ for (const [said, scrolls] of [
     },
   );
 }
+
+Then(
+  new RegExp(`^${SIDE} has its name on one line$`),
+  async function (
+    this: WebWorld,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+  ) {
+    await assertOnOneLine(
+      sideAt(this, side, match, round, view).locator(".player-name"),
+      "The name",
+    );
+  },
+);
+
+Then(
+  new RegExp(`^${SIDE} has its meta-data on one line$`),
+  async function (
+    this: WebWorld,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+  ) {
+    const found = sideAt(this, side, match, round, view);
+    await assertOnOneLine(
+      found.locator(".player-representing"),
+      "What they represent",
+    );
+    await assertBeside(
+      found.locator(".player-flag"),
+      found.locator(".player-representing"),
+      "Their flag",
+    );
+  },
+);
+
+Then(
+  new RegExp(`^${SIDE} has its meta-data below its name$`),
+  async function (
+    this: WebWorld,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+  ) {
+    const found = sideAt(this, side, match, round, view);
+    await assertBelow(
+      found.locator(".player-meta-data"),
+      found.locator(".player-name"),
+      "The meta-data",
+    );
+  },
+);
+
+Then(
+  new RegExp(`^${SIDE} has its meta-data beside its name$`),
+  async function (
+    this: WebWorld,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+  ) {
+    const found = sideAt(this, side, match, round, view);
+    await assertBeside(
+      found.locator(".player-meta-data"),
+      found.locator(".player-name"),
+      "The meta-data",
+    );
+  },
+);
+
+Then(
+  new RegExp(
+    `^${SIDE} has the mark that they have withdrawn above its meta-data$`,
+  ),
+  async function (
+    this: WebWorld,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+  ) {
+    const found = sideAt(this, side, match, round, view);
+    await assertAbove(
+      found.locator(".knockout-withdrawn"),
+      found.locator(".player-meta-data"),
+      "The mark",
+    );
+  },
+);

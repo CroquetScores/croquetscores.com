@@ -2,6 +2,11 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import {
+  assertBelow,
+  assertBeside,
+  assertOnOneLine,
+} from "../../support/placed.js";
 import type { WebWorld } from "../../support/world.js";
 import { isStruckThrough } from "../../support/struckThrough.js";
 import { unmarkedWithin } from "../../support/marks.js";
@@ -335,5 +340,63 @@ Then(
       ".rankings-tournament",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its name on one line$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertOnOneLine(
+      lineOf(this, line, which).locator(".game-name"),
+      "The name",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its meta-data on one line$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertOnOneLine(
+      lineOf(this, line, which).locator(".game-representing"),
+      "What they represent",
+    );
+    await assertBeside(
+      lineOf(this, line, which).locator(".game-flag"),
+      lineOf(this, line, which).locator(".game-representing"),
+      "Their flag",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its meta-data below its name$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertBelow(
+      lineOf(this, line, which).locator(".game-meta-data"),
+      lineOf(this, line, which).locator(".game-name"),
+      "The meta-data",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its meta-data beside its name$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertBeside(
+      lineOf(this, line, which).locator(".game-meta-data"),
+      lineOf(this, line, which).locator(".game-name"),
+      "The meta-data",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its score beside the name$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertBeside(
+      lineOf(this, line, which).locator(".game-score"),
+      lineOf(this, line, which).locator(".game-name"),
+      "The score",
+    );
   },
 );
