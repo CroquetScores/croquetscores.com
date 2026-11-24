@@ -930,6 +930,10 @@ export const german: Language = {
     "admin.hover.dialog.competition.save":
       "Die Änderungen an diesem Wettbewerb behalten",
     "admin.hover.dialog.score.add": "Dieses Ergebnis zum Wettbewerb hinzufügen",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Den Verlierer aus dem Wettbewerb zurückziehen, statt dieses Spiel hinzuzufügen",
+    "admin.hover.dialog.score.addScore":
+      "Dieses Spiel so hinzufügen, wie es eingegeben wurde",
     "admin.hover.dialog.score.save":
       "Die Korrektur dieses Ergebnisses behalten",
     "admin.hover.dialog.carryForward.save":
@@ -1157,6 +1161,11 @@ export const german: Language = {
     "admin.score.correctTitle": "Ergebnis bearbeiten",
     "admin.score.save": "Speichern",
     "admin.score.notCorrected": "Das Ergebnis konnte nicht korrigiert werden.",
+    "admin.score.walkoverTitle": "Walkover",
+    "admin.score.walkoverQuestion":
+      "{name} hat nicht gespielt. Es ist besser, den Spieler zurückzuziehen, als das Spiel als Walkover hinzuzufügen, denn ein zurückgezogener Spieler spielt den Rest des Wettbewerbs nicht mehr, und die Spiele, die er nicht gespielt hat, werden ohne ihn entschieden.",
+    "admin.score.withdrawOpponent": "Gegner zurückziehen",
+    "admin.score.addScore": "Ergebnis hinzufügen",
     "Game.WinnerMissing": "Wählen Sie den Sieger.",
     "Game.WinnerScoreMissing": "Geben Sie das Ergebnis des Siegers ein.",
     "Game.LoserMissing": "Wählen Sie den Verlierer.",

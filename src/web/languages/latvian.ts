@@ -881,6 +881,9 @@ export const latvian: Language = {
     "admin.hover.dialog.competition.add": "Pievienot šīs sacensības turnīram",
     "admin.hover.dialog.competition.save": "Saglabāt izmaiņas šīm sacensībām",
     "admin.hover.dialog.score.add": "Pievienot šo rezultātu sacensībām",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Izstādīt zaudētāju no sacensībām, nevis pievienot šo partiju",
+    "admin.hover.dialog.score.addScore": "Pievienot šo partiju, kā tā ievadīta",
     "admin.hover.dialog.score.save": "Saglabāt šī rezultāta labojumu",
     "admin.hover.dialog.carryForward.save": "Pārnest šī spēlētāja rezultātus",
     "admin.hover.dialog.tournament.new": "Izveidot šo turnīru",
@@ -1080,6 +1083,11 @@ export const latvian: Language = {
     "admin.score.correctTitle": "Labot rezultātu",
     "admin.score.save": "Saglabāt",
     "admin.score.notCorrected": "Rezultātu nevarēja izlabot.",
+    "admin.score.walkoverTitle": "Uzvara bez spēles",
+    "admin.score.walkoverQuestion":
+      "{name} nespēlēja. Labāk spēlētāju izstādīt, nekā pievienot partiju kā uzvaru bez spēles, jo izstādīts spēlētājs vairs nespēlē sacensībās, un partijas, ko viņš nav nospēlējis, tiks izšķirtas bez viņa.",
+    "admin.score.withdrawOpponent": "Izstādīt pretinieku",
+    "admin.score.addScore": "Pievienot rezultātu",
     "Game.WinnerMissing": "Izvēlieties uzvarētāju.",
     "Game.WinnerScoreMissing": "Ievadiet uzvarētāja rezultātu.",
     "Game.LoserMissing": "Izvēlieties zaudētāju.",

@@ -465,3 +465,78 @@ When(
     });
   },
 );
+
+// The question a score that says walkover is asked, which opens over the score
+// dialog (score-modal-dialog.feature). Two dialogs are open while it is, so it
+// is found by what only it has, and what is pressed in it is pressed in it
+// alone: "Cancel" is on both.
+const questionOf = (world: WebWorld): Locator =>
+  world.browserPage.locator(`${open}:has(.walkover-question)`);
+
+Then("the walkover question is open", async function (this: WebWorld) {
+  await questionOf(this).waitFor();
+});
+
+Then("the walkover question is not open", async function (this: WebWorld) {
+  // Given a moment, since it closes once what it was pressed for is done.
+  await questionOf(this).waitFor({ state: "detached" });
+});
+
+Then(
+  "the walkover question names {string}",
+  async function (this: WebWorld, name: string) {
+    await questionOf(this).waitFor();
+    const said = await questionOf(this).locator(".dialog-content").innerText();
+    assert.ok(said.includes(name), `It says ${JSON.stringify(said)}.`);
+  },
+);
+
+Then(
+  /^the walkover question's (first|second|third) button is "([^"]*)"$/,
+  async function (this: WebWorld, place: string, words: string) {
+    await questionOf(this).waitFor();
+    const buttons = questionOf(this).locator(".dialog-buttons button");
+    const which = ["first", "second", "third"].indexOf(place);
+    assert.equal((await buttons.nth(which).innerText()).trim(), words);
+  },
+);
+
+// Pressed, and waited on until the question has gone, which it does once what
+// was pressed is done, so that the next step reads what pressing it did.
+When(
+  "{string} is pressed in the walkover question",
+  async function (this: WebWorld, words: string) {
+    await questionOf(this).waitFor();
+    await questionOf(this)
+      .getByRole("button", { name: words, exact: true })
+      .click();
+    await questionOf(this).waitFor({ state: "detached" });
+    // What it sent has been answered once the dialog beneath is not busy.
+    await dialogOf(this).locator('form[aria-busy="false"]').waitFor();
+  },
+);
+
+When(
+  "every word in the walkover question but the player's name is in the test locale",
+  async function (this: WebWorld) {
+    await questionOf(this).waitFor();
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(
+        this,
+        `${open}:has(.walkover-question)`,
+      );
+      assert.deepEqual(stray, [], "Words in the question came from elsewhere.");
+    });
+  },
+);
+
+// Sent by its first button, as the dialog is sent as it is (player.steps.ts),
+// but waited on until the question is asked rather than until a reply comes,
+// since a score that says walkover sends nothing until the reader has chosen.
+When(
+  "the score dialog is sent and asks about a walkover",
+  async function (this: WebWorld) {
+    await dialogOf(this).locator('button[type="submit"]').click();
+    await questionOf(this).waitFor();
+  },
+);

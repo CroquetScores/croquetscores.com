@@ -875,6 +875,9 @@ export const czech: Language = {
     "admin.hover.dialog.competition.add": "Přidat tuto soutěž do turnaje",
     "admin.hover.dialog.competition.save": "Uložit změny této soutěže",
     "admin.hover.dialog.score.add": "Přidat toto skóre do soutěže",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Nechat poraženého odstoupit ze soutěže místo přidání této hry",
+    "admin.hover.dialog.score.addScore": "Přidat tuto hru tak, jak byla zadána",
     "admin.hover.dialog.score.save": "Uložit opravu tohoto skóre",
     "admin.hover.dialog.carryForward.save":
       "Převést výsledky tohoto hráče do dalšího kola",
@@ -1069,6 +1072,11 @@ export const czech: Language = {
     "admin.score.correctTitle": "Upravit skóre",
     "admin.score.save": "Uložit",
     "admin.score.notCorrected": "Skóre se nepodařilo opravit.",
+    "admin.score.walkoverTitle": "Kontumace",
+    "admin.score.walkoverQuestion":
+      "{name} nehrál. Je lepší hráče nechat odstoupit než přidat hru jako kontumaci, protože hráč, který odstoupil, už v soutěži nehraje a hry, které neodehrál, se rozhodnou bez něj.",
+    "admin.score.withdrawOpponent": "Nechat soupeře odstoupit",
+    "admin.score.addScore": "Přidat skóre",
     "Game.WinnerMissing": "Vyberte vítěze.",
     "Game.WinnerScoreMissing": "Zadejte skóre vítěze.",
     "Game.LoserMissing": "Vyberte poraženého.",

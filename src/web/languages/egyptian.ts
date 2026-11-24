@@ -815,6 +815,9 @@ export const egyptian: Language = {
     "admin.hover.dialog.competition.add": "ضيف المنافسة دي للبطولة",
     "admin.hover.dialog.competition.save": "احفظ التغييرات على المنافسة دي",
     "admin.hover.dialog.score.add": "ضيف النتيجة دي للمنافسة",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "اسحب الخاسر من المنافسة بدل ما تضيف اللعبة دي",
+    "admin.hover.dialog.score.addScore": "ضيف اللعبة دي زي ما اتكتبت",
     "admin.hover.dialog.score.save": "احفظ تصحيح النتيجة دي",
     "admin.hover.dialog.carryForward.save": "رحّل نتايج اللاعب ده",
     "admin.hover.dialog.tournament.new": "أنشئ البطولة دي",
@@ -996,6 +999,11 @@ export const egyptian: Language = {
     "admin.score.correctTitle": "عدّل النتيجة",
     "admin.score.save": "احفظ",
     "admin.score.notCorrected": "ما قدرناش نصحّح النتيجة.",
+    "admin.score.walkoverTitle": "فوز بدون لعب",
+    "admin.score.walkoverQuestion":
+      "{name} ما لعبش. الأحسن تسحبه بدل ما تضيف اللعبة كفوز بدون لعب، لأن اللاعب المسحوب مش هيلعب باقي المنافسة والألعاب اللي ما لعبهاش هتتحسم من غيره.",
+    "admin.score.withdrawOpponent": "اسحب الخصم",
+    "admin.score.addScore": "ضيف النتيجة",
     "Game.WinnerMissing": "اختار الفايز.",
     "Game.WinnerScoreMissing": "اكتب نتيجة الفايز.",
     "Game.LoserMissing": "اختار الخاسر.",

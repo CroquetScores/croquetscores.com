@@ -886,6 +886,9 @@ export const swedish: Language = {
     "admin.hover.dialog.competition.add": "Lägg till tävlingen i turneringen",
     "admin.hover.dialog.competition.save": "Spara ändringarna för tävlingen",
     "admin.hover.dialog.score.add": "Lägg till resultatet i tävlingen",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Dra tillbaka förloraren från tävlingen i stället för att lägga till partiet",
+    "admin.hover.dialog.score.addScore": "Lägg till partiet som det skrevs",
     "admin.hover.dialog.score.save": "Spara rättelsen av resultatet",
     "admin.hover.dialog.carryForward.save": "För spelarens resultat vidare",
     "admin.hover.dialog.tournament.new": "Skapa turneringen",
@@ -1080,6 +1083,11 @@ export const swedish: Language = {
     "admin.score.correctTitle": "Redigera resultat",
     "admin.score.save": "Spara",
     "admin.score.notCorrected": "Resultatet kunde inte rättas.",
+    "admin.score.walkoverTitle": "Walkover",
+    "admin.score.walkoverQuestion":
+      "{name} spelade inte. Det är bättre att dra tillbaka spelaren än att lägga till partiet som walkover, eftersom en spelare som dragits tillbaka inte spelar mer i tävlingen, och partierna hen inte har spelat avgörs utan hen.",
+    "admin.score.withdrawOpponent": "Dra tillbaka motståndaren",
+    "admin.score.addScore": "Lägg till resultat",
     "Game.WinnerMissing": "Välj vinnaren.",
     "Game.WinnerScoreMissing": "Skriv vinnarens resultat.",
     "Game.LoserMissing": "Välj förloraren.",

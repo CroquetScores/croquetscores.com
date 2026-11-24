@@ -945,6 +945,10 @@ export const greek: Language = {
       "Διατήρηση των αλλαγών σε αυτό το αγώνισμα",
     "admin.hover.dialog.score.add":
       "Προσθήκη αυτού του αποτελέσματος στο αγώνισμα",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Απόσυρση του ηττημένου από το αγώνισμα αντί για προσθήκη αυτού του παιχνιδιού",
+    "admin.hover.dialog.score.addScore":
+      "Προσθήκη αυτού του παιχνιδιού όπως πληκτρολογήθηκε",
     "admin.hover.dialog.score.save":
       "Διατήρηση της διόρθωσης σε αυτό το αποτέλεσμα",
     "admin.hover.dialog.carryForward.save":
@@ -1177,6 +1181,11 @@ export const greek: Language = {
     "admin.score.correctTitle": "Επεξεργασία αποτελέσματος",
     "admin.score.save": "Αποθήκευση",
     "admin.score.notCorrected": "Το αποτέλεσμα δεν μπόρεσε να διορθωθεί.",
+    "admin.score.walkoverTitle": "Νίκη άνευ αγώνα",
+    "admin.score.walkoverQuestion":
+      "{name} δεν έπαιξε. Είναι καλύτερο να αποσύρετε τον παίκτη παρά να προσθέσετε το παιχνίδι ως νίκη άνευ αγώνα, γιατί ο παίκτης που αποσύρεται δεν παίζει άλλο στο αγώνισμα και τα παιχνίδια που δεν έχουν παιχτεί κρίνονται χωρίς τη συμμετοχή του.",
+    "admin.score.withdrawOpponent": "Απόσυρση αντιπάλου",
+    "admin.score.addScore": "Προσθήκη αποτελέσματος",
     "Game.WinnerMissing": "Επιλέξτε τον νικητή.",
     "Game.WinnerScoreMissing": "Πληκτρολογήστε το σκορ του νικητή.",
     "Game.LoserMissing": "Επιλέξτε τον ηττημένο.",

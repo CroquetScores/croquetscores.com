@@ -892,6 +892,10 @@ export const afrikaans: Language = {
     "admin.hover.dialog.competition.save":
       "Behou die veranderinge aan hierdie kompetisie",
     "admin.hover.dialog.score.add": "Voeg hierdie uitslag by die kompetisie",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Trek die verloorder uit die kompetisie terug in plaas daarvan om hierdie spel by te voeg",
+    "admin.hover.dialog.score.addScore":
+      "Voeg hierdie spel by soos dit getik is",
     "admin.hover.dialog.score.save":
       "Behou die regstelling van hierdie uitslag",
     "admin.hover.dialog.carryForward.save": "Dra hierdie speler se uitslae oor",
@@ -1097,6 +1101,11 @@ export const afrikaans: Language = {
     "admin.score.correctTitle": "Wysig uitslag",
     "admin.score.save": "Bewaar",
     "admin.score.notCorrected": "Die uitslag kon nie reggestel word nie.",
+    "admin.score.walkoverTitle": "Walkover",
+    "admin.score.walkoverQuestion":
+      "{name} het nie gespeel nie. Dit is beter om hom of haar terug te trek as om die spel as 'n walkover by te voeg, want 'n teruggetrekte speler speel niks meer van die kompetisie nie, en die spelle wat hy of sy nie gespeel het nie, word sonder hom of haar beslis.",
+    "admin.score.withdrawOpponent": "Trek teenstander terug",
+    "admin.score.addScore": "Voeg uitslag by",
     "Game.WinnerMissing": "Kies die wenner.",
     "Game.WinnerScoreMissing": "Tik die wenner se telling.",
     "Game.LoserMissing": "Kies die verloorder.",
