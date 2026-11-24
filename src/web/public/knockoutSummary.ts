@@ -1,10 +1,11 @@
 // A knockout's summary, the view for a phone: its rounds one beneath another
 // rather than side by side, each headed by its name and what its matches are
-// the best of, and each match drawn as
-// the grid draws it (knockout.ts). A match whose sides are not yet both known
-// is not listed, since there is nothing yet to say of it, nor is a round with
-// no such match; the grid shows where they will be. What every view of a
-// competition shares is competitionPages.ts's.
+// the best of, and each match drawn as the grid draws it (knockout.ts). Where
+// a word of a name is wider than a phone it scrolls across within the page, as
+// a block's summary does, rather than the word being broken to fit. A match
+// whose sides are not yet both known is not listed, since there is nothing yet
+// to say of it, nor is a round with no such match; the grid shows where they
+// will be. What every view of a competition shares is competitionPages.ts's.
 import type {
   KnockoutToRead,
   MatchOfKnockout,
@@ -24,7 +25,8 @@ const summary = (
   speaking: Speaking,
   assets: Assets,
 ): string =>
-  `          <div class="knockout-summary">
+  `          <div class="knockout-summary-scroll" role="region" aria-labelledby="competition-heading" tabindex="0">
+            <div class="knockout-summary">
 ${asked.rounds
   .map((round, at) => ({ round, at, listed: round.matches.filter(known) }))
   .filter(({ listed }) => listed.length > 0)
@@ -33,13 +35,14 @@ ${asked.rounds
       round,
       at,
       listed,
-    }) => `            <section class="knockout-summary-round" aria-labelledby="knockout-round-${String(at)}">
-              <h2 class="knockout-round-name" id="knockout-round-${String(at)}">${escape(roundName(at, asked.rounds.length, speaking))}</h2>
-              <p class="knockout-best-of">${escape(speaking.say("knockout.bestOf", { count: String(round.bestOf) }))}</p>
+    }) => `              <section class="knockout-summary-round" aria-labelledby="knockout-round-${String(at)}">
+                <h2 class="knockout-round-name" id="knockout-round-${String(at)}">${escape(roundName(at, asked.rounds.length, speaking))}</h2>
+                <p class="knockout-best-of">${escape(speaking.say("knockout.bestOf", { count: String(round.bestOf) }))}</p>
 ${listed.map((match) => matchShown(match, round.bestOf, speaking, assets)).join("\n")}
-            </section>`,
+              </section>`,
   )
   .join("\n")}
+            </div>
           </div>`;
 
 /** What draws a knockout's summary. */

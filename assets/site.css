@@ -3635,7 +3635,16 @@ a.player-name[data-withdrawn] {
 }
 
 /* A knockout's summary: its rounds one beneath another, each match a table of
-   its own, for a phone. */
+   its own, for a phone. A name wraps between its words and a word is not
+   broken part-way along to fit. Where a word is wider than the room beside
+   the scores the summary is wider than the window, and it scrolls across
+   within the page, as a block's summary does, rather than pushing the page
+   out. */
+.knockout-summary-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 /* As wide as the page, each match's table with it, so that a score's box is
    the page's width however wide the score is written. */
 .knockout-summary {
@@ -3645,7 +3654,7 @@ a.player-name[data-withdrawn] {
 }
 
 /* In the summary, for a phone, a match is as wide as the page allows and a
-   long name wraps rather than running off its edge, its scores still in a
+   long name wraps between its words, its scores still in a
    column of their own. The name takes whatever the scores leave, and a score
    is as wide as it is written, since an Advantage game's, as "83% (5/6)", is
    far wider than a number of hoops and would otherwise run out of its box. */
@@ -3656,7 +3665,6 @@ a.player-name[data-withdrawn] {
 .knockout-summary .knockout-name {
   width: 100%;
   white-space: normal;
-  overflow-wrap: anywhere;
 }
 
 .knockout-summary .knockout-score {
