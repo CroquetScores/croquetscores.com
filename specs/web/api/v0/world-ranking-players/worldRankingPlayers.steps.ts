@@ -33,10 +33,31 @@ When(
   },
 );
 
+// Asked for as a browser or a cache asks to see what an answer would be,
+// which is a HEAD and says nothing but its headers.
 When(
-  "the world ranking players are asked with no key",
+  "the head of the world ranking players is asked for with that key",
   async function (this: WebWorld) {
-    await asked(this, listPath(), {});
+    const answer = await fetch(`${this.baseUrl!}${listPath()}`, {
+      method: "HEAD",
+      headers: withThatKey(this),
+    });
+    assert.equal(answer.status, 200);
+  },
+);
+
+When(
+  "the world ranking players are asked for page {int} with that key",
+  async function (this: WebWorld, page: number) {
+    sceneOf(this).earlier = undefined;
+    await asked(this, listPath({ page: String(page) }), withThatKey(this));
+  },
+);
+
+When(
+  "the world ranking players are asked for page {int} with no key",
+  async function (this: WebWorld, page: number) {
+    await asked(this, listPath({ page: String(page) }), {});
   },
 );
 
@@ -44,20 +65,6 @@ When(
   "the world ranking players are asked with the key {string}",
   async function (this: WebWorld, key: string) {
     await asked(this, listPath(), bearer(key));
-  },
-);
-
-When(
-  "the world ranking players are asked with that key and a page size of {int}",
-  async function (this: WebWorld, size: number) {
-    await asked(this, listPath({ pageSize: String(size) }), withThatKey(this));
-  },
-);
-
-When(
-  "the world ranking players are asked with that key and a page size of {string}",
-  async function (this: WebWorld, size: string) {
-    await asked(this, listPath({ pageSize: size }), withThatKey(this));
   },
 );
 
@@ -73,6 +80,17 @@ When(
 );
 
 When(
+  "the world ranking players are asked for page {int} with that key and a page size of {string}",
+  async function (this: WebWorld, page: number, size: string) {
+    await asked(
+      this,
+      listPath({ page: String(page), pageSize: size }),
+      withThatKey(this),
+    );
+  },
+);
+
+When(
   "the world ranking players are asked for page {string} with that key",
   async function (this: WebWorld, page: string) {
     await asked(this, listPath({ page }), withThatKey(this));
@@ -80,23 +98,27 @@ When(
 );
 
 When(
-  "the world ranking players are asked with that key changed since {string}",
-  async function (this: WebWorld, moment: string) {
-    await asked(this, listPath({ changedSince: moment }), withThatKey(this));
+  "the world ranking players are asked for page {int} with that key changed since {string}",
+  async function (this: WebWorld, page: number, moment: string) {
+    await asked(
+      this,
+      listPath({ page: String(page), changedSince: moment }),
+      withThatKey(this),
+    );
   },
 );
 
 // With the mark of the first full answer, since a 304 repeats none, so a
 // scenario that asks again more than once asks about the same thing.
 When(
-  "the world ranking players are asked again with that key and the mark it gave",
-  async function (this: WebWorld) {
+  "the world ranking players are asked again for page {int} with that key and the mark it gave",
+  async function (this: WebWorld, page: number) {
     const scene = sceneOf(this);
     const earlier: Answer = scene.earlier ?? answered(this);
     scene.earlier = earlier;
     const mark = earlier.headers.get("etag");
     assert.ok(mark !== null, "The API gave no mark.");
-    await asked(this, listPath(), {
+    await asked(this, listPath({ page: String(page) }), {
       ...withThatKey(this),
       "if-none-match": mark,
     });
@@ -269,6 +291,15 @@ Then(
   "the world ranking player {string} says it is not archived",
   function (this: WebWorld, name: string) {
     assert.equal(namedInList(this, name)["archivedAt"], null);
+  },
+);
+
+// Said without the moment where the archiving was done by the site's own
+// clock, which keeps running from the moment the scenario set it.
+Then(
+  "the world ranking player {string} says it is archived",
+  function (this: WebWorld, name: string) {
+    assert.notEqual(namedInList(this, name)["archivedAt"], null);
   },
 );
 

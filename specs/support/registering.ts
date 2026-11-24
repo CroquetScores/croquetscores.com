@@ -53,6 +53,7 @@ import type { ConfirmationLinkWorth } from "../../src/application/operations/acc
 import type { RegisterAccount } from "../../src/application/operations/accounts/RegisterAccount.js";
 import type { AddRole } from "../../src/application/operations/accounts/AddRole.js";
 import type { RemoveRole } from "../../src/application/operations/accounts/RemoveRole.js";
+import type { RefreshAssociationCroquetPlayerNames } from "../../src/application/operations/world-rankings/RefreshAssociationCroquetPlayerNames.js";
 import type { ImportWorldRankingPlayers } from "../../src/application/operations/world-rankings/ImportWorldRankingPlayers.js";
 import type {
   AccountsWithRole,
@@ -164,6 +165,11 @@ export interface Registering {
 
   /** Imports the world ranking players. Throws what the mediator throws. */
   importWorldRankingPlayers(command: ImportWorldRankingPlayers): Promise<void>;
+
+  /** Refreshes the association croquet names. Throws what the mediator throws. */
+  refreshAssociationCroquetPlayerNames(
+    command: RefreshAssociationCroquetPlayerNames,
+  ): Promise<void>;
 
   /** The accounts holding a role, or throws what the mediator throws. */
   accountsWithRole(

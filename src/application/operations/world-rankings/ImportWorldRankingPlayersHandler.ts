@@ -54,6 +54,7 @@ export class ImportWorldRankingPlayersHandler extends CommandHandler<
         queue: this.queue,
         administrator: this.administrator,
         website: command.website,
+        emailsAdministrator: true,
       },
       command.report,
       command.requestedAt,

@@ -298,6 +298,13 @@ Given(
 );
 
 Given(
+  new RegExp(`^the world rankings answer the ${SPORT} list with the list$`),
+  function (this: WebWorld, sport: string) {
+    fakeOf(this).answer(sportCalled(sport), "list");
+  },
+);
+
+Given(
   new RegExp(
     `^the world rankings answer the ${SPORT} list only after the reading has stopped waiting$`,
   ),
@@ -322,6 +329,16 @@ Given(
 Given("the world rankings cannot be reached", async function (this: WebWorld) {
   await fakeOf(this).stop();
 });
+
+Then(
+  new RegExp(`^the ${SPORT} list was not asked for$`),
+  function (this: WebWorld, sport: string) {
+    assert.ok(
+      !fakeOf(this).asked.includes(PATHS[sportCalled(sport)]),
+      `Asked for ${JSON.stringify(fakeOf(this).asked)}.`,
+    );
+  },
+);
 
 // Read from the fake rather than from the page, because what is asked is
 // whether the site was asked anything at all.

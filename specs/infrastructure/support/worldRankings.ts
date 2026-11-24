@@ -163,6 +163,13 @@ Given(
 );
 
 Given(
+  new RegExp(`^the world rankings answer the ${SPORT} list with the list$`),
+  function (this: SpecWorld, sport: string) {
+    fakeRankingsOf(this).answer(sportCalled(sport), "list");
+  },
+);
+
+Given(
   new RegExp(`^the world rankings answer the ${SPORT} list with a failure$`),
   function (this: SpecWorld, sport: string) {
     fakeRankingsOf(this).answer(sportCalled(sport), "failure");
@@ -354,5 +361,41 @@ Given(
       ),
     );
     this.mediator = mediator;
+  },
+);
+
+// The path the fake serves golf croquet's list at, as the real site does.
+Then(
+  new RegExp(`^the ${SPORT} list was not asked for$`),
+  function (this: SpecWorld, sport: string) {
+    const { ac, gc } = fakeRankingsOf(this).addresses;
+    const path = new URL(sportCalled(sport) === "ac" ? ac : gc).pathname;
+    assert.ok(
+      !fakeRankingsOf(this).asked.includes(path),
+      `Asked for ${JSON.stringify(fakeRankingsOf(this).asked)}.`,
+    );
+  },
+);
+
+// The reading failing as the site itself fails, which is not a list refused:
+// what a broken connection to the database or a mistake in the code would do.
+const readings = new WeakMap<SpecWorld, WorldRankingLists>();
+
+Given("the reading of the rankings' lists breaks", function (this: SpecWorld) {
+  const before = this.worldRankingLists;
+  assert.ok(before !== undefined, "There is no fake of the world rankings.");
+  readings.set(this, before);
+  const broken = (): Promise<never> =>
+    Promise.reject(new Error("The reading broke."));
+  this.worldRankingLists = {
+    associationCroquetPlayers: broken,
+    golfCroquetNames: broken,
+  };
+});
+
+Given(
+  "the reading of the rankings' lists is mended",
+  function (this: SpecWorld) {
+    this.worldRankingLists = readings.get(this);
   },
 );

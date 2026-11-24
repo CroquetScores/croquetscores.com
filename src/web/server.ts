@@ -43,6 +43,7 @@ import { AccountProfile } from "../application/operations/accounts/AccountProfil
 import { AccountsWithRoleHandler } from "../application/operations/accounts/AccountsWithRoleHandler.js";
 import { AddRoleHandler } from "../application/operations/accounts/AddRoleHandler.js";
 import { ImportWorldRankingPlayersHandler } from "../application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
+import { RefreshAssociationCroquetPlayerNamesHandler } from "../application/operations/world-rankings/RefreshAssociationCroquetPlayerNamesHandler.js";
 import { makeHelpSearchIndex } from "../application/operations/help/MakeHelpSearchIndex.js";
 import { SearchHelpHandler } from "../application/operations/help/SearchHelpHandler.js";
 import type { HelpPagesToSearch } from "../application/services/HelpSearchIndex.js";
@@ -1351,24 +1352,37 @@ export const buildApplication = async (
   // Given the unit of work to run its own transactions in, since it reads the
   // rankings' lists between them, where the reading holds no connection.
   const worldRankingPlayers = new PostgresWorldRankingPlayers(unitOfWork);
+  const worldRankingLists =
+    options.worldRankingLists ??
+    new WorldRankingWebsite(
+      config.worldRankingAddresses,
+      config.worldRankingWaitMilliseconds,
+    );
+  // Written to the server's log at error, where the administrator who reads
+  // it will look. The server is made after this, so it is asked for when
+  // something is said.
+  const worldRankingErrors = {
+    error: (message: string, details: Record<string, unknown>): void => {
+      server.log.error(details, message);
+    },
+  };
   mediator.handleCommand(
     new ImportWorldRankingPlayersHandler(
       accounts,
-      options.worldRankingLists ??
-        new WorldRankingWebsite(
-          config.worldRankingAddresses,
-          config.worldRankingWaitMilliseconds,
-        ),
+      worldRankingLists,
       worldRankingPlayers,
       unitOfWork,
-      // Written to the server's log at error, where the administrator who
-      // reads it will look. The server is made after this, so it is asked
-      // for when something is said.
-      {
-        error: (message, details) => {
-          server.log.error(details, message);
-        },
-      },
+      worldRankingErrors,
+      emailQueue,
+      config.administratorEmailAddress,
+    ),
+  );
+  mediator.handleCommand(
+    new RefreshAssociationCroquetPlayerNamesHandler(
+      worldRankingLists,
+      worldRankingPlayers,
+      unitOfWork,
+      worldRankingErrors,
       emailQueue,
       config.administratorEmailAddress,
     ),
