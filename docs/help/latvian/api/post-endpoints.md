@@ -1,7 +1,5 @@
 # API POST galapunkti
 
-**PIEZĪME: Šis ir melnraksts. Daži galapunkti, kā zinu, tiks noņemti.**
-
 Šīs adreses kaut ko maina. Tās, kas tikai lasa, ir [GET galapunktos](get-endpoints.md). Katra adrese šeit atrodas zem `/api/v0` vietnē, un to, ko maina vietnes pašas lapas, maina tās pašas adreses, tāpēc lietotnei nav mazāka komplekta nekā vietnei. Kas attiecas uz visām, piemēram, atslēgas, limiti un kļūdas, ir rakstīts [palīdzībā lietotņu izstrādātājiem](index.md); kas drīkst rakstīt, ir [zemāk](#who-may-write).
 
 Turnīru, sacensības un pārējo adresē nosauc ar to id daļu aiz slīpsvītras: turnīram `tournament/4f2a…` adresē ir `4f2a…`. Pieprasījuma pamatteksts citas lietas nosauc tāpat, kā to dara `player` zemāk, izņemot tur, kur teikts, ka tas ir viss id.
@@ -32,23 +30,15 @@ Nosūtīt pieprasījumu divreiz nav tas pats, kas vienreiz: divreiz pievienota p
 
 `POST /api/v0/tournaments`
 
-Pieņem `name`, `starts` un `finishes` (rakstītus kā `2026-10-03T00:00:00Z`), `format`, `sport` (kodu, skatiet [sporta veidus](get-endpoints.md#sports)), `country` (kodu, piemēram, `au`) un, ja vajag, `region`, `subtitle`, `levelTestsDrawn`, `national` un `international`, katrs no pēdējiem trim ir `true` vai `false`. Atbild ar `201` ar `id` un `address`, kas ir vieta, kur vietne to rāda.
+Pieņem `name`, `starts` un `finishes` (rakstītus kā `2026-10-03T00:00:00Z`), `format` (kodu, skatiet [formātus](get-endpoints.md#formats)), `sport` (kodu, skatiet [sporta veidus](get-endpoints.md#sports)), `country` (kodu, piemēram, `au`, skatiet [valstis](get-endpoints.md#countries)) un, ja vajag, `region` (valsts reģiona kodu no tā paša saraksta), `subtitle`, `levelTestsDrawn`, `national` un `international`, katrs no pēdējiem trim ir `true` vai `false`. Atbild ar `201` ar `id` un `address`, kas ir vieta, kur vietne to rāda.
 
-### Arhivēt, atjaunot vai noņemt īpašo statusu {#tournament-actions}
+### Arhivēt vai atjaunot turnīru {#tournament-actions}
 
 `POST /api/v0/tournaments/{id}/archive`
 
 `POST /api/v0/tournaments/{id}/restore`
 
-`POST /api/v0/tournaments/{id}/remove-notable-status`
-
-Nepieņem pamattekstu un atbild ar `204`. Īpašā statusa noņemšana, kas saka, ka turnīrs nav ne nacionāls, ne starptautisks, ir administratora ziņā.
-
-### Dzēst testa turnīru {#delete-tournament}
-
-`POST /api/v0/tournaments/{id}/delete`
-
-Administratora ziņā, kurš ir nospriedis, ka turnīrs ir tests. Pieņem `message`, ko pasaka turnīra pārvaldniekiem, un `archive`, `true`, lai turnīru arī arhivētu. Atbild ar `204`.
+Nepieņem pamattekstu un atbild ar `204`.
 
 ### Pievienot pārvaldnieka piezīmi {#notes}
 
@@ -111,12 +101,6 @@ Pārvieto tās vienu vietu uz augšu vai uz leju turnīra sarakstā vai arhivē,
 
 Pieteic sacensībām vienu no turnīra spēlētājiem. Pieņem `player`, turnīra spēlētāja id daļu aiz `tournament-player/`. Atbild ar `201` ar `id`, kas ir spēlētāja id sacensībās, nevis turnīrā.
 
-### Pieteikt daudzus spēlētājus {#enter-players}
-
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/many`
-
-Pieņem `players`, turnīra spēlētāju sarakstu kā `player` iepriekš, un `enterWhatCan`. Pēc noklusējuma pieteic visus vai nevienu. Kur dažus pieteikt nevar, atbilde pasaka, kurus, un nepieteic nevienu, lai pārvaldnieks varētu izvēlēties; sūtiet `enterWhatCan` kā `true`, lai pieteiktu pārējos. Atbild ar `201` ar `ids` tādā secībā, kādā spēlētāji tika doti, un `refused`.
-
 ### Pārvietot, izstāties, atgriezt vai noņemt spēlētāju {#competition-player-actions}
 
 `POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
@@ -171,6 +155,14 @@ Pieņem rezultātus kā partijas pievienošana un, kur tie mainījušies, `winne
 Pārvieto testa rezultātu vienu vietu uz augšu vai uz leju, arhivē partiju vai atjauno to, neieskaita to (tā ir spēlēta un neskaitās) vai atceļ tās neieskaitīšanu. Nepieņem pamattekstu un atbild ar `204`. Šos un abus augstāk drīkst rezultātu ievadītājs.
 
 ## Turnīra spēlētāji {#tournament-players}
+
+### Pievienot spēlētāju {#add-tournament-player}
+
+`POST /api/v0/tournaments/{id}/players`
+
+Pievieno turnīram spēlētāju. Pieņem `name` un var pieņemt `representing`, `handicap`, `flag` un `worldRankingName`; kas ir izlaists vai tukšs, paliek nenorādīts. Atbild ar `201` ar spēlētāja `id`, kas ir viņa viss id, kā to norāda GET galapunkti. Spēlētājs bez vārda vai ar tāda spēlētāja vārdu, kas jau ir turnīrā, tiek noraidīts. Spēlētāju sacensībām [pieteic](#enter-player) ar šī `id` daļu aiz `tournament-player/`.
+
+### Pārvietot, arhivēt vai atjaunot spēlētāju {#tournament-player-actions}
 
 `POST /api/v0/tournaments/{id}/players/{player}/up`
 

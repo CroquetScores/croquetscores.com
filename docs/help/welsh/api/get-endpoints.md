@@ -37,19 +37,27 @@ Mae'n dweud yr hyn y mae'r rhestr yn ei ddweud amdano, a:
 
 Mae allwedd a wnaed ar gyfer un twrnamaint yn darllen hwnnw ac nid unrhyw un arall, ac fe'i gwrthodir ar gyfer unrhyw un arall gydag `ApiKey.LimitedToAnotherTournament`. Yr ateb yw `304` lle mae'r `ETag` neu'r `Last-Modified` a anfonwyd yn gyfredol.
 
-## Y campau {#sports}
+## Yr hyn y gall twrnamaint fod {#choices}
 
-Mae'r `sport` y mae twrnamaint yn ei ddweud, ac y gellir gofyn am restr ar ei gyfer, yn un o'r codau hyn:
+Mae tair rhestr yn dweud yr hyn y gall twrnamaint fod ar y wefan a ofynnir amdani: ei champau, ei fformatau a'r gwledydd y gall fod ynddynt. Dyma'r hyn y mae ffurflen y wefan ei hun ar gyfer twrnamaint newydd yn ei gynnig, felly mae twrnamaint a wneir â chod o un ohonynt yn cael ei dderbyn gan [wneud twrnamaint](post-endpoints.md#create-tournament). Nid oes angen allwedd arnynt. Mae pob un yn cymryd `language`, tag iaith fel `de`, i enwi ei dewisiadau yn yr iaith honno; gwrthodir tag nad yw'r wefan yn ei chynnig â `400`, ac mae ei `code` yn dweud pa restr a'i gwrthododd: `Sports.LanguageNotOffered`, `Formats.LanguageNotOffered` neu `Countries.LanguageUnknown`. Hebddi, enwir y campau a'r gwledydd yn Saesneg, a'r fformatau yn yr iaith y mae'r porwr neu gwci'r wefan yn ei dweud; dywedwch `language` felly lle dangosir yr enwau. Mae pob ateb yn cario `ETag` ac fe'i hatebir â `304` lle nad yw wedi newid.
 
-| Cod   | Camp                |
-| ----- | ------------------- |
-| `ac`  | Association Croquet |
-| `gc`  | Golf Croquet        |
-| `a6w` | American 6 Wicket   |
-| `rc`  | Ricochet            |
-| `gb`  | Gateball            |
+### Y campau {#sports}
 
-Gellir ychwanegu camp yn y dyfodol, fel maes (gweler [gellir ychwanegu meysydd](index.md#fields-may-be-added)), felly dylai ap ymdopi â chod nad yw'n ei adnabod.
+`GET /api/v0/tournaments/sports`
+
+Mae'n ateb gyda `sports`, pob un â `code` ac `name`. Mae'r `sport` y mae twrnamaint yn ei ddweud, ac y gellir gofyn am restr ar ei gyfer, yn un o'r codau hyn. Mae Croquet Scores yn cynnig `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) a `gb` (Gateball); mae Gateball Scores yn cynnig Gateball yn unig. Gellir ychwanegu camp yn y dyfodol, fel y gellir ychwanegu maes (gweler [gellir ychwanegu meysydd](index.md#fields-may-be-added)), felly dylai ap ymdopi â chod nad yw'n ei adnabod.
+
+### Y fformatau {#formats}
+
+`GET /api/v0/tournaments/formats`
+
+Mae'n ateb gyda `formats`, pob un â `code`, yr enw y gwneir twrnamaint ag ef, `name`, `teams`, a yw'n cael ei chwarae gan dimau, a `drawsLevelTests`, a yw twrnamaint ynddo yn tynnu prawf cyfartal oni ddywed nad yw.
+
+### Y gwledydd {#countries}
+
+`GET /api/v0/countries`
+
+Mae'n ateb gyda `countries`, pob un â `code` (fel `au`), `name` a `regions`, pob un â `code` ac `name`. Maent yn nhrefn eu henwau yn yr iaith y gofynnir amdani. Enwir rhanbarth fel y'i cofnodwyd, gan fwyaf yn iaith ei wlad ei hun. Mae gan wlad nad yw wedi'i rhannu un rhanbarth, sef hi ei hun.
 
 ## Un gystadleuaeth {#competition}
 
@@ -88,3 +96,33 @@ Mae'n rhestru'r twrnameintiau a ddaeth i flwyddyn wahanol i'r un yr oeddent yndd
 `GET /api/v0/tournaments/archived`
 
 Mae'n rhestru'r twrnameintiau a archifwyd, fel y gall ap roi'r gorau i'w dangos. Mae'n cymryd `archivedSince`, wedi'i ysgrifennu fel `2026-03-01T10:00:00Z`, `page` a `pageSize`. Mae gan bob un `tournamentId` ac `archivedAt`.
+
+## Chwaraewyr safleoedd y byd {#world-ranking-players}
+
+`GET /api/v0/ac/world-ranking-players`
+
+Mae'n rhestru'r chwaraewyr Association Croquet y mae safleoedd y byd yn eu hadnabod. Mae'n cymryd `changedSince`, wedi'i hysgrifennu fel `2026-03-01T10:00:00Z`, `page` a `pageSize`, lle mae tudalen yn 100 ar y mwyaf. Mae'n ateb gyda `worldRankingPlayers`, pob un â:
+
+- `id`, a `worldRankingId`, y rhif y mae'r safleoedd yn ei roi i'r chwaraewr
+- `name`, fel y mae'r safleoedd yn ei enwi
+- `games`, lle mae'r API yn sôn am gemau'r chwaraewr (gweler [gemau chwaraewr](#world-ranking-player-games))
+- `archivedAt`, pryd yr archifwyd y chwaraewr, neu `null`
+- `changedAt`, ac `etag`, wedi'i wneud o'r hyn y mae'r chwaraewr yn ei ddweud
+
+a `total`, `page`, `pageSize` a `next`, fel sydd gan dwrnameintiau blwyddyn. Gofynnir am y rhestr eto gyda'r `ETag` a anfonodd, a'i hatebir â `304` lle nad oes dim wedi newid. Gwrthodir cais a wrthodir â `code` sy'n dechrau â `WorldRankingPlayers.`, fel `WorldRankingPlayers.PageNotWhole`, a `field`.
+
+## Gemau chwaraewr safleoedd y byd {#world-ranking-player-games}
+
+`GET /api/v0/ac/world-ranking-players/{id}/games`
+
+Y `id` yw'r rhan o `id` y chwaraewr sy'n dod ar ôl y slaes, fel y mae `games` yn y rhestr uchod yn ei rhoi. Mae'n rhestru'r gemau Association Croquet y mae'r chwaraewr wedi'u chwarae, boed mewn bloc, system Swisaidd, twrnamaint ag ymadael neu brawf, ac a chwaraeodd drosto'i hun neu dros dîm. Mae'n cymryd `changedSince`, `page` a `pageSize` fel y mae'r rhestr o chwaraewyr, ac yn ateb gyda `games`, yn y drefn yr ychwanegwyd hwy, pob un o ochr y chwaraewr:
+
+- `id`, `tournamentId` a `competitionId`
+- `won`, a enillodd y chwaraewr, sy'n `false` am gyfartal, a `drawn`
+- `score`, un'r chwaraewr, ac `opponentScore`, y ddau fel y'u teipiwyd, fel `26tp`
+- `opponentName`, fel y mae'r safleoedd yn ei enwi lle mae'r gwrthwynebydd yn chwaraewr safleoedd y byd ac fel arall fel y mae'r twrnamaint yn ei gadw, ac `opponentId`, `id` y gwrthwynebydd yn y rhestr uchod, neu `null` lle nad yw'n un
+- `archived` a `withdrawn`: rhestrir gêm o gystadleuaeth neu dwrnamaint wedi'i archifo, neu gêm wedi'i harchifo neu ei thynnu'n ôl, ac mae'n dweud hynny, fel y gall ap a'i cadwodd roi'r gorau i'w chyfrif
+- `addedAt`, neu `null` am gêm a ychwanegwyd cyn i'r wefan gofnodi pryd, a `changedAt`
+- `etag`
+
+a `total`, `page`, `pageSize` a `next`. Gwrthodir chwaraewr nad yw'r wefan yn ei adnabod â `404` a `WorldRankingPlayers.NotFound`, nad yw'r un peth â chwaraewr heb gemau, sydd â rhestr wag.

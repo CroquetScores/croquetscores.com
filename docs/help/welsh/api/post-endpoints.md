@@ -1,7 +1,5 @@
 # Terfynbwyntiau POST yr API
 
-**NODYN: Drafft yw hwn. Rwy'n gwybod y caiff rhai terfynbwyntiau eu dileu.**
-
 Mae'r cyfeiriadau hyn yn newid rhywbeth. Mae'r rhai sy'n darllen yn unig yn y [terfynbwyntiau GET](get-endpoints.md). Mae pob cyfeiriad yma o dan `/api/v0` ar y wefan, a'r hyn y mae tudalennau'r wefan ei hun yn ei newid, mae'r un cyfeiriadau hyn yn ei newid, felly nid oes gan ap set lai na'r wefan. Mae'r hyn sy'n wir am bob un, fel allweddi, lwfansau a gwallau, yn y [cymorth i ddatblygwyr apiau](index.md); mae pwy a gaiff ysgrifennu [isod](#who-may-write).
 
 Enwir twrnamaint, cystadleuaeth a'r gweddill mewn cyfeiriad gan y rhan o'u id sy'n dod ar ôl y slaes: ar gyfer `tournament/4f2a…`, mae'r cyfeiriad yn dweud `4f2a…`. Mae corff yn enwi pethau eraill yn yr un modd, fel y mae `player` yn ei wneud isod, ac eithrio lle mae'n dweud mai'r id cyfan ydyw.
@@ -32,23 +30,15 @@ Nid yw anfon cais ddwywaith yr un fath ag anfon un waith: mae gêm a ychwanegir 
 
 `POST /api/v0/tournaments`
 
-Mae'n cymryd `name`, `starts` a `finishes` (wedi'u hysgrifennu fel `2026-10-03T00:00:00Z`), `format`, `sport` (cod, gweler [y campau](get-endpoints.md#sports)), `country` (cod fel `au`) ac, os dymunir, `region`, `subtitle`, `levelTestsDrawn`, `national` a `international`, pob un o'r tri olaf yn `true` neu `false`. Mae'n ateb `201` gydag `id` ac `address`, sef lle mae'r wefan yn ei ddangos.
+Mae'n cymryd `name`, `starts` a `finishes` (wedi'u hysgrifennu fel `2026-10-03T00:00:00Z`), `format` (cod, gweler [y fformatau](get-endpoints.md#formats)), `sport` (cod, gweler [y campau](get-endpoints.md#sports)), `country` (cod fel `au`, gweler [y gwledydd](get-endpoints.md#countries)) ac, os dymunir, `region` (cod o'r wlad, o'r un rhestr), `subtitle`, `levelTestsDrawn`, `national` a `international`, pob un o'r tri olaf yn `true` neu `false`. Mae'n ateb `201` gydag `id` ac `address`, sef lle mae'r wefan yn ei ddangos.
 
-### Archifo, adfer neu dynnu statws nodedig {#tournament-actions}
+### Archifo neu adfer twrnamaint {#tournament-actions}
 
 `POST /api/v0/tournaments/{id}/archive`
 
 `POST /api/v0/tournaments/{id}/restore`
 
-`POST /api/v0/tournaments/{id}/remove-notable-status`
-
-Nid ydynt yn cymryd corff ac maent yn ateb `204`. Gweinyddwr sy'n tynnu statws nodedig, sy'n dweud nad yw'r twrnamaint yn genedlaethol nac yn rhyngwladol.
-
-### Dileu twrnamaint prawf {#delete-tournament}
-
-`POST /api/v0/tournaments/{id}/delete`
-
-Gwaith gweinyddwr, sydd wedi barnu bod y twrnamaint yn brawf. Mae'n cymryd `message`, a ddywedir wrth reolwyr y twrnamaint, ac `archive`, `true` i archifo'r twrnamaint hefyd. Mae'n ateb `204`.
+Nid ydynt yn cymryd corff ac maent yn ateb `204`.
 
 ### Ychwanegu nodyn rheolwr {#notes}
 
@@ -111,12 +101,6 @@ Maent yn ei symud i fyny neu i lawr un lle yn rhestr y twrnamaint, neu'n ei harc
 
 Mae'n rhoi un o chwaraewyr y twrnamaint yn y gystadleuaeth. Mae'n cymryd `player`, y rhan o id chwaraewr y twrnamaint sy'n dod ar ôl `tournament-player/`. Mae'n ateb `201` gydag `id`, sef id y chwaraewr yn y gystadleuaeth ac nid yn y twrnamaint.
 
-### Rhoi llawer o chwaraewyr i mewn {#enter-players}
-
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/many`
-
-Mae'n cymryd `players`, rhestr o chwaraewyr y twrnamaint fel `player` uchod, ac `enterWhatCan`. Yn ddiofyn rhoddir pawb i mewn neu neb. Lle na ellir rhoi rhai i mewn, mae'r ateb yn dweud pa rai ac nid yw'n rhoi neb i mewn, fel y gall y rheolwr ddewis; anfonwch `enterWhatCan` fel `true` i roi'r gweddill i mewn. Mae'n ateb `201` gydag `ids`, yn y drefn y rhoddwyd y chwaraewyr, a `refused`.
-
 ### Symud, tynnu'n ôl, dod â chwaraewr yn ôl neu ei dynnu {#competition-player-actions}
 
 `POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
@@ -171,6 +155,14 @@ Mae'n cymryd y sgorau fel wrth ychwanegu gêm, a, lle maent wedi newid, `winner`
 Maent yn symud sgôr prawf i fyny neu i lawr un lle, yn archifo gêm neu'n ei hadfer, yn ei thynnu'n ôl (chwaraewyd hi, ac nid yw'n cyfrif) neu'n dadwneud ei thynnu'n ôl. Nid ydynt yn cymryd corff ac maent yn ateb `204`. Y rhain, a'r ddau uchod, yw'r hyn y caiff sgoriwr ei wneud.
 
 ## Chwaraewyr twrnamaint {#tournament-players}
+
+### Ychwanegu chwaraewr {#add-tournament-player}
+
+`POST /api/v0/tournaments/{id}/players`
+
+Mae'n ychwanegu chwaraewr at y twrnamaint. Mae'n cymryd `name`, a chaiff gymryd `representing`, `handicap`, `flag` a `worldRankingName`; mae'r hyn a adewir allan neu sy'n wag yn aros heb ei ddweud. Mae'n ateb `201` gydag `id` y chwaraewr, sef ei id cyfan, fel y mae'r terfynbwyntiau GET yn ei ddweud. Gwrthodir chwaraewr heb enw, neu ag enw un sydd yno eisoes. Mae chwaraewr yn cael ei [roi](#enter-player) mewn cystadleuaeth gyda'r rhan o'r `id` hwn sy'n dod ar ôl `tournament-player/`.
+
+### Symud, archifo neu adfer chwaraewr {#tournament-player-actions}
 
 `POST /api/v0/tournaments/{id}/players/{player}/up`
 

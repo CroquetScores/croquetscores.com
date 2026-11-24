@@ -37,19 +37,27 @@ Saka to, ko saraksts saka par to, un:
 
 Atslēga, kas izveidota vienam turnīram, lasa to un nevienu citu, un jebkuram citam tiek noraidīta ar `ApiKey.LimitedToAnotherTournament`. Atbilde ir `304`, ja nosūtītais `ETag` vai `Last-Modified` ir aktuāls.
 
-## Sporta veidi {#sports}
+## Kas var būt turnīrs {#choices}
 
-`sport`, ko turnīrs min un kuram var pieprasīt sarakstu, ir viens no šiem kodiem:
+Trīs saraksti saka, kas var būt turnīrs vietnē, kas tiek jautāta: tās sporta veidi, formāti un valstis, kurās tas var notikt. Tas ir tas, ko piedāvā vietnes pašas veidlapa jaunam turnīram, tāpēc turnīru, kas izveidots ar kodu no kāda no tiem, [Izveidot turnīru](post-endpoints.md#create-tournament) pieņem. Tiem atslēga nav vajadzīga. Katrs pieņem `language`, valodas birku, piemēram, `de`, lai nosauktu savas izvēles šajā valodā; birka, ko vietne nepiedāvā, tiek noraidīta ar `400`, un tās `code` saka, kurš saraksts to noraidīja: `Sports.LanguageNotOffered`, `Formats.LanguageNotOffered` vai `Countries.LanguageUnknown`. Bez tās sporta veidi un valstis tiek nosaukti angliski, bet formāti valodā, ko norāda pārlūks vai vietnes sīkdatne; tāpēc norādiet `language` tur, kur nosaukumi tiek rādīti. Katra atbilde nes `ETag`, un uz to atbild ar `304`, ja tā nav mainījusies.
 
-| Kods  | Sporta veids        |
-| ----- | ------------------- |
-| `ac`  | Association Croquet |
-| `gc`  | Golf Croquet        |
-| `a6w` | American 6 Wicket   |
-| `rc`  | Ricochet            |
-| `gb`  | Gateball            |
+### Sporta veidi {#sports}
 
-Sporta veids nākotnē var tikt pievienots, tāpat kā lauks (skatiet [lauki var tikt pievienoti](index.md#fields-may-be-added)), tāpēc lietotnei jāprot tikt galā ar kodu, ko tā nepazīst.
+`GET /api/v0/tournaments/sports`
+
+Atbild ar `sports`, katrs ar `code` un `name`. `sport`, ko turnīrs min un kuram var pieprasīt sarakstu, ir viens no šiem kodiem. Croquet Scores piedāvā `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) un `gb` (Gateball); Gateball Scores piedāvā tikai Gateball. Sporta veids nākotnē var tikt pievienots, tāpat kā lauks (skatiet [lauki var tikt pievienoti](index.md#fields-may-be-added)), tāpēc lietotnei jāprot tikt galā ar kodu, ko tā nepazīst.
+
+### Formāti {#formats}
+
+`GET /api/v0/tournaments/formats`
+
+Atbild ar `formats`, katrs ar `code`, nosaukumu, ar kādu turnīru izveido, `name`, `teams`, vai to spēlē komandas, un `drawsLevelTests`, vai turnīrs tajā izlozē neizšķirta rezultāta testu, ja tas nesaka, ka to nedara.
+
+### Valstis {#countries}
+
+`GET /api/v0/countries`
+
+Atbild ar `countries`, katra ar `code` (piemēram, `au`), `name` un `regions`, katrs ar `code` un `name`. Tās ir to nosaukumu secībā pieprasītajā valodā. Reģions tiek nosaukts tā, kā tas tika ierakstīts, parasti savas valsts valodā. Valstij, kas nav sadalīta, ir viens reģions, kas ir pati valsts.
 
 ## Viena sacensību grupa {#competition}
 
@@ -88,3 +96,33 @@ Uzskaita turnīrus, kas nonākuši citā gadā, nekā tajā, kurā tie bija, lai
 `GET /api/v0/tournaments/archived`
 
 Uzskaita turnīrus, kas ir arhivēti, lai lietotne varētu beigt tos rādīt. Pieņem `archivedSince`, rakstītu kā `2026-03-01T10:00:00Z`, `page` un `pageSize`. Katram ir `tournamentId` un `archivedAt`.
+
+## Pasaules ranga spēlētāji {#world-ranking-players}
+
+`GET /api/v0/ac/world-ranking-players`
+
+Uzskaita Association Croquet spēlētājus, ko pazīst pasaules ranga saraksti. Pieņem `changedSince`, rakstītu kā `2026-03-01T10:00:00Z`, `page` un `pageSize`, kur lapā ir ne vairāk kā 100 ieraksti. Atbild ar `worldRankingPlayers`, katrs ar:
+
+- `id` un `worldRankingId`, numuru, ko rangu saraksti dod spēlētājam
+- `name`, kā rangu saraksti viņu sauc
+- `games`, kur API stāsta par spēlētāja partijām (skatiet [spēlētāja partijas](#world-ranking-player-games))
+- `archivedAt`, kad spēlētājs tika arhivēts, vai `null`
+- `changedAt` un `etag`, veidotu no tā, ko saka spēlētājs
+
+un `total`, `page`, `pageSize` un `next`, tāpat kā viena gada turnīriem. Sarakstu pieprasa vēlreiz ar `ETag`, ko tas nosūtīja, un atbild ar `304`, ja nekas nav mainījies. Noraidīts pieprasījums tiek noraidīts ar `code`, kas sākas ar `WorldRankingPlayers.`, piemēram, `WorldRankingPlayers.PageNotWhole`, un ar `field`.
+
+## Pasaules ranga spēlētāja partijas {#world-ranking-player-games}
+
+`GET /api/v0/ac/world-ranking-players/{id}/games`
+
+`id` ir spēlētāja `id` daļa aiz slīpsvītras, kā to dod `games` iepriekšējā sarakstā. Uzskaita Association Croquet partijas, ko spēlētājs ir nospēlējis, vai nu grupā, vai Šveices sistēmā, vai izslēgšanas turnīrā, vai testā, un vai viņš spēlēja par sevi, vai par komandu. Pieņem `changedSince`, `page` un `pageSize` kā spēlētāju saraksts un atbild ar `games`, secībā, kādā tās pievienotas, katra no spēlētāja puses:
+
+- `id`, `tournamentId` un `competitionId`
+- `won`, vai spēlētājs uzvarēja, kas neizšķirtai ir `false`, un `drawn`
+- `score`, spēlētāja, un `opponentScore`, abi, kā tie tika ievadīti, piemēram, `26tp`
+- `opponentName`, kā rangu saraksti viņu sauc, ja pretinieks ir pasaules ranga spēlētājs, un citādi tā, kā viņu tur turnīrs, un `opponentId`, pretinieka `id` iepriekšējā sarakstā, vai `null`, ja viņš tāds nav
+- `archived` un `withdrawn`: arhivētu sacensību vai turnīra partija vai arhivēta vai atsaukta partija tiek uzskaitīta un to saka, lai lietotne, kas to paturēja, varētu to beigt skaitīt
+- `addedAt`, vai `null` partijai, kas pievienota, pirms vietne ierakstīja, kad, un `changedAt`
+- `etag`
+
+un `total`, `page`, `pageSize` un `next`. Spēlētājs, ko vietne nepazīst, tiek noraidīts ar `404` un `WorldRankingPlayers.NotFound`, kas nav tas pats, kas spēlētājs bez partijām, kuram ir tukšs saraksts.

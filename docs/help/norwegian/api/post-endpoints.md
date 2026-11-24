@@ -1,7 +1,5 @@
 # API-ets POST-endepunkter
 
-**MERK: Dette er et utkast. Noen endepunkter vet jeg kommer til å bli fjernet.**
-
 Disse adressene endrer noe. De som bare leser, står i [GET-endepunktene](get-endpoints.md). Hver adresse her ligger under `/api/v0` på nettstedet, og det nettstedets egne sider endrer, endres av de samme adressene, slik at en app ikke har et mindre sett enn nettstedet. Det som gjelder alle, som nøkler, kvoter og feil, står i [hjelpen for apputviklere](index.md); hvem som kan skrive, står [nedenfor](#who-may-write).
 
 En turnering, en konkurranse og resten navngis i en adresse med den delen av id-en som står etter skråstreken: for `tournament/4f2a…` står det `4f2a…` i adressen. En forespørselskropp navngir andre ting på samme måte, slik `player` gjør nedenfor, unntatt der det står at det er hele id-en.
@@ -32,23 +30,15 @@ En forespørsel som oppretter noe, besvares med `201` og den nye tingens `id`, s
 
 `POST /api/v0/tournaments`
 
-Tar `name`, `starts` og `finishes` (skrevet som `2026-10-03T00:00:00Z`), `format`, `sport` (en kode, se [idrettene](get-endpoints.md#sports)), `country` (en kode som `au`) og om ønsket `region`, `subtitle`, `levelTestsDrawn`, `national` og `international`, der hver av de tre siste er `true` eller `false`. Svarer `201` med `id` og `address`, som er der nettstedet viser den.
+Tar `name`, `starts` og `finishes` (skrevet som `2026-10-03T00:00:00Z`), `format` (en kode, se [formatene](get-endpoints.md#formats)), `sport` (en kode, se [idrettene](get-endpoints.md#sports)), `country` (en kode som `au`, se [landene](get-endpoints.md#countries)) og om ønsket `region` (en kode for landet, fra samme liste), `subtitle`, `levelTestsDrawn`, `national` og `international`, der hver av de tre siste er `true` eller `false`. Svarer `201` med `id` og `address`, som er der nettstedet viser den.
 
-### Arkiver, gjenopprett eller fjern særstatus {#tournament-actions}
+### Arkiver eller gjenopprett en turnering {#tournament-actions}
 
 `POST /api/v0/tournaments/{id}/archive`
 
 `POST /api/v0/tournaments/{id}/restore`
 
-`POST /api/v0/tournaments/{id}/remove-notable-status`
-
-Tar ingen kropp og svarer `204`. Å fjerne særstatus, som sier at turneringen verken er en nasjonal eller en internasjonal, er administratorens sak.
-
-### Slett en testturnering {#delete-tournament}
-
-`POST /api/v0/tournaments/{id}/delete`
-
-Administratorens sak, som har vurdert turneringen til å være en test. Tar `message`, som turneringens ledere får beskjed om, og `archive`, `true` for å arkivere turneringen også. Svarer `204`.
+Tar ingen kropp og svarer `204`.
 
 ### Legg til et notat fra en leder {#notes}
 
@@ -111,12 +101,6 @@ Flytter den en plass opp eller ned i turneringens liste, eller arkiverer den, el
 
 Melder én av turneringens spillere på konkurransen. Tar `player`, den delen av turneringsspillerens id som står etter `tournament-player/`. Svarer `201` med `id`, som er spillerens id i konkurransen og ikke i turneringen.
 
-### Meld på mange spillere {#enter-players}
-
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/many`
-
-Tar `players`, en liste med turneringsspillere som `player` ovenfor, og `enterWhatCan`. Som standard blir alle meldt på, eller ingen. Der noen ikke kan meldes på, sier svaret hvilke og melder ingen på, slik at lederen kan velge; send `enterWhatCan` som `true` for å melde på resten. Svarer `201` med `ids`, i den rekkefølgen spillerne ble gitt, og `refused`.
-
 ### Flytt, trekk, hent tilbake eller fjern en spiller {#competition-player-actions}
 
 `POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
@@ -171,6 +155,14 @@ Tar resultatene som å legge til et parti, og der de er endret, `winner` og `los
 Flytter en tests resultat en plass opp eller ned, arkiverer et parti eller gjenoppretter det, trekker det (det ble spilt, og teller ikke) eller opphever trekkingen. De tar ingen kropp og svarer `204`. Disse, og de to ovenfor, er det en poengfører kan gjøre.
 
 ## En turnerings spillere {#tournament-players}
+
+### Legg til en spiller {#add-tournament-player}
+
+`POST /api/v0/tournaments/{id}/players`
+
+Legger en spiller til turneringen. Tar `name`, og kan ta `representing`, `handicap`, `flag` og `worldRankingName`; det som er utelatt eller tomt, blir ikke sagt. Svarer `201` med spillerens `id`, som er hele id-en deres, slik GET-endepunktene sier den. En spiller uten navn, eller med navnet til en som allerede er der, avvises. En spiller [meldes på](#enter-player) en konkurranse med den delen av denne `id`-en som står etter `tournament-player/`.
+
+### Flytt, arkiver eller gjenopprett en spiller {#tournament-player-actions}
 
 `POST /api/v0/tournaments/{id}/players/{player}/up`
 

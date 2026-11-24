@@ -37,19 +37,27 @@ a dále `total`, `page`, `pageSize` a `next`, což je adresa další stránky, n
 
 Klíč vytvořený pro jeden turnaj čte tento turnaj a žádný jiný, a pro jakýkoli jiný je odmítnut s `ApiKey.LimitedToAnotherTournament`. Odpověď je `304`, pokud je `ETag` nebo `Last-Modified`, které se poslaly, stále aktuální.
 
-## Sporty {#sports}
+## Čím může turnaj být {#choices}
 
-`sport`, který turnaj uvádí a pro který lze seznam žádat, je jeden z těchto kódů:
+Tři seznamy říkají, čím může turnaj být na dotazovaném webu: jeho sporty, jeho formáty a země, ve kterých se může konat. Je to to, co nabízí vlastní formulář webu pro nový turnaj, takže turnaj vytvořený s kódem z některého z nich [Vytvoření turnaje](post-endpoints.md#create-tournament) přijme. Klíč nepotřebují. Každý přijímá `language`, značku jazyka, například `de`, aby své volby pojmenoval v tomto jazyce; značka, kterou web nenabízí, se odmítne s `400` a její `code` říká, který seznam ji odmítl: `Sports.LanguageNotOffered`, `Formats.LanguageNotOffered` nebo `Countries.LanguageUnknown`. Bez ní se sporty a země pojmenují anglicky a formáty v jazyce, který říká prohlížeč nebo cookie webu, takže uveďte `language` tam, kde se názvy zobrazují. Každá odpověď nese `ETag` a odpovídá se `304`, kde je beze změny.
 
-| Kód   | Sport               |
-| ----- | ------------------- |
-| `ac`  | Association Croquet |
-| `gc`  | Golf Croquet        |
-| `a6w` | American 6 Wicket   |
-| `rc`  | Ricochet            |
-| `gb`  | Gateball            |
+### Sporty {#sports}
 
-Sport může v budoucnu přibýt, stejně jako pole (viz [pole mohou přibýt](index.md#fields-may-be-added)), takže by aplikace měla zvládnout kód, který nezná.
+`GET /api/v0/tournaments/sports`
+
+Odpovídá polem `sports`, u každého sportu `code` a `name`. `sport`, který turnaj uvádí a pro který lze seznam žádat, je jeden z těchto kódů. Croquet Scores nabízí `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) a `gb` (Gateball); Gateball Scores nabízí jen Gateball. Sport může v budoucnu přibýt, stejně jako pole (viz [pole mohou přibýt](index.md#fields-may-be-added)), takže by aplikace měla zvládnout kód, který nezná.
+
+### Formáty {#formats}
+
+`GET /api/v0/tournaments/formats`
+
+Odpovídá polem `formats`, u každého formátu `code`, což je název, pod kterým se turnaj vytváří, `name`, `teams`, zda se hraje v týmech, a `drawsLevelTests`, zda turnaj v něm losuje rozhodující test, pokud neřekne, že ne.
+
+### Země {#countries}
+
+`GET /api/v0/countries`
+
+Odpovídá polem `countries`, u každé země `code` (například `au`), `name` a `regions`, u každého regionu `code` a `name`. Jsou seřazeny podle svých názvů v dotazovaném jazyce. Region se pojmenuje tak, jak byl zaznamenán, většinou v jazyce vlastní země. Země, která není rozdělena, má jeden region, a tím je ona sama.
 
 ## Jedna soutěž {#competition}
 
@@ -88,3 +96,33 @@ Vypisuje turnaje, které se dostaly do jiného roku, než v jakém byly, aby apl
 `GET /api/v0/tournaments/archived`
 
 Vypisuje turnaje, které byly archivovány, aby je aplikace mohla přestat zobrazovat. Přijímá `archivedSince`, zapsané jako `2026-03-01T10:00:00Z`, `page` a `pageSize`. Každý má `tournamentId` a `archivedAt`.
+
+## Hráči světového žebříčku {#world-ranking-players}
+
+`GET /api/v0/ac/world-ranking-players`
+
+Vypíše hráče Association Croquet, které světové žebříčky znají. Přijímá `changedSince`, zapsaný jako `2026-03-01T10:00:00Z`, `page` a `pageSize`, kde stránka má nejvýše 100 položek. Odpovídá polem `worldRankingPlayers`, u každého hráče:
+
+- `id` a `worldRankingId`, číslo, které hráči dávají žebříčky
+- `name`, jak ho žebříčky jmenují
+- `games`, kde API vypráví o hrách hráče (viz [hry hráče](#world-ranking-player-games))
+- `archivedAt`, kdy byl hráč archivován, nebo `null`
+- `changedAt` a `etag`, vytvořený z toho, co hráč říká
+
+a `total`, `page`, `pageSize` a `next`, stejně jako u turnajů jednoho roku. Seznam se žádá znovu s `ETag`, který poslal, a odpovídá se `304`, kde se nic nezměnilo. Odmítnutý požadavek se odmítne s `code`, který začíná `WorldRankingPlayers.`, například `WorldRankingPlayers.PageNotWhole`, a s `field`.
+
+## Hry hráče světového žebříčku {#world-ranking-player-games}
+
+`GET /api/v0/ac/world-ranking-players/{id}/games`
+
+`id` je část `id` hráče za lomítkem, jak ji uvádí `games` v seznamu výše. Vypíše hry Association Croquet, které hráč odehrál, ať v bloku, ve švýcarském systému, v pavouku nebo v testu, a ať hrál sám za sebe, nebo za tým. Přijímá `changedSince`, `page` a `pageSize` jako seznam hráčů a odpovídá polem `games`, v pořadí, v jakém byly přidány, u každé hry z pohledu hráče:
+
+- `id`, `tournamentId` a `competitionId`
+- `won`, zda hráč vyhrál, což je u remízy `false`, a `drawn`
+- `score`, hráčovo, a `opponentScore`, obě tak, jak byla zapsána, například `26tp`
+- `opponentName`, jak ho žebříčky jmenují, kde je soupeř hráčem světového žebříčku, a jinak tak, jak ho vede turnaj, a `opponentId`, `id` soupeře ve výše uvedeném seznamu, nebo `null`, kde jím není
+- `archived` a `withdrawn`: hra archivované soutěže nebo turnaje, nebo archivovaná či odstoupená hra se vypíše a řekne to, aby aplikace, která si ji ponechala, ji mohla přestat počítat
+- `addedAt`, nebo `null` u hry, která byla přidána dříve, než web zaznamenával kdy, a `changedAt`
+- `etag`
+
+a `total`, `page`, `pageSize` a `next`. Hráč, kterého web nezná, se odmítne s `404` a `WorldRankingPlayers.NotFound`, což není totéž jako hráč bez her, který má prázdný seznam.

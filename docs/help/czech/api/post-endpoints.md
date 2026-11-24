@@ -1,7 +1,5 @@
 # Koncové body API pro POST
 
-**POZNÁMKA: Toto je koncept. Několik koncových bodů bude podle mě odstraněno.**
-
 Tyto adresy něco mění. Ty, které jen čtou, jsou v [koncových bodech pro GET](get-endpoints.md). Každá adresa zde je pod `/api/v0` na webu a to, co mění stránky samotného webu, mění tytéž adresy, takže aplikace nemá menší sadu než web. Co platí pro všechny, jako klíče, limity a chyby, je v [nápovědě pro vývojáře aplikací](index.md); kdo smí zapisovat, je [níže](#who-may-write).
 
 Turnaj, soutěž a ostatní se v adrese pojmenují částí svého id za lomítkem: u `tournament/4f2a…` je v adrese `4f2a…`. Tělo požadavku pojmenovává jiné věci stejně, jako to dělá `player` níže, kromě případů, kdy se říká, že jde o celé id.
@@ -32,23 +30,15 @@ Poslat požadavek dvakrát není totéž jako jednou: hra přidaná dvakrát jso
 
 `POST /api/v0/tournaments`
 
-Přijímá `name`, `starts` a `finishes` (zapsané jako `2026-10-03T00:00:00Z`), `format`, `sport` (kód, viz [sporty](get-endpoints.md#sports)), `country` (kód, například `au`) a podle potřeby `region`, `subtitle`, `levelTestsDrawn`, `national` a `international`, z nichž každé z posledních tří je `true` nebo `false`. Odpovídá `201` s `id` a `address`, což je místo, kde ho web ukazuje.
+Přijímá `name`, `starts` a `finishes` (zapsané jako `2026-10-03T00:00:00Z`), `format` (kód, viz [formáty](get-endpoints.md#formats)), `sport` (kód, viz [sporty](get-endpoints.md#sports)), `country` (kód, například `au`, viz [země](get-endpoints.md#countries)) a podle potřeby `region` (kód regionu dané země ze stejného seznamu), `subtitle`, `levelTestsDrawn`, `national` a `international`, z nichž každé z posledních tří je `true` nebo `false`. Odpovídá `201` s `id` a `address`, což je místo, kde ho web ukazuje.
 
-### Archivace, obnovení nebo odebrání významného statusu {#tournament-actions}
+### Archivace nebo obnovení turnaje {#tournament-actions}
 
 `POST /api/v0/tournaments/{id}/archive`
 
 `POST /api/v0/tournaments/{id}/restore`
 
-`POST /api/v0/tournaments/{id}/remove-notable-status`
-
-Nepřijímají tělo a odpovídají `204`. Odebrání významného statusu, který říká, že turnaj není ani národní, ani mezinárodní, je záležitostí administrátora.
-
-### Smazání zkušebního turnaje {#delete-tournament}
-
-`POST /api/v0/tournaments/{id}/delete`
-
-Záležitost administrátora, který posoudil, že turnaj je zkušební. Přijímá `message`, což se řekne organizátorům turnaje, a `archive`, `true`, aby se turnaj také archivoval. Odpovídá `204`.
+Nepřijímají tělo a odpovídají `204`.
 
 ### Přidání poznámky organizátora {#notes}
 
@@ -111,12 +101,6 @@ Posunou ji v seznamu turnaje o místo nahoru nebo dolů, archivují ji nebo ji o
 
 Přihlásí do soutěže jednoho z hráčů turnaje. Přijímá `player`, část id hráče turnaje za `tournament-player/`. Odpovídá `201` s `id`, což je id hráče v soutěži, ne v turnaji.
 
-### Přihlášení více hráčů {#enter-players}
-
-`POST /api/v0/tournaments/{id}/competitions/{competition}/players/many`
-
-Přijímá `players`, seznam hráčů turnaje jako `player` výše, a `enterWhatCan`. Ve výchozím stavu se přihlásí všichni, nebo nikdo. Kde někteří přihlášeni být nemohou, odpověď řekne které a nepřihlásí nikoho, aby si organizátor mohl vybrat; pošlete `enterWhatCan` jako `true`, aby se přihlásili ostatní. Odpovídá `201` s `ids` v pořadí, v jakém byli hráči zadáni, a s `refused`.
-
 ### Posunutí, odstoupení, vrácení nebo odebrání hráče {#competition-player-actions}
 
 `POST /api/v0/tournaments/{id}/competitions/{competition}/players/{player}/up`
@@ -171,6 +155,14 @@ Přijímá skóre jako přidání hry a tam, kde se změnili, `winner` a `loser`
 Posunou skóre testu o místo nahoru nebo dolů, archivují hru nebo ji obnoví, neuznají ji (byla odehrána a nic se nepočítá) nebo zruší její neuznání. Nepřijímají tělo a odpovídají `204`. Tyto a dva výše smí zapisovatel.
 
 ## Hráči turnaje {#tournament-players}
+
+### Přidání hráče {#add-tournament-player}
+
+`POST /api/v0/tournaments/{id}/players`
+
+Přidá do turnaje hráče. Přijímá `name` a může přijmout `representing`, `handicap`, `flag` a `worldRankingName`; co chybí nebo je prázdné, zůstane neuvedeno. Odpovídá `201` s `id` hráče, což je celé jeho id, jak ho uvádějí koncové body pro GET. Hráč bez jména nebo se jménem hráče, který už v turnaji je, je odmítnut. Hráč se do soutěže [přihlásí](#enter-player) částí tohoto `id` za `tournament-player/`.
+
+### Posunutí, archivace nebo obnovení hráče {#tournament-player-actions}
 
 `POST /api/v0/tournaments/{id}/players/{player}/up`
 

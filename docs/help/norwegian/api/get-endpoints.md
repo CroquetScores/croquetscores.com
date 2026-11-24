@@ -37,19 +37,27 @@ Sier det listen sier om den, og:
 
 En nøkkel laget for én turnering leser den og ingen annen, og avvises for enhver annen med `ApiKey.LimitedToAnotherTournament`. Svaret er `304` der den `ETag` eller `Last-Modified` som ble sendt, er gjeldende.
 
-## Idrettene {#sports}
+## Hva en turnering kan være {#choices}
 
-`sport`, som en turnering oppgir og som en liste kan spørres for, er en av disse kodene:
+Tre lister sier hva en turnering kan være på nettstedet det spørres om: idrettene, formatene og landene den kan holdes i. Det er det nettstedets eget skjema for en ny turnering tilbyr, så en turnering som lages med en kode fra en av dem, godtas av [å lage en turnering](post-endpoints.md#create-tournament). De trenger ingen nøkkel. Hver tar `language`, en språkkode som `de`, for å navngi valgene sine på det språket; en kode nettstedet ikke tilbyr, avvises med `400`, og `code` sier hvilken liste som avviste den: `Sports.LanguageNotOffered`, `Formats.LanguageNotOffered` eller `Countries.LanguageUnknown`. Uten den navngis idrettene og landene på engelsk, og formatene på språket nettleseren eller nettstedets informasjonskapsel sier; oppgi derfor en `language` der navnene vises. Hvert svar bærer en `ETag` og besvares med `304` der det er uendret.
 
-| Kode  | Idrett              |
-| ----- | ------------------- |
-| `ac`  | Association Croquet |
-| `gc`  | Golf Croquet        |
-| `a6w` | American 6 Wicket   |
-| `rc`  | Ricochet            |
-| `gb`  | Gateball            |
+### Idrettene {#sports}
 
-En idrett kan legges til i framtiden, slik et felt kan (se [felt kan legges til](index.md#fields-may-be-added)), så en app bør tåle en kode den ikke kjenner.
+`GET /api/v0/tournaments/sports`
+
+Svarer med `sports`, hver med `code` og `name`. `sport`, som en turnering sier og som en liste kan spørres om, er en av disse kodene. Croquet Scores tilbyr `ac` (Association Croquet), `gc` (Golf Croquet), `a6w` (American 6 Wicket), `rc` (Ricochet) og `gb` (Gateball); Gateball Scores tilbyr bare Gateball. En idrett kan bli lagt til i fremtiden, slik et felt kan (se [felt kan bli lagt til](index.md#fields-may-be-added)), så en app bør tåle en kode den ikke kjenner.
+
+### Formatene {#formats}
+
+`GET /api/v0/tournaments/formats`
+
+Svarer med `formats`, hvert med `code`, navnet en turnering lages med, `name`, `teams`, om det spilles av lag, og `drawsLevelTests`, om en turnering i det trekker en uavgjort-test med mindre den sier at den ikke gjør det.
+
+### Landene {#countries}
+
+`GET /api/v0/countries`
+
+Svarer med `countries`, hvert med `code` (som `au`), `name` og `regions`, hver med `code` og `name`. De står i rekkefølgen av navnene sine på språket det spørres på. En region navngis slik den ble registrert, for det meste på sitt eget lands språk. Et land som ikke er delt inn, har én region, som er landet selv.
 
 ## Én konkurranse {#competition}
 
@@ -88,3 +96,33 @@ Lister turneringene som har kommet i et annet år enn det de var i, slik at en a
 `GET /api/v0/tournaments/archived`
 
 Lister turneringene som er arkivert, slik at en app kan slutte å vise dem. Tar `archivedSince`, skrevet som `2026-03-01T10:00:00Z`, `page` og `pageSize`. Hver har `tournamentId` og `archivedAt`.
+
+## Spillere på verdensrankingen {#world-ranking-players}
+
+`GET /api/v0/ac/world-ranking-players`
+
+Lister Association Croquet-spillerne verdensrankingene kjenner. Tar `changedSince`, skrevet som `2026-03-01T10:00:00Z`, `page` og `pageSize`, der en side er høyst 100. Svarer med `worldRankingPlayers`, hver med:
+
+- `id`, og `worldRankingId`, nummeret rankingene gir spilleren
+- `name`, slik rankingene navngir dem
+- `games`, der API-et forteller om spillerens partier (se [en spillers partier](#world-ranking-player-games))
+- `archivedAt`, når spilleren ble arkivert, eller `null`
+- `changedAt`, og `etag`, laget av det spilleren sier
+
+og `total`, `page`, `pageSize` og `next`, slik et års turneringer har. Listen spørres om igjen med `ETag` den sendte, og besvares med `304` der ingenting er endret. En forespørsel som avvises, avvises med en `code` som begynner med `WorldRankingPlayers.`, som `WorldRankingPlayers.PageNotWhole`, og et `field`.
+
+## Partiene til en spiller på verdensrankingen {#world-ranking-player-games}
+
+`GET /api/v0/ac/world-ranking-players/{id}/games`
+
+`id` er den delen av spillerens `id` som står etter skråstreken, slik `games` i listen over gir den. Lister Association Croquet-partiene spilleren har spilt, enten i en blokk, et sveitsisk system, en utslagning eller en test, og enten de spilte for seg selv eller for et lag. Tar `changedSince`, `page` og `pageSize` slik listen over spillere gjør, og svarer med `games`, i den rekkefølgen de ble lagt til, hvert fra spillerens side:
+
+- `id`, `tournamentId` og `competitionId`
+- `won`, om spilleren vant, som er `false` for uavgjort, og `drawn`
+- `score`, spillerens, og `opponentScore`, begge slik de ble skrevet inn, som `26tp`
+- `opponentName`, slik rankingene navngir dem der motstanderen er en spiller på verdensrankingen og ellers slik turneringen fører dem, og `opponentId`, motstanderens `id` i listen over, eller `null` der de ikke er en
+- `archived` og `withdrawn`: et parti i en arkivert konkurranse eller turnering, eller et arkivert eller trukket parti, listes og sier det, slik at en app som har beholdt det, kan slutte å telle det
+- `addedAt`, eller `null` for et parti som ble lagt til før nettstedet noterte når, og `changedAt`
+- `etag`
+
+og `total`, `page`, `pageSize` og `next`. En spiller nettstedet ikke kjenner, avvises med `404` og `WorldRankingPlayers.NotFound`, som ikke er det samme som en spiller uten partier, som har en tom liste.
