@@ -885,6 +885,9 @@ export const portuguese: Language = {
     "admin.hover.dialog.competition.save":
       "Guardar as alterações desta competição",
     "admin.hover.dialog.score.add": "Adicionar este resultado à competição",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Retirar o perdedor da competição em vez de adicionar este jogo",
+    "admin.hover.dialog.score.addScore": "Adicionar este jogo como foi escrito",
     "admin.hover.dialog.score.save": "Guardar a correção deste resultado",
     "admin.hover.dialog.carryForward.save":
       "Transferir os resultados deste jogador",
@@ -1091,6 +1094,11 @@ export const portuguese: Language = {
     "admin.score.correctTitle": "Editar resultado",
     "admin.score.save": "Salvar",
     "admin.score.notCorrected": "Não foi possível corrigir o resultado.",
+    "admin.score.walkoverTitle": "Walkover",
+    "admin.score.walkoverQuestion":
+      "{name} não jogou. É melhor retirar o jogador do que adicionar o jogo como walkover, pois um jogador retirado não jogará mais a competição, e os jogos que não disputou serão decididos sem ele.",
+    "admin.score.withdrawOpponent": "Retirar adversário",
+    "admin.score.addScore": "Adicionar resultado",
     "Game.WinnerMissing": "Escolha o vencedor.",
     "Game.WinnerScoreMissing": "Digite os pontos do vencedor.",
     "Game.LoserMissing": "Escolha o perdedor.",

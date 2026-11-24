@@ -26,6 +26,12 @@ import { DialogStatus } from "../../../../../../../../DialogStatus.js";
 // their teams' names, and once the winner is chosen the loser is offered from
 // the other team alone, since nobody plays their own team
 // (test-score.feature).
+//
+// A new score that says walkover, as "w/o" in any case, is not added at once:
+// the reader is asked, in a dialog over this one, whether to withdraw the loser
+// instead, since a withdrawn player plays no more and the games they have not
+// played are decided without them, where a walkover typed as a score is a game
+// never played counted as one that was.
 
 interface Props {
   /** The tournament's id. */
@@ -210,6 +216,8 @@ export const ScoreDialog = ({
     { readonly winner: string; readonly loser: string } | undefined
   >();
   const [sending, setSending] = useState(false);
+  // Whether the reader is being asked what to do about a walkover.
+  const [askingAboutWalkover, setAskingAboutWalkover] = useState(false);
   const fields = {
     winner: useRef<HTMLSelectElement>(null),
     winnerScore: useRef<HTMLInputElement>(null),
@@ -466,6 +474,63 @@ export const ScoreDialog = ({
     setSending(false);
   };
 
+  // Whether what was typed says walkover, in any case and in either score.
+  // Only a score being added is asked about: one already kept can be
+  // corrected without being asked about what it said, and a test has no player
+  // to withdraw. Nor is an Advantage game, whose sides are hoops and targets,
+  // which are numbers and so cannot say it. And only where there is a loser to
+  // withdraw other than the winner, so that a game the site would refuse is
+  // refused beside its field as ever, and nobody is withdrawn from a form that
+  // was not valid.
+  const saysWalkover =
+    correcting === undefined &&
+    !inATest &&
+    !advantage &&
+    said.winner !== "" &&
+    said.loser !== "" &&
+    said.winner !== said.loser &&
+    Object.values(sentScores).some((typed) => /w\/o/i.test(typed));
+
+  // The loser withdrawn in place of the game being added. The game is not
+  // added, so what was typed is emptied for the next as it is once one is, and
+  // the loser is no longer offered, as the list asked again would have it.
+  const withdrawLoser = async (): Promise<void> => {
+    if (sending) return;
+    setSending(true);
+    setAskingAboutWalkover(false);
+    try {
+      const response = await fetch(
+        `${at.replace("/api/site/", "/api/v0/")}/players/${idInAddress(said.loser)}/withdraw`,
+        { method: "POST", headers: { accept: "application/json" } },
+      );
+      if (response.ok) {
+        setRefused([]);
+        kept();
+        setPlayers((all) =>
+          all.map((player) =>
+            player.id === said.loser ? { ...player, withdrawn: true } : player,
+          ),
+        );
+        setAdded(undefined);
+        setSaid(emptied);
+        fields.winner.current?.focus();
+      } else {
+        const answer = (await response.json()) as {
+          code?: string;
+          error?: string;
+        };
+        setAdded(undefined);
+        setRefused([
+          refusal(answer.code ?? answer.error ?? "Unknown", undefined),
+        ]);
+      }
+    } catch {
+      setAdded(undefined);
+      setRefused([refusal("Unknown", undefined)]);
+    }
+    setSending(false);
+  };
+
   // The reader is taken to the first part refused, as every refused form
   // takes them.
   useEffect(() => {
@@ -621,59 +686,87 @@ export const ScoreDialog = ({
   const above = refusedFor(undefined);
 
   return (
-    <ModalDialog
-      help={(inATest ? teamsHelp : standardHelp)(
-        "scores",
-        correcting === undefined ? "entering-a-score" : "correcting-a-score",
-      )}
-      title={say(
-        correcting === undefined
-          ? "admin.score.title"
-          : "admin.score.correctTitle",
-      )}
-      action={say(
-        correcting === undefined ? "admin.score.add" : "admin.score.save",
-      )}
-      hover={
-        correcting === undefined
-          ? say("admin.hover.dialog.score.add")
-          : say("admin.hover.dialog.score.save")
-      }
-      act={() => void send()}
-      cancel={close}
-      busy={sending}
-    >
-      <DialogStatus>
-        {added === undefined ? null : say("admin.score.added", added)}
-      </DialogStatus>
-      <DialogProblems refused={above} />
-      <div
-        className={advantage ? "score-row score-row-advantage" : "score-row"}
-      >
-        {choosing("winner", "admin.score.winner")}
-        {advantage ? (
-          <>
-            {typingANumber("winnerHoops", "admin.score.hoops")}
-            {typingANumber("winnerTarget", "admin.score.target")}
-          </>
-        ) : (
-          typing("winnerScore", "admin.score.winnerScore")
+    <>
+      <ModalDialog
+        help={(inATest ? teamsHelp : standardHelp)(
+          "scores",
+          correcting === undefined ? "entering-a-score" : "correcting-a-score",
         )}
-      </div>
-      <p className="score-beat">{say("admin.score.beat")}</p>
-      <div
-        className={advantage ? "score-row score-row-advantage" : "score-row"}
-      >
-        {choosing("loser", "admin.score.loser")}
-        {advantage ? (
-          <>
-            {typingANumber("loserHoops", "admin.score.hoops")}
-            {typingANumber("loserTarget", "admin.score.target")}
-          </>
-        ) : (
-          typing("loserScore", "admin.score.loserScore")
+        title={say(
+          correcting === undefined
+            ? "admin.score.title"
+            : "admin.score.correctTitle",
         )}
-      </div>
-    </ModalDialog>
+        action={say(
+          correcting === undefined ? "admin.score.add" : "admin.score.save",
+        )}
+        hover={
+          correcting === undefined
+            ? say("admin.hover.dialog.score.add")
+            : say("admin.hover.dialog.score.save")
+        }
+        act={() => {
+          if (saysWalkover) setAskingAboutWalkover(true);
+          else void send();
+        }}
+        cancel={close}
+        busy={sending}
+      >
+        <DialogStatus>
+          {added === undefined ? null : say("admin.score.added", added)}
+        </DialogStatus>
+        <DialogProblems refused={above} />
+        <div
+          className={advantage ? "score-row score-row-advantage" : "score-row"}
+        >
+          {choosing("winner", "admin.score.winner")}
+          {advantage ? (
+            <>
+              {typingANumber("winnerHoops", "admin.score.hoops")}
+              {typingANumber("winnerTarget", "admin.score.target")}
+            </>
+          ) : (
+            typing("winnerScore", "admin.score.winnerScore")
+          )}
+        </div>
+        <p className="score-beat">{say("admin.score.beat")}</p>
+        <div
+          className={advantage ? "score-row score-row-advantage" : "score-row"}
+        >
+          {choosing("loser", "admin.score.loser")}
+          {advantage ? (
+            <>
+              {typingANumber("loserHoops", "admin.score.hoops")}
+              {typingANumber("loserTarget", "admin.score.target")}
+            </>
+          ) : (
+            typing("loserScore", "admin.score.loserScore")
+          )}
+        </div>
+      </ModalDialog>
+      {askingAboutWalkover ? (
+        <ModalDialog
+          title={say("admin.score.walkoverTitle")}
+          action={say("admin.score.withdrawOpponent")}
+          hover={say("admin.hover.dialog.score.withdrawOpponent")}
+          act={() => void withdrawLoser()}
+          alternative={{
+            action: say("admin.score.addScore"),
+            hover: say("admin.hover.dialog.score.addScore"),
+            act: () => {
+              setAskingAboutWalkover(false);
+              void send();
+            },
+          }}
+          cancel={() => {
+            setAskingAboutWalkover(false);
+          }}
+        >
+          <p className="walkover-question">
+            {say("admin.score.walkoverQuestion", { name: nameOf(said.loser) })}
+          </p>
+        </ModalDialog>
+      ) : null}
+    </>
   );
 };

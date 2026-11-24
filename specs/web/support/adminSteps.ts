@@ -789,3 +789,33 @@ Then(
     });
   },
 );
+
+// Whether a player has been withdrawn from a competition, by their name.
+for (const [words, withdrawn] of [
+  ["is withdrawn from", true],
+  ["is not withdrawn from", false],
+] as const) {
+  Then(
+    `{string} ${words} {string} of {string}`,
+    async function (
+      this: WebWorld,
+      player: string,
+      competition: string,
+      tournament: string,
+    ) {
+      await retried(async () => {
+        const kept = await keptOf(this, tournament);
+        const held = await competitionHeld(
+          competitionOf(kept, tournament, competition).id,
+        );
+        const entered = held.players.find(
+          (each) =>
+            kept.players.find((one) => one.id === each.tournamentPlayer)
+              ?.name === player,
+        );
+        assert.ok(entered, `${player} is not in ${competition}.`);
+        assert.equal(entered.withdrawn, withdrawn);
+      });
+    },
+  );
+}

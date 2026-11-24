@@ -860,6 +860,9 @@ export const welsh: Language = {
     "admin.hover.dialog.competition.save":
       "Cadw'r newidiadau i'r gystadleuaeth hon",
     "admin.hover.dialog.score.add": "Ychwanegu'r sgôr hwn at y gystadleuaeth",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Tynnu'r collwr yn ôl o'r gystadleuaeth yn lle ychwanegu'r gêm hon",
+    "admin.hover.dialog.score.addScore": "Ychwanegu'r gêm hon fel y'i teipiwyd",
     "admin.hover.dialog.score.save": "Cadw'r cywiriad i'r sgôr hwn",
     "admin.hover.dialog.carryForward.save":
       "Cario canlyniadau'r chwaraewr hwn ymlaen",
@@ -1065,6 +1068,11 @@ export const welsh: Language = {
     "admin.score.correctTitle": "Golygu sgôr",
     "admin.score.save": "Cadw",
     "admin.score.notCorrected": "Ni ellid cywiro'r sgôr.",
+    "admin.score.walkoverTitle": "Walkover",
+    "admin.score.walkoverQuestion":
+      "Ni chwaraeodd {name}. Mae'n well tynnu'r chwaraewr yn ôl nag ychwanegu'r gêm fel walkover, gan na fydd chwaraewr sydd wedi'i dynnu'n ôl yn chwarae rhagor o'r gystadleuaeth, a phenderfynir y gemau nad yw wedi'u chwarae hebddo.",
+    "admin.score.withdrawOpponent": "Tynnu'r gwrthwynebydd yn ôl",
+    "admin.score.addScore": "Ychwanegu sgôr",
     "Game.WinnerMissing": "Dewiswch yr enillydd.",
     "Game.WinnerScoreMissing": "Teipiwch sgôr yr enillydd.",
     "Game.LoserMissing": "Dewiswch y collwr.",

@@ -981,6 +981,9 @@ export const english: Language = {
       "Keep the changes to this competition",
     "admin.hover.dialog.score.add": "Add this score to the competition",
     "admin.hover.dialog.score.save": "Keep the correction to this score",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Withdraw the loser from the competition instead of adding this game",
+    "admin.hover.dialog.score.addScore": "Add this game as it was typed",
     "admin.hover.dialog.carryForward.save":
       "Carry this player's results forward",
     "admin.hover.dialog.tournament.new": "Create this tournament",
@@ -1179,6 +1182,12 @@ export const english: Language = {
     "admin.score.correctTitle": "Edit Score",
     "admin.score.save": "Save",
     "admin.score.notCorrected": "The score could not be corrected.",
+    // The question a new score that says walkover is asked, over the dialog.
+    "admin.score.walkoverTitle": "Walkover",
+    "admin.score.walkoverQuestion":
+      "{name} did not play. It is better to withdraw them than to add the game as a walkover, since a withdrawn player plays no more of the competition and the games they have not played are decided without them.",
+    "admin.score.withdrawOpponent": "Withdraw opponent",
+    "admin.score.addScore": "Add score",
     "Game.WinnerMissing": "Choose the winner.",
     "Game.WinnerScoreMissing": "Type the winner's score.",
     "Game.LoserMissing": "Choose the loser.",

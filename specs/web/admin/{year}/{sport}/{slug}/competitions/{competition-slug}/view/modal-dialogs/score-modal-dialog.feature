@@ -492,6 +492,228 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       When "Chris Third" is chosen as the "Winner"
       Then the score dialog says no game was added
 
+  Rule: A score that says walkover asks first whether to withdraw the opponent instead
+
+    A score with "w/o" in it, in any case, says the loser did not play: a
+    walkover. A competition has a better way to say that. A player who is
+    withdrawn plays no more of it, and the games they have not played are
+    decided without them (`competition-players-tab.feature`), where a walkover
+    typed as a score is a game that was never played counted as one that was.
+    So pressing Add Game on such a score does not add it yet. It asks, in a
+    second dialog over the first, naming the loser, what to do: Withdraw
+    opponent, Add score, or Cancel. Which side's score says it makes no
+    difference.
+
+    Only a new score asks. A score that was kept can be corrected without
+    being asked about what it already said, and a test has no player to
+    withdraw.
+
+    Background:
+      Given the scores of "Block A" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "Alex Another" is chosen as the "Loser"
+
+    Scenario Outline: A score that says walkover asks what to do, however it is written
+      Given "<winner's score>" is typed as the "Winner's score"
+      And "<loser's score>" is typed as the "Loser's score"
+      When the score dialog is sent and asks about a walkover
+      Then the walkover question is open
+
+      Examples:
+        | winner's score | loser's score |
+        | 26 w/o         | 0             |
+        | 26 W/O         | 0             |
+        | 26 W/o         | 0             |
+        | 26w/o          | 0             |
+        | 26             | 0 w/o         |
+
+    Scenario: A score that does not say walkover is added as it always was
+      Given "26" is typed as the "Winner's score"
+      And "17" is typed as the "Loser's score"
+      When "Add Game" is pressed
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 17
+
+    Scenario: A score that does not say walkover asks nothing
+      Given "26" is typed as the "Winner's score"
+      And "17" is typed as the "Loser's score"
+      When "Add Game" is pressed
+      Then the walkover question is not open
+
+    Scenario: The question names the loser, the player it would withdraw
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      When the score dialog is sent and asks about a walkover
+      Then the walkover question names "Alex Another"
+
+    Scenario Outline: The question offers its three ways in order
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      When the score dialog is sent and asks about a walkover
+      Then the walkover question's <place> button is "<words>"
+
+      Examples:
+        | place  | words             |
+        | first  | Withdraw opponent |
+        | second | Add score         |
+        | third  | Cancel            |
+
+    Scenario: Asking adds no game
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      When the score dialog is sent and asks about a walkover
+      Then "Block A" of "Spring Open" has no scores
+
+    Scenario: Withdraw opponent withdraws the loser
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Withdraw opponent" is pressed in the walkover question
+      Then "Alex Another" is withdrawn from "Block A" of "Spring Open"
+
+    Scenario: Withdraw opponent withdraws nobody else
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Withdraw opponent" is pressed in the walkover question
+      Then "Sam Someone" is not withdrawn from "Block A" of "Spring Open"
+
+    Scenario: Withdraw opponent adds no game
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Withdraw opponent" is pressed in the walkover question
+      Then "Block A" of "Spring Open" has no scores
+
+    Scenario: Withdraw opponent closes the question and leaves the score dialog open
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Withdraw opponent" is pressed in the walkover question
+      Then the walkover question is not open
+      And the score dialog is open
+
+    Scenario: Withdraw opponent empties the score dialog for the next game
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Withdraw opponent" is pressed in the walkover question
+      Then "Winner" is empty
+
+    Scenario: Add score adds the game as it was typed
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Add score" is pressed in the walkover question
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" kept as "26 w/o" to "0"
+
+    Scenario: Add score withdraws nobody
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Add score" is pressed in the walkover question
+      Then "Alex Another" is not withdrawn from "Block A" of "Spring Open"
+
+    Scenario: Add score closes the question and says which game was added
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Add score" is pressed in the walkover question
+      Then the walkover question is not open
+      And the score dialog says the game "Sam Someone" won against "Alex Another" was added
+
+    Scenario: Cancel in the question adds no game
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Cancel" is pressed in the walkover question
+      Then "Block A" of "Spring Open" has no scores
+
+    Scenario: Cancel in the question withdraws nobody
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Cancel" is pressed in the walkover question
+      Then "Alex Another" is not withdrawn from "Block A" of "Spring Open"
+
+    Scenario: Cancel in the question leaves the score dialog as it was
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When "Cancel" is pressed in the walkover question
+      Then the walkover question is not open
+      And the score dialog is open
+      And "Winner's score" says "26 w/o"
+
+    Scenario: Escape in the question does what Cancel does
+      Given "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+      And the score dialog is sent and asks about a walkover
+      When Escape is pressed
+      Then the walkover question is not open
+      And the score dialog is open
+
+  Rule: A walkover is asked about only for a game that could be added
+
+    The question offers to withdraw the loser, so it is asked only once there
+    is a loser to withdraw and the game is otherwise one the site would take.
+    A game with a player not chosen, or the same player on both sides, is
+    refused beside the field it is about, as it is whatever its scores say,
+    and nobody is withdrawn from a form that was not valid.
+
+    Background:
+      Given the scores of "Block A" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "26 w/o" is typed as the "Winner's score"
+      And "0" is typed as the "Loser's score"
+
+    Scenario Outline: A game with nobody chosen as one side is refused and not asked about
+      Given "<chosen>" is chosen as the "<chosen side>"
+      When "Add Game" is pressed
+      Then "<missing side>" is refused with "<code>"
+      And the walkover question is not open
+
+      Examples:
+        | chosen       | chosen side | missing side | code               |
+        | Sam Someone  | Winner      | Loser        | Game.LoserMissing  |
+        | Alex Another | Loser       | Winner       | Game.WinnerMissing |
+
+    Scenario: A game with the same player on both sides is refused and not asked about
+      Given "Sam Someone" is chosen as the "Winner"
+      And "Sam Someone" is chosen as the "Loser"
+      When "Add Game" is pressed
+      Then "Loser" is refused with "Game.SamePlayer"
+      And the walkover question is not open
+
+    Scenario: A refused game withdraws nobody
+      Given "Sam Someone" is chosen as the "Winner"
+      And "Sam Someone" is chosen as the "Loser"
+      When "Add Game" is pressed
+      Then "Sam Someone" is not withdrawn from "Block A" of "Spring Open"
+
+  Rule: Every word the walkover question says is in the reader's language
+
+    Scenario: The question is in the reader's language
+      Given a browser that asks for "en-XA"
+      And the scores of "Block A" in "Spring Open" are open
+      And the way to add a score is pressed
+      And "Sam Someone" is chosen as the winner in the score dialog
+      And "Alex Another" is chosen as the loser in the score dialog
+      And "26 w/o" is typed as the winner's score in the score dialog
+      And "0" is typed as the loser's score in the score dialog
+      When the score dialog is sent and asks about a walkover
+      Then every word in the walkover question but the player's name is in the test locale
+
+  Rule: A score corrected is not asked about
+
+    Scenario: A score corrected to say walkover is saved as it was typed
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      And the way to correct the score of "Sam Someone" beating "Alex Another" is pressed
+      And "26 w/o" is typed as the "Winner's score"
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" kept as "26 w/o" to "17"
+
   Rule: What is refused is said beside the field it is about
 
     Each refusal is said in its own words as well as by its code. The admin
@@ -1399,6 +1621,19 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       And "6" is typed as the loser's "Target"
       When "Add Game" is pressed
       Then the loser's "Hoops" is refused with "ScoringFraction.HoopsAboveTarget"
+
+    Scenario: A walkover typed in an Advantage game is refused as any hoops not a whole number are
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "5w/o" is typed as the winner's "Hoops"
+      And "6" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "3" is typed as the loser's "Hoops"
+      And "6" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then the winner's "Hoops" is refused with "ScoringFraction.HoopsNotWhole"
+      And the walkover question is not open
 
     Scenario Outline: A part left empty is refused beside it
       Given the scores of "Block G" in "Spring Open" are open

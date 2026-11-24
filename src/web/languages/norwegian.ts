@@ -882,6 +882,10 @@ export const norwegian: Language = {
     "admin.hover.dialog.competition.save":
       "Behold endringene for denne konkurransen",
     "admin.hover.dialog.score.add": "Legg til dette resultatet i konkurransen",
+    "admin.hover.dialog.score.withdrawOpponent":
+      "Trekk taperen fra konkurransen i stedet for å legge til dette partiet",
+    "admin.hover.dialog.score.addScore":
+      "Legg til dette partiet slik det ble skrevet",
     "admin.hover.dialog.score.save": "Behold rettelsen av dette resultatet",
     "admin.hover.dialog.carryForward.save":
       "Før denne spillerens resultater videre",
@@ -1081,6 +1085,11 @@ export const norwegian: Language = {
     "admin.score.correctTitle": "Rediger resultat",
     "admin.score.save": "Lagre",
     "admin.score.notCorrected": "Resultatet kunne ikke rettes.",
+    "admin.score.walkoverTitle": "Walkover",
+    "admin.score.walkoverQuestion":
+      "{name} spilte ikke. Det er bedre å trekke spilleren enn å legge til partiet som walkover, siden en spiller som er trukket ikke spiller mer av konkurransen, og partiene de ikke har spilt avgjøres uten dem.",
+    "admin.score.withdrawOpponent": "Trekk motstanderen",
+    "admin.score.addScore": "Legg til resultat",
     "Game.WinnerMissing": "Velg vinneren.",
     "Game.WinnerScoreMissing": "Skriv vinnerens poengsum.",
     "Game.LoserMissing": "Velg taperen.",
