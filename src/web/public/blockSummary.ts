@@ -86,7 +86,7 @@ const summary = (
         ? ` <span class="block-summary-withdrawn">${escape(say("block.withdrawn"))}</span>`
         : "";
       return `              <tr>
-                <th scope="row" class="block-summary-player">${playerShown({ ...player, name: held(player.name) }, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}</th>
+                <th scope="row" class="block-summary-player">${playerShown({ ...player, name: held(player.name) }, "player", speaking, assets, `/${player.address}`, player.withdrawn, withdrawn)}</th>
 ${columns.map(({ of }) => `                <td class="block-summary-total">${escape(of(player))}</td>`).join("\n")}
               </tr>`;
     })

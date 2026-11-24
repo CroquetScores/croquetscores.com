@@ -23,9 +23,9 @@ Feature: A knockout's grid draws its draw round by round
   tournament's other pages show one, their name leading to their own page, a
   bye, said as "Bye", or a place not yet known, left empty until the match
   before it is decided. A withdrawn player says they have withdrawn, and
-  their name is struck through, as a block's grid strikes it. Their scores
-  are not, since each of their games decided a match that stands
-  (`PublicKnockoutOfTournament.feature`). Beside
+  their name is struck through, as a block's grid strikes it, and so are
+  their scores and what is known of them, the handicap, what they represent and
+  their flag. Beside
   each side is a cell for each game the match is the best of, holding the
   side's score in that game as it was typed, oldest first, and empty for a
   game not played. Each score is marked as won or lost, as the block's grid
@@ -262,11 +262,11 @@ Feature: A knockout's grid draws its draw round by round
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then the first score of the first side of the first match of the first round in the grid is "26tp"
 
-    Scenario: A withdrawn player's score is not struck through
+    Scenario: A withdrawn player's score is struck through
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       And "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
-      Then the first score of the second side of the first match of the first round in the grid is not struck through
+      Then the first score of the second side of the first match of the first round in the grid is struck through
 
     Scenario: A withdrawn player's score is not said to be withdrawn
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
@@ -546,3 +546,143 @@ Feature: A knockout's grid draws its draw round by round
     Scenario: A knockout that is not Advantage says nothing of it
       When the page at "/2026/gc/spring-open/competitions/finals" is opened
       Then the competition does not say it is played as Advantage Golf Croquet
+
+  Rule: A name and what is known of the player are each kept whole, and wrap only between them
+
+    # A name is never broken, nor is what is known of the player. Where they do not fit
+    # on a row together, it is the row that breaks, between the two.
+
+    Scenario: A player's name is never broken, on a phone
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has added the player "Bartholomew Featherstonehaugh Wolstenholme" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Bartholomew Featherstonehaugh Wolstenholme" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has its name on one line
+
+    Scenario: A player's meta-data is never broken, on a phone
+      Given a viewport 320 pixels wide
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury Croquet Club of Christchurch"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Bartholomew Featherstonehaugh Wolstenholme" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Bartholomew Featherstonehaugh Wolstenholme" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has its meta-data on one line
+
+    Scenario: A player's meta-data is on a row beneath their name where there is no room beside it
+      Given a viewport 320 pixels wide
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Bartholomew Featherstonehaugh Wolstenholme" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Bartholomew Featherstonehaugh Wolstenholme" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate/summary" is opened
+      Then the second side of the second match of the first round in the summary has its meta-data below its name
+
+    Scenario: A player's meta-data is beside their name where there is room
+      Given a viewport 1200 pixels wide
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has its meta-data beside its name
+
+    Scenario: A player's meta-data is always on a row beneath their name on a phone
+      Given a viewport 375 pixels wide
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has its meta-data below its name
+
+    Scenario: A player's meta-data is always on a row beneath their name on a tablet held upright
+      Given a viewport 800 pixels wide and 1000 pixels high
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has its meta-data below its name
+
+    Scenario: A player's meta-data is always on a row beneath their name on a tablet held sideways
+      Given a viewport 1024 pixels wide and 768 pixels high
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has its meta-data below its name
+
+    Scenario: A withdrawn player's mark is on the row of their name on a phone
+      Given a viewport 375 pixels wide
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Kim Fifth" from "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has the mark that they have withdrawn above its meta-data
+
+    Scenario: A withdrawn player's meta-data is struck through
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Kim Fifth" from "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid has its meta-data struck through
+
+    Scenario: A player who has not withdrawn has no line through their meta-data
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Kim Fifth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/plate" is opened
+      Then the second side of the second match of the first round in the grid does not have its meta-data struck through

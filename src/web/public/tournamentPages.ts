@@ -174,6 +174,9 @@ export const playerShown = (
   // player, so that a game's players, who are answered with whether they
   // have withdrawn on some pages and not others, are never marked.
   withdrawn = false,
+  // Whatever goes with the name, as a mark that they have withdrawn, kept on
+  // the name's row where the meta-data is put beneath it.
+  after = "",
 ): string => {
   const flown = flag === undefined ? undefined : Flags.thereAre.find(flag);
   // One pair of brackets for both, with a comma only between the two there
@@ -185,10 +188,11 @@ export const playerShown = (
       .join(", ")
       .trim() || undefined;
   const marked = withdrawn ? " data-withdrawn" : "";
-  return [
+  const shown =
     href === undefined
       ? `<span class="${kind}-name"${marked}>${escape(name)}</span>`
-      : `<a class="${kind}-name"${marked} href="${escape(href)}">${escape(name)}</a>`,
+      : `<a class="${kind}-name"${marked} href="${escape(href)}">${escape(name)}</a>`;
+  const metaData = [
     ...(about === undefined
       ? []
       : [`<span class="${kind}-representing">(${escape(about)})</span>`]),
@@ -197,7 +201,13 @@ export const playerShown = (
       : [
           `<img class="${kind}-flag" src="${escape(assets.url(`images/${flown.relativePath}`))}" alt="${escape(speaking.say(`country.${String(flown)}`))}" />`,
         ]),
-  ].join(" ");
+  ];
+  // What is known of the player besides their name is one thing to the page,
+  // which keeps it whole and moves it as a piece (site.css), so that a line
+  // breaks between the name and it, and never inside either.
+  return metaData.length === 0
+    ? `${shown}${after}`
+    : `${shown}${after} <span class="${kind}-meta-data"${marked}>${metaData.join(" ")}</span>`;
 };
 
 // How long ago `then` was, as a reader would say it: seconds under a minute,

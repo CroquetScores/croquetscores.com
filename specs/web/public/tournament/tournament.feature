@@ -217,6 +217,151 @@ Feature: A tournament's page lists its games, the most recent first
       When the page at "/2026/ac/spring-open" is opened
       Then what the first line of the first game represents is lighter than its name
 
+  Rule: A name and what is known of the player are each kept whole, and wrap only between them
+
+    # A name is never broken, nor is what is known of the player. Where they do not fit
+    # on a row together, it is the row that breaks, between the two.
+
+    Scenario: A player's name is never broken, on a phone
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has added the player "Bartholomew Featherstonehaugh Wolstenholme" to "Spring Open"
+      And "organiser@example.com" has entered the player "Bartholomew Featherstonehaugh Wolstenholme" in "Block A" of "Spring Open"
+      And "Bartholomew Featherstonehaugh Wolstenholme" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its name on one line
+
+    Scenario: A player's meta-data is never broken, on a phone
+      Given a viewport 320 pixels wide
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury Croquet Club of Christchurch"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Bartholomew Featherstonehaugh Wolstenholme" to "Spring Open"
+      And "organiser@example.com" has entered the player "Bartholomew Featherstonehaugh Wolstenholme" in "Block A" of "Spring Open"
+      And "Bartholomew Featherstonehaugh Wolstenholme" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data on one line
+
+    Scenario: A player's meta-data is on a row beneath their name where there is no room beside it
+      Given a viewport 320 pixels wide
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Bartholomew Featherstonehaugh Wolstenholme" to "Spring Open"
+      And "organiser@example.com" has entered the player "Bartholomew Featherstonehaugh Wolstenholme" in "Block A" of "Spring Open"
+      And "Bartholomew Featherstonehaugh Wolstenholme" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data below its name
+
+    Scenario: A player's meta-data is beside their name where there is room
+      Given a viewport 1200 pixels wide
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data beside its name
+
+    Scenario: A game's meta-data is always on a row beneath the name on a phone
+      Given a viewport 375 pixels wide
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data below its name
+
+    Scenario: A game's meta-data is always on a row beneath the name on a tablet held upright
+      Given a viewport 800 pixels wide and 1000 pixels high
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data below its name
+
+    Scenario: A game's meta-data is always on a row beneath the name on a tablet held sideways
+      Given a viewport 1024 pixels wide and 768 pixels high
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data below its name
+
+    Scenario: The winner's score is beside their name on a phone
+      Given a viewport 375 pixels wide
+      And the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its score beside the name
+
+    Scenario: The loser's score is beside their name on a phone
+      Given a viewport 375 pixels wide
+      And the player is to represent "Canterbury"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the second line of the first game has its score beside the name
+
+  Rule: A game that counts for nothing has its players' names, scores and meta-data struck through
+
+    Background:
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury"
+      And the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Chris Third" beating "Sam Someone" in "Block A" of "Spring Open"
+
+    Scenario: A withdrawn game's name is struck through
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its name struck through
+
+    Scenario: A withdrawn game's score is struck through
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its score struck through
+
+    Scenario: A withdrawn game's meta-data is struck through
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data struck through
+
+    Scenario: A withdrawn game's name is struck through on a phone
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its name struck through
+
+    Scenario: A withdrawn game's score is struck through on a phone
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its score struck through
+
+    Scenario: A withdrawn game's meta-data is struck through on a phone
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first line of the first game has its meta-data struck through
+
+  Rule: A name too long for a phone is not broken and does not widen the page
+
+    Scenario: A name longer than a phone is wide leaves the page no wider than the window
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has added the player "Bartholomew Featherstonehaugh Wolstenholme" to "Spring Open"
+      And "organiser@example.com" has entered the player "Bartholomew Featherstonehaugh Wolstenholme" in "Block A" of "Spring Open"
+      And "Bartholomew Featherstonehaugh Wolstenholme" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the page is no wider than the window
+
   Rule: A drawn game says the two drew
 
     Scenario: A drawn game says "drew with"

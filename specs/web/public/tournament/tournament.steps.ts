@@ -2,8 +2,16 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import {
+  assertBelow,
+  assertBeside,
+  assertOnOneLine,
+} from "../../support/placed.js";
 import type { WebWorld } from "../../support/world.js";
-import { isStruckThrough } from "../../support/struckThrough.js";
+import {
+  isMetaDataStruckThrough,
+  isStruckThrough,
+} from "../../support/struckThrough.js";
 import { unmarkedWithin } from "../../support/marks.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -96,10 +104,14 @@ Then(
   /^the (first|second|third) game is struck through$/,
   async function (this: WebWorld, which: string) {
     for (const line of ["first", "second"]) {
-      assert.ok(
-        await isStruckThrough(lineOf(this, line, which)),
-        `The ${line} line is not struck through.`,
-      );
+      for (const part of ["name", "score"]) {
+        assert.ok(
+          await isStruckThrough(
+            lineOf(this, line, which).locator(`.game-${part}`).first(),
+          ),
+          `The ${part} of the ${line} line is not struck through.`,
+        );
+      }
     }
   },
 );
@@ -335,5 +347,83 @@ Then(
       ".rankings-tournament",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its name on one line$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertOnOneLine(
+      lineOf(this, line, which).locator(".game-name"),
+      "The name",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its meta-data on one line$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertOnOneLine(
+      lineOf(this, line, which).locator(".game-representing"),
+      "What they represent",
+    );
+    await assertBeside(
+      lineOf(this, line, which).locator(".game-flag"),
+      lineOf(this, line, which).locator(".game-representing"),
+      "Their flag",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its meta-data below its name$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertBelow(
+      lineOf(this, line, which).locator(".game-meta-data"),
+      lineOf(this, line, which).locator(".game-name"),
+      "The meta-data",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its meta-data beside its name$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertBeside(
+      lineOf(this, line, which).locator(".game-meta-data"),
+      lineOf(this, line, which).locator(".game-name"),
+      "The meta-data",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its score beside the name$/,
+  async function (this: WebWorld, line: string, which: string) {
+    await assertBeside(
+      lineOf(this, line, which).locator(".game-score"),
+      lineOf(this, line, which).locator(".game-name"),
+      "The score",
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its (name|score) struck through$/,
+  async function (this: WebWorld, line: string, which: string, part: string) {
+    assert.ok(
+      await isStruckThrough(lineOf(this, line, which).locator(`.game-${part}`)),
+    );
+  },
+);
+
+Then(
+  /^the (first|second) line of the (first|second|third) game has its meta-data struck through$/,
+  async function (this: WebWorld, line: string, which: string) {
+    assert.ok(
+      await isMetaDataStruckThrough(
+        lineOf(this, line, which).locator(".game-meta-data"),
+      ),
+    );
   },
 );

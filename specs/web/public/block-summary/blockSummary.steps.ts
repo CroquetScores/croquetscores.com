@@ -2,8 +2,17 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import {
+  assertAbove,
+  assertBelow,
+  assertBeside,
+  assertOnOneLine,
+} from "../../support/placed.js";
 import type { WebWorld } from "../../support/world.js";
-import { isStruckThrough } from "../../support/struckThrough.js";
+import {
+  isMetaDataStruckThrough,
+  isStruckThrough,
+} from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -193,6 +202,80 @@ Then(
     assert.equal(
       await said(rowOf(this, name).locator(".block-summary-total").nth(at)),
       value,
+    );
+  },
+);
+
+Then(
+  "the row of {string} in the summary has its name on one line",
+  async function (this: WebWorld, name: string) {
+    await assertOnOneLine(
+      rowOf(this, name).locator(".player-name"),
+      "The name",
+    );
+  },
+);
+
+Then(
+  "the row of {string} in the summary has its meta-data on one line",
+  async function (this: WebWorld, name: string) {
+    const row = rowOf(this, name);
+    await assertOnOneLine(
+      row.locator(".player-representing"),
+      "What they represent",
+    );
+    await assertBeside(
+      row.locator(".player-flag"),
+      row.locator(".player-representing"),
+      "Their flag",
+    );
+  },
+);
+
+Then(
+  "the row of {string} in the summary has its meta-data below its name",
+  async function (this: WebWorld, name: string) {
+    const row = rowOf(this, name);
+    await assertBelow(
+      row.locator(".player-meta-data"),
+      row.locator(".player-name"),
+      "The meta-data",
+    );
+  },
+);
+
+Then(
+  "the row of {string} in the summary has its meta-data beside its name",
+  async function (this: WebWorld, name: string) {
+    const row = rowOf(this, name);
+    await assertBeside(
+      row.locator(".player-meta-data"),
+      row.locator(".player-name"),
+      "The meta-data",
+    );
+  },
+);
+
+Then(
+  "the row of {string} in the summary has the mark that they have withdrawn above its meta-data",
+  async function (this: WebWorld, name: string) {
+    const row = rowOf(this, name);
+    await assertAbove(
+      row.locator(".block-summary-withdrawn"),
+      row.locator(".player-meta-data"),
+      "The mark",
+    );
+  },
+);
+
+Then(
+  /^the row of "(.*)" in the summary (has|does not have) its meta-data struck through$/,
+  async function (this: WebWorld, name: string, has: string) {
+    assert.equal(
+      await isMetaDataStruckThrough(
+        rowOf(this, name).locator(".player-meta-data"),
+      ),
+      has === "has",
     );
   },
 );
