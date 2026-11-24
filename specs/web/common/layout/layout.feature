@@ -439,6 +439,54 @@ Feature: What every page is set in
       When the admin is opened
       Then the footer's links end where the theme choice ends
 
+  Rule: On a phone the panel reaches both edges of the window
+
+    A phone's width is the scarcest thing a page has, and a green margin either
+    side of the white panel, with a rounded border inside it, spends some of it
+    on nothing the reader reads. So where the bars fold into
+    their menu, which is a window narrower than a tablet, or a tablet held
+    upright, the panel runs from one edge of the window to the other, square
+    cornered, and it is only its text that is kept off the edge. That is only
+    10 pixels, so that the text has the width the green gave up, and it is
+    still in line with the site name above it, since both are held in from the
+    window by the same distance. On a wider window the panel stands on the
+    green page as it always has.
+
+    Scenario: The panel starts at the left edge of a phone
+      Given a viewport 375 pixels wide
+      When the home page is opened
+      Then the panel starts at the left edge of the window
+
+    Scenario: The panel ends at the right edge of a phone
+      Given a viewport 375 pixels wide
+      When the home page is opened
+      Then the panel ends at the right edge of the window
+
+    Scenario: The panel's text is close to the left edge of a phone
+      Given a viewport 375 pixels wide
+      When the home page is opened
+      Then the panel's text starts no more than 10 pixels in
+
+    Scenario: The panel's text is in line with the site name on a phone
+      Given a viewport 375 pixels wide
+      When the home page is opened
+      Then the panel's text starts where the site name starts
+
+    Scenario: The panel starts at the left edge of a tablet held upright
+      Given a viewport 800 pixels wide and 1000 pixels high
+      When the home page is opened
+      Then the panel starts at the left edge of the window
+
+    Scenario: The panel is inset from the left edge of a phone held sideways
+      Given a viewport 700 pixels wide and 350 pixels high
+      When the home page is opened
+      Then the panel does not start at the left edge of the window
+
+    Scenario: The panel is inset from the left edge on a desktop
+      Given a viewport 1200 pixels wide
+      When the home page is opened
+      Then the panel does not start at the left edge of the window
+
   Rule: Every page a reader can see is counted by Cloudflare's web analytics, and the admin is not
 
     The site's owner wants to know how many readers come and which pages they

@@ -94,6 +94,8 @@ interface InThePage {
     readonly fontWeight: string;
     readonly backgroundColor: string;
     readonly color: string;
+    readonly borderLeftWidth: string;
+    readonly paddingLeft: string;
   };
 }
 
@@ -416,5 +418,70 @@ Then(
       "The theme choice",
     );
     assert.ok(choice.y >= last.y + last.height - 2);
+  },
+);
+
+// Where the panel is, against the window -------------------------------------------
+
+const panel = (world: WebWorld): Locator =>
+  world.browserPage.locator("main > .page > .panel");
+
+// How far in from the panel's own edge its text starts: its border and padding.
+const textInsetOf = (locator: Locator): Promise<number> =>
+  locator.evaluate((element: unknown) => {
+    const style = (globalThis as unknown as InThePage).getComputedStyle(
+      element,
+    );
+    return parseFloat(style.borderLeftWidth) + parseFloat(style.paddingLeft);
+  });
+
+Then(
+  "the panel starts at the left edge of the window",
+  async function (this: WebWorld) {
+    const box = await boxOf(panel(this), "The panel");
+    assert.ok(near(box.x, 0), `The panel starts ${box.x} pixels in.`);
+  },
+);
+
+Then(
+  "the panel ends at the right edge of the window",
+  async function (this: WebWorld) {
+    const box = await boxOf(panel(this), "The panel");
+    const width = await this.browserPage.evaluate<number>("window.innerWidth");
+    assert.ok(
+      near(box.x + box.width, width),
+      `The panel ends ${width - box.x - box.width} pixels short.`,
+    );
+  },
+);
+
+Then(
+  "the panel does not start at the left edge of the window",
+  async function (this: WebWorld) {
+    const box = await boxOf(panel(this), "The panel");
+    assert.ok(box.x > 2, "The panel starts at the left edge.");
+  },
+);
+
+Then(
+  "the panel's text starts no more than {int} pixels in",
+  async function (this: WebWorld, most: number) {
+    const box = await boxOf(panel(this), "The panel");
+    const held = await textInsetOf(panel(this));
+    assert.ok(box.x + held <= most, `The text starts ${box.x + held} in.`);
+  },
+);
+
+// Its text is where its padding and border end, which is not the box's own edge.
+Then(
+  "the panel's text starts where the site name starts",
+  async function (this: WebWorld) {
+    const box = await boxOf(panel(this), "The panel");
+    const held = await textInsetOf(panel(this));
+    const name = await boxOf(siteNameInHeader(this), "The site name");
+    assert.ok(
+      near(box.x + held, name.x),
+      `The text starts at ${box.x + held}, the site name at ${name.x}.`,
+    );
   },
 );

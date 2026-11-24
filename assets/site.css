@@ -1426,6 +1426,38 @@ body > .site-footer {
   padding: var(--space-5);
 }
 
+/* On a phone the panel runs from one edge of the window to the other: the
+   green either side of it and its rounded border spend width on nothing the
+   reader reads. Only where the panel is the page's whole content: a dialog on
+   the green page, or a panel with something beside it, keeps its margin. The
+   same test as the menu's, so that the two fold together.
+
+   Every page is held in from the window by 10px, the bars' contents as much as
+   the panel's text, since a phone has no width to spare: 5px from the page and
+   5px from the panel's inset, which each of them is held in by, so that the
+   site name and the panel's text still line up. --panel-inset is read only by
+   the bars (the site bar, the title strips, the sections and the footer), so
+   changing it here moves nothing inside the panel. */
+@media not ((min-width: 40rem) and (orientation: landscape)) {
+  :root {
+    --panel-inset: 5px;
+  }
+
+  .page {
+    padding-inline: 5px;
+  }
+
+  main > .page:has(> .panel:only-child) {
+    padding-inline: 0;
+  }
+
+  main > .page > .panel:only-child {
+    border-inline: 0;
+    border-radius: 0;
+    padding-inline: calc(5px + var(--panel-inset));
+  }
+}
+
 main {
   flex: 1;
   padding-block: var(--space-5);
