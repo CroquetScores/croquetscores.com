@@ -2,6 +2,8 @@
 
 Lle mae cystadleuaeth yn cyfrif tuag at restr detholion y byd, caiff ei ganlyniadau eu hanfon at y detholion fel ffeil, y mae'r wefan yn ei hysgrifennu o'r hyn a roddwyd i mewn gennych. Y tab **Detholion** yw lle y'i cewch.
 
+Dim ond y ffeil y mae'r wefan hon yn ei darparu, y mae swyddogion detholion y byd yn ei lawrlwytho a'i mewnforio. Am gwestiwn ynghylch detholion y byd eu hunain, megis sut y cânt eu cyfrifo neu pam mae chwaraewr lle mae, gweler [tudalen detholion y byd y World Croquet Federation](https://worldcroquet.org/wcf-world-rankings/).
+
 ## Y tab
 
 Agorwch dudalen y twrnamaint a dewiswch **Detholion**, yr olaf o'i dabiau. Mae'n dweud, yn yr un geiriau ni waeth y gamp, y bydd rhestr detholion y byd yn defnyddio canlyniadau'r twrnamaint drwy'r ffeil, fel nad oes angen i'r rheolwyr wneud dim. O dan hynny mae **Lawrlwytho gemau ar gyfer Safle'r Byd**, dolen i'r ffeil, sy'n ei chadw. Ffeil destun yw'r ffeil ar gyfer Association Croquet a thaenlen ar gyfer Golf Croquet ac American 6 Wicket. Mae yno cyn i un canlyniad gael ei roi i mewn, ac mae'n rhoi ffeil heb ddim ynddi nes bod un. Cynigir y tab hefyd i swyddogion detholion y byd y gamp, i gymryd y gemau o'r ffeil.

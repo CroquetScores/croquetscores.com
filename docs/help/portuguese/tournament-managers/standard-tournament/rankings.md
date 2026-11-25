@@ -2,6 +2,8 @@
 
 Quando uma competição vale para os rankings mundiais, os seus resultados são enviados aos rankings como um arquivo, que o site escreve para você a partir do que foi inserido. A aba **Rankings** é onde você o obtém.
 
+Este site apenas fornece o arquivo, que os responsáveis pelo ranking mundial baixam e importam. Para uma dúvida sobre os próprios rankings mundiais, como o modo de calculá-los ou o motivo de um jogador estar onde está, veja [a página da World Croquet Federation sobre os rankings mundiais](https://worldcroquet.org/wcf-world-rankings/).
+
 ## A aba
 
 Abra a página do torneio e escolha **Rankings**, a última das suas abas. Ela diz, com as mesmas palavras seja qual for o esporte, que o ranking mundial usará os resultados do torneio por meio do arquivo, e que os organizadores não precisam fazer nada. Abaixo está **Baixar jogos para o ranking mundial**, um link para o arquivo, que o salva. O arquivo é um arquivo de texto no Croquet de Associação e uma planilha no Croquet de Golfe e no Croquet Americano de 6 Arcos. Ele está ali antes de qualquer resultado ser inserido, e dá um arquivo sem nada dentro até que um seja. Os responsáveis pelo ranking mundial do esporte também recebem a aba, para pegar os jogos do arquivo.

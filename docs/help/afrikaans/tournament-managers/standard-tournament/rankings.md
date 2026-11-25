@@ -2,6 +2,8 @@
 
 Waar 'n kompetisie vir die wêreldranglys tel, word sy uitslae as 'n leer aan die ranglys gestuur, wat die webwerf vir jou skryf uit wat jy ingevoer het. Die **Ranglyste**-oortjie is waar jy dit kry.
 
+Hierdie webwerf verskaf net die leer, wat die wêreldranglysbeamptes aflaai en invoer. Vir 'n vraag oor die wêreldranglyste self, soos hoe hulle bereken word of hoekom 'n speler op die lys staan waar hy staan, kyk [die World Croquet Federation se wêreldranglysbladsy](https://worldcroquet.org/wcf-world-rankings/).
+
 ## Die oortjie
 
 Maak die toernooi se bladsy oop en kies **Ranglyste**, die laaste van sy oortjies. Dit sê, in dieselfde woorde watter sport ook al, dat die wêreldranglyste die toernooi se uitslae deur die leer gebruik, sodat bestuurders niks hoef te doen nie. Daaronder is **Laai spelle af vir die wêreldranglys**, 'n skakel na die leer, wat dit stoor. Die leer is 'n teksleer vir Association Croquet en 'n sigblad vir Golf Croquet en Amerikaanse 6-hoepel-croquet. Dit is daar voordat enige uitslag ingevoer is, en gee 'n leer met niks in nie totdat daar een is. Die wêreldranglysbeamptes van die sport kry die oortjie ook aangebied, om die spelle uit die leer te neem.

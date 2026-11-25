@@ -2,9 +2,11 @@
 
 Nada disto exige uma conta, e tudo funciona com os scripts desativados, exceto abrir um mês de um ano, que exige scripts (sem eles, o mês é um link).
 
-## Encontrando um torneio
+## Encontrando um torneio {#finding-a-tournament}
 
 A página inicial lista os resultados recentes e os próximos torneios e leva a **Todos os torneios** do ano. A página de um ano lista os seus doze meses, fechados. Aperte um mês para abrir os seus torneios logo abaixo, quantos quiser ao mesmo tempo, ou aperte **Mostrar tudo** para abrir todos os meses e depois **Ocultar tudo** para fechá-los.
+
+Para procurar outro torneio enquanto você lê um, volte à página inicial. Aperte o nome do site, **Croquet Scores**, no canto superior esquerdo da tela. Ou aperte o ícone **Início** no cabeçalho. Em um celular, e em um tablet na vertical, os links do cabeçalho ficam atrás do botão de menu, as três linhas no alto, então aperte primeiro esse e depois o ícone **Início**.
 
 A lupa no cabeçalho pesquisa torneios, competições e jogadores. Cada lista dos resultados é uma tabela com os dias, o esporte, a bandeira do país e o nome.
 

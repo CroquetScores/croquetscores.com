@@ -2,11 +2,13 @@
 
 ## Häufige Fragen {#popular-questions}
 
+- [Wie finde ich ein anderes Turnier?](readers/following-a-tournament.md#finding-a-tournament)
 - [Wie lege ich ein Turnier an?](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [Wie füge ich einem Turnier Spieler hinzu?](tournament-managers/standard-tournament/players.md#add-a-player)
 - [Wie gebe ich Ergebnisse ein?](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [Wie setze ich mein Passwort zurück?](accounts/signing-in.md#forgotten-password)
 - [Wie funktionieren Ranglisten?](tournament-managers/standard-tournament/rankings.md)
+- [Wohin wende ich mich mit Fragen zur Weltrangliste?](https://worldcroquet.org/wcf-world-rankings/)
 
 ## Hilfe nach Thema {#subjects}
 

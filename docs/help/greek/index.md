@@ -2,11 +2,13 @@
 
 ## Συχνές ερωτήσεις {#popular-questions}
 
+- [Πώς βρίσκω ένα άλλο τουρνουά;](readers/following-a-tournament.md#finding-a-tournament)
 - [Πώς δημιουργώ ένα τουρνουά;](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [Πώς προσθέτω παίκτες σε ένα τουρνουά;](tournament-managers/standard-tournament/players.md#add-a-player)
 - [Πώς καταχωρίζω αποτελέσματα;](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [Πώς επαναφέρω τον κωδικό μου;](accounts/signing-in.md#forgotten-password)
 - [Πώς λειτουργούν οι κατατάξεις;](tournament-managers/standard-tournament/rankings.md)
+- [Πού απευθύνομαι για ερωτήσεις σχετικά με τις παγκόσμιες κατατάξεις;](https://worldcroquet.org/wcf-world-rankings/)
 
 ## Βοήθεια ανά θέμα {#subjects}
 

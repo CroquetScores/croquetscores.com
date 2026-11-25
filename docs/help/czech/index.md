@@ -2,11 +2,13 @@
 
 ## Časté otázky {#popular-questions}
 
+- [Jak najdu jiný turnaj?](readers/following-a-tournament.md#finding-a-tournament)
 - [Jak vytvořím turnaj?](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [Jak přidám hráče do turnaje?](tournament-managers/standard-tournament/players.md#add-a-player)
 - [Jak zadám skóre?](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [Jak obnovím své heslo?](accounts/signing-in.md#forgotten-password)
 - [Jak fungují žebříčky?](tournament-managers/standard-tournament/rankings.md)
+- [Kam se obrátit s dotazem na světové žebříčky?](https://worldcroquet.org/wcf-world-rankings/)
 
 ## Nápověda podle tématu {#subjects}
 

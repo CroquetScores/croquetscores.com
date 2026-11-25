@@ -2,11 +2,13 @@
 
 ## Gewilde vrae {#popular-questions}
 
+- [Hoe vind ek 'n ander toernooi?](readers/following-a-tournament.md#finding-a-tournament)
 - [Hoe skep ek 'n toernooi?](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [Hoe voeg ek spelers by 'n toernooi?](tournament-managers/standard-tournament/players.md#add-a-player)
 - [Hoe voer ek uitslae in?](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [Hoe stel ek my wagwoord terug?](accounts/signing-in.md#forgotten-password)
 - [Hoe werk ranglyste?](tournament-managers/standard-tournament/rankings.md)
+- [Waar vra ek oor die wêreldranglyste?](https://worldcroquet.org/wcf-world-rankings/)
 
 ## Hulp volgens onderwerp {#subjects}
 

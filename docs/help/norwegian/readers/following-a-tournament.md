@@ -2,9 +2,11 @@
 
 Ingenting av dette krever en konto, og alt fungerer med skripting slått av, bortsett fra å åpne en måned i et år, som krever skripting (uten det er en måned en lenke i stedet).
 
-## Finne en turnering
+## Finne en turnering {#finding-a-tournament}
 
 Hjemmesiden viser siste resultater og kommende turneringer, og fører til **Alle turneringer** i året. Et års side viser de tolv månedene, lukket. Trykk på en måned for å åpne turneringene under den, så mange du vil samtidig, eller trykk **Vis alle** for å åpne hver måned, og deretter **Skjul alle** for å lukke dem.
+
+For å lete etter en annen turnering mens du leser en, gå tilbake til hjemmesiden. Trykk på nettstedets navn, **Croquet Scores**, øverst til venstre på skjermen. Eller trykk på **Hjem**-ikonet i toppen. På en telefon, og på et nettbrett som holdes stående, ligger lenkene i toppen bak menyknappen, de tre strekene øverst, så trykk på den først og deretter på **Hjem**-ikonet.
 
 Forstørrelsesglasset i toppen søker etter turneringer, konkurranser og spillere. Hver liste i resultatene er en tabell med dagene, idretten, landets flagg og navnet.
 

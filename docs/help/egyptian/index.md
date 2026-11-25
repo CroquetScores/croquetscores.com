@@ -2,11 +2,13 @@
 
 ## أسئلة شائعة {#popular-questions}
 
+- [إزاي ألاقي بطولة تانية؟](readers/following-a-tournament.md#finding-a-tournament)
 - [إزاي أعمل بطولة؟](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [إزاي أضيف لاعبين للبطولة؟](tournament-managers/standard-tournament/players.md#add-a-player)
 - [إزاي أكتب النتايج؟](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [إزاي أستعيد كلمة السر بتاعتي؟](accounts/signing-in.md#forgotten-password)
 - [التصنيفات بتشتغل إزاي؟](tournament-managers/standard-tournament/rankings.md)
+- [أسأل فين عن التصنيف العالمي؟](https://worldcroquet.org/wcf-world-rankings/)
 
 ## المساعدة حسب الموضوع {#subjects}
 

@@ -2,6 +2,8 @@
 
 Der en konkurranse teller med i verdensrangeringene, sendes resultatene dens til rangeringene som en fil, som nettstedet skriver for deg ut fra det du har lagt inn. Fanen **Rangeringer** er der du har den.
 
+Dette nettstedet gir bare filen, som verdensrangeringsansvarlige laster ned og importerer. Har du et spørsmål om selve verdensrangeringene, for eksempel hvordan de beregnes eller hvorfor en spiller står der den står, se [World Croquet Federations side om verdensrangeringene](https://worldcroquet.org/wcf-world-rankings/).
+
 ## Fanen
 
 Åpne turneringens side og velg **Rangeringer**, den siste av fanene. Den sier, med de samme ordene uansett idrett, at verdensrangeringene bruker turneringens resultater gjennom filen, slik at lederne ikke trenger å gjøre noe. Under det står **Last ned partier til verdensrangering**, en lenke til filen, som lagrer den. Filen er en tekstfil for Association croquet og et regneark for Golfcroquet og Amerikansk 6-buers croquet. Den er der før et eneste resultat er lagt inn, og gir en fil uten noe i seg til det er det. Verdensrangeringsansvarlige for idretten tilbys også fanen, for å ta partiene fra filen.

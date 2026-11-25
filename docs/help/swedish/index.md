@@ -2,11 +2,13 @@
 
 ## Vanliga frågor {#popular-questions}
 
+- [Hur hittar jag en annan turnering?](readers/following-a-tournament.md#finding-a-tournament)
 - [Hur skapar jag en turnering?](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [Hur lägger jag till spelare i en turnering?](tournament-managers/standard-tournament/players.md#add-a-player)
 - [Hur skriver jag in resultat?](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [Hur återställer jag mitt lösenord?](accounts/signing-in.md#forgotten-password)
 - [Hur fungerar rankingar?](tournament-managers/standard-tournament/rankings.md)
+- [Var frågar jag om världsrankingen?](https://worldcroquet.org/wcf-world-rankings/)
 
 ## Hjälp efter ämne {#subjects}
 

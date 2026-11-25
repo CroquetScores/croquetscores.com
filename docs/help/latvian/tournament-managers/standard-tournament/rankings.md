@@ -2,6 +2,8 @@
 
 Kur sacensības tiek ieskaitītas pasaules rangā, to rezultāti tiek nosūtīti rangiem kā fails, ko vietne jums uzraksta no tā, ko esat ievadījis. Cilne **Rangi** ir vieta, kur to saņemat.
 
+Šī vietne tikai nodrošina failu, ko pasaules ranga atbildīgie lejupielādē un importē. Ar jautājumu par pašiem pasaules rangiem, piemēram, kā tie tiek aprēķināti vai kāpēc spēlētājs ir tur, kur ir, skatiet [World Croquet Federation pasaules rangu lapu](https://worldcroquet.org/wcf-world-rankings/).
+
 ## Cilne
 
 Atveriet turnīra lapu un izvēlieties **Rangi**, pēdējo no tās cilnēm. Tā saka, vienādiem vārdiem neatkarīgi no sporta veida, ka pasaules rangi izmantos turnīra rezultātus ar faila palīdzību, tāpēc pārvaldniekiem nekas nav jādara. Zem tā ir **Lejupielādēt partijas pasaules rangam**, saite uz failu, kas to saglabā. Fails ir teksta fails Asociācijas kroketam un izklājlapa Golfa kroketam un Amerikāņu 6 vārtiņu kroketam. Tas ir pieejams, pirms ir ievadīts kaut viens rezultāts, un dod failu, kurā nekā nav, līdz tas ir ievadīts. Sporta veida pasaules ranga atbildīgajiem cilne tiek piedāvāta arī, lai viņi varētu paņemt partijas no faila.
