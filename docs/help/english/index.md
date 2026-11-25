@@ -7,6 +7,7 @@
 - [How do I enter scores?](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [How do I reset my password?](accounts/signing-in.md#forgotten-password)
 - [How do rankings work?](tournament-managers/standard-tournament/rankings.md)
+- [Where do I ask about the world rankings?](https://worldcroquet.org/wcf-world-rankings/)
 
 ## Help by subject {#subjects}
 

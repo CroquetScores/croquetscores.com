@@ -2,6 +2,8 @@
 
 Where a competition counts toward the world rankings, its results are sent to the rankings as a file, which the site writes for you from what you have entered. The **Rankings** tab is where you have it.
 
+This site provides the file, which the world ranking officers download and import. For a question about the world rankings themselves, such as how they are worked out or why a player stands where they do, see [the World Croquet Federation's world rankings page](https://worldcroquet.org/wcf-world-rankings/).
+
 ## The tab
 
 Open the tournament's page and choose **Rankings**, the last of its tabs. It says, in the same words whatever the sport, that the world rankings will use the tournament's results through the file, so that managers do not need to do anything. Beneath that is **Download games for world ranking**, a link to the file, which saves it. The file is a text file for Association Croquet and a spreadsheet for Golf Croquet and American 6 Wicket. It is there before a single score is entered, and gives a file with nothing in it until one is. The world ranking officers of the sport are offered the tab too, to take the games from the file.
