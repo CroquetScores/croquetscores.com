@@ -2,9 +2,11 @@
 
 Nekam no tā nav vajadzīgs konts, un viss darbojas ar izslēgtiem skriptiem, izņemot gada mēneša atvēršanu, kam skripti ir vajadzīgi (bez tiem mēnesis ir saite).
 
-## Turnīra atrašana
+## Turnīra atrašana {#finding-a-tournament}
 
 Sākumlapā ir nesenie rezultāti un gaidāmie turnīri, un tā ved uz **Visi turnīri** gadā. Gada lapā ir tās divpadsmit mēneši, aizvērti. Nospiediet mēnesi, lai zem tā atvērtu tā turnīrus, cik vēlaties uzreiz, vai nospiediet **Rādīt visu**, lai atvērtu katru mēnesi, un tad **Slēpt visu**, lai tos aizvērtu.
+
+Lai meklētu citu turnīru, kamēr lasāt kādu, atgriezieties sākumlapā. Nospiediet vietnes nosaukumu **Croquet Scores** ekrāna augšējā kreisajā stūrī. Vai arī nospiediet ikonu **Sākums** galvenē. Tālrunī un portretā turētā planšetdatorā galvenes saites ir aiz izvēlnes pogas, trim svītrām augšā, tāpēc vispirms nospiediet to un tad ikonu **Sākums**.
 
 Palielināmais stikls galvenē meklē turnīrus, sacensības un spēlētājus. Katrs saraksts rezultātos ir tabula ar dienām, sporta veidu, valsts karogu un nosaukumu.
 

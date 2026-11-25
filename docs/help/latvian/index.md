@@ -2,11 +2,13 @@
 
 ## Biežāk uzdotie jautājumi {#popular-questions}
 
+- [Kā atrast citu turnīru?](readers/following-a-tournament.md#finding-a-tournament)
 - [Kā izveidot turnīru?](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [Kā pievienot spēlētājus turnīram?](tournament-managers/standard-tournament/players.md#add-a-player)
 - [Kā ievadīt rezultātus?](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [Kā atiestatīt paroli?](accounts/signing-in.md#forgotten-password)
 - [Kā darbojas rangi?](tournament-managers/standard-tournament/rankings.md)
+- [Kur jautāt par pasaules rangiem?](https://worldcroquet.org/wcf-world-rankings/)
 
 ## Palīdzība pēc tēmas {#subjects}
 

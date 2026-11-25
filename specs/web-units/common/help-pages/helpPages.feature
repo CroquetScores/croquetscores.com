@@ -175,7 +175,7 @@ Feature: Help written in markdown becomes pages of the site
   Rule: The first page of the help of every language offers popular questions and the subjects as cards
 
     The first page is the same in every language in what it offers, though not
-    in its words: the same five questions leading to the same articles, and the
+    in its words: the same seven questions leading to the same articles, and the
     same five subjects, each with words under its title. The cards are made of
     these lists by the stylesheet, which finds them by their bookmarks.
 
@@ -194,10 +194,10 @@ Feature: Help written in markdown becomes pages of the site
       When the first page of each is converted
       Then each has the bookmark "subjects"
 
-    Scenario: Each language asks the same five questions
+    Scenario: Each language asks the same seven questions
       Given the help of every language
       When the first page of each is converted
-      Then each has 5 popular questions
+      Then each has 7 popular questions
 
     Scenario Outline: Each language's popular question leads to the same article
       Given the help of every language
@@ -205,12 +205,14 @@ Feature: Help written in markdown becomes pages of the site
       Then the <number> popular question of each leads to "<address>"
 
       Examples:
-        | number | address                                                                  |
-        | first  | /help/tournament-managers/standard-tournament/creating-a-tournament      |
-        | second | /help/tournament-managers/standard-tournament/players#add-a-player      |
-        | third  | /help/tournament-managers/standard-tournament/scores#entering-a-score   |
-        | fourth | /help/accounts/signing-in#forgotten-password                             |
-        | fifth  | /help/tournament-managers/standard-tournament/rankings                  |
+        | number  | address                                                                  |
+        | first   | /help/readers/following-a-tournament#finding-a-tournament                |
+        | second  | /help/tournament-managers/standard-tournament/creating-a-tournament      |
+        | third   | /help/tournament-managers/standard-tournament/players#add-a-player      |
+        | fourth  | /help/tournament-managers/standard-tournament/scores#entering-a-score   |
+        | fifth   | /help/accounts/signing-in#forgotten-password                             |
+        | sixth   | /help/tournament-managers/standard-tournament/rankings                  |
+        | seventh | https://worldcroquet.org/wcf-world-rankings/                             |
 
     Scenario: Each language has the five subjects
       Given the help of every language

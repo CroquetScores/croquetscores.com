@@ -2,9 +2,11 @@
 
 Nic z toho nevyžaduje účet a vše funguje i s vypnutým skriptováním, kromě otevření měsíce v roce, které skriptování potřebuje (bez něj je měsíc místo toho odkazem).
 
-## Hledání turnaje
+## Hledání turnaje {#finding-a-tournament}
 
 Domovská stránka uvádí nedávné výsledky a nadcházející turnaje a vede na **Všechny turnaje v roce** (v aktuálním roce). Stránka roku uvádí svých dvanáct měsíců, zavřených. Stiskněte měsíc a pod ním se otevřou jeho turnaje, můžete jich otevřít kolik chcete najednou, nebo stiskněte **Zobrazit vše** a otevřou se všechny měsíce a poté **Skrýt vše** je zavře.
+
+Chcete-li během čtení jednoho turnaje hledat jiný, vraťte se na domovskou stránku. Stiskněte název webu, **Croquet Scores**, vlevo nahoře na obrazovce. Nebo stiskněte ikonu **Domů** v záhlaví. Na telefonu a na tabletu drženém na výšku jsou odkazy záhlaví za tlačítkem menu, třemi čárami nahoře, takže nejdřív stiskněte to a potom ikonu **Domů**.
 
 Lupa v záhlaví hledá turnaje, soutěže a hráče. Každý seznam ve výsledcích je tabulka s dny, sportem, vlajkou země a názvem.
 

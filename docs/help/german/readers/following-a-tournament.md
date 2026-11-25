@@ -2,9 +2,11 @@
 
 Nichts davon braucht ein Konto, und alles funktioniert bei ausgeschalteten Skripten, außer dem Öffnen eines Monats im Jahr, wofür Skripte nötig sind (ohne sie ist ein Monat stattdessen ein Link).
 
-## Ein Turnier finden
+## Ein Turnier finden {#finding-a-tournament}
 
 Die Startseite listet die letzten Ergebnisse und die bevorstehenden Turniere und führt zu **Alle Turniere** des Jahres. Die Seite eines Jahres listet seine zwölf Monate, geschlossen. Drücken Sie einen Monat, um seine Turniere darunter zu öffnen, beliebig viele zugleich, oder drücken Sie **Alle anzeigen**, um jeden Monat zu öffnen, und danach **Alle ausblenden**, um sie zu schließen.
+
+Um ein anderes Turnier zu suchen, während Sie eines lesen, gehen Sie zurück zur Startseite. Drücken Sie oben links auf dem Bildschirm auf den Namen der Website, **Croquet Scores**. Oder drücken Sie in der Kopfzeile auf das Symbol **Startseite**. Auf einem Telefon und auf einem hochgehaltenen Tablet liegen die Links der Kopfzeile hinter der Menüschaltfläche, den drei Strichen oben, drücken Sie also zuerst diese und dann auf das Symbol **Startseite**.
 
 Die Lupe in der Kopfzeile sucht nach Turnieren, Wettbewerben und Spielern. Jede Liste der Ergebnisse ist eine Tabelle mit den Tagen, der Sportart, der Flagge des Landes und dem Namen.
 

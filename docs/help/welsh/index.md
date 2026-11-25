@@ -2,11 +2,13 @@
 
 ## Cwestiynau poblogaidd {#popular-questions}
 
+- [Sut mae dod o hyd i dwrnamaint arall?](readers/following-a-tournament.md#finding-a-tournament)
 - [Sut mae creu twrnamaint?](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [Sut mae ychwanegu chwaraewyr at dwrnamaint?](tournament-managers/standard-tournament/players.md#add-a-player)
 - [Sut mae rhoi canlyniadau i mewn?](tournament-managers/standard-tournament/scores.md#entering-a-score)
 - [Sut mae ailosod fy nghyfrinair?](accounts/signing-in.md#forgotten-password)
 - [Sut mae detholion yn gweithio?](tournament-managers/standard-tournament/rankings.md)
+- [Ble mae gofyn am detholion y byd?](https://worldcroquet.org/wcf-world-rankings/)
 
 ## Cymorth yn ôl pwnc {#subjects}
 

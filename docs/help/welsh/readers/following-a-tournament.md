@@ -2,9 +2,11 @@
 
 Nid oes angen cyfrif ar gyfer dim o hyn, ac mae'r cyfan yn gweithio gyda sgriptio wedi'i ddiffodd, ac eithrio agor mis o flwyddyn, sydd angen sgriptio (hebddo, dolen yw mis).
 
-## Dod o hyd i dwrnamaint
+## Dod o hyd i dwrnamaint {#finding-a-tournament}
 
 Mae'r hafan yn rhestru canlyniadau diweddar a thwrnameintiau i ddod, ac yn arwain at **Pob twrnamaint** yn y flwyddyn. Mae tudalen blwyddyn yn rhestru ei deuddeg mis, ar gau. Pwyswch fis i agor ei dwrnameintiau odano, cynifer ag y mynnwch ar unwaith, neu pwyswch **Dangos y cyfan** i agor pob mis, ac yna **Cuddio'r cyfan** i'w cau.
+
+I chwilio am dwrnamaint arall wrth ddarllen un, ewch yn ôl i'r hafan. Pwyswch enw'r wefan, **Croquet Scores**, ar frig chwith y sgrin. Neu pwyswch yr eicon **Hafan** yn yr uwchben. Ar ffôn, ac ar dabled a ddelir yn unionsyth, mae dolenni'r uwchben y tu ôl i'r botwm dewislen, y tair llinell ar y brig, felly pwyswch hwnnw'n gyntaf ac yna'r eicon **Hafan**.
 
 Mae'r chwyddwydr yn yr uwchben yn chwilio am dwrnameintiau, cystadlaethau a chwaraewyr. Mae pob rhestr yn y canlyniadau yn dabl gyda'r dyddiau, y gamp, baner y wlad a'r enw.
 

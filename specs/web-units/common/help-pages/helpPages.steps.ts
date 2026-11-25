@@ -268,7 +268,15 @@ Then(
   },
 );
 
-const places = ["first", "second", "third", "fourth", "fifth"];
+const places = [
+  "first",
+  "second",
+  "third",
+  "fourth",
+  "fifth",
+  "sixth",
+  "seventh",
+];
 
 Then(
   "the {word} popular question of each leads to {string}",

@@ -2,6 +2,8 @@
 
 Wenn ein Wettbewerb für die Weltrangliste zählt, werden seine Ergebnisse der Rangliste als Datei geschickt, die die Website aus dem, was Sie eingegeben haben, für Sie erstellt. Auf dem Reiter **Ranglisten** bekommen Sie sie.
 
+Diese Website stellt nur die Datei bereit, die die Weltranglistenbeauftragten herunterladen und importieren. Bei Fragen zu den Weltranglisten selbst, etwa wie sie berechnet werden oder warum ein Spieler dort steht, wo er steht, siehe [die Seite der World Croquet Federation zu den Weltranglisten](https://worldcroquet.org/wcf-world-rankings/).
+
 ## Der Reiter
 
 Öffnen Sie die Seite des Turniers und wählen Sie **Ranglisten**, den letzten ihrer Reiter. Er sagt, bei jeder Sportart mit denselben Worten, dass die Weltranglisten die Ergebnisse des Turniers über die Datei verwenden, sodass die Verantwortlichen nichts zu tun brauchen. Darunter steht **Spiele für die Weltrangliste herunterladen**, ein Link zur Datei, der sie speichert. Die Datei ist eine Textdatei für Association Croquet und eine Tabelle für Golf Croquet und American 6 Wicket. Sie ist schon da, bevor ein einziges Ergebnis eingegeben ist, und liefert eine Datei ohne Inhalt, bis eines da ist. Die Weltranglistenbeauftragten der Sportart bekommen den Reiter auch angeboten, um die Spiele aus der Datei zu übernehmen.

@@ -2,6 +2,8 @@
 
 När en tävling räknas med i världsrankingen skickas dess resultat till rankingen som en fil, som webbplatsen skriver utifrån det du har skrivit in. Fliken **Rankingar** är där du får tag i den.
 
+Den här webbplatsen tillhandahåller bara filen, som de rankingansvariga laddar ner och importerar. För en fråga om själva världsrankingen, till exempel hur den räknas ut eller varför en spelare står där den står, se [World Croquet Federations sida om världsrankingen](https://worldcroquet.org/wcf-world-rankings/).
+
 ## Fliken
 
 Öppna turneringens sida och välj **Rankingar**, den sista av dess flikar. Den säger, med samma ord oavsett sport, att världsrankingen använder turneringens resultat via filen, så att arrangörerna inte behöver göra något. Under det finns **Ladda ner partier för världsranking**, en länk till filen, som sparar den. Filen är en textfil för association croquet och ett kalkylblad för golfcroquet och amerikansk 6-bågars croquet. Den finns där innan ett enda resultat har skrivits in, och ger då en fil utan något i. De rankingansvariga för sporten erbjuds också fliken, för att hämta partierna från filen.

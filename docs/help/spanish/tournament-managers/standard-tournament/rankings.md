@@ -2,6 +2,8 @@
 
 Cuando una competición cuenta para el ranking mundial, sus resultados se envían al ranking como un archivo, que el sitio escribe a partir de lo que has introducido. La pestaña **Rankings** es donde lo tienes.
 
+Este sitio solo ofrece el archivo, que los responsables del ranking mundial descargan e importan. Para una pregunta sobre los rankings mundiales en sí, como cómo se calculan o por qué un jugador está donde está, consulta [la página de la World Croquet Federation sobre los rankings mundiales](https://worldcroquet.org/wcf-world-rankings/).
+
 ## La pestaña
 
 Abre la página del torneo y elige **Rankings**, la última de sus pestañas. Dice, con las mismas palabras sea cual sea el deporte, que los rankings mundiales usarán los resultados del torneo mediante el archivo, así que los gestores no tienen que hacer nada. Debajo está **Descargar partidas para el ranking mundial**, un enlace al archivo, que lo guarda. El archivo es un archivo de texto para Croquet de asociación y una hoja de cálculo para Croquet golf y American 6 Wicket. Está ahí antes de introducir un solo resultado, y da un archivo sin nada dentro hasta que hay alguno. Los responsables del ranking mundial del deporte también ven la pestaña, para tomar las partidas del archivo.

@@ -2,9 +2,11 @@
 
 Niks hiervan het 'n rekening nodig nie, en dit alles werk met skrip afgeskakel, behalwe om 'n maand van 'n jaar oop te maak, wat skrip nodig het (sonder dit is 'n maand eerder 'n skakel).
 
-## 'n Toernooi vind
+## 'n Toernooi vind {#finding-a-tournament}
 
 Die tuisblad lys onlangse uitslae en toernooie wat binnekort kom, en lei na **Alle toernooie** in die jaar. 'n Jaar se bladsy lys sy twaalf maande, toe. Druk op 'n maand om sy toernooie daaronder oop te maak, soveel as wat jy wil gelyktydig, of druk **Wys alles** om elke maand oop te maak, en dan **Versteek alles** om hulle toe te maak.
+
+Om na 'n ander toernooi te soek terwyl jy een lees, gaan terug na die tuisblad. Druk die webwerf se naam, **Croquet Scores**, links bo op die skerm. Of druk die **Tuis**-ikoon in die kopstuk. Op 'n foon, en op 'n tablet wat regop gehou word, is die kopstuk se skakels agter die kieslysknoppie, die drie strepe bo, so druk eers dit en dan die **Tuis**-ikoon.
 
 Die vergrootglas in die kopstuk soek na toernooie, kompetisies en spelers. Elke lys in die resultate is 'n tabel met die dae, die sport, die vlag van die land en die naam.
 

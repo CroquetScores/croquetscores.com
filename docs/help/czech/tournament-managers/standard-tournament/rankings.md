@@ -2,6 +2,8 @@
 
 Kde se soutěž počítá do světových žebříčků, její výsledky se do žebříčků posílají jako soubor, který web píše za vás z toho, co jste zadali. Karta **Žebříčky** je místo, kde ho máte.
 
+Tento web poskytuje pouze soubor, který správci světového žebříčku stahují a importují. S otázkou o samotných světových žebříčcích, například jak se počítají nebo proč je hráč tam, kde je, se obraťte na [stránku World Croquet Federation o světových žebříčcích](https://worldcroquet.org/wcf-world-rankings/).
+
 ## Karta
 
 Otevřete stránku turnaje a zvolte **Žebříčky**, poslední z jejích karet. Říká, stejnými slovy bez ohledu na sport, že světové žebříčky použijí výsledky turnaje prostřednictvím souboru, takže organizátoři nemusí dělat nic. Pod tím je **Stáhnout hry pro světový žebříček**, odkaz na soubor, který ho uloží. Soubor je textový pro asociační kroket a tabulka pro golfový kroket a americký kroket (6 branek). Je tu dřív, než se zadá jediné skóre, a do té doby je prázdný. Karta se nabízí i správcům světového žebříčku daného sportu, aby z ní převzali hry.
