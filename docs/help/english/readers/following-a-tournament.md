@@ -2,9 +2,11 @@
 
 None of this needs an account, and all of it works with scripting switched off, except opening a month of a year, which needs scripting (without it a month is a link instead).
 
-## Finding a tournament
+## Finding a tournament {#finding-a-tournament}
 
 The home page lists recent results and upcoming tournaments, and leads to **All tournaments** in the year. A year's page lists its twelve months, closed. Press a month to open its tournaments beneath it, as many as you like at once, or press **Show all** to open every month, and then **Hide all** to close them.
+
+To look for another tournament while you are reading one, go back to the home page. Press the site's name, **Croquet Scores**, at the top left of the screen. Or press **Home icon** in the header. On a phone, and on a tablet held upright, the header's links are behind the menu button, the three lines at the top, so press that first and then **Home icon**.
 
 The magnifying glass in the header searches for tournaments, competitions and players. Each list in the results is a table with the days, the sport, the flag of the country and the name.
 

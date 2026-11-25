@@ -2,6 +2,7 @@
 
 ## Popular questions {#popular-questions}
 
+- [How do I find another tournament?](readers/following-a-tournament.md#finding-a-tournament)
 - [How do I create a tournament?](tournament-managers/standard-tournament/creating-a-tournament.md)
 - [How do I add players to a tournament?](tournament-managers/standard-tournament/players.md#add-a-player)
 - [How do I enter scores?](tournament-managers/standard-tournament/scores.md#entering-a-score)
