@@ -72,9 +72,16 @@ Feature: A competition's page can be printed
     The views and the printer are both for doing something with the page, as
     the competition's name is not, so they are kept together against the
     right edge, with the name alone at the left, rather than spread across the
-    line with the views stranded between the two. On a phone the views fill
-    the line, so the printer goes beneath them, still against the right edge
-    rather than left on a line of its own.
+    line with the views stranded between the two. Where the views fill the
+    line, as they do on a phone, the printer goes beneath them, still against
+    the right edge rather than left on a line of its own.
+
+    How narrow a window has to be for the views to fill the line depends on
+    the letters the reader's device draws them in, which are the device's
+    own and not the site's. So the scenario for it does not name a width that
+    fills the line on one device and leaves room on another: it narrows the
+    window, from a phone's width, until the views leave no room for the
+    printer, and stops at the narrowest phone there is.
 
     Scenario Outline: The views are next to the print button
       When the page at "<page>" is opened with scripting on
@@ -87,9 +94,10 @@ Feature: A competition's page can be printed
         | /2026/gc/swiss-open/competitions/zed            |
         | /2026/gc/spring-tests/tests/aus-v-eng           |
 
-    Scenario: The print button is beneath the views on a phone
+    Scenario: The print button is beneath the views where they fill the line
       Given a viewport 375 pixels wide
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the window is narrowed until the views leave no room beside them
       Then the print button is beneath the views
       And the print button is against the right edge
 
