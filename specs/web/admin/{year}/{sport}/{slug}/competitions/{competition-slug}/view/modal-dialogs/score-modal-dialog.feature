@@ -494,8 +494,10 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
 
   Rule: A score that says walkover asks first whether to withdraw the opponent instead
 
-    A score with "w/o" in it, in any case, says the loser did not play: a
-    walkover. A competition has a better way to say that. A player who is
+    A score with "w/o", "wo", "walkover" or "walk over" in it, in any case,
+    says the loser did not play: a walkover. Each stands as a word and not
+    as letters inside one, so "two" and "won" say nothing of the kind. A
+    competition has a better way to say that. A player who is
     withdrawn plays no more of it, and the games they have not played are
     decided without them (`competition-players-tab.feature`), where a walkover
     typed as a score is a game that was never played counted as one that was.
@@ -527,6 +529,27 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
         | 26 W/o         | 0             |
         | 26w/o          | 0             |
         | 26             | 0 w/o         |
+        | 26 wo          | 0             |
+        | 26 WO          | 0             |
+        | 26             | 0 wo          |
+        | 26 walkover    | 0             |
+        | 26 Walkover    | 0             |
+        | 26             | 0 walkover    |
+        | 26 walk over   | 0             |
+        | 26 Walk Over   | 0             |
+        | 26             | 0 walk over   |
+
+    Scenario Outline: A score with those letters inside another word does not say walkover
+      Given "<winner's score>" is typed as the "Winner's score"
+      And "<loser's score>" is typed as the "Loser's score"
+      When "Add Game" is pressed
+      Then the walkover question is not open
+
+      Examples:
+        | winner's score | loser's score |
+        | 26 two         | 0             |
+        | 26 won         | 0             |
+        | 26             | 0 wolf        |
 
     Scenario: A score that does not say walkover is added as it always was
       Given "26" is typed as the "Winner's score"
