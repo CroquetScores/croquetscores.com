@@ -245,6 +245,31 @@ Then("the views are next to the print button", async function (this: WebWorld) {
   );
 });
 
+// The narrowest phone there is, below which the scenario would be about no
+// window anyone reads on. Five pixels at a time, since a pixel at a time is
+// fifty relayouts to learn what five tell as well.
+const narrowestPhone = 320;
+
+When(
+  "the window is narrowed until the views leave no room beside them",
+  async function (this: WebWorld) {
+    const size = this.browserPage.viewportSize();
+    assert.ok(size !== null, "The page has no viewport.");
+    for (let width = size.width; width >= narrowestPhone; width -= 5) {
+      await this.browserPage.setViewportSize({ width, height: size.height });
+      const views = await this.browserPage
+        .locator("main .competition-views")
+        .boundingBox();
+      const button = await printButton(this).boundingBox();
+      assert.ok(views !== null && button !== null, "One of them is not drawn.");
+      if (button.y >= views.y + views.height - 0.5) return;
+    }
+    assert.fail(
+      `The print button is still beside the views at ${String(narrowestPhone)} pixels wide.`,
+    );
+  },
+);
+
 Then("the print button is beneath the views", async function (this: WebWorld) {
   const views = await this.browserPage
     .locator("main .competition-views")
