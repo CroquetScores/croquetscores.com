@@ -182,9 +182,9 @@ Feature: The first page of the help helps a reader find an answer without knowin
       When the first page of the help is opened in the browser
       Then the popular questions come after the search box
 
-    Scenario: There are five popular questions
+    Scenario: There are seven popular questions
       When the first page of the help is opened in the browser
-      Then there are 5 popular questions
+      Then there are 7 popular questions
 
     Scenario Outline: A popular question leads to the article that answers it
       When the first page of the help is opened in the browser
@@ -193,6 +193,7 @@ Feature: The first page of the help helps a reader find an answer without knowin
 
       Examples:
         | question                              | article             |
+        | How do I find another tournament?     | Finding and following a tournament |
         | How do I create a tournament?         | Creating a tournament |
         | How do I add players to a tournament? | Players             |
         | How do I enter scores?                | Scores              |
