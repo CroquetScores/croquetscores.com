@@ -33,10 +33,18 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
 
-  # The scenarios, in four shards side by side, each on a runner of its own
-  # with a Postgres of its own and a quarter of the suite to run. A shard that
-  # fails does not stop the others, so that a run names every scenario that
-  # failed rather than only those in the first shard to.
+  # Every scenario, @browser ones included, in eight shards side by side, each
+  # on a runner of its own with a Postgres of its own and an eighth of the
+  # suite to run. Running all of them is what a pull request is for: main is
+  # reached only by squash-merging one whose run passed, so nothing is run again
+  # there, and a change under src/web with no feature file beside it is seen
+  # before it is merged and not found after. All of the
+  # scenarios are about an hour and three quarters of runner time (the @browser
+  # ones nearly all of it), which eight shards bring to a quarter of an hour or
+  # so each, with the runner's setup besides.
+  #
+  # A shard that fails does not stop the others, so that a run names every
+  # scenario that failed rather than only those in the first shard to.
   tests:
     needs: build
     # Pinned, as the build's is.
@@ -45,7 +53,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
 
     permissions:
       contents: read
@@ -60,83 +68,20 @@ jobs:
 
       - run: npm ci
 
+      # Chromium and only Chromium: a second engine is a second download on
+      # every run, and wants a reason (SETUP.md §8.2). Every shard installs it,
+      # since the @browser scenarios are spread across all of them.
+      - run: npx playwright install --with-deps chromium
+
       # Postgres, from the same compose.yaml a developer uses. Each @postgres
       # scenario makes a database of its own on it.
       - run: npm run db:up
 
-      # Everything but the @browser scenarios, so no browser is installed.
-      # Two workers rather than the six scripts/cucumber.mjs asks for: the runner has
-      # two cores, and workers beyond them only wait their turn for one.
-      - run: npm run test:nobrowser -- --parallel 2 --shard ${{ matrix.shard }}/4
+      # Two workers rather than the six scripts/cucumber.mjs asks for: the runner
+      # has two cores, and workers beyond them only wait their turn for one.
+      # test:features and not test, which runs it through a second npm run, so
+      # that what follows the -- reaches Cucumber.
+      - run: npm run test:features -- --parallel 2 --shard ${{ matrix.shard }}/8
 
       - if: always()
-        run: npm run db:down
-
-  # The @browser scenarios in the feature files this pull request has changed,
-  # and none of the others. All of them take about an hour and a half of runner
-  # time, nearly all of what a full run costs, and most pull requests touch
-  # nothing they check, so every one running them all would make every one wait
-  # for them. browser.yml runs the whole lot each Australian night, which is what catches
-  # a change under src/web with no feature file beside it.
-  #
-  # A pull request that changes no browser feature finds that out first, before
-  # anything is installed, and the job is over in seconds.
-  browser:
-    needs: build
-    runs-on: ubuntu-24.04
-
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          # The history, so that what the pull request changed can be told
-          # from what main already had.
-          fetch-depth: 0
-
-      # Names are passed on NUL-separated: features here are under folders
-      # called {year} and (home), and a shell splitting on spaces or expanding
-      # braces would split them wrongly.
-      - id: changed
-        env:
-          BASE: origin/${{ github.base_ref }}
-        run: |
-          git diff -z --name-only --diff-filter=d "$BASE...HEAD" -- '*.feature' \
-            | xargs -0 -r grep -l -Z -F '@browser' > "$RUNNER_TEMP/browser-features" || true
-          if [ -s "$RUNNER_TEMP/browser-features" ]; then
-            echo "any=true" >> "$GITHUB_OUTPUT"
-            tr '\0' '\n' < "$RUNNER_TEMP/browser-features"
-          else
-            echo "any=false" >> "$GITHUB_OUTPUT"
-            echo "No feature file with @browser scenarios has changed, so there is nothing to run."
-          fi
-
-      - if: steps.changed.outputs.any == 'true'
-        uses: actions/setup-node@v7
-        with:
-          node-version: 22.13.0
-          cache: npm
-
-      - if: steps.changed.outputs.any == 'true'
-        run: npm ci
-
-      # Chromium and only Chromium: a second engine is a second download on
-      # every run, and wants a reason (SETUP.md §8.2).
-      - if: steps.changed.outputs.any == 'true'
-        run: npx playwright install --with-deps chromium
-
-      - if: steps.changed.outputs.any == 'true'
-        run: npm run db:up
-
-      # Two workers, for the same reason as in the tests job. Not test:browser:
-      # its profile names every feature, and a path given on the command line is
-      # added to those and does not replace them, so naming files to it would
-      # still run every browser scenario there is.
-      - if: steps.changed.outputs.any == 'true'
-        run: |
-          mapfile -d '' -t features < "$RUNNER_TEMP/browser-features"
-          npm run test:browser:changed -- --parallel 2 "${features[@]}"
-
-      - if: always() && steps.changed.outputs.any == 'true'
         run: npm run db:down
