@@ -27,11 +27,18 @@ import { DialogStatus } from "../../../../../../../../DialogStatus.js";
 // the other team alone, since nobody plays their own team
 // (test-score.feature).
 //
-// A new score that says walkover, as "w/o" in any case, is not added at once:
+// A new score that says walkover, as "w/o", "wo", "walkover" or "walk over" in
+// any case, is not added at once:
 // the reader is asked, in a dialog over this one, whether to withdraw the loser
 // instead, since a withdrawn player plays no more and the games they have not
 // played are decided without them, where a walkover typed as a score is a game
 // never played counted as one that was.
+
+// The ways a walkover is written. Bounded by letters of any alphabet rather
+// than by a word edge, so that "26w/o" still says it, where "26" and "w" are
+// both word characters and no edge falls between them, and "two", "won" and
+// "woł" do not. Only a letter blocks a match: a digit beside it does not.
+const WALKOVER_WORDS = /(?<!\p{L})(?:w\/o|wo|walk[\s-]*over)(?!\p{L})/iu;
 
 interface Props {
   /** The tournament's id. */
@@ -489,7 +496,7 @@ export const ScoreDialog = ({
     said.winner !== "" &&
     said.loser !== "" &&
     said.winner !== said.loser &&
-    Object.values(sentScores).some((typed) => /w\/o/i.test(typed));
+    Object.values(sentScores).some((typed) => WALKOVER_WORDS.test(typed));
 
   // The loser withdrawn in place of the game being added. The game is not
   // added, so what was typed is emptied for the next as it is once one is, and
