@@ -34,10 +34,11 @@ import { DialogStatus } from "../../../../../../../../DialogStatus.js";
 // played are decided without them, where a walkover typed as a score is a game
 // never played counted as one that was.
 
-// The ways a walkover is written. Bounded by letters rather than by a word
-// edge, so that "26w/o" still says it, where "26" and "w" are both word
-// characters and no edge falls between them, and "two" or "won" do not.
-const WALKOVER_WORDS = /(?<![a-z])(?:w\/o|wo|walk ?over)(?![a-z])/i;
+// The ways a walkover is written. Bounded by letters of any alphabet rather
+// than by a word edge, so that "26w/o" still says it, where "26" and "w" are
+// both word characters and no edge falls between them, and "two", "won" and
+// "woł" do not. Only a letter blocks a match: a digit beside it does not.
+const WALKOVER_WORDS = /(?<!\p{L})(?:w\/o|wo|walk[\s-]*over)(?!\p{L})/iu;
 
 interface Props {
   /** The tournament's id. */

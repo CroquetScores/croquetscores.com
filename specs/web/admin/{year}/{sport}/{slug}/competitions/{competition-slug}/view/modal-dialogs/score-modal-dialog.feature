@@ -495,8 +495,11 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
   Rule: A score that says walkover asks first whether to withdraw the opponent instead
 
     A score with "w/o", "wo", "walkover" or "walk over" in it, in any case,
-    says the loser did not play: a walkover. Each stands as a word and not
-    as letters inside one, so "two" and "won" say nothing of the kind. A
+    says the loser did not play: a walkover. "Walk over" may be written with
+    a hyphen or more than one space. Each stands as a word and not as
+    letters inside one, in any alphabet, so "two", "won" and "woł" say
+    nothing of the kind. A digit beside one does not stop it saying so, as
+    "26w/o" is written. A
     competition has a better way to say that. A player who is
     withdrawn plays no more of it, and the games they have not played are
     decided without them (`competition-players-tab.feature`), where a walkover
@@ -538,6 +541,9 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
         | 26 walk over   | 0             |
         | 26 Walk Over   | 0             |
         | 26             | 0 walk over   |
+        | 26 walk  over  | 0             |
+        | 26 walk-over   | 0             |
+        | 26             | 0 Walk-Over   |
 
     Scenario Outline: A score with those letters inside another word does not say walkover
       Given "<winner's score>" is typed as the "Winner's score"
@@ -550,6 +556,8 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
         | 26 two         | 0             |
         | 26 won         | 0             |
         | 26             | 0 wolf        |
+        | 26             | 0 woł         |
+        | 26 éwo         | 0             |
 
     Scenario: A score that does not say walkover is added as it always was
       Given "26" is typed as the "Winner's score"
