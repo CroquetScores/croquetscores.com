@@ -17,7 +17,7 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 - **Web: static pages for the public side**: Server-rendered HTML, no client framework, works without JavaScript
 - **Web: a SPA at `/admin`**: React built by Vite, served as static files with a history fallback
 - **Gherkin**: Cucumber.js, the only test runner
-- **CI via GitHub**: Actions: lint, typecheck, build, then every scenario but the `@browser` ones, against the compose database, and the `@browser` ones in the feature files a pull request changes
+- **CI via GitHub**: Actions: lint, typecheck, build, then every scenario, the `@browser` ones too, against the compose database, in eight shards, on a pull request and on nothing else
 - **Roll its own mediator, CQRS, event store**: Written in `src/application` and `src/infrastructure`; no framework decides their shape
 - **Layers: web, infrastructure, application, domain**: Enforced by ESLint, not by good intentions
 - **`/src` for source, `/specs` for `.feature` files**: Steps live beside their feature
@@ -499,14 +499,14 @@ The log is written where it always was, to standard output, and a copy of each l
 - `db`, from `npm run test:db`: every feature, only `@postgres`. Reports under `reports/cucumber-db`.
 - `browser`, from `npm run test:browser`: every feature, only `@browser`. Reports under `reports/cucumber-browser`.
 - `nobrowser`, from `npm run test:nobrowser`: every feature, less `@browser`. Reports under `reports/cucumber-nobrowser`.
-- `changed`, from `npm run test:changed`, and from `npm run test:browser:changed`, which adds `--tags @browser` and takes the features on the command line, as CI does for those a pull request changed: the features `scripts/test-changed.mjs` names. Reports under `reports/cucumber-changed`.
+- `changed`, from `npm run test:changed`, and from `npm run test:browser:changed`, which adds `--tags @browser` and takes the features on the command line, for running only the browser scenarios of those a change touched: the features `scripts/test-changed.mjs` names. Reports under `reports/cucumber-changed`.
 
 - JavaScript rather than JSON, so the import list, the loader and the number of workers are said once. Six copies of them in JSON would be six things to keep in step, and a support folder added to five and missed in the sixth would fail one script's scenarios for a reason nowhere in the code. It also lets the reasons sit beside the settings as comments, which JSON has no room for.
 - Every profile writes two reports, each named after the profile, so running one script does not overwrite what another last reported: `.html`, the whole run to be read in a browser; and `-summary.txt`, the count of scenarios and steps and the time the run took as a whole, which the progress bar prints and then scrolls away, so one run's time can be set against the next.
 - A tag given on the command line is added to the profile's rather than replacing it: `npm run test:nodb -- --tags @browser` runs the scenarios that are both.
 - The globs match by extension at any depth, which is what lets a `.feature` and its `.steps.ts` share a folder.
 - Undefined and pending steps fail the run, so an unimplemented feature file cannot report green.
-- Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:nobrowser -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber, which is why CI asks of a script that runs Cucumber directly. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
+- Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:features -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber, which is why CI asks of a script that runs Cucumber directly. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
 - tsx is applied twice over, once to each kind of thread. The npm script runs Cucumber's bin through tsx, which is what the main thread loads the steps with. A worker thread does not inherit that, so `loader` names `scripts/cucumber-loader.mjs`, which Cucumber registers in each worker before loading anything: tsx's own hooks, handed the empty options that Cucumber does not give them and without which tsx takes itself to have been started with Node's deprecated `--loader` flag and refuses to run. Steps execute as TypeScript with no build step either way.
 
 ### 8.1 Scenarios that need a database
@@ -548,9 +548,9 @@ The `@postgres` hooks have to run before the `@browser` ones, because a scenario
 
 That harness lives in `specs/web-units/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not. It is the harness of the in-process specs. The specs of the website by its address alone have a harness of their own, which names nothing of the site's code (§8.3).
 
-The `tests` job in CI does not run the `@browser` scenarios, and so installs no browser: `test:nobrowser` is what it runs. They are run in two other places. A job of its own on a pull request runs those in the feature files the pull request changed, and finds out first whether there are any, so that a pull request changing none installs nothing. `browser.yml` runs every one of them each Australian night and on request, in one job. Both install Chromium and only Chromium: a second engine is a second download on every run, and wants a reason.
+The `tests` job in CI runs the `@browser` scenarios with the rest, every shard installing Chromium, and runs `test:features`. `browser.yml` runs every one of them again on request and on no schedule, in one job, on whichever branch is chosen. Both install Chromium and only Chromium: a second engine is a second download on every run, and wants a reason.
 
-The split is there because the `@browser` scenarios are about two fifths of the scenarios and about five sixths of the runner time: all of them took about an hour and a half of it, against a quarter of an hour for the rest. The cost of it is that a change under `src/web/` with no feature file beside it is not seen by its pull request's run, and is seen by the next Australian night's. Where that is not soon enough, `browser.yml` can be run on the branch from the Actions page, or `npm run test:browser` by hand.
+The `@browser` scenarios are about two fifths of the scenarios and about five sixths of the runner time: all of them took about an hour and a half of it, against a quarter of an hour for the rest. A pull request pays that, spread over eight shards, so that a change under `src/web/` with no feature file beside it is seen by its own pull request and not found a night later. What a pull request cannot see is two pull requests that each passed alone and do not together, and a scenario that fails only now and then. A nightly run of `main` used to catch those, and was stopped; `browser.yml` is how to look at `main` when it is wanted.
 
 ### 8.3 Specs of the website alone
 
@@ -818,7 +818,7 @@ code-review.md
 `.github/workflows/ci.yml` runs on every pull request and on nothing else, since `main` is only reached by squash-merging a pull request whose run passed on its own branch. It is two jobs, and the file itself is where what each does is said, with why beside it:
 
 - `build` installs, lints, typechecks and builds.
-- `tests` waits on it, and runs every scenario but the `@browser` ones (`npm run test:nobrowser`) in four shards side by side, each on a runner of its own with a Postgres of its own, a quarter of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others.
+- `tests` waits on it, and runs every scenario, the `@browser` ones included (`npm run test:features`), in eight shards side by side, each on a runner of its own with a Postgres of its own and Chromium, an eighth of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others.
 
 Nothing is kept of a run but what GitHub shows of it: a failing scenario is read off the log of the shard it failed in, and run again locally.
 
