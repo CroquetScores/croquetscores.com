@@ -1,13 +1,17 @@
 {
   "permissions": {
-    "allow": ["Bash(git add *)", "Bash(git commit *)", "Bash(git push *)"],
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(gh pr create *)"
+    ],
     "ask": [
       "Bash(git push *--force*)",
       "Bash(git push -f *)",
       "Bash(git push * -f)",
       "Bash(git push * -f *)",
       "Bash(git push * +*)",
-      "Bash(gh pr create *)",
       "Bash(gh pr merge *)",
       "mcp__g__push_files",
       "mcp__g__create_or_update_file",
