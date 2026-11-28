@@ -107,7 +107,7 @@ Where a database is not available, say which scenarios were not run rather than 
 
 A new scenario is worth only as much as its ability to fail. Check it by breaking the code it describes and watching it go red, then put the code back. A scenario that passes against a deliberately broken implementation is worse than no scenario, because it says something is covered when it is not.
 
-Report what happened, including what did not work. "Tests pass" when they were not run, or when some were skipped, costs more than it saves.
+Report what happened, including what did not work, and say which command was run and what it said. "Tests pass" when they were not run, or when some were skipped, costs more than it saves, and a command with its output can be checked where the claim alone cannot.
 
 ---
 
@@ -135,7 +135,7 @@ A reviewer told to find faults will report some that are not, so a finding is ch
 
 Do what was asked. Where something else is wrong, say so and leave it: a change that quietly fixes three other things is a change nobody can review. Where a decision could go two ways and both are defensible, make one, say which, and say what would change if it went the other way.
 
-Git is nobody's but the author's. Nothing is staged, committed, pushed, force-pushed, or opened as a pull request without being asked for in those words, each time: being asked to commit is not being asked to push, and being asked once is not being asked again. Work is done, checked, and left in the working tree, with what is there said plainly. When asked to commit what is staged, commit what is staged: exactly that, with nothing added to the index first, and unstaged work left alone. Where a review or a fix changes files, say which, and leave the staging to whoever asked.
+Git is nobody's but the author's. Nothing is staged, committed, pushed, force-pushed, or opened as a pull request without being asked for in those words, each time: being asked to commit is not being asked to push, and being asked once is not being asked again. Being asked for a pull request is the exception in one direction: a pull request needs its work committed and its branch pushed, so asking for one is asking for both, with no more asking, and the same is true of a branch made for it. It is not asking for a force-push, which a rebase makes necessary and which is asked for as such. Work is done, checked, and left in the working tree, with what is there said plainly. When asked to commit what is staged, commit what is staged: exactly that, with nothing added to the index first, and unstaged work left alone. Where a review or a fix changes files, say which, and leave the staging to whoever asked.
 
 ---
 
@@ -153,3 +153,21 @@ The site is live and holds real events, so it is no longer a greenfield site whe
 - **A change to an event says so in its feature,** with a scenario that reads an event as it was kept before the change, so that the old shape is held to the same scenarios as the new. A scenario written only against the new shape would pass while the old events could no longer be read.
 - **Tables whose names begin with `import` are never touched.** `import_errors`, `imported_users`, `imported_tournaments`, `imported_players` and `imported_competitions`, and any made later with such a name, are what the import from the old sites keeps, and nothing else reads them. A migration does not alter, rename, empty or drop one, however much it would tidy the schema, and nothing but the import writes to one. Where one looks wrong, say so and leave it.
 - **The database schema is the same:** `0001-initial.sql` is never edited, and a change is a migration after it (`SETUP.md` §6.2). A migration may change a read model, which can be made again from the events, and never the events.
+
+---
+
+## 10. Working with Claude Code
+
+**This file is advice, and advice can be set aside.** Claude Code reads it as context, and may decide a line does not apply; it is not enforced. What must never happen, an event rewritten (§9), a table whose name begins with `import` touched, a push nobody asked for (§8), is better held by something that holds it more firmly than a sentence does: ESLint for the layers (§5), and a hook or a permission rule in `.claude/settings.json` for an action. Three are there, and none of them is a wall:
+
+- **Before an edit,** `scripts/claude-guard.mjs` refuses one, or several at once, or a whole file written, to `0001-initial.sql`, and to a migration with a statement that changes a table the import keeps (§9): an alteration, a rename, a truncation, a drop, a write, an index or a trigger, and not a comment or a query that only reads one. It is specified in `specs/infrastructure/claude/claude-guard.feature`. **It does not see a file changed through the shell**: `sed -i`, a redirect or a script changes `0001-initial.sql` without it being asked, and a rule on the shell would be a guess at what a command does. It holds those two rules through the editing tools and no more, and an event being rewritten is not something an edit to a file says, so that one is still only advice.
+- **Before Claude Code says it has finished,** `scripts/claude-stop-check.mjs` runs `npm run typecheck` and `npm run lint` where the changed code is not what it was when they last passed, and sends it back with what they said if either fails (§6). It does that once a turn, and does not run the scenarios. A failure it finds may be in code that was changed before this turn began, since the checks are of the whole repository, and it is let finish the second time it is sent back. It has no feature of its own, since what it runs is the checks that already have them.
+- **Before a force-push, and before a pull request is opened or merged,** a permission rule asks the person at the keyboard each time. A stage, a commit and an ordinary push are let through without asking, since a rule cannot tell whether a pull request was asked for, which is the one case §8 allows them for; what keeps them from being done unasked is the sentence in §8 and not the rule, so they are only as held as advice is. The rule covers `git push` with `--force`, `-f` or a `+` before a branch, `gh pr create` and `gh pr merge`, and the GitHub tools that push, write a file, or open or merge a pull request.
+
+A line that has been made louder and is still missed belongs in one, not in capitals, since emphasis mostly gets a rule applied where it does not belong.
+
+**What is written here is what the repository cannot say for itself.** Where a thing can be read from the code, it is not described here, because it would be a second thing to keep true and Claude Code reads the code. Keep this file under 200 lines, which is where Claude Code's own guidance says adherence starts to fall, and say each thing in words that can be checked: "run `npm run test:changed`" and not "test your changes". `CLAUDE.md` stays a pointer to this file, so there is one place to look.
+
+**One task to a session.** Start a fresh one, with `/clear`, between tasks that have nothing to do with each other, so that what was true of the last does not weigh on the next. When a correction has failed twice, do not make a third on top of the two: clear, and write one prompt that says what the two attempts showed. `Esc` stops Claude Code and keeps what it has done so far, and `/rewind` goes back to a point before something went wrong.
+
+**A subagent is for work that can stand apart:** a search whose output would bury the session, jobs that can run side by side, or a review by something that has not seen the code it reviews (§7). It is not for a better answer to the same question. Each starts knowing nothing and costs tokens of its own, so a small job is not worth one.
