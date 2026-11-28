@@ -15,6 +15,7 @@ import type {
   WorldRankingPlayersKept,
 } from "../../application/services/WorldRankingPlayers.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
+import { lookForIdsAgain } from "../read-models/worldRankingIds.js";
 import type { UnitOfWork } from "./UnitOfWork.js";
 
 // Written out rather than made from the sport, so that nothing a caller says
@@ -142,6 +143,10 @@ export class PostgresWorldRankingPlayers
           and world_ranking_id <> all($1::integer[])`,
       [numbers, at.toDate()],
     );
+    // A player of a tournament whose name the rankings did not know, or whose
+    // name two players now share, has the id looked for again by what the
+    // rankings now say.
+    await lookForIdsAgain(connection, { sport });
   }
 
   // A few thousand names to a sport, so each is read rather than indexed: a

@@ -8,9 +8,14 @@ Feature: An app lists the games of a golf croquet world ranking player
   gave it.
 
   This is the golf croquet twin of `ac/world-ranking-player-games/worldRankingPlayerGames.feature`
-  and keeps to it wherever golf croquet can. A game is the player's when the player is
-  one the tournament keeps, under the name the rankings know them by, in a
-  golf croquet tournament. It does not matter whether the competition counts
+  and keeps to it wherever golf croquet can. A game is the player's when a
+  player of a golf croquet tournament is the world ranking player, which the
+  tournament's player is found to be by the name the rankings know them by,
+  and where two world ranking players have that name, by who the tournament's
+  player represents and where the tournament is played
+  (`TournamentContents.feature`). A tournament's player the rankings' names do
+  not tell apart is nobody's, since a game given to the wrong one is worse than
+  a game left out. It does not matter whether the competition counts
   towards the world rankings: every game is listed. A game in a test between
   teams is the player's when they played it for their team, and is told as any
   other game is. Each is told from the player's side: its id and the ids of
@@ -131,6 +136,35 @@ Feature: An app lists the games of a golf croquet world ranking player
       And "Ann Archer" has beaten "Vic Visitor" 7 to 3 in "Block A" of "Spring Open"
       When the games of the golf croquet world ranking player "Ann Archer" are asked with that key
       Then the game says the opponent is not a world ranking player
+
+    Scenario: A game is the player's of the name two world ranking players share who the tournament's player represents
+      Given the golf croquet world ranking player "Ivor Brand" with the world ranking number 41 from "england"
+      And the golf croquet world ranking player "Ivor Brand" with the world ranking number 42 from "wales"
+      And the player is to represent "Wales"
+      And "organiser@example.com" has added the player "Ivor Brand" to "Spring Open"
+      And "organiser@example.com" has entered the player "Ivor Brand" in "Block A" of "Spring Open"
+      And "Ivor Brand" has beaten "Ann Archer" 7 to 3 in "Block A" of "Spring Open"
+      When the games of the golf croquet world ranking player "Ivor Brand" from "wales" are asked with that key
+      Then one game is listed
+
+    Scenario: A game is not the player's of the name two world ranking players share who the tournament's player does not represent
+      Given the golf croquet world ranking player "Ivor Brand" with the world ranking number 41 from "england"
+      And the golf croquet world ranking player "Ivor Brand" with the world ranking number 42 from "wales"
+      And the player is to represent "Wales"
+      And "organiser@example.com" has added the player "Ivor Brand" to "Spring Open"
+      And "organiser@example.com" has entered the player "Ivor Brand" in "Block A" of "Spring Open"
+      And "Ivor Brand" has beaten "Ann Archer" 7 to 3 in "Block A" of "Spring Open"
+      When the games of the golf croquet world ranking player "Ivor Brand" from "england" are asked with that key
+      Then no games are listed
+
+    Scenario: A game is nobody's of the name two world ranking players share where nothing tells them apart
+      Given the golf croquet world ranking player "Ivor Brand" with the world ranking number 41 from "england"
+      And the golf croquet world ranking player "Ivor Brand" with the world ranking number 42 from "wales"
+      And "organiser@example.com" has added the player "Ivor Brand" to "Spring Open"
+      And "organiser@example.com" has entered the player "Ivor Brand" in "Block A" of "Spring Open"
+      And "Ivor Brand" has beaten "Ann Archer" 7 to 3 in "Block A" of "Spring Open"
+      When the games of the golf croquet world ranking player "Ivor Brand" from "wales" are asked with that key
+      Then no games are listed
 
     Scenario: A game that was not drawn says so
       Given "Ann Archer" has beaten "Bea Bishop" 7 to 3 in "Block A" of "Spring Open"

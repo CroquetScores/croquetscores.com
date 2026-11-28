@@ -156,6 +156,8 @@ const made = async (
   const { id } = JSON.parse(text) as { id: string };
   const ids = idsMade.get(world) ?? new Map<string, string>();
   ids.set(name, id);
+  // Two players of one name are told apart by their country.
+  if (country !== undefined) ids.set(`${name} from ${country}`, id);
   idsMade.set(world, ids);
 };
 

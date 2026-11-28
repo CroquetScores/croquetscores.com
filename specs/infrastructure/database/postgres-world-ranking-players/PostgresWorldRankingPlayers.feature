@@ -27,6 +27,14 @@ Feature: Keeping the world ranking players in Postgres
   player whose country the rankings change has changed. A golf croquet player given with no country is from
   England, which the scenarios do not mind.
 
+  A tournament's players are kept with the id the site gave the rankings'
+  player of the name they are known by (`TournamentContents.feature`), so
+  keeping a sport's players looks for the id again of every player of a
+  tournament of that sport. A player the rankings did not know when the tournament was told of
+  them is found once the rankings do, one the rankings go on listing keeps
+  their number, and a name that comes to be two players is looked for again by
+  who the player represents and where the tournament is played.
+
   Keeping is done inside the import's transaction, so a reader asking for the
   players while it is under way still finds the ones kept before, until it is
   committed. Two imports at once keep one after the other rather than
@@ -339,6 +347,53 @@ Feature: Keeping the world ranking players in Postgres
       And the moment "2026-10-09T10:00:00Z"
       When the golf croquet player 3 called "Ivor Brand" from "wales" is given
       Then the golf croquet player 3 changed at "2026-10-09T10:00:00Z"
+
+  Rule: Keeping a sport's players looks for the id of its tournaments' players again
+
+    Scenario: An association croquet player the rankings did not know is given their number
+      Given a player "Keith Aiton" of a tournament of the sport "ac" played in "au"
+      When the association croquet player 3 called "Keith Aiton" is given
+      Then the tournament player "Keith Aiton" is kept with the id of the association croquet player 3
+
+    Scenario: A golf croquet player the rankings did not know is given their number
+      Given a player "Ivor Brand" of a tournament of the sport "gc" played in "england"
+      When the golf croquet player 4 called "Ivor Brand" from "england" is given
+      Then the tournament player "Ivor Brand" is kept with the id of the golf croquet player 4
+
+    Scenario: A player the rankings stop listing keeps their number
+      Given a player "Keith Aiton" of a tournament of the sport "ac" played in "au"
+      And the association croquet player 3 called "Keith Aiton" has been given
+      When the association croquet player 4 called "Bill Aldridge" is given
+      Then the tournament player "Keith Aiton" is kept with the id of the association croquet player 3
+
+    Scenario: A name that comes to be two players is told apart by who the player represents
+      Given a player "Ivor Brand" representing "Wales" of a tournament of the sport "gc" played in "england"
+      And the golf croquet player 4 called "Ivor Brand" from "england" has been given
+      And the golf croquet player 4 called "Ivor Brand" from "england" is to be given
+      And the golf croquet player 5 called "Ivor Brand" from "wales" is to be given
+      When those to be given are given
+      Then the tournament player "Ivor Brand" is kept with the id of the golf croquet player 5
+
+    Scenario: A name that comes to be two players is told apart by where the tournament is played
+      Given a player "Ivor Brand" of a tournament of the sport "gc" played in "england"
+      And the golf croquet player 4 called "Ivor Brand" from "england" has been given
+      And the golf croquet player 4 called "Ivor Brand" from "england" is to be given
+      And the golf croquet player 5 called "Ivor Brand" from "wales" is to be given
+      When those to be given are given
+      Then the tournament player "Ivor Brand" is kept with the id of the golf croquet player 4
+
+    Scenario: A name that comes to be two players with nothing to tell them apart has no number
+      Given a player "Ivor Brand" of a tournament of the sport "gc" played in "au"
+      And the golf croquet player 4 called "Ivor Brand" from "england" has been given
+      And the golf croquet player 4 called "Ivor Brand" from "england" is to be given
+      And the golf croquet player 5 called "Ivor Brand" from "wales" is to be given
+      When those to be given are given
+      Then the tournament player "Ivor Brand" is kept with no world ranking id
+
+    Scenario: A tournament of the other sport is left as it was
+      Given a player "Keith Aiton" of a tournament of the sport "ac" played in "au"
+      When the golf croquet player 3 called "Keith Aiton" is given
+      Then the tournament player "Keith Aiton" is kept with no world ranking id
 
   Rule: Keeping one sport's players leaves the other's
 

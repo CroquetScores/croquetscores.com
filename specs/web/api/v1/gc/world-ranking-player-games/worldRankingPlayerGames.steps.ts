@@ -47,6 +47,13 @@ When(
 );
 
 When(
+  "the games of the golf croquet world ranking player {string} from {string} are asked with that key",
+  async function (this: WebWorld, player: string, country: string) {
+    await askedOf(this, `${player} from ${country}`, {}, withThatKey(this));
+  },
+);
+
+When(
   "the games of the golf croquet world ranking player {string} are asked with no key",
   async function (this: WebWorld, player: string) {
     await askedOf(this, player, {}, {});
