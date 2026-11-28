@@ -7,7 +7,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { WebWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../../../support/world.js";
 import {
   answered,
   asked,
@@ -15,7 +15,7 @@ import {
   keyMade,
   sceneOf,
   type Answer,
-} from "../apiOfApps.js";
+} from "../../apiOfApps.js";
 import { idOf } from "../world-ranking-players/worldRankingPlayers.steps.js";
 
 const bare = (id: string): string => id.slice(id.indexOf("/") + 1);
