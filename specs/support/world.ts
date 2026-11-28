@@ -427,6 +427,18 @@ export class SpecWorld extends World {
     sport?: string;
   } = {};
 
+  // What a scenario asks of the guard that Claude Code runs before an edit, as
+  // the hook is given it, and what the guard answered: how it ended, and what
+  // it said on the way. Absent until the guard is asked.
+  public claudeGuardRequest: {
+    tool?: string;
+    filePath?: string;
+    newText?: string;
+    moreText?: string[];
+    raw?: string;
+  } = {};
+  public claudeGuardAnswer: { status: number | null; said: string } | undefined;
+
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
   // What the scenario has asked of the browser, kept so that a browser made
