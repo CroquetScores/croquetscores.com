@@ -15,11 +15,16 @@
 // signed in to with Google: it signs in with Google, as its reader would.
 import type { FastifyRequest } from "fastify";
 
+import { SignInWithGoogle } from "../../../src/application/operations/accounts/SignInWithGoogle.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
+import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import type { Reader } from "../../../src/web/common/reader.js";
+import { sessionCookie } from "../../../src/web/common/session.js";
 import { googleSaysFor } from "../../support/google.js";
 import type { SpecWorld } from "../../support/world.js";
 import { calledByGoogle, googleSubjectOf } from "./accounts.js";
+import { applicationFor } from "./browser.js";
+import { clockFor } from "./clock.js";
 
 const cookie = "spec-signed-in-as";
 // Set beside it for a reader whose account has no password, which the menu
@@ -76,9 +81,61 @@ export const signInAs = async (
   }
 };
 
-// Straight to the way to Google, with the stand-in saying who the reader is
-// as it said when the account was made, and followed back to wherever the
-// site sends a reader who has signed in.
+/**
+ * Has the scenario's browser hold a new session of `account`, started as the
+ * site starts one, with its id in the cookie the site sets it in.
+ *
+ * The browser is taken out of the page it was on first. The site renews the
+ * session cookie on every request that carries one, with the id the request
+ * came with, so a request of the old page still under way when the new cookie
+ * is added is answered with the old id, which then replaces the new one: a
+ * scenario that signed in as a second reader after its background signed in as
+ * a first came out as the first, one run in a few hundred. The browser is left
+ * on a blank page, so a step that acts on the page in front of it has to open
+ * one first.
+ */
+export const holdSessionOf = async (
+  world: SpecWorld,
+  account: AccountId,
+): Promise<void> => {
+  const application = applicationFor(world);
+  const at = ReadOnlyDate.from(new Date(clockFor(world).now.getTime()));
+  const context = world.browserPage.context();
+  // The session the browser held is ended first, as the site ends it
+  // (startSession in src/web/common/session.ts), so that a scenario signing in
+  // as a second reader does not leave the first one's session worth something.
+  const held = (await context.cookies()).find(
+    (each) => each.name === sessionCookie,
+  )?.value;
+  const id = await application.unitOfWork.inTransaction(async () => {
+    if (held !== undefined && held !== "") await application.sessions.end(held);
+    return application.sessions.start(account, at);
+  });
+  await world.browserPage.goto("about:blank");
+  // As the site sets it (src/web/common/session.ts), 90 days and all: a cookie
+  // with no end is one a browser drops when it is closed. Counted from the
+  // machine's clock, not the scenario's, because that is the clock the browser
+  // counts it by.
+  await context.addCookies([
+    {
+      name: sessionCookie,
+      value: id,
+      url: world.baseUrl!,
+      httpOnly: true,
+      secure: true,
+      sameSite: "Lax",
+      expires: Math.floor(Date.now() / 1000) + 90 * 24 * 60 * 60,
+    },
+  ]);
+};
+
+// Signed in with Google as the callback does it: the same command, so the
+// account is made or found as signing in would, and then a session. The way
+// there and back is not gone through, nor is the page it ends on loaded, which
+// was most of what this step took and which the next step nearly always left at
+// once by opening a page of its own. That the way works is what the scenarios
+// of signing in with Google say. The stand-in is still told who Google says the
+// reader is, as it was, for a later step that goes through it.
 const signInWithGoogleAs = async (
   world: SpecWorld,
   address: string,
@@ -88,10 +145,17 @@ const signInWithGoogleAs = async (
   says.emailAddress = address;
   says.verified = true;
   says.name = calledByGoogle;
-  await world.browserPage.goto(`${world.baseUrl!}/auth/google?from=sign-in`);
-  // What the page it landed on asks for itself renews the session cookie, and
-  // must be done before the scenario goes on.
-  await world.browserPage.waitForLoadState("networkidle");
+  const application = applicationFor(world);
+  const account = await application.mediator.send(
+    new SignInWithGoogle(
+      says.subject,
+      address,
+      true,
+      calledByGoogle,
+      ReadOnlyDate.from(new Date(clockFor(world).now.getTime())),
+    ),
+  );
+  await holdSessionOf(world, account);
 };
 
 /**
