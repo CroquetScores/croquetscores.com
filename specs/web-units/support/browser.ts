@@ -533,12 +533,13 @@ const itsOwn = async (
     rmSync(folder, { recursive: true, force: true });
     return Promise.resolve();
   });
+  const loaded = loadConfig({
+    ...process.env,
+    DATABASE_ACCESS_FILE: join(folder, ".database-access"),
+  });
   const scenario = await buildApplication(
     {
-      ...loadConfig({
-        ...process.env,
-        DATABASE_ACCESS_FILE: join(folder, ".database-access"),
-      }),
+      ...loaded,
       databaseUrl,
       // The scenarios' own, so that an account brought over from the old site
       // can be made and signed in to whether or not whoever runs them has the
@@ -573,6 +574,14 @@ const itsOwn = async (
         }),
       },
       emailSender: fileSender(),
+      // Not read from the two files of the world rankings' lists, about a
+      // megabyte and a half to read and parse for each application, and a
+      // quarter of what building one took. Left to the site where it has the
+      // control, which says which countries are listed itself and is asked by
+      // the scenarios that say so (testControl.feature).
+      ...((changed.testControlToken ?? loaded.testControlToken) === undefined
+        ? { worldRankingCountries }
+        : {}),
       ...offered(languages),
       ...(addressesToList.has(world)
         ? { addressesOfWebsite: addressesToList.get(world)! }
