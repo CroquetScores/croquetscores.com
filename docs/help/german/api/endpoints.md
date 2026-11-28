@@ -4,5 +4,5 @@ Jede Adresse liegt unter `/api/v1` der Website, und jede Antwort ist JSON. Was f
 
 Es gibt zwei Arten, und für jede eine Seite:
 
-- [Die GET-Endpunkte](get-endpoints.md) lesen: die Turniere eines Jahres, ein Turnier, einen Wettbewerb, seine Tabelle und Spiele, die Sportarten, Formate und Länder, die ein Turnier haben kann, die Weltranglistenspieler und ihre Spiele, was ein Schlüssel darf und was sich geändert hat oder archiviert wurde.
+- [Die GET-Endpunkte](get-endpoints.md) lesen: die Turniere eines Jahres, ein Turnier, einen Wettbewerb, seine Tabelle und Spiele, die Sportarten, Formate und Länder, die ein Turnier haben kann, die Weltranglistenspieler von Association Croquet und Golf Croquet und ihre Spiele, was ein Schlüssel darf und was sich geändert hat oder archiviert wurde.
 - [Die POST-Endpunkte](post-endpoints.md) ändern etwas: ein Turnier, seine Wettbewerbe, Spieler, Teams und Spiele anlegen und festlegen, wer es leiten und Ergebnisse erfassen darf.

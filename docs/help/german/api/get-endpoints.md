@@ -99,23 +99,28 @@ Listet die Turniere auf, die archiviert wurden, damit eine App aufhören kann, s
 
 ## Weltranglistenspieler {#world-ranking-players}
 
-`GET /api/v1/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players` für Association Croquet und `GET /api/v1/gc/world-ranking-players` für Golf Croquet
 
-Listet die Association-Croquet-Spieler, die die Weltranglisten kennen. Nimmt `changedSince`, geschrieben als `2026-03-01T10:00:00Z`, `page` und `pageSize`, wobei eine Seite höchstens 100 hat. Antwortet mit `worldRankingPlayers`, jeder mit:
+Listet die Spieler dieser Sportart auf, die die Weltranglisten kennen, in der Reihenfolge ihrer Namen. Beide werden gleich erfragt und beantwortet, außer wo hier etwas anderes steht. Jede nimmt `changedSince`, geschrieben als `2026-03-01T10:00:00Z`, `page` und `pageSize`, wobei eine Seite höchstens 100 hat. Antwortet mit `worldRankingPlayers`, jeder mit:
 
 - `id` und `worldRankingId`, der Nummer, die die Ranglisten dem Spieler geben
 - `name`, wie die Ranglisten ihn nennen
+- `country`, woher der Spieler kommt, als der eigene Code der Website dafür, einer der Codes in [den Ländern](#countries). Ein Golf-Croquet-Spieler hat immer einen, und zwei Golf-Croquet-Spieler können in verschiedenen Ländern denselben Namen haben. Ein Association-Croquet-Spieler hat einen, sobald die Liste der Ranglisten seit seiner Einführung gelesen wurde, und bis dahin fehlt er
 - `games`, wo die API von den Spielen des Spielers erzählt (siehe [die Spiele eines Spielers](#world-ranking-player-games))
 - `archivedAt`, wann der Spieler archiviert wurde, oder `null`
 - `changedAt` und `etag`, gebildet aus dem, was der Spieler sagt
 
-und `total`, `page`, `pageSize` und `next`, wie bei den Turnieren eines Jahres. Die Liste wird mit dem `ETag` erneut erfragt, das sie gesendet hat, und mit `304` beantwortet, wo sich nichts geändert hat. Eine abgewiesene Anfrage wird mit einem `code` abgewiesen, der mit `WorldRankingPlayers.` beginnt, wie `WorldRankingPlayers.PageNotWhole`, und mit einem `field`.
+und `total`, `page`, `pageSize` und `next`, wie bei den Turnieren eines Jahres. Die Liste wird mit dem `ETag` erneut erfragt, das sie gesendet hat, und mit `304` beantwortet, wo sich nichts geändert hat. Ein Spieler, den die Ranglisten nicht mehr führen, wird weiterhin aufgeführt, mit `archivedAt`, damit eine App, die ihn behalten hat, erfahren kann, dass er weg ist. Die `id` ist das, was zu behalten ist: Die Ranglisten können die Nummer eines Spielers ändern, und die `id` bleibt die desselben Spielers.
+
+Ohne `page` erfragt, bringt die Liste zuerst die Namen von der eigenen Website der Weltranglisten auf den neuesten Stand, höchstens einmal pro Stunde für jede Sportart. Mit einer Seitennummer erfragt, auch der ersten, sagt sie nur, was die Website behalten hat, sodass eine App, die den Seiten folgt, die Website der Ranglisten nicht für jede davon lesen lässt. Wo die Website der Ranglisten nicht gelesen werden kann, sind es die Namen vom letzten Mal, als sie aktualisiert wurden.
+
+Eine abgewiesene Anfrage wird mit einem `code` abgewiesen, der bei Association Croquet mit `WorldRankingPlayers.` beginnt, wie `WorldRankingPlayers.PageNotWhole`, und bei Golf Croquet mit `GolfCroquetWorldRankingPlayers.`, und mit einem `field`.
 
 ## Die Spiele eines Weltranglistenspielers {#world-ranking-player-games}
 
-`GET /api/v1/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games` und `GET /api/v1/gc/world-ranking-players/{id}/games`
 
-Die `id` ist der Teil der `id` des Spielers nach dem Schrägstrich, wie ihn `games` in der obigen Liste nennt. Listet die Association-Croquet-Spiele, die der Spieler gespielt hat, ob in einem Block, einem Schweizer System, einem K.-o.-System oder einem Test, und ob er für sich selbst oder für ein Team spielte. Nimmt `changedSince`, `page` und `pageSize` wie die Liste der Spieler und antwortet mit `games`, in der Reihenfolge, in der sie hinzugefügt wurden, jedes aus der Sicht des Spielers:
+Die `id` ist der Teil der `id` des Spielers nach dem Schrägstrich, wie ihn `games` in der obigen Liste nennt. Listet die Spiele dieser Sportart, die der Spieler gespielt hat, ob in einem Block, einem Schweizer System, einem K.-o.-System oder einem Test, und ob er für sich selbst oder für ein Team spielte. Nimmt `changedSince`, `page` und `pageSize` wie die Liste der Spieler und antwortet mit `games`, in der Reihenfolge, in der sie hinzugefügt wurden, jedes aus der Sicht des Spielers:
 
 - `id`, `tournamentId` und `competitionId`
 - `won`, ob der Spieler gewonnen hat, was bei einem Unentschieden `false` ist, und `drawn`
@@ -125,4 +130,6 @@ Die `id` ist der Teil der `id` des Spielers nach dem Schrägstrich, wie ihn `gam
 - `addedAt`, oder `null` bei einem Spiel, das hinzugefügt wurde, bevor die Website festhielt, wann, und `changedAt`
 - `etag`
 
-und `total`, `page`, `pageSize` und `next`. Ein Spieler, den die Website nicht kennt, wird mit `404` und `WorldRankingPlayers.NotFound` abgewiesen, was nicht dasselbe ist wie ein Spieler ohne Spiele, der eine leere Liste hat.
+und `total`, `page`, `pageSize` und `next`. Ein Spiel gehört dem Spieler, wenn er ein Spieler eines Turniers dieser Sportart ist. Die Website findet anhand des Namens, unter dem die Ranglisten ihn kennen, heraus, welcher Weltranglistenspieler ein Turnierspieler ist. Wo die Ranglisten diesen Namen zwei Spielern geben, wie es die Golf-Croquet-Liste für Spieler in verschiedenen Ländern tut, unterscheidet sie diese danach, wen der Turnierspieler vertritt, wo das eines ihrer Länder ist, und andernfalls nach dem Land, in dem das Turnier gespielt wird. Ein Turnierspieler, den diese nicht unterscheiden, gehört niemandem, und seine Spiele auch nicht, und ein Gegner, den sie nicht unterscheiden, wird ohne `opponentId` genannt.
+
+Ein Spieler, den die Website nicht kennt, wird mit `404` und `WorldRankingPlayers.NotFound` abgewiesen, bei Golf Croquet mit `GolfCroquetWorldRankingPlayers.NotFound`, was nicht dasselbe ist wie ein Spieler ohne Spiele, der eine leere Liste hat. Eine Anfrage, die wegen ihrer Seite abgewiesen wird, wird mit einem `code` abgewiesen, der mit `WorldRankingPlayerGames.` beginnt, bei Golf Croquet mit `GolfCroquetWorldRankingPlayerGames.`, und mit einem `field`.

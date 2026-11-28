@@ -4,5 +4,5 @@ Every address is under `/api/v1` on the site, and every answer is JSON. What app
 
 There are two kinds, and a page for each:
 
-- [The GET endpoints](get-endpoints.md) read: a year's tournaments, a tournament, a competition, its standings and games, the sports, formats and countries a tournament can be, the world ranking players and their games, what a key may do, and what changed or was archived.
+- [The GET endpoints](get-endpoints.md) read: a year's tournaments, a tournament, a competition, its standings and games, the sports, formats and countries a tournament can be, the world ranking players of Association Croquet and Golf Croquet and their games, what a key may do, and what changed or was archived.
 - [The POST endpoints](post-endpoints.md) change something: making a tournament, its competitions, players, teams and games, and who may manage and score it.

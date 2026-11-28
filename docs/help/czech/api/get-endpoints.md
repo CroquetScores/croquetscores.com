@@ -99,23 +99,28 @@ Vypisuje turnaje, které byly archivovány, aby je aplikace mohla přestat zobra
 
 ## Hráči světového žebříčku {#world-ranking-players}
 
-`GET /api/v1/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players` pro Association Croquet a `GET /api/v1/gc/world-ranking-players` pro Golf Croquet
 
-Vypíše hráče Association Croquet, které světové žebříčky znají. Přijímá `changedSince`, zapsaný jako `2026-03-01T10:00:00Z`, `page` a `pageSize`, kde stránka má nejvýše 100 položek. Odpovídá polem `worldRankingPlayers`, u každého hráče:
+Vypíše hráče daného sportu, které světové žebříčky znají, v pořadí jejich jmen. Oba se žádají a odpovídají stejně, kromě toho, co se zde říká jinak. Každý přijímá `changedSince`, zapsaný jako `2026-03-01T10:00:00Z`, `page` a `pageSize`, kde stránka má nejvýše 100 položek. Odpovídá polem `worldRankingPlayers`, u každého hráče:
 
 - `id` a `worldRankingId`, číslo, které hráči dávají žebříčky
 - `name`, jak ho žebříčky jmenují
+- `country`, odkud hráč pochází, jako vlastní kód webu pro ni, jeden z kódů v [zemích](#countries). Hráč Golf Croquet ji má vždy a dva hráči Golf Croquet mohou mít stejné jméno v různých zemích. Hráč Association Croquet ji má, jakmile byl seznam žebříčků od jejího přidání znovu přečten, a do té doby se vynechává
 - `games`, kde API vypráví o hrách hráče (viz [hry hráče](#world-ranking-player-games))
 - `archivedAt`, kdy byl hráč archivován, nebo `null`
 - `changedAt` a `etag`, vytvořený z toho, co hráč říká
 
-a `total`, `page`, `pageSize` a `next`, stejně jako u turnajů jednoho roku. Seznam se žádá znovu s `ETag`, který poslal, a odpovídá se `304`, kde se nic nezměnilo. Odmítnutý požadavek se odmítne s `code`, který začíná `WorldRankingPlayers.`, například `WorldRankingPlayers.PageNotWhole`, a s `field`.
+a `total`, `page`, `pageSize` a `next`, stejně jako u turnajů jednoho roku. Seznam se žádá znovu s `ETag`, který poslal, a odpovídá se `304`, kde se nic nezměnilo. Hráč, kterého žebříčky přestanou uvádět, se vypíše dál, s `archivedAt`, aby se aplikace, která si ho ponechala, dozvěděla, že zmizel. `id` je třeba si ponechat: žebříčky mohou hráči změnit číslo a `id` zůstává stejného hráče.
+
+Požádán bez `page`, seznam nejprve aktualizuje jména z vlastního webu světových žebříčků, nejvýše jednou za hodinu pro každý sport. Požádán o stránku číslem, včetně první, říká jen to, co web uchoval, takže aplikace, která stránky prochází, nenutí číst web žebříčků kvůli každé z nich. Kde web žebříčků nelze přečíst, jsou to jména z posledního přečtení.
+
+Odmítnutý požadavek se odmítne s `code`, který u Association Croquet začíná `WorldRankingPlayers.`, například `WorldRankingPlayers.PageNotWhole`, a u Golf Croquet `GolfCroquetWorldRankingPlayers.`, a s `field`.
 
 ## Hry hráče světového žebříčku {#world-ranking-player-games}
 
-`GET /api/v1/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games` a `GET /api/v1/gc/world-ranking-players/{id}/games`
 
-`id` je část `id` hráče za lomítkem, jak ji uvádí `games` v seznamu výše. Vypíše hry Association Croquet, které hráč odehrál, ať v bloku, ve švýcarském systému, v pavouku nebo v testu, a ať hrál sám za sebe, nebo za tým. Přijímá `changedSince`, `page` a `pageSize` jako seznam hráčů a odpovídá polem `games`, v pořadí, v jakém byly přidány, u každé hry z pohledu hráče:
+`id` je část `id` hráče za lomítkem, jak ji uvádí `games` v seznamu výše. Vypíše hry daného sportu, které hráč odehrál, ať v bloku, ve švýcarském systému, v pavouku nebo v testu, a ať hrál sám za sebe, nebo za tým. Přijímá `changedSince`, `page` a `pageSize` jako seznam hráčů a odpovídá polem `games`, v pořadí, v jakém byly přidány, u každé hry z pohledu hráče:
 
 - `id`, `tournamentId` a `competitionId`
 - `won`, zda hráč vyhrál, což je u remízy `false`, a `drawn`
@@ -125,4 +130,6 @@ a `total`, `page`, `pageSize` a `next`, stejně jako u turnajů jednoho roku. Se
 - `addedAt`, nebo `null` u hry, která byla přidána dříve, než web zaznamenával kdy, a `changedAt`
 - `etag`
 
-a `total`, `page`, `pageSize` a `next`. Hráč, kterého web nezná, se odmítne s `404` a `WorldRankingPlayers.NotFound`, což není totéž jako hráč bez her, který má prázdný seznam.
+a `total`, `page`, `pageSize` a `next`. Hra je hráčova, když je hráčem turnaje daného sportu. Web zjistí, který hráč světového žebříčku turnajový hráč je, podle jména, pod kterým ho žebříčky znají. Kde žebříčky dávají toto jméno dvěma hráčům, jako to dělá seznam Golf Croquet u hráčů z různých zemí, rozliší je podle toho, koho turnajový hráč zastupuje, pokud je to jedna z jejich zemí, a jinak podle země, v níž se turnaj hraje. Turnajový hráč, kterého tyto údaje nerozliší, není ničí, a jeho hry také ne, a soupeř, kterého nerozliší, se uvede bez `opponentId`.
+
+Hráč, kterého web nezná, se odmítne s `404` a `WorldRankingPlayers.NotFound`, u Golf Croquet `GolfCroquetWorldRankingPlayers.NotFound`, což není totéž jako hráč bez her, který má prázdný seznam. Požadavek odmítnutý kvůli stránce se odmítne s `code`, který začíná `WorldRankingPlayerGames.`, u Golf Croquet `GolfCroquetWorldRankingPlayerGames.`, a s `field`.

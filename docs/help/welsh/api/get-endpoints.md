@@ -99,23 +99,28 @@ Mae'n rhestru'r twrnameintiau a archifwyd, fel y gall ap roi'r gorau i'w dangos.
 
 ## Chwaraewyr safleoedd y byd {#world-ranking-players}
 
-`GET /api/v1/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players` ar gyfer Association Croquet a `GET /api/v1/gc/world-ranking-players` ar gyfer Golf Croquet
 
-Mae'n rhestru'r chwaraewyr Association Croquet y mae safleoedd y byd yn eu hadnabod. Mae'n cymryd `changedSince`, wedi'i hysgrifennu fel `2026-03-01T10:00:00Z`, `page` a `pageSize`, lle mae tudalen yn 100 ar y mwyaf. Mae'n ateb gyda `worldRankingPlayers`, pob un â:
+Mae'n rhestru'r chwaraewyr yn y gamp honno y mae safleoedd y byd yn eu hadnabod, yn nhrefn eu henwau. Gofynnir am y ddau ac fe'u hatebir yr un fath, ac eithrio lle mae hwn yn dweud yn wahanol. Mae pob un yn cymryd `changedSince`, wedi'i hysgrifennu fel `2026-03-01T10:00:00Z`, `page` a `pageSize`, lle mae tudalen yn 100 ar y mwyaf. Mae'n ateb gyda `worldRankingPlayers`, pob un â:
 
 - `id`, a `worldRankingId`, y rhif y mae'r safleoedd yn ei roi i'r chwaraewr
 - `name`, fel y mae'r safleoedd yn ei enwi
+- `country`, o ble mae'r chwaraewr, fel cod y wefan ei hun amdano, un o'r codau yn [y gwledydd](#countries). Mae gan chwaraewr Golf Croquet un bob amser, a gall dau chwaraewr Golf Croquet fod â'r un enw mewn gwledydd gwahanol. Mae gan chwaraewr Association Croquet un unwaith y darllenwyd rhestr y safleoedd ers ei ychwanegu, a than hynny fe'i hepgorir
 - `games`, lle mae'r API yn sôn am gemau'r chwaraewr (gweler [gemau chwaraewr](#world-ranking-player-games))
 - `archivedAt`, pryd yr archifwyd y chwaraewr, neu `null`
 - `changedAt`, ac `etag`, wedi'i wneud o'r hyn y mae'r chwaraewr yn ei ddweud
 
-a `total`, `page`, `pageSize` a `next`, fel sydd gan dwrnameintiau blwyddyn. Gofynnir am y rhestr eto gyda'r `ETag` a anfonodd, a'i hatebir â `304` lle nad oes dim wedi newid. Gwrthodir cais a wrthodir â `code` sy'n dechrau â `WorldRankingPlayers.`, fel `WorldRankingPlayers.PageNotWhole`, a `field`.
+a `total`, `page`, `pageSize` a `next`, fel sydd gan dwrnameintiau blwyddyn. Gofynnir am y rhestr eto gyda'r `ETag` a anfonodd, a'i hatebir â `304` lle nad oes dim wedi newid. Mae chwaraewr y mae'r safleoedd yn rhoi'r gorau i'w restru yn dal i gael ei restru, gydag `archivedAt`, fel y gellir dweud wrth ap a'i cadwodd ei fod wedi mynd. Yr `id` yw'r hyn i'w gadw: gall y safleoedd newid rhif chwaraewr, a'r `id` yw'r hyn sy'n aros yn eiddo i'r un chwaraewr.
+
+Pan ofynnir amdani heb `page`, mae'r rhestr yn diweddaru'r enwau yn gyntaf o wefan ei hun safleoedd y byd, unwaith yr awr ar y mwyaf ar gyfer pob camp. Pan ofynnir am dudalen yn ôl rhif, y gyntaf yn gynwysedig, dim ond yr hyn y mae'r wefan wedi'i gadw y mae'n ei ddweud, fel nad yw ap sy'n dilyn y tudalennau yn peri darllen gwefan y safleoedd ar gyfer pob un. Lle na ellir darllen gwefan y safleoedd, yr enwau yw rhai'r tro diwethaf y'u diweddarwyd.
+
+Gwrthodir cais a wrthodir â `code` sy'n dechrau â `WorldRankingPlayers.` ar gyfer Association Croquet, fel `WorldRankingPlayers.PageNotWhole`, ac â `GolfCroquetWorldRankingPlayers.` ar gyfer Golf Croquet, a `field`.
 
 ## Gemau chwaraewr safleoedd y byd {#world-ranking-player-games}
 
-`GET /api/v1/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games` a `GET /api/v1/gc/world-ranking-players/{id}/games`
 
-Y `id` yw'r rhan o `id` y chwaraewr sy'n dod ar ôl y slaes, fel y mae `games` yn y rhestr uchod yn ei rhoi. Mae'n rhestru'r gemau Association Croquet y mae'r chwaraewr wedi'u chwarae, boed mewn bloc, system Swisaidd, twrnamaint ag ymadael neu brawf, ac a chwaraeodd drosto'i hun neu dros dîm. Mae'n cymryd `changedSince`, `page` a `pageSize` fel y mae'r rhestr o chwaraewyr, ac yn ateb gyda `games`, yn y drefn yr ychwanegwyd hwy, pob un o ochr y chwaraewr:
+Y `id` yw'r rhan o `id` y chwaraewr sy'n dod ar ôl y slaes, fel y mae `games` yn y rhestr uchod yn ei rhoi. Mae'n rhestru gemau'r gamp honno y mae'r chwaraewr wedi'u chwarae, boed mewn bloc, system Swisaidd, twrnamaint ag ymadael neu brawf, ac a chwaraeodd drosto'i hun neu dros dîm. Mae'n cymryd `changedSince`, `page` a `pageSize` fel y mae'r rhestr o chwaraewyr, ac yn ateb gyda `games`, yn y drefn yr ychwanegwyd hwy, pob un o ochr y chwaraewr:
 
 - `id`, `tournamentId` a `competitionId`
 - `won`, a enillodd y chwaraewr, sy'n `false` am gyfartal, a `drawn`
@@ -125,4 +130,6 @@ Y `id` yw'r rhan o `id` y chwaraewr sy'n dod ar ôl y slaes, fel y mae `games` y
 - `addedAt`, neu `null` am gêm a ychwanegwyd cyn i'r wefan gofnodi pryd, a `changedAt`
 - `etag`
 
-a `total`, `page`, `pageSize` a `next`. Gwrthodir chwaraewr nad yw'r wefan yn ei adnabod â `404` a `WorldRankingPlayers.NotFound`, nad yw'r un peth â chwaraewr heb gemau, sydd â rhestr wag.
+a `total`, `page`, `pageSize` a `next`. Mae gêm yn eiddo i'r chwaraewr pan mai'r chwaraewr hwnnw yw un o chwaraewyr twrnamaint yn y gamp honno. Mae'r wefan yn canfod pa chwaraewr safleoedd y byd yw chwaraewr twrnamaint yn ôl yr enw y mae'r safleoedd yn ei adnabod. Lle mae'r safleoedd yn rhoi'r enw hwnnw i ddau chwaraewr, fel y mae rhestr Golf Croquet yn ei wneud i chwaraewyr mewn gwledydd gwahanol, mae'n eu gwahaniaethu yn ôl pwy y mae chwaraewr y twrnamaint yn ei gynrychioli, lle mae hynny'n un o'u gwledydd, ac fel arall yn ôl y wlad y chwaraeir y twrnamaint ynddi. Nid yw chwaraewr twrnamaint na all y rhain eu gwahaniaethu yn eiddo i neb, na'i gemau chwaith, ac enwir gwrthwynebydd na all y rhain ei wahaniaethu heb `opponentId`.
+
+Gwrthodir chwaraewr nad yw'r wefan yn ei adnabod â `404` a `WorldRankingPlayers.NotFound`, neu `GolfCroquetWorldRankingPlayers.NotFound` ar gyfer Golf Croquet, nad yw'r un peth â chwaraewr heb gemau, sydd â rhestr wag. Gwrthodir cais a wrthodir oherwydd ei dudalen â `code` sy'n dechrau â `WorldRankingPlayerGames.`, neu `GolfCroquetWorldRankingPlayerGames.` ar gyfer Golf Croquet, a `field`.
