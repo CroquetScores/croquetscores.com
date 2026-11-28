@@ -60,8 +60,7 @@ export const importWorldRankingPlayers = async (
   const { lists, players, transactions } = parts;
   for (const sport of sports) {
     report({ kind: "reading", sport });
-    // What is read, and how it is kept: golf croquet's replaces what was
-    // kept, and association croquet's is kept by number, at `at`.
+    // What is read, and how it is kept: each sport's by number, at `at`.
     let read: number;
     let keep: () => Promise<void>;
     try {
@@ -70,9 +69,9 @@ export const importWorldRankingPlayers = async (
         read = listed.length;
         keep = () => players.keepAssociationCroquet(listed, at);
       } else {
-        const names = await lists.golfCroquetNames();
-        read = names.length;
-        keep = () => players.replaceGolfCroquet(names);
+        const listed = await lists.golfCroquetPlayers();
+        read = listed.length;
+        keep = () => players.keepGolfCroquet(listed, at);
       }
     } catch (failure) {
       // Only a list that was not read is said and passed over. Anything else

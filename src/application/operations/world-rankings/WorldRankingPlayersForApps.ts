@@ -1,7 +1,8 @@
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Query } from "../../common/Query.js";
-import type { KeptAssociationCroquetPlayer } from "../../services/WorldRankingPlayers.js";
+import type { WorldRankingSport } from "../../services/WorldRankingLists.js";
+import type { KeptWorldRankingPlayer } from "../../services/WorldRankingPlayers.js";
 
 /** Every reason asking an app's list of world ranking players can be refused where it is asked. */
 export type WorldRankingPlayersForAppsRefusedCode =
@@ -15,7 +16,7 @@ export const mostPlayersInAPage = 100;
 
 /** One page of the players, and what an app needs to ask for the next. */
 export interface WorldRankingPlayersForAppsPage {
-  readonly players: readonly KeptAssociationCroquetPlayer[];
+  readonly players: readonly KeptWorldRankingPlayer[];
   /** How many there are in all, on every page. */
   readonly total: number;
   readonly page: number;
@@ -32,14 +33,15 @@ export interface WorldRankingPlayersForAppsPage {
 }
 
 /**
- * The association croquet world ranking players, archived ones too, in the
- * order of their names, those that changed after `changedSince` where one is
+ * The world ranking players of `sport`, archived ones too, in the order of
+ * their names, those that changed after `changedSince` where one is
  * given, a page of `pageSize` at a time, for an app. For anybody, so it names
  * nobody. A page size over `mostPlayersInAPage` is answered as that size and
  * not refused, as an app's list of tournaments is.
  */
 export class WorldRankingPlayersForApps extends Query<WorldRankingPlayersForAppsPage> {
   constructor(
+    readonly sport: WorldRankingSport,
     readonly changedSince: ReadOnlyDate | undefined,
     readonly page: number,
     readonly pageSize: number,

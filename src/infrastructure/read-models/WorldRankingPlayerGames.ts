@@ -2,11 +2,21 @@ import type {
   KeptWorldRankingPlayerGame,
   WorldRankingPlayerGamesKept,
 } from "../../application/services/WorldRankingPlayers.js";
+import type { WorldRankingSport } from "../../application/services/WorldRankingLists.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 
+// Written out rather than made from the sport, so that nothing a caller says
+// is ever part of a statement.
+const PLAYERS: Readonly<
+  Record<WorldRankingSport, { table: string; id: string }>
+> = {
+  ac: { table: "ac_world_ranking_players", id: "ac_world_ranking_id" },
+  gc: { table: "gc_world_ranking_players", id: "gc_world_ranking_id" },
+};
+
 /**
- * The games of each association croquet world ranking player, read from what
+ * The games of each world ranking player of a sport, read from what
  * the competitions' and tournaments' read models already keep
  * (`worldRankingPlayerGames.feature`), so nothing is projected for it and
  * nothing is asked of the events.
@@ -15,20 +25,27 @@ import type { UnitOfWork } from "../database/UnitOfWork.js";
  * rankings' by the name the tournament says the rankings know them by, which
  * is what the players' dialogs offer from the rankings' list. So a game is a
  * ranking player's where one of its sides has that name, in a tournament of
- * association croquet, whether or not the competition counts towards the
+ * the player's sport, whether or not the competition counts towards the
  * rankings.
+ *
+ * A name two players of one sport share, as two golf croquet players of
+ * different countries can, is no one player: a tournament keeps no country to
+ * tell them apart by, so an opponent of that name is told by their name and
+ * with no id, and each of the two is told of every game played under it.
  */
 export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
   async changedAfter(
+    sport: WorldRankingSport,
     playerId: string,
     changedSince: ReadOnlyDate | undefined,
   ): Promise<readonly KeptWorldRankingPlayerGame[] | undefined> {
     const connection = this.unitOfWork.connection();
+    const { table, id } = PLAYERS[sport];
     const { rows: known } = await connection.query<{ name: string }>(
-      `select name from ac_world_ranking_players
-        where ac_world_ranking_id = $1`,
+      `select name from ${table}
+        where ${id} = $1`,
       [playerId],
     );
     const [player] = known;
@@ -94,7 +111,7 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
             and me.side_id in (g.winner_id, g.loser_id)
            join competitions c on c.competition_id = g.competition_id
            join tournaments t
-             on t.tournament_id = c.tournament_id and t.sport = 'ac'
+             on t.tournament_id = c.tournament_id and t.sport = $3
           where me.side_id = g.winner_id
              or not exists (select 1 from mine other
                              where other.competition_id = g.competition_id
@@ -104,7 +121,7 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
               told.is_winner, told.winner_score, told.loser_score,
               told.drawn, told.told_archived as archived, told.withdrawn,
               told.added_at, told.told_changed_at as changed_at,
-              opponent.ac_world_ranking_id as opponent_id,
+              opponent.${id} as opponent_id,
               coalesce(opponent.name, other.name) as opponent_name
          from told
          cross join lateral (
@@ -117,11 +134,15 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
              from tournament_team_players t
             where t.player_id = told.other_id
          ) other
-         left join ac_world_ranking_players opponent
+         left join ${table} opponent
            on opponent.name = other.world_ranking_name
+          and not exists (
+                select 1 from ${table} another
+                 where another.name = opponent.name
+                   and another.${id} <> opponent.${id})
         where $2::timestamptz is null or told.told_changed_at > $2
         order by told.added_at nulls first`,
-      [player.name, changedSince?.toDate() ?? null],
+      [player.name, changedSince?.toDate() ?? null, sport],
     );
     return rows.map((row) => ({
       id: row.game_id,

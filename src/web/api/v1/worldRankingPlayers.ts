@@ -1,7 +1,8 @@
-// GET /api/v1/ac/world-ranking-players: the association croquet players the
-// world rankings know, for apps (worldRankingPlayers.feature). Asked and
-// answered as the tournaments' list is (tournaments.ts), so that an app that
-// reads one reads the other.
+// GET /api/v1/ac/world-ranking-players and GET /api/v1/gc/world-ranking-players:
+// the players of a sport the world rankings know, for apps
+// (ac/world-ranking-players/worldRankingPlayers.feature and the golf croquet
+// twin in gc/). Asked and answered as the tournaments' list is
+// (tournaments.ts), so that an app that reads one reads the other.
 import type { FastifyPluginAsync, FastifyReply } from "fastify";
 
 import {
@@ -9,7 +10,8 @@ import {
   WorldRankingPlayersForApps,
   type WorldRankingPlayersForAppsPage,
 } from "../../../application/operations/world-rankings/WorldRankingPlayersForApps.js";
-import { RefreshAssociationCroquetPlayerNames } from "../../../application/operations/world-rankings/RefreshAssociationCroquetPlayerNames.js";
+import { RefreshWorldRankingPlayerNames } from "../../../application/operations/world-rankings/RefreshWorldRankingPlayerNames.js";
+import type { WorldRankingSport } from "../../../application/services/WorldRankingLists.js";
 import { websiteOf } from "../../common/site.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
@@ -26,50 +28,75 @@ interface Asked {
   readonly pageSize?: string;
 }
 
+// What each sport's list answers as, where it differs: the sport has its own
+// codes, so that an app is told which of the two lists it asked, and says
+// which sport it is when it logs a failure.
+const wordsOf: Readonly<
+  Record<WorldRankingSport, { readonly code: string; readonly said: string }>
+> = {
+  ac: { code: "WorldRankingPlayers", said: "association croquet" },
+  gc: { code: "GolfCroquetWorldRankingPlayers", said: "golf croquet" },
+};
+
 // Each refusal of what was asked, written once, as the tournaments' are: the
-// code the application refuses it as, and what the API answers.
+// code the application refuses it as, and what the API answers it as, which
+// the sport's code goes before.
 const refusals: Readonly<
   Record<
     string,
-    { readonly code: string; readonly field: string; readonly message: string }
+    {
+      readonly code: string;
+      readonly field: string;
+      readonly message: string;
+    }
   >
 > = {
   "WorldRankingPlayersForApps.PageNotWhole": {
-    code: "WorldRankingPlayers.PageNotWhole",
+    code: "PageNotWhole",
     field: "page",
     message: "The page is a whole number, from 1.",
   },
   "WorldRankingPlayersForApps.PageOutOfRange": {
-    code: "WorldRankingPlayers.PageOutOfRange",
+    code: "PageOutOfRange",
     field: "page",
     message: "The first page is page 1.",
   },
   "WorldRankingPlayersForApps.PageSizeNotWhole": {
-    code: "WorldRankingPlayers.PageSizeNotWhole",
+    code: "PageSizeNotWhole",
     field: "pageSize",
     message: `The page size is a whole number, up to ${String(mostPlayersInAPage)}.`,
   },
   "WorldRankingPlayersForApps.PageSizeOutOfRange": {
-    code: "WorldRankingPlayers.PageSizeOutOfRange",
+    code: "PageSizeOutOfRange",
     field: "pageSize",
     message: "A page holds at least one player.",
   },
 };
 
-const refusedAs = (reply: FastifyReply, refused: string): FastifyReply => {
+const refusedAs = (
+  reply: FastifyReply,
+  sport: WorldRankingSport,
+  refused: string,
+): FastifyReply => {
   const { code, field, message } = refusals[refused]!;
-  return refusal(reply, 400, code, message, field);
+  return refusal(reply, 400, `${wordsOf[sport].code}.${code}`, message, field);
 };
 
 const said = (
+  sport: WorldRankingSport,
   page: WorldRankingPlayersForAppsPage,
 ): Record<string, unknown> => ({
   worldRankingPlayers: page.players.map((each) =>
     marked({
       id: each.id,
-      worldRankingId: each.worldRankingId,
+      // Only association croquet's rankings give a player a number.
+      ...(each.worldRankingId === undefined
+        ? {}
+        : { worldRankingId: each.worldRankingId }),
       name: each.name,
-      games: worldRankingPlayerGamesHref(each.id),
+      // Only golf croquet's players are told apart by one.
+      ...(each.country === undefined ? {} : { country: each.country }),
+      games: worldRankingPlayerGamesHref(sport, each.id),
       archivedAt: each.archivedAt?.toISOString() ?? null,
       changedAt: each.changedAt.toISOString(),
     }),
@@ -80,84 +107,104 @@ const said = (
   next: page.next ?? null,
 });
 
-export const worldRankingPlayersOfApps: FastifyPluginAsync = (server) => {
-  server.get<{ Querystring: Asked }>(
-    "/ac/world-ranking-players",
-    async (request, reply) => {
-      // As the tournaments' list is: a key that was sent and does not work is
-      // refused, and having none is not.
-      const caller = callerOf(request);
-      if (caller.carriedKey && caller.key === undefined) {
-        return refuseKey(reply, true);
-      }
+export const worldRankingPlayersOfApps =
+  (sport: WorldRankingSport): FastifyPluginAsync =>
+  (server) => {
+    server.get<{ Querystring: Asked }>(
+      `/${sport}/world-ranking-players`,
+      async (request, reply) => {
+        // As the tournaments' list is: a key that was sent and does not work is
+        // refused, and having none is not.
+        const caller = callerOf(request);
+        if (caller.carriedKey && caller.key === undefined) {
+          return refuseKey(reply, true);
+        }
 
-      const { changedSince, page, pageSize } = request.query;
-      let since: ReadOnlyDate | undefined;
-      if (changedSince !== undefined) {
-        since = momentOf(changedSince);
-        if (since === undefined) {
-          return refusal(
+        const { changedSince, page, pageSize } = request.query;
+        let since: ReadOnlyDate | undefined;
+        if (changedSince !== undefined) {
+          since = momentOf(changedSince);
+          if (since === undefined) {
+            return refusal(
+              reply,
+              400,
+              `${wordsOf[sport].code}.ChangedSinceNotAMoment`,
+              "changedSince is a moment, written as 2026-03-01T10:00:00Z.",
+              "changedSince",
+            );
+          }
+        }
+        if (page !== undefined && !wholeNumber.test(page)) {
+          return refusedAs(
             reply,
-            400,
-            "WorldRankingPlayers.ChangedSinceNotAMoment",
-            "changedSince is a moment, written as 2026-03-01T10:00:00Z.",
-            "changedSince",
+            sport,
+            "WorldRankingPlayersForApps.PageNotWhole",
           );
         }
-      }
-      if (page !== undefined && !wholeNumber.test(page)) {
-        return refusedAs(reply, "WorldRankingPlayersForApps.PageNotWhole");
-      }
-      if (pageSize !== undefined && !wholeNumber.test(pageSize)) {
-        return refusedAs(reply, "WorldRankingPlayersForApps.PageSizeNotWhole");
-      }
+        if (pageSize !== undefined && !wholeNumber.test(pageSize)) {
+          return refusedAs(
+            reply,
+            sport,
+            "WorldRankingPlayersForApps.PageSizeNotWhole",
+          );
+        }
 
-      // Asked for from the start, the names are refreshed first, so that the
-      // list an app reads is the rankings' as they are now. Only after the
-      // asking has been checked, so that a refused request reads nothing.
-      // Not for a HEAD, which is asked only to see what the answer would be.
-      // A refresh that fails is logged and the list is answered as it is kept:
-      // the app asked for the players, not for the refresh.
-      if (page === undefined && request.method === "GET") {
+        // Asked for from the start, the sport's names are refreshed first, so
+        // that the list an app reads is the rankings' as they are now. Only after the
+        // asking has been checked, so that a refused request reads nothing.
+        // Not for a HEAD, which is asked only to see what the answer would be.
+        // A refresh that fails is logged and the list is answered as it is kept:
+        // the app asked for the players, not for the refresh.
+        if (page === undefined && request.method === "GET") {
+          try {
+            await request.server.mediator.send(
+              new RefreshWorldRankingPlayerNames(
+                request.requestedAt,
+                websiteOf(request).host,
+                sport,
+              ),
+            );
+          } catch (failure) {
+            request.log.error(
+              { err: failure },
+              `The ${wordsOf[sport].said} names could not be refreshed`,
+            );
+          }
+        }
+
+        let answer: WorldRankingPlayersForAppsPage;
         try {
-          await request.server.mediator.send(
-            new RefreshAssociationCroquetPlayerNames(
-              request.requestedAt,
-              websiteOf(request).host,
+          answer = await request.server.mediator.query(
+            new WorldRankingPlayersForApps(
+              sport,
+              since,
+              page === undefined ? 1 : Number(page),
+              pageSize === undefined ? mostPlayersInAPage : Number(pageSize),
             ),
           );
         } catch (failure) {
-          request.log.error(
-            { err: failure },
-            "The association croquet names could not be refreshed",
-          );
+          // Written as whole numbers but out of the range there is, or too
+          // large to be one the site can count.
+          const code =
+            failure instanceof ValidationError
+              ? String(failure.code)
+              : undefined;
+          if (code === undefined || refusals[code] === undefined) throw failure;
+          return refusedAs(reply, sport, code);
         }
-      }
 
-      let answer: WorldRankingPlayersForAppsPage;
-      try {
-        answer = await request.server.mediator.query(
-          new WorldRankingPlayersForApps(
-            since,
-            page === undefined ? 1 : Number(page),
-            pageSize === undefined ? mostPlayersInAPage : Number(pageSize),
-          ),
+        // By its mark alone, as the tournaments' list is: a date alone does not
+        // say the list is the one the app has, and the mark is exact.
+        return sendConditionally(
+          request,
+          reply,
+          said(sport, answer),
+          answer.changedAt,
+          {
+            byDate: false,
+          },
         );
-      } catch (failure) {
-        // Written as whole numbers but out of the range there is, or too
-        // large to be one the site can count.
-        const code =
-          failure instanceof ValidationError ? String(failure.code) : undefined;
-        if (code === undefined || refusals[code] === undefined) throw failure;
-        return refusedAs(reply, code);
-      }
-
-      // By its mark alone, as the tournaments' list is: a date alone does not
-      // say the list is the one the app has, and the mark is exact.
-      return sendConditionally(request, reply, said(answer), answer.changedAt, {
-        byDate: false,
-      });
-    },
-  );
-  return Promise.resolve();
-};
+      },
+    );
+    return Promise.resolve();
+  };

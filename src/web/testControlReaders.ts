@@ -95,33 +95,37 @@ export interface ReaderMaking {
   /** Says `times` sign ins as `comparable` (an address as it is compared) failed, `minutesAgo`. */
   /**
    * Says the world rankings of `sport` ("ac" or "gc") hold a player called
-   * `name`, with the number the rankings give them where it is association
-   * croquet's and one is said. The id the site gave an association croquet
-   * player, which golf croquet's have none of.
+   * `name`, with the number the rankings give them where one is said, and the
+   * next one where it is not. The id the site gave the player.
    */
   readonly addWorldRankingPlayer: (
     sport: "ac" | "gc",
     name: string,
     worldRankingId?: number,
     at?: Date,
+    country?: string,
   ) => Promise<string | undefined>;
-  /** Archives the association croquet player called `name`; false where there is none. */
+  /** Archives the player of `sport` called `name`; false where there is none. */
   readonly archiveWorldRankingPlayer: (
+    sport: "ac" | "gc",
     name: string,
     at?: Date,
   ) => Promise<boolean>;
-  /** Gives the association croquet player called `name` another number; false where there is none. */
+  /** Gives the player of `sport` called `name` another number; false where there is none. */
   readonly renumberWorldRankingPlayer: (
+    sport: "ac" | "gc",
     name: string,
     worldRankingId: number,
     at?: Date,
   ) => Promise<boolean>;
-  /** Every association croquet player the site holds, by name. */
-  readonly associationCroquetPlayers: () => Promise<
+  /** Every player of `sport` the site holds, by name. */
+  readonly keptWorldRankingPlayers: (sport: "ac" | "gc") => Promise<
     readonly {
       readonly name: string;
       readonly id: string;
       readonly worldRankingId: number;
+      /** Golf croquet's players have one. */
+      readonly country?: string;
       readonly changedAt: string;
       readonly archivedAt: string | null;
     }[]
@@ -585,11 +589,9 @@ export const registerTestControlReaders = (
         }
         return {
           names: await making.worldRankingPlayers(sport),
-          // Only association croquet's players are kept by number, with the
-          // moments they changed and were archived.
-          ...(sport === "ac"
-            ? { players: await making.associationCroquetPlayers() }
-            : {}),
+          // With the id the site gave each, the number the rankings give
+          // them, and the moments they changed and were archived.
+          players: await making.keptWorldRankingPlayers(sport),
         };
       });
 
@@ -614,11 +616,14 @@ export const registerTestControlReaders = (
         ) {
           return reply.code(400).send({ code: "TestControl.NotWritable" });
         }
-        const { worldRankingId } = body as { worldRankingId?: unknown };
+        const { worldRankingId, country } = body as {
+          worldRankingId?: unknown;
+          country?: unknown;
+        };
         const at = momentOf(request.body);
         if (
-          worldRankingId !== undefined &&
-          (body.sport !== "ac" || !Number.isInteger(worldRankingId))
+          (worldRankingId !== undefined && !Number.isInteger(worldRankingId)) ||
+          (country !== undefined && typeof country !== "string")
         ) {
           return reply.code(400).send({ code: "TestControl.NotWritable" });
         }
@@ -628,6 +633,7 @@ export const registerTestControlReaders = (
             body.name,
             worldRankingId as number | undefined,
             at,
+            country,
           );
           return reply.code(201).send(id === undefined ? {} : { id });
         } catch (failure) {
@@ -639,10 +645,17 @@ export const registerTestControlReaders = (
       // What the rankings do to a player the site has met: list them no more,
       // or give them another number when they find two players of one name.
       scope.post("/world-ranking-players/archive", async (request, reply) => {
-        const { name } = (request.body ?? {}) as { name?: unknown };
+        // Association croquet's, unless the sport is said, since the number
+        // that names the other's players apart is the one thing it lacks.
+        const { sport = "ac", name } = (request.body ?? {}) as {
+          sport?: unknown;
+          name?: unknown;
+        };
         if (
+          (sport !== "ac" && sport !== "gc") ||
           typeof name !== "string" ||
           !(await making.archiveWorldRankingPlayer(
+            sport,
             name,
             momentOf(request.body),
           ))
@@ -654,10 +667,13 @@ export const registerTestControlReaders = (
 
       scope.post("/world-ranking-players/renumber", async (request, reply) => {
         const body = (request.body ?? {}) as {
+          sport?: unknown;
           name?: unknown;
           worldRankingId?: unknown;
         };
+        const sport = body.sport ?? "ac";
         if (
+          (sport !== "ac" && sport !== "gc") ||
           typeof body.name !== "string" ||
           !Number.isInteger(body.worldRankingId)
         ) {
@@ -666,6 +682,7 @@ export const registerTestControlReaders = (
         try {
           if (
             !(await making.renumberWorldRankingPlayer(
+              sport,
               body.name,
               body.worldRankingId as number,
               momentOf(request.body),

@@ -45,7 +45,7 @@ import { AccountProfile } from "../application/operations/accounts/AccountProfil
 import { AccountsWithRoleHandler } from "../application/operations/accounts/AccountsWithRoleHandler.js";
 import { AddRoleHandler } from "../application/operations/accounts/AddRoleHandler.js";
 import { ImportWorldRankingPlayersHandler } from "../application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
-import { RefreshAssociationCroquetPlayerNamesHandler } from "../application/operations/world-rankings/RefreshAssociationCroquetPlayerNamesHandler.js";
+import { RefreshWorldRankingPlayerNamesHandler } from "../application/operations/world-rankings/RefreshWorldRankingPlayerNamesHandler.js";
 import { makeHelpSearchIndex } from "../application/operations/help/MakeHelpSearchIndex.js";
 import { SearchHelpHandler } from "../application/operations/help/SearchHelpHandler.js";
 import type { HelpPagesToSearch } from "../application/services/HelpSearchIndex.js";
@@ -951,6 +951,13 @@ const worldRankingTables = {
   gc: "gc_world_ranking_players",
 } as const;
 
+// The column each of them keeps the site's own identifier in, looked up for the
+// same reason.
+const worldRankingIdentifiers = {
+  ac: "ac_world_ranking_id",
+  gc: "gc_world_ranking_id",
+} as const;
+
 export const buildApplication = async (
   config: Config,
   options: ApplicationOptions = {},
@@ -1380,7 +1387,7 @@ export const buildApplication = async (
     ),
   );
   mediator.handleCommand(
-    new RefreshAssociationCroquetPlayerNamesHandler(
+    new RefreshWorldRankingPlayerNamesHandler(
       worldRankingLists,
       worldRankingPlayers,
       unitOfWork,
@@ -2005,28 +2012,34 @@ export const buildApplication = async (
             `select name from ${worldRankingTables[sport]} order by name`,
           )
         ).rows.map((row) => row.name),
-      addWorldRankingPlayer: async (sport, name, worldRankingId, at) => {
-        if (sport === "gc") {
-          await pool.query(
-            `insert into gc_world_ranking_players (name)
-             values ($1) on conflict do nothing`,
-            [name],
-          );
-          return undefined;
-        }
+      addWorldRankingPlayer: async (
+        sport,
+        name,
+        worldRankingId,
+        at,
+        country,
+      ) => {
         // A name is one player's and so is a number, so a player given again
         // is the same player or is refused, and not given two numbers or
         // another player's. The same name and number again is the same
-        // player, which golf croquet's names are too.
+        // player.
+        // Golf croquet's are told apart by their country as well, which a
+        // scenario that does not say is England, and the same name in another
+        // country is another player.
+        const from =
+          sport === "gc" ? (country ?? "england") : (country ?? null);
         const { rows: held } = await pool.query<{
           id: string;
           name: string;
           world_ranking_id: number;
         }>(
-          `select ac_world_ranking_id as id, name, world_ranking_id
-             from ac_world_ranking_players
-            where name = $1 or world_ranking_id = $2::integer`,
-          [name, worldRankingId ?? null],
+          `select ${worldRankingIdentifiers[sport]} as id, name, world_ranking_id
+             from ${worldRankingTables[sport]}
+            where ((name = $1 ${sport === "gc" ? "and country = $3" : ""})
+                   or world_ranking_id = $2::integer)`,
+          sport === "gc"
+            ? [name, worldRankingId ?? null, from]
+            : [name, worldRankingId ?? null],
         );
         const named = held.find((each) => each.name === name);
         if (
@@ -2043,24 +2056,25 @@ export const buildApplication = async (
         // Changed when the site's clock says, not the database's, since the
         // scenarios that ask what changed since a moment move the site's.
         const { rows } = await pool.query<{ id: string }>(
-          `insert into ac_world_ranking_players
-             (ac_world_ranking_id, world_ranking_id, name, changed_at)
-           select 'ac-world-ranking-id/' || gen_random_uuid(),
+          `insert into ${worldRankingTables[sport]}
+             (${worldRankingIdentifiers[sport]}, world_ranking_id, name,
+              changed_at, country)
+           select '${sport}-world-ranking-id/' || gen_random_uuid(),
                   coalesce($2::integer,
                     (select coalesce(max(world_ranking_id), 0) + 1
-                       from ac_world_ranking_players)),
-                  $1, $3
-           returning ac_world_ranking_id as id`,
-          [name, worldRankingId ?? null, at ?? clock()],
+                       from ${worldRankingTables[sport]})),
+                  $1, $3, $4
+           returning ${worldRankingIdentifiers[sport]} as id`,
+          [name, worldRankingId ?? null, at ?? clock(), from],
         );
         return rows[0]?.id;
       },
-      archiveWorldRankingPlayer: async (name, at) =>
+      archiveWorldRankingPlayer: async (sport, name, at) =>
         (
           await pool.query(
             // Archived once, as the import archives a player: the first
             // moment stays, and nothing changes when it is said again.
-            `update ac_world_ranking_players
+            `update ${worldRankingTables[sport]}
                 set archived_at = coalesce(archived_at, $2),
                     changed_at = case when archived_at is null
                                       then $2 else changed_at end
@@ -2068,11 +2082,11 @@ export const buildApplication = async (
             [name, at ?? clock()],
           )
         ).rowCount === 1,
-      renumberWorldRankingPlayer: async (name, worldRankingId, at) => {
+      renumberWorldRankingPlayer: async (sport, name, worldRankingId, at) => {
         // Another player's number is refused here and not left to the
         // table's constraint, which would answer as a failure of the site.
         const { rowCount: taken } = await pool.query(
-          `select 1 from ac_world_ranking_players
+          `select 1 from ${worldRankingTables[sport]}
             where world_ranking_id = $2 and name <> $1`,
           [name, worldRankingId],
         );
@@ -2080,7 +2094,7 @@ export const buildApplication = async (
         return (
           (
             await pool.query(
-              `update ac_world_ranking_players
+              `update ${worldRankingTables[sport]}
                   set world_ranking_id = $2, changed_at = $3
                 where name = $1`,
               [name, worldRankingId, at ?? clock()],
@@ -2088,23 +2102,26 @@ export const buildApplication = async (
           ).rowCount === 1
         );
       },
-      associationCroquetPlayers: async () =>
+      keptWorldRankingPlayers: async (sport) =>
         (
           await pool.query<{
             name: string;
             id: string;
             world_ranking_id: number;
+            country: string | null;
             changed_at: Date;
             archived_at: Date | null;
           }>(
-            `select name, ac_world_ranking_id as id, world_ranking_id,
-                    changed_at, archived_at
-               from ac_world_ranking_players order by name`,
+            `select name, ${worldRankingIdentifiers[sport]} as id,
+                    world_ranking_id, changed_at, archived_at,
+                    country
+               from ${worldRankingTables[sport]} order by name`,
           )
         ).rows.map((row) => ({
           name: row.name,
           id: row.id,
           worldRankingId: row.world_ranking_id,
+          ...(row.country === null ? {} : { country: row.country }),
           changedAt: row.changed_at.toISOString(),
           archivedAt: row.archived_at?.toISOString() ?? null,
         })),

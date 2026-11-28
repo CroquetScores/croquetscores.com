@@ -27,6 +27,7 @@ export class WorldRankingPlayerGamesForAppsHandler extends QueryHandler<
     query: WorldRankingPlayerGamesForApps,
   ): Promise<WorldRankingPlayerGamesForAppsPage> {
     const matching = await this.kept.changedAfter(
+      query.sport,
       query.playerId,
       query.changedSince,
     );

@@ -129,8 +129,10 @@ export const apiV1: FastifyPluginAsync<ApiV1Options> = async (
       });
 
       await day.register(tournamentsOfApps);
-      await day.register(worldRankingPlayersOfApps);
-      await day.register(worldRankingPlayerGamesOfApps);
+      await day.register(worldRankingPlayersOfApps("ac"));
+      await day.register(worldRankingPlayersOfApps("gc"));
+      await day.register(worldRankingPlayerGamesOfApps("ac"));
+      await day.register(worldRankingPlayerGamesOfApps("gc"));
       await day.register(formatsOfApps);
       await day.register(countriesOfApps);
       await day.register(tournamentsChangedYearOfApps);
