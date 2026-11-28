@@ -99,23 +99,28 @@ Lista os torneios que foram arquivados, para que um aplicativo possa deixar de m
 
 ## Jogadores do ranking mundial {#world-ranking-players}
 
-`GET /api/v1/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players` para Association Croquet e `GET /api/v1/gc/world-ranking-players` para Golf Croquet
 
-Lista os jogadores de Association Croquet que os rankings mundiais conhecem. Aceita `changedSince`, escrito como `2026-03-01T10:00:00Z`, `page` e `pageSize`, em que uma página tem no máximo 100. Responde com `worldRankingPlayers`, cada um com:
+Lista os jogadores desse esporte que os rankings mundiais conhecem, na ordem dos seus nomes. Os dois são pedidos e respondidos da mesma forma, exceto onde aqui se diz outra coisa. Cada um aceita `changedSince`, escrito como `2026-03-01T10:00:00Z`, `page` e `pageSize`, em que uma página tem no máximo 100. Responde com `worldRankingPlayers`, cada um com:
 
 - `id`, e `worldRankingId`, o número que os rankings dão ao jogador
 - `name`, como os rankings o nomeiam
+- `country`, de onde o jogador é, como o código próprio do site para isso, um dos códigos nos [países](#countries). Um jogador de Golf Croquet sempre tem um, e dois jogadores de Golf Croquet podem ter o mesmo nome em países diferentes. Um jogador de Association Croquet tem um quando a lista dos rankings foi lida desde que ele foi acrescentado, e até então é omitido
 - `games`, onde a API fala dos jogos do jogador (veja [os jogos de um jogador](#world-ranking-player-games))
 - `archivedAt`, quando o jogador foi arquivado, ou `null`
 - `changedAt`, e `etag`, feito do que o jogador diz
 
-e `total`, `page`, `pageSize` e `next`, como os torneios de um ano. A lista é pedida de novo com o `ETag` que enviou, e respondida com `304` onde nada mudou. Uma requisição recusada é recusada com um `code` que começa com `WorldRankingPlayers.`, como `WorldRankingPlayers.PageNotWhole`, e um `field`.
+e `total`, `page`, `pageSize` e `next`, como os torneios de um ano. A lista é pedida de novo com o `ETag` que enviou, e respondida com `304` onde nada mudou. Um jogador que os rankings deixam de listar continua listado, com `archivedAt`, para que um app que o guardou possa saber que ele saiu. O `id` é o que se deve guardar: os rankings podem mudar o número de um jogador, e o `id` é o que continua sendo o mesmo jogador.
+
+Pedida sem `page`, a lista primeiro atualiza os nomes a partir do próprio site dos rankings mundiais, no máximo uma vez por hora para cada esporte. Pedida uma página por número, a primeira inclusive, ela só diz o que o site guardou, de modo que um app que segue as páginas não faz o site dos rankings ser lido para cada uma delas. Onde o site dos rankings não pode ser lido, os nomes são os da última vez em que foram atualizados.
+
+Uma requisição recusada é recusada com um `code` que começa com `WorldRankingPlayers.` para Association Croquet, como `WorldRankingPlayers.PageNotWhole`, e com `GolfCroquetWorldRankingPlayers.` para Golf Croquet, e um `field`.
 
 ## Os jogos de um jogador do ranking mundial {#world-ranking-player-games}
 
-`GET /api/v1/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games` e `GET /api/v1/gc/world-ranking-players/{id}/games`
 
-O `id` é a parte do `id` do jogador depois da barra, como `games` na lista acima o dá. Lista os jogos de Association Croquet que o jogador jogou, seja num bloco, num sistema suíço, num mata-mata ou num teste, e tenha jogado por si ou por uma equipe. Aceita `changedSince`, `page` e `pageSize` como a lista de jogadores, e responde com `games`, na ordem em que foram adicionados, cada um do lado do jogador:
+O `id` é a parte do `id` do jogador depois da barra, como `games` na lista acima o dá. Lista os jogos desse esporte que o jogador jogou, seja num bloco, num sistema suíço, num mata-mata ou num teste, e tenha jogado por si ou por uma equipe. Aceita `changedSince`, `page` e `pageSize` como a lista de jogadores, e responde com `games`, na ordem em que foram adicionados, cada um do lado do jogador:
 
 - `id`, `tournamentId` e `competitionId`
 - `won`, se o jogador ganhou, o que é `false` num empate, e `drawn`
@@ -125,4 +130,6 @@ O `id` é a parte do `id` do jogador depois da barra, como `games` na lista acim
 - `addedAt`, ou `null` para um jogo adicionado antes de o site guardar quando, e `changedAt`
 - `etag`
 
-e `total`, `page`, `pageSize` e `next`. Um jogador que o site não conhece é recusado com `404` e `WorldRankingPlayers.NotFound`, o que não é o mesmo que um jogador sem jogos, que tem uma lista vazia.
+e `total`, `page`, `pageSize` e `next`. Um jogo é do jogador quando ele é um jogador de um torneio desse esporte. O site descobre qual jogador do ranking mundial um jogador de torneio é pelo nome com que os rankings o conhecem. Onde os rankings dão esse nome a dois jogadores, como a lista de Golf Croquet faz com jogadores de países diferentes, o site os distingue por quem o jogador do torneio representa, quando é um dos países deles, e, se isso não bastar, pelo país em que o torneio é disputado. Um jogador de torneio que isso não distingue não é de ninguém, nem os jogos dele, e um adversário que isso não distingue é nomeado sem `opponentId`.
+
+Um jogador que o site não conhece é recusado com `404` e `WorldRankingPlayers.NotFound`, ou `GolfCroquetWorldRankingPlayers.NotFound` para Golf Croquet, o que não é o mesmo que um jogador sem jogos, que tem uma lista vazia. Uma requisição recusada por causa da página é recusada com um `code` que começa com `WorldRankingPlayerGames.`, ou `GolfCroquetWorldRankingPlayerGames.` para Golf Croquet, e um `field`.

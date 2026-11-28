@@ -99,23 +99,28 @@ Uzskaita turnīrus, kas ir arhivēti, lai lietotne varētu beigt tos rādīt. Pi
 
 ## Pasaules ranga spēlētāji {#world-ranking-players}
 
-`GET /api/v1/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players` Association Croquet un `GET /api/v1/gc/world-ranking-players` Golf Croquet
 
-Uzskaita Association Croquet spēlētājus, ko pazīst pasaules ranga saraksti. Pieņem `changedSince`, rakstītu kā `2026-03-01T10:00:00Z`, `page` un `pageSize`, kur lapā ir ne vairāk kā 100 ieraksti. Atbild ar `worldRankingPlayers`, katrs ar:
+Uzskaita šī sporta spēlētājus, ko pazīst pasaules ranga saraksti, viņu vārdu secībā. Abus pieprasa un atbild tāpat, izņemot, ja šeit teikts citādi. Katrs pieņem `changedSince`, rakstītu kā `2026-03-01T10:00:00Z`, `page` un `pageSize`, kur lapā ir ne vairāk kā 100 ieraksti. Atbild ar `worldRankingPlayers`, katrs ar:
 
 - `id` un `worldRankingId`, numuru, ko rangu saraksti dod spēlētājam
 - `name`, kā rangu saraksti viņu sauc
+- `country`, no kurienes spēlētājs ir, kā vietnes pašas kods tai, viens no kodiem [valstīs](#countries). Golf Croquet spēlētājam tā ir vienmēr, un diviem Golf Croquet spēlētājiem var būt viens un tas pats vārds dažādās valstīs. Association Croquet spēlētājam tā ir, kopš ranga saraksts ir lasīts pēc tās pievienošanas, un līdz tam tā tiek izlaista
 - `games`, kur API stāsta par spēlētāja partijām (skatiet [spēlētāja partijas](#world-ranking-player-games))
 - `archivedAt`, kad spēlētājs tika arhivēts, vai `null`
 - `changedAt` un `etag`, veidotu no tā, ko saka spēlētājs
 
-un `total`, `page`, `pageSize` un `next`, tāpat kā viena gada turnīriem. Sarakstu pieprasa vēlreiz ar `ETag`, ko tas nosūtīja, un atbild ar `304`, ja nekas nav mainījies. Noraidīts pieprasījums tiek noraidīts ar `code`, kas sākas ar `WorldRankingPlayers.`, piemēram, `WorldRankingPlayers.PageNotWhole`, un ar `field`.
+un `total`, `page`, `pageSize` un `next`, tāpat kā viena gada turnīriem. Sarakstu pieprasa vēlreiz ar `ETag`, ko tas nosūtīja, un atbild ar `304`, ja nekas nav mainījies. Spēlētājs, ko rangu saraksti vairs neuzskaita, tomēr tiek uzskaitīts, ar `archivedAt`, lai lietotnei, kas viņu paturēja, varētu pateikt, ka viņa vairs nav. `id` ir tas, kas jāpatur: rangu saraksti var mainīt spēlētāja numuru, un `id` paliek tā paša spēlētāja.
+
+Pieprasot bez `page`, saraksts vispirms atjaunina vārdus no pasaules ranga pašu vietnes, ne biežāk kā reizi stundā katram sportam. Pieprasot lapu pēc numura, arī pirmo, tas saka tikai to, ko vietne ir paturējusi, tāpēc lietotne, kas seko lapām, nelasa ranga vietni katrai no tām. Ja ranga vietni nevar nolasīt, vārdi ir no pēdējās reizes, kad tie tika atjaunināti.
+
+Noraidīts pieprasījums tiek noraidīts ar `code`, kas Association Croquet sākas ar `WorldRankingPlayers.`, piemēram, `WorldRankingPlayers.PageNotWhole`, bet Golf Croquet ar `GolfCroquetWorldRankingPlayers.`, un ar `field`.
 
 ## Pasaules ranga spēlētāja partijas {#world-ranking-player-games}
 
-`GET /api/v1/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games` un `GET /api/v1/gc/world-ranking-players/{id}/games`
 
-`id` ir spēlētāja `id` daļa aiz slīpsvītras, kā to dod `games` iepriekšējā sarakstā. Uzskaita Association Croquet partijas, ko spēlētājs ir nospēlējis, vai nu grupā, vai Šveices sistēmā, vai izslēgšanas turnīrā, vai testā, un vai viņš spēlēja par sevi, vai par komandu. Pieņem `changedSince`, `page` un `pageSize` kā spēlētāju saraksts un atbild ar `games`, secībā, kādā tās pievienotas, katra no spēlētāja puses:
+`id` ir spēlētāja `id` daļa aiz slīpsvītras, kā to dod `games` iepriekšējā sarakstā. Uzskaita šī sporta partijas, ko spēlētājs ir nospēlējis, vai nu grupā, vai Šveices sistēmā, vai izslēgšanas turnīrā, vai testā, un vai viņš spēlēja par sevi, vai par komandu. Pieņem `changedSince`, `page` un `pageSize` kā spēlētāju saraksts un atbild ar `games`, secībā, kādā tās pievienotas, katra no spēlētāja puses:
 
 - `id`, `tournamentId` un `competitionId`
 - `won`, vai spēlētājs uzvarēja, kas neizšķirtai ir `false`, un `drawn`
@@ -125,4 +130,6 @@ un `total`, `page`, `pageSize` un `next`, tāpat kā viena gada turnīriem. Sara
 - `addedAt`, vai `null` partijai, kas pievienota, pirms vietne ierakstīja, kad, un `changedAt`
 - `etag`
 
-un `total`, `page`, `pageSize` un `next`. Spēlētājs, ko vietne nepazīst, tiek noraidīts ar `404` un `WorldRankingPlayers.NotFound`, kas nav tas pats, kas spēlētājs bez partijām, kuram ir tukšs saraksts.
+un `total`, `page`, `pageSize` un `next`. Partija ir spēlētāja, ja viņš ir šī sporta turnīra spēlētājs. Vietne atrod, kurš pasaules ranga spēlētājs ir turnīra spēlētājs, pēc vārda, ar kādu viņu pazīst rangu saraksti. Ja rangu saraksti šo vārdu dod diviem spēlētājiem, kā Golf Croquet saraksts dara spēlētājiem dažādās valstīs, tā tos atšķir pēc tā, ko turnīra spēlētājs pārstāv, ja tā ir viena no viņu valstīm, un citādi pēc valsts, kurā turnīrs notiek. Turnīra spēlētājs, ko tas neatšķir, nav neviena, un viņa partijas arī ne, un pretinieks, ko tas neatšķir, tiek nosaukts bez `opponentId`.
+
+Spēlētājs, ko vietne nepazīst, tiek noraidīts ar `404` un `WorldRankingPlayers.NotFound`, vai Golf Croquet ar `GolfCroquetWorldRankingPlayers.NotFound`, kas nav tas pats, kas spēlētājs bez partijām, kuram ir tukšs saraksts. Pieprasījums, kas noraidīts lapas dēļ, tiek noraidīts ar `code`, kas sākas ar `WorldRankingPlayerGames.`, vai Golf Croquet ar `GolfCroquetWorldRankingPlayerGames.`, un ar `field`.

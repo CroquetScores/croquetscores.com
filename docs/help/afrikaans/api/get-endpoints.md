@@ -99,23 +99,28 @@ Lys die toernooie wat geargiveer is, sodat 'n toepassing kan ophou om hulle te w
 
 ## Wêreldranglysspelers {#world-ranking-players}
 
-`GET /api/v1/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players` vir Association Croquet en `GET /api/v1/gc/world-ranking-players` vir Golf Croquet
 
-Lys die Association Croquet-spelers wat die wêreldranglyste ken. Neem `changedSince`, geskryf as `2026-03-01T10:00:00Z`, `page` en `pageSize`, waar 'n bladsy hoogstens 100 is. Antwoord met `worldRankingPlayers`, elk met:
+Lys die spelers van daardie sportsoort wat die wêreldranglyste ken, in die volgorde van hul name. Die twee word eners gevra en beantwoord, behalwe waar dit hier anders sê. Elk neem `changedSince`, geskryf as `2026-03-01T10:00:00Z`, `page` en `pageSize`, waar 'n bladsy hoogstens 100 is. Antwoord met `worldRankingPlayers`, elk met:
 
 - `id`, en `worldRankingId`, die nommer wat die ranglyste die speler gee
 - `name`, soos die ranglyste hom noem
+- `country`, waar die speler vandaan kom, as die webwerf se eie kode daarvoor, een van die kodes in [die lande](#countries). 'n Golf Croquet-speler het altyd een, en twee Golf Croquet-spelers kan dieselfde naam in verskillende lande hê. 'n Association Croquet-speler het een sodra die ranglyste se lys gelees is sedert dit bygevoeg is, en tot dan word dit weggelaat
 - `games`, waar die API van die speler se spelle vertel (kyk ['n speler se spelle](#world-ranking-player-games))
 - `archivedAt`, wanneer die speler geargiveer is, of `null`
 - `changedAt`, en `etag`, saamgestel uit wat die speler sê
 
-en `total`, `page`, `pageSize` en `next`, soos 'n jaar se toernooie dit het. Die lys word weer gevra met die `ETag` wat dit gestuur het, en met `304` beantwoord waar niks verander het nie. 'n Versoek wat geweier word, word geweier met 'n `code` wat met `WorldRankingPlayers.` begin, soos `WorldRankingPlayers.PageNotWhole`, en 'n `field`.
+en `total`, `page`, `pageSize` en `next`, soos 'n jaar se toernooie dit het. Die lys word weer gevra met die `ETag` wat dit gestuur het, en met `304` beantwoord waar niks verander het nie. 'n Speler wat die ranglyste ophou lys, word steeds gelys, met `archivedAt`, sodat 'n toepassing wat hom gehou het, vertel kan word dat hy weg is. Die `id` is wat gehou moet word: die ranglyste kan 'n speler se nommer verander, en die `id` bly dieselfde speler s'n.
+
+Sonder 'n `page` gevra, bring die lys eers die name op datum vanaf die wêreldranglyste se eie webwerf, hoogstens een keer per uur vir elke sportsoort. Vir 'n bladsy volgens nommer gevra, die eerste ingesluit, vertel dit net wat die webwerf gehou het, sodat 'n toepassing wat die bladsye volg nie die ranglyste se webwerf vir elkeen laat lees nie. Waar die ranglyste se webwerf nie gelees kan word nie, is die name dié van die laaste keer dat hulle op datum gebring is.
+
+'n Versoek wat geweier word, word geweier met 'n `code` wat vir Association Croquet met `WorldRankingPlayers.` begin, soos `WorldRankingPlayers.PageNotWhole`, en vir Golf Croquet met `GolfCroquetWorldRankingPlayers.`, en 'n `field`.
 
 ## 'n Wêreldranglysspeler se spelle {#world-ranking-player-games}
 
-`GET /api/v1/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games` en `GET /api/v1/gc/world-ranking-players/{id}/games`
 
-Die `id` is die deel van die speler se `id` ná die skuinsstreep, soos `games` in die lys hierbo dit gee. Lys die Association Croquet-spelle wat die speler gespeel het, hetsy in 'n blok, 'n Switserse stelsel, 'n uitklopkompetisie of 'n toets, en hetsy hy vir homself of vir 'n span gespeel het. Neem `changedSince`, `page` en `pageSize` soos die lys van spelers, en antwoord met `games`, in die volgorde waarin hulle bygevoeg is, elk vanuit die speler se kant:
+Die `id` is die deel van die speler se `id` ná die skuinsstreep, soos `games` in die lys hierbo dit gee. Lys die spelle van daardie sportsoort wat die speler gespeel het, hetsy in 'n blok, 'n Switserse stelsel, 'n uitklopkompetisie of 'n toets, en hetsy hy vir homself of vir 'n span gespeel het. Neem `changedSince`, `page` en `pageSize` soos die lys van spelers, en antwoord met `games`, in die volgorde waarin hulle bygevoeg is, elk vanuit die speler se kant:
 
 - `id`, `tournamentId` en `competitionId`
 - `won`, of die speler gewen het, wat `false` is vir 'n gelykopuitslag, en `drawn`
@@ -125,4 +130,6 @@ Die `id` is die deel van die speler se `id` ná die skuinsstreep, soos `games` i
 - `addedAt`, of `null` vir 'n spel wat bygevoeg is voordat die webwerf onthou het wanneer, en `changedAt`
 - `etag`
 
-en `total`, `page`, `pageSize` en `next`. 'n Speler wat die webwerf nie ken nie, word geweier met `404` en `WorldRankingPlayers.NotFound`, wat nie dieselfde is as 'n speler sonder spelle nie, wat 'n leë lys het.
+en `total`, `page`, `pageSize` en `next`. 'n Spel is die speler s'n wanneer hy 'n speler van 'n toernooi van daardie sportsoort is. Die webwerf vind watter wêreldranglysspeler 'n toernooispeler is aan die hand van die naam waarmee die ranglyste hom ken. Waar die ranglyste daardie naam aan twee spelers gee, soos die Golf Croquet-lys doen vir spelers in verskillende lande, onderskei dit hulle aan wie die toernooispeler verteenwoordig, waar dit een van hul lande is, en andersins aan die land waar die toernooi gespeel word. 'n Toernooispeler wat dit nie onderskei nie, is niemand s'n nie, en hul spelle ook nie, en 'n opponent wat dit nie onderskei nie, word sonder 'n `opponentId` genoem.
+
+'n Speler wat die webwerf nie ken nie, word geweier met `404` en `WorldRankingPlayers.NotFound`, of `GolfCroquetWorldRankingPlayers.NotFound` vir Golf Croquet, wat nie dieselfde is as 'n speler sonder spelle nie, wat 'n leë lys het. 'n Versoek wat om sy bladsy geweier word, word geweier met 'n `code` wat met `WorldRankingPlayerGames.` begin, of `GolfCroquetWorldRankingPlayerGames.` vir Golf Croquet, en 'n `field`.

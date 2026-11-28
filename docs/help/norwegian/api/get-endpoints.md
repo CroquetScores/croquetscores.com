@@ -99,23 +99,28 @@ Lister turneringene som er arkivert, slik at en app kan slutte å vise dem. Tar 
 
 ## Spillere på verdensrankingen {#world-ranking-players}
 
-`GET /api/v1/ac/world-ranking-players`
+`GET /api/v1/ac/world-ranking-players` for Association Croquet og `GET /api/v1/gc/world-ranking-players` for Golf Croquet
 
-Lister Association Croquet-spillerne verdensrankingene kjenner. Tar `changedSince`, skrevet som `2026-03-01T10:00:00Z`, `page` og `pageSize`, der en side er høyst 100. Svarer med `worldRankingPlayers`, hver med:
+Lister spillerne i den idretten som verdensrankingene kjenner, i rekkefølgen av navnene deres. De to spørres om og besvares likt, unntatt der dette sier noe annet. Hver tar `changedSince`, skrevet som `2026-03-01T10:00:00Z`, `page` og `pageSize`, der en side er høyst 100. Svarer med `worldRankingPlayers`, hver med:
 
 - `id`, og `worldRankingId`, nummeret rankingene gir spilleren
 - `name`, slik rankingene navngir dem
+- `country`, hvor spilleren kommer fra, som nettstedets egen kode for det, en av kodene i [landene](#countries). En Golf Croquet-spiller har alltid ett, og to Golf Croquet-spillere kan ha samme navn i ulike land. En Association Croquet-spiller har ett når rankingenes liste er lest siden det ble lagt til, og inntil da utelates det
 - `games`, der API-et forteller om spillerens partier (se [en spillers partier](#world-ranking-player-games))
 - `archivedAt`, når spilleren ble arkivert, eller `null`
 - `changedAt`, og `etag`, laget av det spilleren sier
 
-og `total`, `page`, `pageSize` og `next`, slik et års turneringer har. Listen spørres om igjen med `ETag` den sendte, og besvares med `304` der ingenting er endret. En forespørsel som avvises, avvises med en `code` som begynner med `WorldRankingPlayers.`, som `WorldRankingPlayers.PageNotWhole`, og et `field`.
+og `total`, `page`, `pageSize` og `next`, slik et års turneringer har. Listen spørres om igjen med `ETag` den sendte, og besvares med `304` der ingenting er endret. En spiller rankingene slutter å liste, listes fortsatt, med `archivedAt`, slik at en app som har beholdt vedkommende kan få vite at spilleren er borte. `id` er det som skal beholdes: rankingene kan endre en spillers nummer, og `id` er det som forblir den samme spillerens.
+
+Spurt om uten `page` bringer listen først navnene à jour fra verdensrankingenes eget nettsted, høyst én gang i timen for hver idrett. Spurt om en side ved nummer, den første medregnet, sier den bare det nettstedet har beholdt, slik at en app som følger sidene ikke får rankingenes nettsted lest for hver av dem. Der rankingenes nettsted ikke kan leses, er navnene fra forrige gang de ble oppdatert.
+
+En forespørsel som avvises, avvises med en `code` som for Association Croquet begynner med `WorldRankingPlayers.`, som `WorldRankingPlayers.PageNotWhole`, og for Golf Croquet med `GolfCroquetWorldRankingPlayers.`, og et `field`.
 
 ## Partiene til en spiller på verdensrankingen {#world-ranking-player-games}
 
-`GET /api/v1/ac/world-ranking-players/{id}/games`
+`GET /api/v1/ac/world-ranking-players/{id}/games` og `GET /api/v1/gc/world-ranking-players/{id}/games`
 
-`id` er den delen av spillerens `id` som står etter skråstreken, slik `games` i listen over gir den. Lister Association Croquet-partiene spilleren har spilt, enten i en blokk, et sveitsisk system, en utslagning eller en test, og enten de spilte for seg selv eller for et lag. Tar `changedSince`, `page` og `pageSize` slik listen over spillere gjør, og svarer med `games`, i den rekkefølgen de ble lagt til, hvert fra spillerens side:
+`id` er den delen av spillerens `id` som står etter skråstreken, slik `games` i listen over gir den. Lister partiene i den idretten spilleren har spilt, enten i en blokk, et sveitsisk system, en utslagning eller en test, og enten de spilte for seg selv eller for et lag. Tar `changedSince`, `page` og `pageSize` slik listen over spillere gjør, og svarer med `games`, i den rekkefølgen de ble lagt til, hvert fra spillerens side:
 
 - `id`, `tournamentId` og `competitionId`
 - `won`, om spilleren vant, som er `false` for uavgjort, og `drawn`
@@ -125,4 +130,6 @@ og `total`, `page`, `pageSize` og `next`, slik et års turneringer har. Listen s
 - `addedAt`, eller `null` for et parti som ble lagt til før nettstedet noterte når, og `changedAt`
 - `etag`
 
-og `total`, `page`, `pageSize` og `next`. En spiller nettstedet ikke kjenner, avvises med `404` og `WorldRankingPlayers.NotFound`, som ikke er det samme som en spiller uten partier, som har en tom liste.
+og `total`, `page`, `pageSize` og `next`. Et parti er spillerens når vedkommende er en spiller i en turnering i den idretten. Nettstedet finner ut hvilken spiller på verdensrankingen en turneringsspiller er ut fra navnet rankingene kjenner dem under. Der rankingene gir det navnet til to spillere, slik Golf Croquet-listen gjør for spillere i ulike land, skiller det dem etter hvem turneringsspilleren representerer, der det er ett av landene deres, og ellers etter landet turneringen spilles i. En turneringsspiller disse ikke skiller, tilhører ingen, og det gjør heller ikke partiene deres, og en motstander de ikke skiller, navngis uten `opponentId`.
+
+En spiller nettstedet ikke kjenner, avvises med `404` og `WorldRankingPlayers.NotFound`, eller `GolfCroquetWorldRankingPlayers.NotFound` for Golf Croquet, som ikke er det samme som en spiller uten partier, som har en tom liste. En forespørsel som avvises på grunn av siden, avvises med en `code` som begynner med `WorldRankingPlayerGames.`, eller `GolfCroquetWorldRankingPlayerGames.` for Golf Croquet, og et `field`.
