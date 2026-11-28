@@ -5,7 +5,7 @@
 import rateLimit from "@fastify/rate-limit";
 import type { FastifyInstance } from "fastify";
 import { createHash } from "node:crypto";
-import { createReadStream, readdirSync, readFileSync } from "node:fs";
+import { createReadStream, readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, join, posix } from "node:path";
 
 import { ipAddressOf } from "./trustedProxy.js";
@@ -89,6 +89,37 @@ const filesUnder = (root: string, prefix = ""): string[] =>
       : [posix.join(prefix, entry.name)],
   );
 
+// What each file was last found to hold, by where it is. The site reads its
+// files once, as it starts, so in life this is never asked twice; a spec run
+// builds the site for each scenario that needs one of its own, and reading
+// and hashing every file each time was about a third of what a build took.
+// A file is read again when its size or the time it was last changed is not
+// what it was, which is what a deploy moves. One changed to the same size
+// inside the same moment as it was last read would be missed, which a deploy
+// does not do, since it puts files down long after the ones they replace
+// (assetNames.feature). Kept for the life of the process, which is as long as
+// the answer could be wanted, and no longer than the files could be.
+const hashes = new Map<
+  string,
+  { size: number; modified: number; hash: string }
+>();
+
+const hashOf = (path: string): string => {
+  // To the millisecond, which is as finely as a time can be written back by
+  // anything that sets one with a date, and so as finely as one that was
+  // meant to be the same can be told from one that was not.
+  const { size, mtimeMs } = statSync(path);
+  const modified = Math.floor(mtimeMs);
+  const kept = hashes.get(path);
+  if (kept?.size === size && kept.modified === modified) return kept.hash;
+  const hash = createHash("sha256")
+    .update(readFileSync(path))
+    .digest("hex")
+    .slice(0, 8);
+  hashes.set(path, { size, modified, hash });
+  return hash;
+};
+
 export const readAssets = (
   root: string,
   administratorEmailAddress: string,
@@ -98,10 +129,7 @@ export const readAssets = (
 
   for (const name of filesUnder(root)) {
     const path = join(root, name);
-    const hash = createHash("sha256")
-      .update(readFileSync(path))
-      .digest("hex")
-      .slice(0, 8);
+    const hash = hashOf(path);
     byName.set(name, {
       path,
       contentType:
