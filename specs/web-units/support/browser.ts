@@ -578,8 +578,12 @@ const itsOwn = async (
       // megabyte and a half to read and parse for each application, and a
       // quarter of what building one took. Left to the site where it has the
       // control, which says which countries are listed itself and is asked by
-      // the scenarios that say so (testControl.feature).
-      ...((changed.testControlToken ?? loaded.testControlToken) === undefined
+      // the scenarios that say so (testControl.feature). What a scenario changed
+      // wins even when it is nothing, as it does in the configuration above,
+      // which is why this does not use ??.
+      ...((Object.hasOwn(changed, "testControlToken")
+        ? changed.testControlToken
+        : loaded.testControlToken) === undefined
         ? { worldRankingCountries }
         : {}),
       ...offered(languages),
