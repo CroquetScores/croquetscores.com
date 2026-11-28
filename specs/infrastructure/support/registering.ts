@@ -75,8 +75,8 @@ import { LogEntriesHandler } from "../../../src/application/operations/logs/LogE
 import { PruneLogHandler } from "../../../src/application/operations/logs/PruneLogHandler.js";
 import { PostgresServerLog } from "../../../src/infrastructure/database/PostgresServerLog.js";
 import { PostgresKeptImportErrors } from "../../../src/infrastructure/database/PostgresKeptImportErrors.js";
-import type { RefreshAssociationCroquetPlayerNames } from "../../../src/application/operations/world-rankings/RefreshAssociationCroquetPlayerNames.js";
-import { RefreshAssociationCroquetPlayerNamesHandler } from "../../../src/application/operations/world-rankings/RefreshAssociationCroquetPlayerNamesHandler.js";
+import type { RefreshWorldRankingPlayerNames } from "../../../src/application/operations/world-rankings/RefreshWorldRankingPlayerNames.js";
+import { RefreshWorldRankingPlayerNamesHandler } from "../../../src/application/operations/world-rankings/RefreshWorldRankingPlayerNamesHandler.js";
 import { ImportWorldRankingPlayersHandler } from "../../../src/application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
 import { PostgresWorldRankingPlayers } from "../../../src/infrastructure/database/PostgresWorldRankingPlayers.js";
 import { ChangeNameHandler } from "../../../src/application/operations/accounts/ChangeNameHandler.js";
@@ -609,8 +609,8 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await mediator.send(command);
     },
 
-    async refreshAssociationCroquetPlayerNames(
-      command: RefreshAssociationCroquetPlayerNames,
+    async refreshWorldRankingPlayerNames(
+      command: RefreshWorldRankingPlayerNames,
     ): Promise<void> {
       await settle();
       await mediator.send(command);
@@ -721,7 +721,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       // Registered with it, since both are made with where the administrator
       // is, and a scenario about either says so.
       mediator.handleCommand(
-        new RefreshAssociationCroquetPlayerNamesHandler(
+        new RefreshWorldRankingPlayerNamesHandler(
           worldRankingLists,
           players,
           unitOfWork,

@@ -1948,6 +1948,73 @@ When(
 );
 
 When(
+  "the golf croquet world ranking player {string} with the world ranking number {int} is given through the control",
+  async function (this: SpecWorld, name: string, worldRankingId: number) {
+    await controlled(this, "/__test/world-ranking-players", {
+      sport: "gc",
+      name,
+      worldRankingId,
+    });
+  },
+);
+
+When(
+  "the association croquet world ranking player {string} with the world ranking number {int} from {string} is given through the control",
+  async function (
+    this: SpecWorld,
+    name: string,
+    worldRankingId: number,
+    country: string,
+  ) {
+    await controlled(this, "/__test/world-ranking-players", {
+      sport: "ac",
+      name,
+      worldRankingId,
+      country,
+    });
+  },
+);
+
+When(
+  "the golf croquet world ranking player {string} from {string} is given through the control",
+  async function (this: SpecWorld, name: string, country: string) {
+    await controlled(this, "/__test/world-ranking-players", {
+      sport: "gc",
+      name,
+      country,
+    });
+  },
+);
+
+Then(
+  "the country told for {string} is {string}",
+  function (this: SpecWorld, name: string, country: string) {
+    assert.equal(playerTold(this, name).country, country);
+  },
+);
+
+When(
+  "the golf croquet world ranking player {string} is given the world ranking number {int} through the control",
+  async function (this: SpecWorld, name: string, worldRankingId: number) {
+    await controlled(this, "/__test/world-ranking-players/renumber", {
+      sport: "gc",
+      name,
+      worldRankingId,
+    });
+  },
+);
+
+When(
+  "the golf croquet world ranking player {string} is archived through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/world-ranking-players/archive", {
+      sport: "gc",
+      name,
+    });
+  },
+);
+
+When(
   "the association croquet world ranking player {string} is archived through the control",
   async function (this: SpecWorld, name: string) {
     await controlled(this, "/__test/world-ranking-players/archive", { name });
@@ -1976,6 +2043,7 @@ interface PlayerTold {
   readonly name: string;
   readonly id: string;
   readonly worldRankingId: number;
+  readonly country?: string;
   readonly changedAt: string;
   readonly archivedAt: string | null;
 }
@@ -2007,6 +2075,23 @@ Then("the site tells the id it gave the player", function (this: SpecWorld) {
     /^ac-world-ranking-id\/.+/,
   );
 });
+
+Then(
+  "the site tells the golf croquet id it gave the player",
+  function (this: SpecWorld) {
+    assert.match(
+      (JSON.parse(responseOf(this).body) as { id: string }).id,
+      /^gc-world-ranking-id\/.+/,
+    );
+  },
+);
+
+Then(
+  "the moment told that {string} was archived is nothing",
+  function (this: SpecWorld, name: string) {
+    assert.equal(playerTold(this, name).archivedAt, null);
+  },
+);
 
 Then(
   "the world ranking number told for {string} is {int}",

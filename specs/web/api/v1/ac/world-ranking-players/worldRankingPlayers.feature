@@ -55,6 +55,11 @@ Feature: An app lists the association croquet world ranking players
       When the world ranking players are asked for page 1 with that key
       Then the world ranking player "Ann Archer" says its world ranking number is 11
 
+    Scenario: A player says its country
+      Given the world ranking player "Ann Archer" with the world ranking number 11 from "nz"
+      When the world ranking players are asked for page 1 with that key
+      Then the world ranking player "Ann Archer" says its country is "nz"
+
     Scenario: A player says where the API tells of its games
       Given the world ranking player "Ann Archer" with the world ranking number 11
       When the world ranking players are asked for page 1 with that key
@@ -82,7 +87,7 @@ Feature: An app lists the association croquet world ranking players
       And the third world ranking player listed is "Cara Croquet"
 
     Scenario: A golf croquet player is not listed
-      Given the golf croquet world ranking player "Gus Golfer"
+      Given the golf croquet world ranking player "Gus Golfer" with the world ranking number 15
       When the world ranking players are asked for page 1 with that key
       Then no world ranking players are listed
 

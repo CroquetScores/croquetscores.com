@@ -10,28 +10,40 @@ Feature: Reading the players' lists from the world rankings' site
 
   The two files are not laid out alike. An association croquet line has 25
   details, padded with spaces to line up; a golf croquet line has 17. Only
-  each player's full name is read from either, since a name is what the site
-  wants of them: an association croquet player's is the seventh detail, their
+  each player's full name and number are read from either, since those are
+  what the site wants of them: an association croquet player's full name is the
+  seventh detail, their
   first name, then a space, then the second, their surname; and a golf croquet
   player's is the fourth detail, the name they are known by, then a space,
   then the second, their surname. The spaces padding a detail are not part of
   it.
 
-  Each golf croquet full name is read once, however many lines name it: a
-  name is all that is kept of a golf croquet player, and two players of the
-  same name could not be told apart by it.
+  A player is read with their world ranking number as well, which is the first
+  detail on their line in either list, a whole number with the spaces padding
+  it left out. A line whose first detail is not a whole number is refused
+  like any other that cannot be read.
 
-  An association croquet player is read with their world ranking number as
-  well, which is the first detail on their line, a whole number with the
-  spaces padding it left out. A line whose first detail is not a whole number
-  is refused like any other that cannot be read.
+  A player is read with their country as well, which is where the player is
+  from and not where they play. An association croquet line says it in its
+  fifth detail, by the name that sport's list gives it, and a golf croquet
+  line in its sixth, in the three letters that sport uses. The site knows a
+  country by its own code, so each is translated: England and ENG are
+  `england`, and New Zealand and NZL are `nz`. A country the site has no code for is read as the
+  rankings write it, rather than refuse a whole list for one country the site
+  has yet to learn. The golf croquet list has players of one name in different
+  countries, so a golf croquet player is told apart by their name and their
+  country together.
 
-  Unlike golf croquet's, an association croquet list may not give one full
-  name to two players, whatever their numbers: the site finds a player by
-  their name, and a name that is two players cannot be told apart. Such a
-  list is refused as `WorldRankingLists.DuplicateNames`, whole, and says
-  which names and which numbers, for whoever has to correct the list at the
-  rankings.
+  An association croquet list may not give one full name to two players,
+  whatever their numbers: the site finds a player by their name, and a name
+  that is two players cannot be told apart. A golf croquet list may not give
+  one full name and country to two players, for the same reason. Such a list is
+  refused as `WorldRankingLists.DuplicateNames`, whole, and says which names
+  and which numbers, for whoever has to correct the list at the rankings. Nor
+  may a number go to two names, which is refused as
+  `WorldRankingLists.DuplicateNumbers`. The golf croquet list once read a name
+  given to two players as one player; it is refused now, as association
+  croquet's is, unless the two are from different countries.
 
   A list is read whole or not at all, since a list read in part would let go
   of every player it did not reach. So a list is refused as
@@ -69,6 +81,28 @@ Feature: Reading the players' lists from the world rankings' site
       And the association croquet list has the line "     4,Aldridge,WO,       ,England,      100,Bill, , ,Chs, ,Standard, , , , , , , , , , , , ,"
       When the association croquet list is read
       Then 2 players are read
+
+  Rule: An association croquet player is read with their country
+
+    Scenario: The player's country is read as the site's code
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,New Zealand,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the first player read is from "nz"
+
+    Scenario: A country the association croquet list writes in its own words is read as the site's code
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,Czech Rep,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the first player read is from "cz"
+
+    Scenario: A country the site has no code for is read as the rankings write it
+      Given the association croquet list has the line "     3,Aiton,KMH,          ,Atlantis,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the first player read is from "Atlantis"
+
+    Scenario: A line with no country is refused
+      Given the association croquet list has the line "     3,Aiton,KMH,          , ,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
+      When the association croquet list is read
+      Then the reading is refused with "WorldRankingLists.Unreadable"
 
   Rule: An association croquet player is read with their world ranking number
 
@@ -137,25 +171,90 @@ Feature: Reading the players' lists from the world rankings' site
       When the golf croquet list is read
       Then 2 players are read
 
-  Rule: Each golf croquet full name is read once
+  Rule: A golf croquet player is read with their world ranking number
 
-    Scenario: Two lines with the same full name are one player
+    Scenario: The player's world ranking number is read
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the first player read has the world ranking number 4
+
+    Scenario: The player's country is read as the site's code
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,NZL,ENG,,2250,2250,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the first player read is from "nz"
+
+    Scenario: A country of the United Kingdom is read as the site's code
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,WAL,ENG,,2250,2250,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the first player read is from "wales"
+
+    Scenario: A country the rankings write in letters of their own is read as the site's code
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,DEN,DEN,,2250,2250,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the first player read is from "dk"
+
+    Scenario: A country the site has no code for is read as the rankings write it
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,XYZ,XYZ,,2250,2250,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the first player read is from "XYZ"
+
+    Scenario: Two lines with the same full name and country are refused
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
+      And the golf croquet list has the line "5,Brand,Ivor,Ivor,m,ENG,WAL,,1800,1800,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the reading is refused with "WorldRankingLists.DuplicateNames"
+
+    Scenario: Two lines with the same full name in different countries are two players
       Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
       And the golf croquet list has the line "5,Brand,Ivor,Ivor,m,WAL,WAL,,1800,1800,,,,,1,0,0"
       When the golf croquet list is read
-      Then 1 player is read
+      Then 2 players are read
 
-    Scenario: Two lines with the same full name are not refused
+    Scenario: Two lines with the same full name in different countries are not refused
       Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
       And the golf croquet list has the line "5,Brand,Ivor,Ivor,m,WAL,WAL,,1800,1800,,,,,1,0,0"
       When the golf croquet list is read
       Then the reading is not refused
+
+    Scenario: The refusal names the full name given twice
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
+      And the golf croquet list has the line "5,Brand,Ivor,Ivor,m,ENG,WAL,,1800,1800,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the refusal names "Ivor Brand"
+
+    Scenario: The refusal names the first world ranking number of the name
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
+      And the golf croquet list has the line "5,Brand,Ivor,Ivor,m,ENG,WAL,,1800,1800,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the refusal names the world ranking number 4
+
+    Scenario: The refusal names the second world ranking number of the name
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
+      And the golf croquet list has the line "5,Brand,Ivor,Ivor,m,ENG,WAL,,1800,1800,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the refusal names the world ranking number 5
+
+    Scenario: Two lines with the same number and different names are refused
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
+      And the golf croquet list has the line "4,Brand,Richard,Richard,m,ENG,ENG,,2250,2250,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the reading is refused with "WorldRankingLists.DuplicateNumbers"
 
     Scenario: Names that differ only in their first names are two players
       Given the golf croquet list has the line "2,Brand,Richard,Richard,m,ENG,ENG,,2250,2250,,,,,1,0,0"
       And the golf croquet list has the line "4,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
       When the golf croquet list is read
       Then 2 players are read
+
+    Scenario: A line with no country is refused
+      Given the golf croquet list has the line "4,Brand,Ivor,Ivor,m, ,ENG,,2250,2250,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the reading is refused with "WorldRankingLists.Unreadable"
+
+    Scenario: A line whose world ranking number is not a whole number is refused
+      Given the golf croquet list has the line "none,Brand,Ivor,Ivor,m,ENG,ENG,,2250,2250,,,,,1,0,0"
+      When the golf croquet list is read
+      Then the reading is refused with "WorldRankingLists.Unreadable"
 
   Rule: An empty line is passed over
 

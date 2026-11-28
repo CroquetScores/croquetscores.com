@@ -218,7 +218,7 @@ Feature: A site over a database the specs made can be controlled by a token
       When the teams "England" and "Australia" are added through the control
       And a player is added to the team "England" through the control
       And a test between the two teams is added and given 2 expected matches through the control
-      And the team "England" is given the short name "ENG" through the control
+      And the team "England" is given the short name "england" through the control
       And the teams "New Zealand" and "Fiji" are added through the control
       And the team "Fiji" is archived through the control
       Then the site answers that it is fine
@@ -380,6 +380,85 @@ Feature: A site over a database the specs made can be controlled by a token
       And the golf croquet world ranking player "Keith Aiton" is given through the control
       When the golf croquet world ranking players are asked for
       Then the players told are "Keith Aiton"
+
+    # Golf croquet's players are kept as association croquet's are, by the
+    # number the rankings give them and by an id of the site's own, with the
+    # moments they changed and were archived.
+    Scenario: A golf croquet world ranking player is given an id of the site's own
+      Given a site given the token "open sesame"
+      When the golf croquet world ranking player "Gus Golfer" is given through the control
+      Then the site tells the golf croquet id it gave the player
+
+    Scenario: A golf croquet world ranking player can be given with its number
+      Given a site given the token "open sesame"
+      When the golf croquet world ranking player "Gus Golfer" with the world ranking number 21 is given through the control
+      Then the site tells the golf croquet id it gave the player
+
+    Scenario: The golf croquet world ranking players a site holds are told with their numbers
+      Given a site given the token "open sesame"
+      And the golf croquet world ranking player "Gus Golfer" with the world ranking number 21 is given through the control
+      When the golf croquet world ranking players are asked for
+      Then the world ranking number told for "Gus Golfer" is 21
+
+    Scenario: A golf croquet world ranking player can be given a country
+      Given a site given the token "open sesame"
+      And the golf croquet world ranking player "Gus Golfer" from "nz" is given through the control
+      When the golf croquet world ranking players are asked for
+      Then the country told for "Gus Golfer" is "nz"
+
+    Scenario: An association croquet world ranking player can be given a country
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 from "nz" is given through the control
+      When the association croquet world ranking players are asked for
+      Then the country told for "Ann Archer" is "nz"
+
+    Scenario: A golf croquet world ranking player given no country is from England
+      Given a site given the token "open sesame"
+      And the golf croquet world ranking player "Gus Golfer" is given through the control
+      When the golf croquet world ranking players are asked for
+      Then the country told for "Gus Golfer" is "england"
+
+    Scenario: A golf croquet world ranking player's number can be changed
+      Given a site given the token "open sesame"
+      And the golf croquet world ranking player "Gus Golfer" with the world ranking number 21 is given through the control
+      When the golf croquet world ranking player "Gus Golfer" is given the world ranking number 99 through the control
+      And the golf croquet world ranking players are asked for
+      Then the world ranking number told for "Gus Golfer" is 99
+
+    Scenario: A golf croquet world ranking player is given the moment the site's clock reads as the moment it changed
+      Given a site given the token "open sesame"
+      And the clock is set to "2026-03-01T10:00:00Z"
+      And the golf croquet world ranking player "Gus Golfer" is given through the control
+      When the golf croquet world ranking players are asked for
+      Then the moment told that "Gus Golfer" changed is "2026-03-01T10:00:00.000Z"
+
+    Scenario: A golf croquet world ranking player can be archived
+      Given a site given the token "open sesame"
+      And the golf croquet world ranking player "Gus Golfer" is given through the control
+      When the golf croquet world ranking player "Gus Golfer" is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A golf croquet world ranking player archived is told archived at the moment the site's clock reads
+      Given a site given the token "open sesame"
+      And the golf croquet world ranking player "Gus Golfer" is given through the control
+      And the clock is set to "2026-03-02T10:00:00Z"
+      And the golf croquet world ranking player "Gus Golfer" is archived through the control
+      When the golf croquet world ranking players are asked for
+      Then the moment told that "Gus Golfer" was archived is "2026-03-02T10:00:00.000Z"
+      And the moment told that "Gus Golfer" changed is "2026-03-02T10:00:00.000Z"
+
+    Scenario: Archiving a golf croquet world ranking player does not archive the association croquet player of that name
+      Given a site given the token "open sesame"
+      And the association croquet world ranking player "Ann Archer" with the world ranking number 11 is given through the control
+      And the golf croquet world ranking player "Ann Archer" is given through the control
+      And the golf croquet world ranking player "Ann Archer" is archived through the control
+      When the association croquet world ranking players are asked for
+      Then the moment told that "Ann Archer" was archived is nothing
+
+    Scenario: A golf croquet world ranking player the site does not hold cannot be archived
+      Given a site given the token "open sesame"
+      When the golf croquet world ranking player "Nobody" is archived through the control
+      Then the site answers that the request was wrong
 
     # The association croquet players are kept by the number the rankings give
     # them and by an id of the site's own, with the moments they changed and
