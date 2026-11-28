@@ -495,3 +495,145 @@ Feature: What is in a tournament, kept for the API
       And "Spring Open" is read for an app
       Then it is rebuilt without failing
       And the competitions read are "Block A"
+
+  Rule: A player is kept with the id of the world ranking player of their name
+
+    The world rankings' players are kept in a table for each sport
+    (`PostgresWorldRankingPlayers.feature`), and a player is looked for, by the
+    name the rankings know them by, in the table of their tournament's sport.
+    One found is kept with the id the site gave them, in the column of the
+    sport: `ac_world_ranking_id` for association croquet and
+    `gc_world_ranking_id` for golf croquet, the other left empty. That id is
+    what an app follows a world ranking player by
+    (`worldRankingPlayers.feature`), which a name that could be written two
+    ways is not. One not found is kept with none, as is any player of a sport
+    the rankings keep no players for.
+
+    A name can be two players, as two golf croquet players of one name in
+    different countries are. The player is then told apart by who they
+    represent, where that is a country that one of them is from, and where it
+    is not, by the country the tournament is played in. Where neither says
+    which, the player is kept with none, since a guess would give the games of
+    one player to another. A team's player is told apart by their team, which
+    is called by a country's name or its letters where it is that country's.
+
+    The id is looked for again whenever what it is looked for by changes:
+    the player's world ranking name or what they represent, the tournament's
+    sport or country, and the rankings' own lists
+    (`PostgresWorldRankingPlayers.feature`). A player archived by the rankings
+    is still found, since the site has met them.
+
+    Background:
+      Given a tournament "Golf Open" to start on "2026-10-03"
+      And "Golf Open" to be for the sport "gc"
+      And "Golf Open" to be played in the country "england"
+      And "Golf Open" to be played in the region "ber"
+      And "Golf Open" is created by the account for "organiser@example.com"
+
+    Scenario: An association croquet player the rankings know is kept with their number
+      Given the world rankings know the association croquet player 3 called "Sam Someone"
+      When the player "Sam Someone" is added to "Spring Open"
+      Then the player "Sam Someone" of "Spring Open" is kept with the id of the association croquet player 3
+
+    Scenario: A player is looked for by their world ranking name
+      Given the world rankings know the association croquet player 3 called "Samuel Someone"
+      When the player "Sam Someone" is added to "Spring Open" with the world ranking name "Samuel Someone"
+      Then the player "Sam Someone" of "Spring Open" is kept with the id of the association croquet player 3
+
+    Scenario: A player the rankings do not know is kept with no number
+      Given the world rankings know the association croquet player 3 called "Sam Someone"
+      When the player "Pat Player" is added to "Spring Open"
+      Then the player "Pat Player" of "Spring Open" is kept with no world ranking id
+
+    Scenario: A golf croquet player the rankings know is kept with their number
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      When the player "Ivor Brand" is added to "Golf Open"
+      Then the player "Ivor Brand" of "Golf Open" is kept with the id of the golf croquet player 4
+
+    Scenario: A player is not looked for among the other sport's players
+      Given the world rankings know the golf croquet player 4 called "Sam Someone" from "england"
+      When the player "Sam Someone" is added to "Spring Open"
+      Then the player "Sam Someone" of "Spring Open" is kept with no world ranking id
+
+    Scenario: A player of a sport the rankings keep no players for is kept with no number
+      Given a tournament "Gateball Open" to start on "2026-10-03"
+      And "Gateball Open" to be on the website "gateballscores.com"
+      And "Gateball Open" is created by the account for "organiser@example.com"
+      And the world rankings know the association croquet player 3 called "Sam Someone"
+      When the player "Sam Someone" is added to "Gateball Open"
+      Then the player "Sam Someone" of "Gateball Open" is kept with no world ranking id
+
+    Scenario: A player the rankings have archived is still found
+      Given the world rankings know the association croquet player 3 called "Sam Someone"
+      And the world rankings have archived the association croquet player 3
+      When the player "Sam Someone" is added to "Spring Open"
+      Then the player "Sam Someone" of "Spring Open" is kept with the id of the association croquet player 3
+
+    Scenario: A name two players share is told apart by the country the player represents
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      And the world rankings know the golf croquet player 5 called "Ivor Brand" from "wales"
+      When the player "Ivor Brand" is added to "Golf Open" representing "Wales"
+      Then the player "Ivor Brand" of "Golf Open" is kept with the id of the golf croquet player 5
+
+    Scenario: A country is understood in the letters the golf croquet list uses
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      And the world rankings know the golf croquet player 5 called "Ivor Brand" from "wales"
+      When the player "Ivor Brand" is added to "Golf Open" representing "WAL"
+      Then the player "Ivor Brand" of "Golf Open" is kept with the id of the golf croquet player 5
+
+    Scenario: A name two players share is told apart by the tournament's country where the player represents no country
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      And the world rankings know the golf croquet player 5 called "Ivor Brand" from "wales"
+      When the player "Ivor Brand" is added to "Golf Open" representing "Surrey Croquet Club"
+      Then the player "Ivor Brand" of "Golf Open" is kept with the id of the golf croquet player 4
+
+    Scenario: A name two players share is told apart by the tournament's country where the player represents neither of theirs
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      And the world rankings know the golf croquet player 5 called "Ivor Brand" from "wales"
+      When the player "Ivor Brand" is added to "Golf Open" representing "New Zealand"
+      Then the player "Ivor Brand" of "Golf Open" is kept with the id of the golf croquet player 4
+
+    Scenario: A name two players share is told apart by the tournament's country where the player represents nobody
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      And the world rankings know the golf croquet player 5 called "Ivor Brand" from "wales"
+      When the player "Ivor Brand" is added to "Golf Open"
+      Then the player "Ivor Brand" of "Golf Open" is kept with the id of the golf croquet player 4
+
+    Scenario: A name two players share is kept with no number where nothing tells them apart
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "wales"
+      And the world rankings know the golf croquet player 5 called "Ivor Brand" from "nz"
+      When the player "Ivor Brand" is added to "Golf Open" representing "Surrey Croquet Club"
+      Then the player "Ivor Brand" of "Golf Open" is kept with no world ranking id
+
+    Scenario: A name only one player has is found whatever the player represents
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      When the player "Ivor Brand" is added to "Golf Open" representing "Wales"
+      Then the player "Ivor Brand" of "Golf Open" is kept with the id of the golf croquet player 4
+
+    Scenario: A player given another world ranking name is looked for again
+      Given the world rankings know the association croquet player 3 called "Samuel Someone"
+      And the player "Sam Someone" is added to "Spring Open"
+      When the player "Sam Someone" of "Spring Open" is given the world ranking name "Samuel Someone"
+      Then the player "Sam Someone" of "Spring Open" is kept with the id of the association croquet player 3
+
+    Scenario: A player made to represent another country is looked for again
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      And the world rankings know the golf croquet player 5 called "Ivor Brand" from "nz"
+      And the player "Ivor Brand" is added to "Golf Open" representing "NZ"
+      When the player "Ivor Brand" of "Golf Open" is made to represent "New Zealand"
+      Then the player "Ivor Brand" of "Golf Open" is kept with the id of the golf croquet player 5
+
+    Scenario: A team's player is looked for among the sport's players
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      And "Golf Open" is played by teams
+      And the team "Fairways" is added to "Golf Open" with the short name "FWY"
+      When the player "Ivor Brand" is added to the team "Fairways" of "Golf Open"
+      Then the player "Ivor Brand" of the team "Fairways" of "Golf Open" is kept with the id of the golf croquet player 4
+
+    Scenario: A team's player is told apart by the country their team is called
+      Given the world rankings know the golf croquet player 4 called "Ivor Brand" from "england"
+      And the world rankings know the golf croquet player 5 called "Ivor Brand" from "wales"
+      And "Golf Open" is played by teams
+      And the team "Wales" is added to "Golf Open" with the short name "WAL"
+      When the player "Ivor Brand" is added to the team "Wales" of "Golf Open"
+      Then the player "Ivor Brand" of the team "Wales" of "Golf Open" is kept with the id of the golf croquet player 5

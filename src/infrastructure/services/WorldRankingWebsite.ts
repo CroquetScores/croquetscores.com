@@ -1,14 +1,18 @@
 // The players' lists as the world rankings keep them on their own site
 // (WorldRankingWebsite.feature): a file for each sport, a line to a player,
 // the player's details separated by commas. Only each player's full name is
-// read, and for association croquet the number the rankings give them.
+// read, and the number the rankings give them.
 import {
-  type AssociationCroquetPlayer,
+  type ListedPlayer,
   DuplicateNamesRefused,
   ListRefused,
   type WorldRankingLists,
   type WorldRankingSport,
 } from "../../application/services/WorldRankingLists.js";
+import {
+  countryNamedInList,
+  countryOfLetters,
+} from "../world-rankings/countriesOfLists.js";
 
 /**
  * Each sport as what is written for whoever runs the site names it: what a
@@ -35,20 +39,52 @@ export const defaultWaitMilliseconds = 30_000;
 // How each sport's lines are laid out: how many details a line has, and which
 // make up the full name, counted from nought. Association croquet's first
 // name is its seventh detail; golf croquet's is the name the player is known
-// by, its fourth, rather than the name they were given, its third.
+// by, its fourth, rather than the name they were given, its third. Golf
+// croquet's line also says the country the player is from, its sixth detail,
+// in the three letters that sport uses, and not the seventh, which is another
+// country again for some players. Association croquet's says it in its fifth,
+// by name.
 const LAYOUTS: Readonly<
   Record<
     WorldRankingSport,
-    { details: number; firstName: number; surname: number }
+    {
+      details: number;
+      firstName: number;
+      surname: number;
+      country: number;
+      // Whether a line with none is refused. Golf croquet's players are told
+      // apart by their country; association croquet's are only told of it.
+      countryRequired: boolean;
+    }
   >
 > = {
-  ac: { details: 25, firstName: 6, surname: 1 },
-  gc: { details: 17, firstName: 3, surname: 1 },
+  ac: {
+    details: 25,
+    firstName: 6,
+    surname: 1,
+    country: 4,
+    countryRequired: false,
+  },
+  gc: {
+    details: 17,
+    firstName: 3,
+    surname: 1,
+    country: 5,
+    countryRequired: true,
+  },
 };
 
 // The most a number can be and still be kept, which is as large as the
 // database's integer goes.
 const MOST_ID = 2_147_483_647;
+
+// The site's code for the country the rankings write as `letters`, which is
+// how the rest of the site knows it. A country the site has no code for is
+// kept as the rankings write it, so that the player is still told apart by it
+// and a list is not refused for a country the site has yet to learn.
+const siteCountryOf = (sport: WorldRankingSport, written: string): string =>
+  (sport === "ac" ? countryNamedInList(written) : countryOfLetters(written))
+    ?.code ?? written;
 
 const unreachable = (
   sport: WorldRankingSport,
@@ -75,40 +111,66 @@ export class WorldRankingWebsite implements WorldRankingLists {
     private readonly waitMilliseconds: number = defaultWaitMilliseconds,
   ) {}
 
-  async associationCroquetPlayers(): Promise<
-    readonly AssociationCroquetPlayer[]
-  > {
-    const players: AssociationCroquetPlayer[] = [];
+  associationCroquetPlayers(): Promise<readonly ListedPlayer[]> {
+    return this.playersOf("ac");
+  }
+
+  golfCroquetPlayers(): Promise<readonly ListedPlayer[]> {
+    return this.playersOf("gc");
+  }
+
+  // Both lists are read the same way, a number to a player and a name to a
+  // number, so a list that breaks either is refused the same way.
+  private async playersOf(
+    sport: WorldRankingSport,
+  ): Promise<readonly ListedPlayer[]> {
+    const players: ListedPlayer[] = [];
     for (const { details, index } of this.linesOf(
-      "ac",
-      await this.fetched("ac"),
+      sport,
+      await this.fetched(sport),
     )) {
       const worldRankingId = Number(details[0]);
       if (!/^\d+$/.test(details[0] ?? "") || worldRankingId > MOST_ID) {
-        throw unreadable("ac", `could not be read at line ${index + 1}`);
+        throw unreadable(sport, `could not be read at line ${index + 1}`);
       }
-      players.push({ worldRankingId, name: this.nameOn("ac", details) });
+      const country = LAYOUTS[sport].country;
+      const written = details[country] ?? "";
+      players.push({
+        worldRankingId,
+        name: this.nameOn(sport, details),
+        ...(written === "" ? {} : { country: siteCountryOf(sport, written) }),
+      });
     }
-    this.somebody("ac", players);
+    this.somebody(sport, players);
 
     // Refused whole where a name is two players or a number is two names:
     // the site finds a player by either, and could not tell them apart.
     // Names are matched exactly, as the site spells them.
+    // A golf croquet name is told apart by its country, so the same name in
+    // another country is another player. An association croquet name is not,
+    // whatever country it is from.
     const numbersOf = new Map<string, number[]>();
     const nameOf = new Map<number, string>();
     let numberGivenTwice: number | undefined;
-    for (const { worldRankingId, name } of players) {
-      numbersOf.set(name, [...(numbersOf.get(name) ?? []), worldRankingId]);
+    for (const { worldRankingId, name, country } of players) {
+      const told =
+        sport === "gc" && country !== undefined
+          ? `${name}\u0000${country}`
+          : name;
+      numbersOf.set(told, [...(numbersOf.get(told) ?? []), worldRankingId]);
       const had = nameOf.get(worldRankingId);
-      if (had !== undefined && had !== name) numberGivenTwice = worldRankingId;
-      nameOf.set(worldRankingId, name);
+      if (had !== undefined && had !== told) numberGivenTwice = worldRankingId;
+      nameOf.set(worldRankingId, told);
     }
     const duplicates = [...numbersOf]
       .filter(([, numbers]) => numbers.length > 1)
-      .map(([name, worldRankingIds]) => ({ name, worldRankingIds }));
+      .map(([told, worldRankingIds]) => ({
+        name: told.split("\u0000")[0] ?? told,
+        worldRankingIds,
+      }));
     if (duplicates.length > 0) {
       throw new DuplicateNamesRefused(
-        `The world rankings' ${worldRankingSportNames.ac} list gives a full name to more than one player, so none of it was read: ${duplicates
+        `The world rankings' ${worldRankingSportNames[sport]} list gives a full name to more than one player, so none of it was read: ${duplicates
           .map(
             ({ name, worldRankingIds }) =>
               `${name} (${worldRankingIds.join(", ")})`,
@@ -120,19 +182,10 @@ export class WorldRankingWebsite implements WorldRankingLists {
     if (numberGivenTwice !== undefined) {
       throw new ListRefused(
         "WorldRankingLists.DuplicateNumbers",
-        `The world rankings' ${worldRankingSportNames.ac} list gives the number ${numberGivenTwice} to more than one name, so none of it was read.`,
+        `The world rankings' ${worldRankingSportNames[sport]} list gives the number ${numberGivenTwice} to more than one name, so none of it was read.`,
       );
     }
     return players;
-  }
-
-  async golfCroquetNames(): Promise<readonly string[]> {
-    // A Set keeps each name once, in the order the list first names it.
-    const names = new Set<string>();
-    for (const { details } of this.linesOf("gc", await this.fetched("gc"))) {
-      names.add(this.nameOn("gc", details));
-    }
-    return this.somebody("gc", [...names]);
   }
 
   // The whole of the list, as it was sent. The time allowed covers reading
@@ -172,7 +225,8 @@ export class WorldRankingWebsite implements WorldRankingLists {
       throw unreadable(sport, "is not UTF-8");
     }
 
-    const { details, firstName, surname } = LAYOUTS[sport];
+    const { details, firstName, surname, country, countryRequired } =
+      LAYOUTS[sport];
     const lines: { details: string[]; index: number }[] = [];
     for (const [index, line] of text.split(/\r?\n/).entries()) {
       if (line.trim() === "") continue;
@@ -180,7 +234,8 @@ export class WorldRankingWebsite implements WorldRankingLists {
       if (
         said.length !== details ||
         (said[firstName] ?? "") === "" ||
-        (said[surname] ?? "") === ""
+        (said[surname] ?? "") === "" ||
+        (countryRequired && (said[country] ?? "") === "")
       ) {
         throw unreadable(sport, `could not be read at line ${index + 1}`);
       }

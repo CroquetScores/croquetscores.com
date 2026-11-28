@@ -634,8 +634,8 @@ const itsOwn = async (
         associationCroquetPlayers: () =>
           world.worldRankingLists?.associationCroquetPlayers() ??
           Promise.reject(noWorldRankings()),
-        golfCroquetNames: () =>
-          world.worldRankingLists?.golfCroquetNames() ??
+        golfCroquetPlayers: () =>
+          world.worldRankingLists?.golfCroquetPlayers() ??
           Promise.reject(noWorldRankings()),
       },
       // Never Google: a spec run has no business asking it, and a scenario

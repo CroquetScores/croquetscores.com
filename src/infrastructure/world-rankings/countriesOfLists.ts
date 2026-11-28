@@ -321,8 +321,19 @@ export const countryNamedInList = (name: string): Country | undefined => {
   );
 };
 
+// Letters the Golf Croquet list uses that the table above does not have under
+// them: Denmark, the Isle of Man and Palestine, which that sport writes as
+// DEN, IMN and PSE. Found in the list of its players.
+const golfCroquetLetters: Readonly<Record<string, string>> = {
+  den: "dk",
+  imn: "im",
+  pse: "ps",
+};
+
 /** The country the Golf Croquet list gives as `letters`, if the site has it. */
 export const countryOfLetters = (letters: string): Country | undefined => {
+  const alias = golfCroquetLetters[letters.trim().toLowerCase()];
+  if (alias !== undefined) return Countries.thereAre.find(alias);
   const flag = oldFlagOf(letters.trim());
   return flag === undefined ? undefined : Countries.thereAre.find(flag);
 };

@@ -14,11 +14,12 @@ import type { SpecWorld } from "../../../support/world.js";
 
 // What the last reading answered, or what it was refused with, kept apart for
 // each scenario.
-// A player as read, with the number the rankings give them where the sport's
-// list has one.
+// A player as read, with the number the rankings give them.
 interface Read {
   readonly name: string;
-  readonly worldRankingId?: number;
+  readonly worldRankingId: number;
+  // Where the line says one.
+  readonly country?: string | undefined;
 }
 
 const read = new WeakMap<
@@ -45,7 +46,7 @@ When(
       const players =
         sportCalled(sport) === "ac"
           ? await lists.associationCroquetPlayers()
-          : (await lists.golfCroquetNames()).map((name) => ({ name }));
+          : await lists.golfCroquetPlayers();
       read.set(this, { players });
     } catch (refused) {
       read.set(this, { refused });
@@ -57,6 +58,17 @@ Then(
   "the first player read is {string}",
   function (this: SpecWorld, fullName: string) {
     assert.equal(readOf(this)[0]?.name, fullName);
+  },
+);
+
+Then("the first player read has no country", function (this: SpecWorld) {
+  assert.equal(readOf(this)[0]?.country, undefined);
+});
+
+Then(
+  "the first player read is from {string}",
+  function (this: SpecWorld, country: string) {
+    assert.equal(readOf(this)[0]?.country, country);
   },
 );
 

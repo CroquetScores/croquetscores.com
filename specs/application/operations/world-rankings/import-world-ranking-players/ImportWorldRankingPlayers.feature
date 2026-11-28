@@ -10,8 +10,8 @@ Feature: Importing the players the world rankings know
   `Account.NotAnAdministrator`, before anything is read. A forgotten account
   holds no role (`asker.feature`), so it is refused the same way.
 
-  A golf croquet player is kept by their full name, which is all that is read
-  of them, and each name once. An association croquet player is kept by their
+  A player of either sport is kept by their full name and world ranking
+  number, with an identifier of the site's own. An association croquet player is kept by their
   world ranking number as well as their name (`WorldRankingWebsite.feature`).
   Each sport's players
   are kept apart from the other's, since the two lists are not the same
@@ -19,12 +19,10 @@ Feature: Importing the players the world rankings know
   first, and golf croquet's after them.
 
   A list is read in full before anything is done with it. Only a list read
-  in full, with every line in it read, is kept. Golf croquet's replaces the
-  players kept before, so that what is kept is the list as the rankings have
-  it now. Association croquet's is kept by world ranking number
-  (`PostgresWorldRankingPlayers.feature`): a player named on it who is new
-  is added, one whose name has changed is renamed, and one no longer on it is
-  archived rather than let go, with the moment of the import. A list
+  in full, with every line in it read, is kept. Both are kept as
+  `PostgresWorldRankingPlayers.feature` says: a player named on a list who is
+  new is added, one whose name has changed is renamed, and one no longer on
+  it is archived rather than let go, with the moment of the import. A list
   that cannot be read, whatever the reason, leaves its sport's players as
   they were, and the other sport's list is still read and kept. Players kept
   as they were are out of date by however long it has been since the last
@@ -110,12 +108,12 @@ Feature: Importing the players the world rankings know
       When the reader signed in to the account for "admin@example.com" imports the world ranking players
       Then "Bill Aldridge" is archived among the association croquet players
 
-    Scenario: A golf croquet player no longer on the list is no longer kept
+    Scenario: A golf croquet player no longer on the list is archived
       Given the world ranking players have been imported
       And the golf croquet list no longer names "Bill Arliss"
       And the golf croquet list names "Richard Brand"
       When the reader signed in to the account for "admin@example.com" imports the world ranking players
-      Then "Bill Arliss" is not kept among the golf croquet players
+      Then "Bill Arliss" is archived among the golf croquet players
 
     Scenario: An association croquet player whose name has changed is renamed
       Given the world ranking players have been imported
@@ -128,6 +126,18 @@ Feature: Importing the players the world rankings know
       And the association croquet list names the player who was "Keith Aiton" as "Keith Aitken"
       When the reader signed in to the account for "admin@example.com" imports the world ranking players
       Then "Keith Aiton" is not kept among the association croquet players
+
+    Scenario: A golf croquet player whose name has changed is renamed
+      Given the world ranking players have been imported
+      And the golf croquet list names the player who was "Bill Arliss" as "Bill Arlis"
+      When the reader signed in to the account for "admin@example.com" imports the world ranking players
+      Then "Bill Arlis" is kept among the golf croquet players
+
+    Scenario: A renamed golf croquet player is not kept under the old name
+      Given the world ranking players have been imported
+      And the golf croquet list names the player who was "Bill Arliss" as "Bill Arlis"
+      When the reader signed in to the account for "admin@example.com" imports the world ranking players
+      Then "Bill Arliss" is not kept among the golf croquet players
 
     Scenario: Importing again keeps each player once
       Given the world ranking players have been imported
@@ -222,6 +232,42 @@ Feature: Importing the players the world rankings know
       And the association croquet list no longer names "Keith Aiton"
       When the reader signed in to the account for "admin@example.com" imports the world ranking players
       Then the administrator of the site was not emailed about duplicate names
+
+  Rule: A golf croquet list that gives one name and country to two players is not kept, and is told
+
+    Two golf croquet players of one name in different countries are two
+    players, and are both kept.
+
+    Scenario: Two players of one name in different countries are both kept
+      Given the golf croquet list names "Bill Arliss" from "WAL"
+      When the reader signed in to the account for "admin@example.com" imports the world ranking players
+      Then 2 golf croquet players are kept
+
+    Scenario: The players kept before are left as they were
+      Given the world ranking players have been imported
+      And the golf croquet list names "Bill Arliss" again with another world ranking number
+      When the reader signed in to the account for "admin@example.com" imports the world ranking players
+      Then "Bill Arliss" is not archived among the golf croquet players
+
+    Scenario: The list is said to be refused for its duplicate names
+      Given the golf croquet list names "Bill Arliss" again with another world ranking number
+      When the reader signed in to the account for "admin@example.com" imports the world ranking players
+      Then the import's fifth report is that the golf croquet list was refused with "WorldRankingLists.DuplicateNames"
+
+    Scenario: The association croquet list is still kept
+      Given the golf croquet list names "Bill Arliss" again with another world ranking number
+      When the reader signed in to the account for "admin@example.com" imports the world ranking players
+      Then "Keith Aiton" is kept among the association croquet players
+
+    Scenario: An error is logged
+      Given the golf croquet list names "Bill Arliss" again with another world ranking number
+      When the reader signed in to the account for "admin@example.com" imports the world ranking players
+      Then an error was logged naming "Bill Arliss"
+
+    Scenario: The administrator of the site is emailed
+      Given the golf croquet list names "Bill Arliss" again with another world ranking number
+      When the reader signed in to the account for "admin@example.com" imports the world ranking players
+      Then the administrator of the site was emailed once about duplicate names
 
   Rule: An association croquet list that renames a player to a name another holds is not kept
 

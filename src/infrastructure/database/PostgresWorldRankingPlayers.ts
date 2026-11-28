@@ -1,20 +1,21 @@
 // The players the world rankings know, in a table for each sport
-// (PostgresWorldRankingPlayers.feature): golf croquet's by their full names,
-// replaced whole, and association croquet's by world ranking number, brought
-// up to date with the rankings' list. Found by their names
+// (PostgresWorldRankingPlayers.feature): golf croquet's by their full names
+// and association croquet's by world ranking number, each brought up to date
+// with the rankings' list. Found by their names
 // (WorldRankingPlayersMatching.feature).
 import {
-  type AssociationCroquetPlayer,
+  type ListedPlayer,
   NameTakenRefused,
   type WorldRankingSport,
 } from "../../application/services/WorldRankingLists.js";
 import type {
-  AssociationCroquetPlayersKept,
-  KeptAssociationCroquetPlayer,
+  KeptWorldRankingPlayer,
   WorldRankingPlayerNames,
   WorldRankingPlayers,
+  WorldRankingPlayersKept,
 } from "../../application/services/WorldRankingPlayers.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
+import { lookForIdsAgain } from "../read-models/worldRankingIds.js";
 import type { UnitOfWork } from "./UnitOfWork.js";
 
 // Written out rather than made from the sport, so that nothing a caller says
@@ -22,6 +23,12 @@ import type { UnitOfWork } from "./UnitOfWork.js";
 const TABLES: Readonly<Record<WorldRankingSport, string>> = {
   ac: "ac_world_ranking_players",
   gc: "gc_world_ranking_players",
+};
+
+// The column each table keeps the site's own identifier in.
+const IDENTIFIERS: Readonly<Record<WorldRankingSport, string>> = {
+  ac: "ac_world_ranking_id",
+  gc: "gc_world_ranking_id",
 };
 
 // What was typed, as a pattern matches it, with every character a pattern
@@ -37,34 +44,32 @@ export class PostgresWorldRankingPlayers
   implements
     WorldRankingPlayers,
     WorldRankingPlayerNames,
-    AssociationCroquetPlayersKept
+    WorldRankingPlayersKept
 {
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
-  async replaceGolfCroquet(names: readonly string[]): Promise<void> {
-    const connection = this.unitOfWork.connection();
-    const table = TABLES.gc;
-    // A lock that two replacings cannot both hold, so that the second waits
-    // for the first to commit and then replaces what it kept. Without it the
-    // second deletes only the rows it could see when it began, and its
-    // inserts run into the first's. Share row exclusive rather than truncate's
-    // access exclusive, because readers do not wait on it: they go on reading
-    // the players kept before until this is committed.
-    await connection.query(`lock table ${table} in share row exclusive mode`);
-    await connection.query(`delete from ${table}`);
-    await connection.query(
-      `insert into ${table} (name)
-       select distinct name from unnest($1::text[]) as given (name)`,
-      [names],
-    );
+  // Both sports' players are kept by the number the rankings give them, and
+  // a player who drops off a list is still one the site has met, so is
+  // archived rather than let go.
+  keepAssociationCroquet(
+    players: readonly ListedPlayer[],
+    at: ReadOnlyDate,
+  ): Promise<void> {
+    return this.keepByNumber("ac", players, at);
   }
 
-  // Not replaced whole, as golf croquet's are: the number the rankings give a
-  // player is what identifies them here, and a player who drops off the list
-  // is still one the site has met, so is archived rather than let go. The
-  // same lock as golf croquet's, for the same reason.
-  async keepAssociationCroquet(
-    players: readonly AssociationCroquetPlayer[],
+  keepGolfCroquet(
+    players: readonly ListedPlayer[],
+    at: ReadOnlyDate,
+  ): Promise<void> {
+    return this.keepByNumber("gc", players, at);
+  }
+
+  // The same lock for both, so that two keepings of one sport at once are one
+  // after the other.
+  private async keepByNumber(
+    sport: WorldRankingSport,
+    players: readonly ListedPlayer[],
     at: ReadOnlyDate,
   ): Promise<void> {
     // Nobody given is no list the rankings would send, and would archive
@@ -72,7 +77,12 @@ export class PostgresWorldRankingPlayers
     // nothing is done.
     if (players.length === 0) return;
     const connection = this.unitOfWork.connection();
-    const table = TABLES.ac;
+    const table = TABLES[sport];
+    const identifier = IDENTIFIERS[sport];
+    // Golf croquet's players are told apart by their country as well as their
+    // name, so a name taken is a name taken in that country. Association
+    // croquet's are told apart by name alone, and have a country all the same.
+    const countries = players.map((player) => player.country ?? null);
     await connection.query(`lock table ${table} in share row exclusive mode`);
     const numbers = players.map((player) => player.worldRankingId);
     const names = players.map((player) => player.name);
@@ -83,17 +93,19 @@ export class PostgresWorldRankingPlayers
     // rather than guessed at.
     const { rows: taken } = await connection.query<{ name: string }>(
       `select kept.name
-         from unnest($1::integer[], $2::text[]) as given (world_ranking_id, name)
+         from unnest($1::integer[], $2::text[], $3::text[])
+              as given (world_ranking_id, name, country)
          join ${table} kept
            on kept.name = given.name
           and kept.world_ranking_id <> given.world_ranking_id
+          ${sport === "gc" ? "and kept.country = given.country" : ""}
         order by kept.name`,
-      [numbers, names],
+      [numbers, names, countries],
     );
     if (taken.length > 0) {
       const named = taken.map((row) => row.name);
       throw new NameTakenRefused(
-        `The world rankings' association croquet list gives ${named.join(", ")} to a player other than the one the site keeps it for, so none of it was kept.`,
+        `The world rankings' ${sport === "ac" ? "association" : "golf"} croquet list gives ${named.join(", ")} to a player other than the one the site keeps it for, so none of it was kept.`,
         named,
       );
     }
@@ -101,22 +113,26 @@ export class PostgresWorldRankingPlayers
     // for those that are new: a player kept before keeps the one they have.
     await connection.query(
       `insert into ${table}
-         (ac_world_ranking_id, world_ranking_id, name, changed_at)
-       select given.ac_world_ranking_id, given.world_ranking_id, given.name, $4
-         from unnest($1::text[], $2::integer[], $3::text[])
-              as given (ac_world_ranking_id, world_ranking_id, name)
+         (${identifier}, world_ranking_id, name, country, changed_at)
+       select given.${identifier}, given.world_ranking_id, given.name,
+              given.country, $5
+         from unnest($1::text[], $2::integer[], $3::text[], $4::text[])
+              as given (${identifier}, world_ranking_id, name, country)
        on conflict (world_ranking_id) do update
           set name = excluded.name,
+              country = excluded.country,
               changed_at = excluded.changed_at,
               archived_at = null
         where ${table}.name is distinct from excluded.name
+           or ${table}.country is distinct from excluded.country
            or ${table}.archived_at is not null`,
       [
         players.map(
-          () => `ac-world-ranking-id/${globalThis.crypto.randomUUID()}`,
+          () => `${sport}-world-ranking-id/${globalThis.crypto.randomUUID()}`,
         ),
         numbers,
         names,
+        countries,
         at.toDate(),
       ],
     );
@@ -127,6 +143,10 @@ export class PostgresWorldRankingPlayers
           and world_ranking_id <> all($1::integer[])`,
       [numbers, at.toDate()],
     );
+    // A player of a tournament whose name the rankings did not know, or whose
+    // name two players now share, has the id looked for again by what the
+    // rankings now say.
+    await lookForIdsAgain(connection, { sport });
   }
 
   // A few thousand names to a sport, so each is read rather than indexed: a
@@ -141,7 +161,7 @@ export class PostgresWorldRankingPlayers
     const { rows } = await this.unitOfWork.connection().query<{
       name: string;
     }>(
-      `select name from ${TABLES[sport]}
+      `select distinct name from ${TABLES[sport]}
         where lower(name) like lower($1) escape '\\'
            or lower(name) like lower($2) escape '\\'
            or lower(name) like lower($3) escape '\\'
@@ -163,29 +183,36 @@ export class PostgresWorldRankingPlayers
   }
 
   // A few thousand rows at most, so all of them are read and the page is cut
-  // from them, as a year's tournaments are. Ordered by name, which is unique,
-  // so that two reads in a row put the players in the same order.
+  // from them, as a year's tournaments are. Ordered by name and then by number,
+  // which together are unique where a name alone is not (two golf croquet
+  // players of one name in different countries), so that two reads in a row put
+  // the players in the same order and a page never repeats or skips one.
   async changedAfter(
+    sport: WorldRankingSport,
     changedSince: ReadOnlyDate | undefined,
-  ): Promise<readonly KeptAssociationCroquetPlayer[]> {
+  ): Promise<readonly KeptWorldRankingPlayer[]> {
+    const select = `select ${IDENTIFIERS[sport]} as id, world_ranking_id, name,
+                           country,
+                           changed_at, archived_at
+                      from ${TABLES[sport]}`;
     const { rows } = await this.unitOfWork.connection().query<{
       id: string;
       world_ranking_id: number;
       name: string;
+      country: string | null;
       changed_at: Date;
       archived_at: Date | null;
     }>(
-      `select ac_world_ranking_id as id, world_ranking_id, name,
-              changed_at, archived_at
-         from ${TABLES.ac}
+      `${select}
         where $1::timestamptz is null or changed_at > $1
-        order by name`,
+        order by name, world_ranking_id`,
       [changedSince?.toDate() ?? null],
     );
     return rows.map((row) => ({
       id: row.id,
       worldRankingId: row.world_ranking_id,
       name: row.name,
+      country: row.country ?? undefined,
       changedAt: ReadOnlyDate.from(row.changed_at),
       archivedAt:
         row.archived_at === null

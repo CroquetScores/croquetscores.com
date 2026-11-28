@@ -1,3 +1,5 @@
+import type { WorldRankingSport } from "../../../application/services/WorldRankingLists.js";
+
 // Where the API tells of a thing, which is the `href` every answer of it gives
 // (the public site's page is its `uri`). Held here so that the list and the
 // tournament say the same of the same thing.
@@ -28,6 +30,8 @@ export const standingsHref = (
 export const gamesHref = (tournament: string, competition: string): string =>
   `${competitionHref(tournament, competition)}/games`;
 
-/** Where the API tells of an association croquet world ranking player's games. */
-export const worldRankingPlayerGamesHref = (player: string): string =>
-  `/api/v1/ac/world-ranking-players/${bare(player)}/games`;
+/** Where the API tells of a world ranking player's games, of the sport the player is of. */
+export const worldRankingPlayerGamesHref = (
+  sport: WorldRankingSport,
+  player: string,
+): string => `/api/v1/${sport}/world-ranking-players/${bare(player)}/games`;

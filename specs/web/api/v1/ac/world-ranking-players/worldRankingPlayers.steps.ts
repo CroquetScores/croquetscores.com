@@ -140,11 +140,13 @@ const made = async (
   world: WebWorld,
   name: string,
   worldRankingId: number,
+  country?: string,
 ): Promise<void> => {
   const answer = await call("POST", "/world-ranking-players", {
     sport: "ac",
     name,
     worldRankingId,
+    ...(country ? { country } : {}),
   });
   const text = await answer.text();
   assert.equal(answer.status, 201, text);
@@ -155,20 +157,14 @@ const made = async (
 };
 
 Given(
-  "the world ranking player {string} with the world ranking number {int}",
-  async function (this: WebWorld, name: string, number: number) {
-    await made(this, name, number);
-  },
-);
-
-Given(
-  "the golf croquet world ranking player {string}",
-  async function (this: WebWorld, name: string) {
-    const answer = await call("POST", "/world-ranking-players", {
-      sport: "gc",
-      name,
-    });
-    assert.equal(answer.status, 201, await answer.text());
+  /^the world ranking player "([^"]*)" with the world ranking number (\d+)(?: from "([^"]*)")?$/,
+  async function (
+    this: WebWorld,
+    name: string,
+    number: string,
+    country: string | undefined,
+  ) {
+    await made(this, name, Number(number), country);
   },
 );
 
@@ -265,6 +261,13 @@ Then(
   "the world ranking player {string} says its id",
   function (this: WebWorld, name: string) {
     assert.equal(namedInList(this, name)["id"], idOf(this, name));
+  },
+);
+
+Then(
+  "the world ranking player {string} says its country is {string}",
+  function (this: WebWorld, name: string, country: string) {
+    assert.equal(namedInList(this, name)["country"], country);
   },
 );
 

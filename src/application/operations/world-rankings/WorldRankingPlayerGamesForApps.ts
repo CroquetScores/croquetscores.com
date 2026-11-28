@@ -1,6 +1,7 @@
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Query } from "../../common/Query.js";
+import type { WorldRankingSport } from "../../services/WorldRankingLists.js";
 import type { KeptWorldRankingPlayerGame } from "../../services/WorldRankingPlayers.js";
 
 /** Every reason asking an app's list of a world ranking player's games can be refused where it is asked. */
@@ -33,14 +34,15 @@ export interface WorldRankingPlayerGamesForAppsPage {
 }
 
 /**
- * The games of the association croquet world ranking player the site gave
- * `playerId`, those that changed after `changedSince` where one is given, a
- * page of `pageSize` at a time, for an app. For anybody, so it names nobody.
+ * The games of the world ranking player of `sport` the site gave `playerId`,
+ * those that changed after `changedSince` where one is given, a page of
+ * `pageSize` at a time, for an app. For anybody, so it names nobody.
  * A page size over `mostGamesInAPage` is answered as that size and not
  * refused, as the list of the players is.
  */
 export class WorldRankingPlayerGamesForApps extends Query<WorldRankingPlayerGamesForAppsPage> {
   constructor(
+    readonly sport: WorldRankingSport,
     readonly playerId: string,
     readonly changedSince: ReadOnlyDate | undefined,
     readonly page: number,

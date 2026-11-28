@@ -1,7 +1,7 @@
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
-import type { AssociationCroquetPlayersKept } from "../../services/WorldRankingPlayers.js";
+import type { WorldRankingPlayersKept } from "../../services/WorldRankingPlayers.js";
 import {
   mostPlayersInAPage,
   WorldRankingPlayersForApps,
@@ -15,7 +15,7 @@ export class WorldRankingPlayersForAppsHandler extends QueryHandler<
   readonly handles: RequestType<WorldRankingPlayersForApps> =
     WorldRankingPlayersForApps;
 
-  constructor(private readonly kept: AssociationCroquetPlayersKept) {
+  constructor(private readonly kept: WorldRankingPlayersKept) {
     super();
   }
 
@@ -25,7 +25,10 @@ export class WorldRankingPlayersForAppsHandler extends QueryHandler<
   async handle(
     query: WorldRankingPlayersForApps,
   ): Promise<WorldRankingPlayersForAppsPage> {
-    const matching = await this.kept.changedAfter(query.changedSince);
+    const matching = await this.kept.changedAfter(
+      query.sport,
+      query.changedSince,
+    );
     const pageSize = Math.min(query.pageSize, mostPlayersInAPage);
     const first = (query.page - 1) * pageSize;
     const latest = matching.reduce<ReadOnlyDate | undefined>(

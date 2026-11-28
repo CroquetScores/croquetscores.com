@@ -36,13 +36,14 @@ const lineNaming = (
   sport: WorldRankingSport,
   number: number,
   fullName: string,
+  country: string,
 ): string => {
   const space = fullName.indexOf(" ");
   const first = fullName.slice(0, space);
   const surname = fullName.slice(space + 1);
   return sport === "ac"
     ? `${String(number).padStart(6)},${surname},X,     ,England,   100,${first}${", ".repeat(18)}`
-    : `${number},${surname},${first},${first},m,ENG,ENG,,2000,2000,,,,,1,0,0`;
+    : `${number},${surname},${first},${first},m,${country},${country},,2000,2000,,,,,1,0,0`;
 };
 
 // A full name as its first name, then its surname, which is the rest.
@@ -89,10 +90,17 @@ export class FakeWorldRankings {
     return { ac: `${at}${PATHS.ac}`, gc: `${at}${PATHS.gc}` };
   }
 
-  /** Adds a line naming `fullName` to `sport`'s list. */
-  names(sport: WorldRankingSport, fullName: string): void {
+  /**
+   * Adds a line naming `fullName` to `sport`'s list, with the country a golf
+   * croquet line has, which an association croquet line has none of.
+   */
+  names(
+    sport: WorldRankingSport,
+    fullName: string,
+    country: string = "ENG",
+  ): void {
     this.numbered += 1;
-    this.has(sport, lineNaming(sport, this.numbered, fullName));
+    this.has(sport, lineNaming(sport, this.numbered, fullName, country));
   }
 
   /** Takes every line naming `fullName` off `sport`'s list. */

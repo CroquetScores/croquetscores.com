@@ -7,8 +7,9 @@ Feature: An app lists the games of an association croquet world ranking player
   The player is named by the id the site gave it, which stays the same when the
   rankings change its number.
 
-  A game is the player's when the player is one the tournament keeps, under
-  the name the rankings know them by, in an association croquet tournament. It
+  A game is the player's when a player of an association croquet tournament is
+  the world ranking player, which the tournament's player is found to be by the
+  name the rankings know them by (`TournamentContents.feature`). It
   does not matter whether the competition counts towards the world rankings:
   every game is listed. A game in a test between teams is the player's when
   they played it for their team, and is told as any other game is. Each is

@@ -53,6 +53,18 @@ import type { UnitOfWork } from "../database/UnitOfWork.js";
 import { standCompetition, standingsToMakeOf } from "./CompetitionStandings.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 import { writtenMoment } from "./writtenMoment.js";
+import {
+  lookForIdsAgain,
+  type WorldRankingIds,
+  worldRankingIdsOf,
+} from "./worldRankingIds.js";
+
+// The two ids a player is kept with, in the order the statements that write
+// them take them.
+const ofTheSports = (ids: WorldRankingIds): [string | null, string | null] => [
+  ids.ac,
+  ids.gc,
+];
 
 // In the order a reader looks for a name in a list, capitals or none.
 const byName = new Intl.Collator("en");
@@ -400,6 +412,46 @@ export class TournamentContents implements Projection, Asked {
     }
   }
 
+  // What a tournament's players are looked for the rankings' numbers by,
+  // which is the sport they are of and where it is played. Nothing of either
+  // where the tournament is not there, which no number is looked for for.
+  async #tournamentOf(
+    tournament: string,
+  ): Promise<{ sport?: string; country?: string }> {
+    const { rows } = await this.unitOfWork.connection().query<{
+      sport: string;
+      country: string;
+    }>(`select sport, country from tournaments where tournament_id = $1`, [tournament]);
+    return rows[0] ?? {};
+  }
+
+  // The same for a team's player, with what their team is called, which is
+  // what a team's player is told apart from one of their name by.
+  async #teamOf(
+    team: string,
+  ): Promise<{ sport?: string; country?: string; called: string[] }> {
+    const { rows } = await this.unitOfWork.connection().query<{
+      sport: string;
+      country: string;
+      short_name: string;
+      name: string;
+    }>(
+      `select t.sport, t.country, m.short_name, m.name
+         from tournament_teams m
+         join tournaments t on t.tournament_id = m.tournament_id
+        where m.team_id = $1`,
+      [team],
+    );
+    const [found] = rows;
+    return found === undefined
+      ? { called: [] }
+      : {
+          sport: found.sport,
+          country: found.country,
+          called: [found.short_name, found.name],
+        };
+  }
+
   async #write(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
 
@@ -414,6 +466,8 @@ export class TournamentContents implements Projection, Asked {
           where tournament_id = $1`,
         [stream, event.subtitle ?? null, event.format, event.levelTestsDrawn],
       );
+      // Its sport or its country may be what is new.
+      await lookForIdsAgain(connection, { tournament: stream });
 
       // Its players ----------------------------------------------------------
     } else if (
@@ -422,11 +476,14 @@ export class TournamentContents implements Projection, Asked {
     ) {
       const player = playerOf(event);
       const name = player.name.toString();
+      const worldRankingName = player.worldRankingName?.toString() ?? name;
+      const { sport, country } = await this.#tournamentOf(stream);
       await connection.query(
         `insert into tournament_players
            (player_id, tournament_id, name, world_ranking_name, handicap,
-            representing, flag, slug, changed_at)
-         values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            representing, flag, slug, changed_at, ac_world_ranking_id,
+            gc_world_ranking_id)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
          on conflict (player_id) do update
            set changed_at = excluded.changed_at,
                name = excluded.name,
@@ -434,18 +491,29 @@ export class TournamentContents implements Projection, Asked {
                handicap = excluded.handicap,
                representing = excluded.representing,
                flag = excluded.flag,
-               slug = coalesce(tournament_players.slug, excluded.slug)`,
+               slug = coalesce(tournament_players.slug, excluded.slug),
+               ac_world_ranking_id = excluded.ac_world_ranking_id,
+               gc_world_ranking_id = excluded.gc_world_ranking_id`,
         [
           event.playerId,
           stream,
           name,
-          player.worldRankingName?.toString() ?? name,
+          worldRankingName,
           player.handicap ?? null,
           player.representing ?? null,
           player.flag === undefined ? null : String(player.flag),
           // Only said when the player is added: updating keeps it.
           event instanceof TournamentPlayerAdded ? event.slug : null,
           this.#at,
+          ...ofTheSports(
+            await worldRankingIdsOf(
+              connection,
+              sport,
+              worldRankingName,
+              player.representing === undefined ? [] : [player.representing],
+              country,
+            ),
+          ),
         ],
       );
     } else if (event instanceof TournamentPlayerArchived) {
@@ -474,6 +542,8 @@ export class TournamentContents implements Projection, Asked {
           team.flag === undefined ? null : String(team.flag),
         ],
       );
+      // What a team is called is what its players are told apart by.
+      await lookForIdsAgain(connection, { tournament: stream });
     } else if (event instanceof TeamArchived) {
       await connection.query(
         `update tournament_teams
@@ -493,25 +563,39 @@ export class TournamentContents implements Projection, Asked {
     ) {
       const player = teamPlayerOf(event);
       const name = player.name.toString();
+      const worldRankingName = player.worldRankingName?.toString() ?? name;
+      const { sport, country, called } = await this.#teamOf(event.teamId);
       await connection.query(
         `insert into tournament_team_players
            (player_id, team_id, name, world_ranking_name,
-            position, changed_at, slug)
-         values ($1, $2, $3, $4, $5, $6, $7)
+            position, changed_at, slug, ac_world_ranking_id,
+            gc_world_ranking_id)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
          on conflict (player_id) do update
            set name = excluded.name,
                world_ranking_name = excluded.world_ranking_name,
                changed_at = excluded.changed_at,
-               slug = coalesce(tournament_team_players.slug, excluded.slug)`,
+               slug = coalesce(tournament_team_players.slug, excluded.slug),
+               ac_world_ranking_id = excluded.ac_world_ranking_id,
+               gc_world_ranking_id = excluded.gc_world_ranking_id`,
         [
           event.playerId,
           event.teamId,
           name,
-          player.worldRankingName?.toString() ?? name,
+          worldRankingName,
           event instanceof TeamPlayerAdded ? event.order : ORDER_STEP,
           this.#at,
           // Only said when the player is added: updating keeps it.
           event instanceof TeamPlayerAdded ? event.slug : null,
+          ...ofTheSports(
+            await worldRankingIdsOf(
+              connection,
+              sport,
+              worldRankingName,
+              called,
+              country,
+            ),
+          ),
         ],
       );
     } else if (event instanceof TeamPlayerArchived) {

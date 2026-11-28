@@ -2,42 +2,57 @@ import type {
   KeptWorldRankingPlayerGame,
   WorldRankingPlayerGamesKept,
 } from "../../application/services/WorldRankingPlayers.js";
+import type { WorldRankingSport } from "../../application/services/WorldRankingLists.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 
+// Written out rather than made from the sport, so that nothing a caller says
+// is ever part of a statement.
+const PLAYERS: Readonly<
+  Record<WorldRankingSport, { table: string; id: string }>
+> = {
+  ac: { table: "ac_world_ranking_players", id: "ac_world_ranking_id" },
+  gc: { table: "gc_world_ranking_players", id: "gc_world_ranking_id" },
+};
+
 /**
- * The games of each association croquet world ranking player, read from what
+ * The games of each world ranking player of a sport, read from what
  * the competitions' and tournaments' read models already keep
  * (`worldRankingPlayerGames.feature`), so nothing is projected for it and
  * nothing is asked of the events.
  *
- * A tournament keeps no link to the rankings' players: a player is the
- * rankings' by the name the tournament says the rankings know them by, which
- * is what the players' dialogs offer from the rankings' list. So a game is a
- * ranking player's where one of its sides has that name, in a tournament of
- * association croquet, whether or not the competition counts towards the
- * rankings.
+ * A tournament's players are kept with the id of the world ranking player
+ * they are (`ac_world_ranking_id` or `gc_world_ranking_id`, by the sport),
+ * which is found by the name the tournament says the rankings know them by and,
+ * where two players have it, by who they represent and where the tournament is
+ * played (TournamentContents.feature). So a game is a ranking player's where
+ * one of its sides has their id, whether or not the competition counts
+ * towards the rankings.
+ *
+ * A side that has no id is nobody's, as a side the rankings' names did not tell
+ * apart is: an opponent of that kind is told by their name and with no id.
  */
 export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
   async changedAfter(
+    sport: WorldRankingSport,
     playerId: string,
     changedSince: ReadOnlyDate | undefined,
   ): Promise<readonly KeptWorldRankingPlayerGame[] | undefined> {
     const connection = this.unitOfWork.connection();
-    const { rows: known } = await connection.query<{ name: string }>(
-      `select name from ac_world_ranking_players
-        where ac_world_ranking_id = $1`,
+    const { table, id } = PLAYERS[sport];
+    const { rows: known } = await connection.query<{ found: boolean }>(
+      `select true as found from ${table} where ${id} = $1`,
       [playerId],
     );
-    const [player] = known;
-    if (player === undefined) return undefined;
+    if (known.length === 0) return undefined;
 
     // A game names its sides by the id the competition gives a player, or by
     // a team player's id in a test. Only the sides that are this player's are
-    // found by name, and the other side of each game is looked up by its id,
-    // so that nothing is read of the players who are nobody's concern here.
+    // found by their world ranking id, and the other side of each game is
+    // looked up by its entry, so that nothing is read of the players who are
+    // nobody's concern here.
     //
     // Where both sides of a game are this player's, which two tournament
     // players of one world ranking name can make, the winner's side is the
@@ -71,13 +86,13 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
          select e.competition_id, e.entry_id as side_id
            from tournament_players p
            join competition_entries e on e.tournament_player_id = p.player_id
-          where p.world_ranking_name = $1
+          where p.${id} = $1
          union all
          select c.competition_id, t.player_id as side_id
            from tournament_team_players t
            join competitions c
              on t.team_id in (c.first_team_id, c.second_team_id)
-          where t.world_ranking_name = $1
+          where t.${id} = $1
        ),
        told as (
          select g.*, c.tournament_id,
@@ -93,8 +108,7 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
              on g.competition_id = me.competition_id
             and me.side_id in (g.winner_id, g.loser_id)
            join competitions c on c.competition_id = g.competition_id
-           join tournaments t
-             on t.tournament_id = c.tournament_id and t.sport = 'ac'
+           join tournaments t on t.tournament_id = c.tournament_id
           where me.side_id = g.winner_id
              or not exists (select 1 from mine other
                              where other.competition_id = g.competition_id
@@ -104,24 +118,24 @@ export class WorldRankingPlayerGames implements WorldRankingPlayerGamesKept {
               told.is_winner, told.winner_score, told.loser_score,
               told.drawn, told.told_archived as archived, told.withdrawn,
               told.added_at, told.told_changed_at as changed_at,
-              opponent.ac_world_ranking_id as opponent_id,
+              opponent.${id} as opponent_id,
               coalesce(opponent.name, other.name) as opponent_name
          from told
          cross join lateral (
-           select p.world_ranking_name, p.name
+           select p.${id} as world_ranking_player_id, p.name
              from competition_entries e
              join tournament_players p on p.player_id = e.tournament_player_id
             where e.entry_id = told.other_id
            union all
-           select t.world_ranking_name, t.name
+           select t.${id}, t.name
              from tournament_team_players t
             where t.player_id = told.other_id
          ) other
-         left join ac_world_ranking_players opponent
-           on opponent.name = other.world_ranking_name
+         left join ${table} opponent
+           on opponent.${id} = other.world_ranking_player_id
         where $2::timestamptz is null or told.told_changed_at > $2
         order by told.added_at nulls first`,
-      [player.name, changedSince?.toDate() ?? null],
+      [playerId, changedSince?.toDate() ?? null],
     );
     return rows.map((row) => ({
       id: row.game_id,

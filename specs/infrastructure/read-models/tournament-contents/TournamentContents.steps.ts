@@ -781,3 +781,181 @@ Then(
     assert.equal(player.archived, true);
   },
 );
+
+// The world rankings' players ----------------------------------------------------------
+
+// Put straight into the tables the rankings' players are kept in, as an import
+// would have left them: what a tournament's player is found among them by is
+// the scenario's subject, not how they came to be there.
+Given(
+  /^the world rankings know the (association|golf) croquet player (\d+) called "([^"]*)"(?: from "([^"]*)")?$/,
+  async function (
+    this: SpecWorld,
+    sport: string,
+    number: string,
+    name: string,
+    country: string | undefined,
+  ) {
+    if (sport === "association") {
+      await this.database.query(
+        `insert into ac_world_ranking_players
+           (ac_world_ranking_id, world_ranking_id, name, changed_at)
+         values ('ac-world-ranking-id/' || gen_random_uuid(), $1, $2, now())`,
+        [Number(number), name],
+      );
+      return;
+    }
+    await this.database.query(
+      `insert into gc_world_ranking_players
+         (gc_world_ranking_id, world_ranking_id, name, country, changed_at)
+       values ('gc-world-ranking-id/' || gen_random_uuid(), $1, $2, $3, now())`,
+      [Number(number), name, country ?? "england"],
+    );
+  },
+);
+
+Given(
+  "the world rankings have archived the association croquet player {int}",
+  async function (this: SpecWorld, number: number) {
+    await this.database.query(
+      `update ac_world_ranking_players set archived_at = now()
+        where world_ranking_id = $1`,
+      [number],
+    );
+  },
+);
+
+// The ids a tournament's player is kept with, one for each sport, which the
+// scenarios read from the tables, since what is asked of the read model is
+// what the API tells and the API does not tell them.
+interface Ids {
+  readonly ac: string | null;
+  readonly gc: string | null;
+}
+
+const idsKept = async (
+  world: SpecWorld,
+  table: "tournament_players" | "tournament_team_players",
+  id: string,
+): Promise<Ids> => {
+  const { rows } = await world.database.query<{
+    ac_world_ranking_id: string | null;
+    gc_world_ranking_id: string | null;
+  }>(
+    `select ac_world_ranking_id, gc_world_ranking_id from ${table}
+      where player_id = $1`,
+    [id],
+  );
+  assert.equal(rows.length, 1, "The player was not kept.");
+  return { ac: rows[0]!.ac_world_ranking_id, gc: rows[0]!.gc_world_ranking_id };
+};
+
+const idsOfPlayer = (
+  world: SpecWorld,
+  name: string,
+  tournament: string,
+): Promise<Ids> =>
+  idsKept(
+    world,
+    "tournament_players",
+    found(ownScenarioOf(world).players, `${name} of ${tournament}`).id.value,
+  );
+
+const idsOfTeamPlayer = (
+  world: SpecWorld,
+  name: string,
+  team: string,
+  tournament: string,
+): Promise<Ids> =>
+  idsKept(
+    world,
+    "tournament_team_players",
+    found(
+      ownScenarioOf(world).teamPlayers,
+      `${name} of ${team} of ${tournament}`,
+    ).id.value,
+  );
+
+// The id the site gave the rankings' player with that number, which is what a
+// scenario can say of them, since the id is the site's own.
+const idOfRankingPlayer = async (
+  world: SpecWorld,
+  sport: "ac" | "gc",
+  number: number,
+): Promise<string> => {
+  const table =
+    sport === "ac" ? "ac_world_ranking_players" : "gc_world_ranking_players";
+  const identifier =
+    sport === "ac" ? "ac_world_ranking_id" : "gc_world_ranking_id";
+  const { rows } = await world.database.query<{ id: string }>(
+    `select ${identifier} as id from ${table} where world_ranking_id = $1`,
+    [number],
+  );
+  assert.equal(rows.length, 1, `The rankings know no player ${number}.`);
+  return rows[0]!.id;
+};
+
+const sportOf = (said: string): "ac" | "gc" =>
+  said === "association" ? "ac" : "gc";
+
+// Only the sport's own column is filled in, so the other is checked empty too.
+const assertKeptWith = async (
+  world: SpecWorld,
+  kept: Ids,
+  said: string,
+  number: string,
+): Promise<void> => {
+  const sport = sportOf(said);
+  assert.deepEqual(kept, {
+    ac: null,
+    gc: null,
+    [sport]: await idOfRankingPlayer(world, sport, Number(number)),
+  });
+};
+
+Then(
+  /^the player "([^"]*)" of "([^"]*)" is kept with the id of the (association|golf) croquet player (\d+)$/,
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    sport: string,
+    number: string,
+  ) {
+    await assertKeptWith(
+      this,
+      await idsOfPlayer(this, name, tournament),
+      sport,
+      number,
+    );
+  },
+);
+
+Then(
+  "the player {string} of {string} is kept with no world ranking id",
+  async function (this: SpecWorld, name: string, tournament: string) {
+    assert.deepEqual(await idsOfPlayer(this, name, tournament), {
+      ac: null,
+      gc: null,
+    });
+  },
+);
+
+Then(
+  /^the player "([^"]*)" of the team "([^"]*)" of "([^"]*)" is kept with the id of the (association|golf) croquet player (\d+)$/,
+  async function (
+    this: SpecWorld,
+    name: string,
+    team: string,
+    tournament: string,
+    sport: string,
+    number: string,
+  ) {
+    await assertKeptWith(
+      this,
+      await idsOfTeamPlayer(this, name, team, tournament),
+      sport,
+      number,
+    );
+  },
+);

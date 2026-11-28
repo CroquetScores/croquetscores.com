@@ -43,7 +43,7 @@ export interface DuplicateName {
 }
 
 /**
- * An association croquet list that gives one full name to two players, kept
+ * A list that gives one full name to two players, kept
  * apart from {@link ListRefused} so that what is told to the administrator
  * can say which names and which numbers.
  */
@@ -57,8 +57,8 @@ export class DuplicateNamesRefused extends ListRefused {
 }
 
 /**
- * An association croquet list that gives a name to a player when the site
- * keeps it for another number, kept apart for the same reason as
+ * A list that gives a name to a player when the site keeps it for another
+ * number, kept apart for the same reason as
  * {@link DuplicateNamesRefused}.
  */
 export class NameTakenRefused extends ListRefused {
@@ -71,13 +71,15 @@ export class NameTakenRefused extends ListRefused {
 }
 
 /**
- * An association croquet player as the rankings list them: the number the
+ * A player as the rankings list them, in either sport's list: the number the
  * rankings keep them by, which does not change when their name does, and
- * their full name.
+ * their full name. A golf croquet player has the country they are from too,
+ * since players of one name are told apart by it.
  */
-export interface AssociationCroquetPlayer {
+export interface ListedPlayer {
   readonly worldRankingId: number;
   readonly name: string;
+  readonly country?: string | undefined;
 }
 
 /**
@@ -93,11 +95,13 @@ export interface WorldRankingLists {
    * once. Throws {@link ListRefused} where the list could not be asked for,
    * or where any of it could not be read.
    */
-  associationCroquetPlayers(): Promise<readonly AssociationCroquetPlayer[]>;
+  associationCroquetPlayers(): Promise<readonly ListedPlayer[]>;
 
   /**
-   * The full name of every player on golf croquet's list, each name once.
-   * Throws {@link ListRefused} as above.
+   * Every player on golf croquet's list, each with their country, each world
+   * ranking number once and each full name and country once. Throws
+   * {@link ListRefused} as above, and a list that gives one name and country
+   * to two players is refused as association croquet's is.
    */
-  golfCroquetNames(): Promise<readonly string[]>;
+  golfCroquetPlayers(): Promise<readonly ListedPlayer[]>;
 }

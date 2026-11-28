@@ -55,7 +55,7 @@ export const listsStoodUpBy = (world: SpecWorld): WorldRankingLists => {
   };
   return {
     associationCroquetPlayers: () => stoodUp().associationCroquetPlayers(),
-    golfCroquetNames: () => stoodUp().golfCroquetNames(),
+    golfCroquetPlayers: () => stoodUp().golfCroquetPlayers(),
   };
 };
 
@@ -89,6 +89,15 @@ Given(
   new RegExp(`^the ${SPORT} list names "([^"]*)"$`),
   function (this: SpecWorld, sport: string, fullName: string) {
     fakeRankingsOf(this).names(sportCalled(sport), fullName);
+  },
+);
+
+// A golf croquet player of the country the scenario says, which is how two
+// players of one name are told apart.
+Given(
+  /^the golf croquet list names "([^"]*)" from "([^"]*)"$/,
+  function (this: SpecWorld, fullName: string, country: string) {
+    fakeRankingsOf(this).names("gc", fullName, country);
   },
 );
 
@@ -251,25 +260,26 @@ Then(
   },
 );
 
-// Whether a kept player has been archived, which only association croquet's
-// are. A player not kept at all is neither.
+// Whether a kept player has been archived. A player not kept at all is
+// neither.
 const archivedAt = (
   world: SpecWorld,
+  sport: WorldRankingSport,
   name: string,
 ): Promise<{ found: boolean; archived: boolean }> =>
   fromOutside(world, async (outside) => {
     const { rows } = await outside.query<{ archived: boolean }>(
       `select archived_at is not null as archived
-         from ${TABLES.ac} where name = $1`,
+         from ${TABLES[sport]} where name = $1`,
       [name],
     );
     return { found: rows.length > 0, archived: rows[0]?.archived === true };
   });
 
 Then(
-  /^"([^"]*)" is archived among the association croquet players$/,
-  async function (this: SpecWorld, name: string) {
-    assert.deepEqual(await archivedAt(this, name), {
+  new RegExp(`^"([^"]*)" is archived among the ${SPORT} players$`),
+  async function (this: SpecWorld, name: string, sport: string) {
+    assert.deepEqual(await archivedAt(this, sportCalled(sport), name), {
       found: true,
       archived: true,
     });
@@ -277,9 +287,9 @@ Then(
 );
 
 Then(
-  /^"([^"]*)" is not archived among the association croquet players$/,
-  async function (this: SpecWorld, name: string) {
-    assert.deepEqual(await archivedAt(this, name), {
+  new RegExp(`^"([^"]*)" is not archived among the ${SPORT} players$`),
+  async function (this: SpecWorld, name: string, sport: string) {
+    assert.deepEqual(await archivedAt(this, sportCalled(sport), name), {
       found: true,
       archived: false,
     });
@@ -294,28 +304,23 @@ Then(
   },
 );
 
-// A player straight into a sport's table. An association croquet player is
-// given the next number and an identifier of its own, which nothing here is
-// about.
+// A player straight into a sport's table, with the next number and an
+// identifier of its own, which nothing here is about, and from England where
+// the sport has countries.
 const putIn = async (
   world: SpecWorld,
   sport: WorldRankingSport,
   name: string,
 ): Promise<void> => {
-  if (sport === "gc") {
-    await world.database.query(
-      `insert into ${TABLES.gc} (name) values ($1) on conflict do nothing`,
-      [name],
-    );
-    return;
-  }
+  const identifier =
+    sport === "ac" ? "ac_world_ranking_id" : "gc_world_ranking_id";
   await world.database.query(
-    `insert into ${TABLES.ac}
-       (ac_world_ranking_id, world_ranking_id, name, changed_at)
-     select 'ac-world-ranking-id/' || gen_random_uuid(),
-            coalesce(max(world_ranking_id), 0) + 1, $1, now()
-       from ${TABLES.ac}
-      where not exists (select 1 from ${TABLES.ac} where name = $1)`,
+    `insert into ${TABLES[sport]}
+       (${identifier}, world_ranking_id, name, changed_at${sport === "gc" ? ", country" : ""})
+     select '${sport}-world-ranking-id/' || gen_random_uuid(),
+            coalesce(max(world_ranking_id), 0) + 1, $1, now()${sport === "gc" ? ", 'england'" : ""}
+       from ${TABLES[sport]}
+      where not exists (select 1 from ${TABLES[sport]} where name = $1)`,
     [name],
   );
 };
@@ -389,7 +394,7 @@ Given("the reading of the rankings' lists breaks", function (this: SpecWorld) {
     Promise.reject(new Error("The reading broke."));
   this.worldRankingLists = {
     associationCroquetPlayers: broken,
-    golfCroquetNames: broken,
+    golfCroquetPlayers: broken,
   };
 });
 

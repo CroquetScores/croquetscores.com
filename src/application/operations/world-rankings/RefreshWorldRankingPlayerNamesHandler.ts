@@ -3,16 +3,21 @@ import type { RequestType } from "../../common/Mediator.js";
 import type { EmailQueue } from "../../services/EmailQueue.js";
 import type { ErrorLog } from "../../services/ErrorLog.js";
 import type { Transactions } from "../../services/Transactions.js";
-import type { WorldRankingLists } from "../../services/WorldRankingLists.js";
+import type {
+  WorldRankingLists,
+  WorldRankingSport,
+} from "../../services/WorldRankingLists.js";
 import type { WorldRankingPlayers } from "../../services/WorldRankingPlayers.js";
 import { importWorldRankingPlayers } from "./importingWorldRankingPlayers.js";
-import { RefreshAssociationCroquetPlayerNames } from "./RefreshAssociationCroquetPlayerNames.js";
+import { RefreshWorldRankingPlayerNames } from "./RefreshWorldRankingPlayerNames.js";
 
 const anHour = 60 * 60 * 1000;
 
 /**
- * Refreshing the association croquet names (worldRankingPlayers.feature), at
- * most once an hour.
+ * Refreshing the names of one sport's players
+ * (RefreshWorldRankingPlayerNames.feature), at most once an hour for each
+ * sport, since a sport's list is read only when that sport's players are asked
+ * for, and the other's hour is no reason to hold it back.
  *
  * A request made while a refresh is under way is within its hour and is
  * answered with the list as it stood, rather than made to wait for it.
@@ -25,14 +30,14 @@ const anHour = 60 * 60 * 1000;
  * is down is not asked again by every request while it is. A failure of the
  * site's own is the exception: it is let go, since nothing was kept.
  */
-export class RefreshAssociationCroquetPlayerNamesHandler extends CommandHandler<
-  RefreshAssociationCroquetPlayerNames,
+export class RefreshWorldRankingPlayerNamesHandler extends CommandHandler<
+  RefreshWorldRankingPlayerNames,
   void
 > {
-  readonly handles: RequestType<RefreshAssociationCroquetPlayerNames> =
-    RefreshAssociationCroquetPlayerNames;
+  readonly handles: RequestType<RefreshWorldRankingPlayerNames> =
+    RefreshWorldRankingPlayerNames;
 
-  private lastAskedAt: number | undefined;
+  private readonly lastAskedAt = new Map<WorldRankingSport, number>();
 
   constructor(
     private readonly lists: WorldRankingLists,
@@ -46,20 +51,21 @@ export class RefreshAssociationCroquetPlayerNamesHandler extends CommandHandler<
     super();
   }
 
-  async handle(command: RefreshAssociationCroquetPlayerNames): Promise<void> {
+  async handle(command: RefreshWorldRankingPlayerNames): Promise<void> {
+    const { sport } = command;
     const now = command.requestedAt.toDate().getTime();
+    const lastAskedAt = this.lastAskedAt.get(sport);
     // A request made before the last one is not within its hour: a clock
     // that has been put back would otherwise hold the refresh off until it
     // caught up.
     if (
-      this.lastAskedAt !== undefined &&
-      now >= this.lastAskedAt &&
-      now - this.lastAskedAt < anHour
+      lastAskedAt !== undefined &&
+      now >= lastAskedAt &&
+      now - lastAskedAt < anHour
     ) {
       return;
     }
-    const before = this.lastAskedAt;
-    this.lastAskedAt = now;
+    this.lastAskedAt.set(sport, now);
     try {
       await importWorldRankingPlayers(
         {
@@ -75,11 +81,12 @@ export class RefreshAssociationCroquetPlayerNamesHandler extends CommandHandler<
         // Nobody is waiting to be told how it went.
         () => {},
         command.requestedAt,
-        ["ac"],
+        [sport],
       );
     } catch (failure) {
       // The site's own failure kept nothing, so it costs no hour.
-      this.lastAskedAt = before;
+      if (lastAskedAt === undefined) this.lastAskedAt.delete(sport);
+      else this.lastAskedAt.set(sport, lastAskedAt);
       throw failure;
     }
   }
