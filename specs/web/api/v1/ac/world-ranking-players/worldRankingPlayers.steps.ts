@@ -6,8 +6,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { call } from "../../../support/control.js";
-import type { WebWorld } from "../../../support/world.js";
+import { call } from "../../../../support/control.js";
+import type { WebWorld } from "../../../../support/world.js";
 import {
   answered,
   asked,
@@ -15,7 +15,7 @@ import {
   keyMade,
   sceneOf,
   type Answer,
-} from "../apiOfApps.js";
+} from "../../apiOfApps.js";
 
 const listPath = (more: Record<string, string> = {}): string => {
   const asks = new URLSearchParams(more).toString();
