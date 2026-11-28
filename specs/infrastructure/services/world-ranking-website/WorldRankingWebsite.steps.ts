@@ -18,7 +18,7 @@ import type { SpecWorld } from "../../../support/world.js";
 interface Read {
   readonly name: string;
   readonly worldRankingId: number;
-  // Only golf croquet's players are told apart by one.
+  // Where the line says one.
   readonly country?: string | undefined;
 }
 
@@ -60,6 +60,10 @@ Then(
     assert.equal(readOf(this)[0]?.name, fullName);
   },
 );
+
+Then("the first player read has no country", function (this: SpecWorld) {
+  assert.equal(readOf(this)[0]?.country, undefined);
+});
 
 Then(
   "the first player read is from {string}",

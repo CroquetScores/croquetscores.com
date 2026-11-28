@@ -270,6 +270,13 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) golf croquet world ranking player listed is from "([^"]*)"$/,
+  function (this: WebWorld, place: (typeof places)[number], country: string) {
+    assert.equal(listed(this)[places.indexOf(place)]?.["country"], country);
+  },
+);
+
+Then(
   "the golf croquet world ranking player {string} says its id",
   function (this: WebWorld, name: string) {
     assert.equal(namedInList(this, name)["id"], idOf(this, name));

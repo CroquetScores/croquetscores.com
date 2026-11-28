@@ -183,8 +183,10 @@ export class PostgresWorldRankingPlayers
   }
 
   // A few thousand rows at most, so all of them are read and the page is cut
-  // from them, as a year's tournaments are. Ordered by name, which is unique,
-  // so that two reads in a row put the players in the same order.
+  // from them, as a year's tournaments are. Ordered by name and then by number,
+  // which together are unique where a name alone is not (two golf croquet
+  // players of one name in different countries), so that two reads in a row put
+  // the players in the same order and a page never repeats or skips one.
   async changedAfter(
     sport: WorldRankingSport,
     changedSince: ReadOnlyDate | undefined,
@@ -203,7 +205,7 @@ export class PostgresWorldRankingPlayers
     }>(
       `${select}
         where $1::timestamptz is null or changed_at > $1
-        order by name`,
+        order by name, world_ranking_id`,
       [changedSince?.toDate() ?? null],
     );
     return rows.map((row) => ({

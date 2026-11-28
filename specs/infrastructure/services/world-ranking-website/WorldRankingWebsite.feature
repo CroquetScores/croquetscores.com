@@ -32,7 +32,10 @@ Feature: Reading the players' lists from the world rankings' site
   rankings write it, rather than refuse a whole list for one country the site
   has yet to learn. The golf croquet list has players of one name in different
   countries, so a golf croquet player is told apart by their name and their
-  country together.
+  country together, and a golf croquet line with no country is refused. An
+  association croquet player is told apart by name alone and the country is
+  only told of them, so a line with none is read with none, as it is better to
+  tell a player with no country than to refuse the whole list for one line.
 
   An association croquet list may not give one full name to two players,
   whatever their numbers: the site finds a player by their name, and a name
@@ -99,10 +102,11 @@ Feature: Reading the players' lists from the world rankings' site
       When the association croquet list is read
       Then the first player read is from "Atlantis"
 
-    Scenario: A line with no country is refused
+    Scenario: A line with no country is read with none
       Given the association croquet list has the line "     3,Aiton,KMH,          , ,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
       When the association croquet list is read
-      Then the reading is refused with "WorldRankingLists.Unreadable"
+      Then the first player read is "Keith Aiton"
+      And the first player read has no country
 
   Rule: An association croquet player is read with their world ranking number
 

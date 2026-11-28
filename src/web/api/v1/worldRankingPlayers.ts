@@ -89,12 +89,10 @@ const said = (
   worldRankingPlayers: page.players.map((each) =>
     marked({
       id: each.id,
-      // Only association croquet's rankings give a player a number.
-      ...(each.worldRankingId === undefined
-        ? {}
-        : { worldRankingId: each.worldRankingId }),
+      worldRankingId: each.worldRankingId,
       name: each.name,
-      // Only golf croquet's players are told apart by one.
+      // Golf croquet's players always have one. Association croquet's have one
+      // once the rankings' list has been read since it was added.
       ...(each.country === undefined ? {} : { country: each.country }),
       games: worldRankingPlayerGamesHref(sport, each.id),
       archivedAt: each.archivedAt?.toISOString() ?? null,

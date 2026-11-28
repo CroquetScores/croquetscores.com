@@ -47,11 +47,31 @@ export const defaultWaitMilliseconds = 30_000;
 const LAYOUTS: Readonly<
   Record<
     WorldRankingSport,
-    { details: number; firstName: number; surname: number; country: number }
+    {
+      details: number;
+      firstName: number;
+      surname: number;
+      country: number;
+      // Whether a line with none is refused. Golf croquet's players are told
+      // apart by their country; association croquet's are only told of it.
+      countryRequired: boolean;
+    }
   >
 > = {
-  ac: { details: 25, firstName: 6, surname: 1, country: 4 },
-  gc: { details: 17, firstName: 3, surname: 1, country: 5 },
+  ac: {
+    details: 25,
+    firstName: 6,
+    surname: 1,
+    country: 4,
+    countryRequired: false,
+  },
+  gc: {
+    details: 17,
+    firstName: 3,
+    surname: 1,
+    country: 5,
+    countryRequired: true,
+  },
 };
 
 // The most a number can be and still be kept, which is as large as the
@@ -114,12 +134,11 @@ export class WorldRankingWebsite implements WorldRankingLists {
         throw unreadable(sport, `could not be read at line ${index + 1}`);
       }
       const country = LAYOUTS[sport].country;
+      const written = details[country] ?? "";
       players.push({
         worldRankingId,
         name: this.nameOn(sport, details),
-        ...(country === undefined
-          ? {}
-          : { country: siteCountryOf(sport, details[country] ?? "") }),
+        ...(written === "" ? {} : { country: siteCountryOf(sport, written) }),
       });
     }
     this.somebody(sport, players);
@@ -206,7 +225,8 @@ export class WorldRankingWebsite implements WorldRankingLists {
       throw unreadable(sport, "is not UTF-8");
     }
 
-    const { details, firstName, surname, country } = LAYOUTS[sport];
+    const { details, firstName, surname, country, countryRequired } =
+      LAYOUTS[sport];
     const lines: { details: string[]; index: number }[] = [];
     for (const [index, line] of text.split(/\r?\n/).entries()) {
       if (line.trim() === "") continue;
@@ -215,7 +235,7 @@ export class WorldRankingWebsite implements WorldRankingLists {
         said.length !== details ||
         (said[firstName] ?? "") === "" ||
         (said[surname] ?? "") === "" ||
-        (country !== undefined && (said[country] ?? "") === "")
+        (countryRequired && (said[country] ?? "") === "")
       ) {
         throw unreadable(sport, `could not be read at line ${index + 1}`);
       }

@@ -64,7 +64,11 @@ export interface KeptWorldRankingPlayer {
   /** The number the rankings give them, which can change. */
   readonly worldRankingId: number;
   readonly name: string;
-  /** Where they are from, which only golf croquet's players are told by. */
+  /**
+   * Where they are from, as the site's own code for it. Golf croquet's
+   * players always have one, since it tells them apart; association croquet's
+   * have one once the rankings' list has been read since it was added.
+   */
   readonly country: string | undefined;
   readonly changedAt: ReadOnlyDate;
   /** Empty for a player the rankings still list. */

@@ -124,7 +124,7 @@ export interface ReaderMaking {
       readonly name: string;
       readonly id: string;
       readonly worldRankingId: number;
-      /** Golf croquet's players have one. */
+      /** Where they are from, where it is known. */
       readonly country?: string;
       readonly changedAt: string;
       readonly archivedAt: string | null;

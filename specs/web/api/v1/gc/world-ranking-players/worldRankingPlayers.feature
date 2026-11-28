@@ -103,6 +103,13 @@ Feature: An app lists the golf croquet world ranking players
       And the second golf croquet world ranking player listed is "Bea Bishop"
       And the third golf croquet world ranking player listed is "Cara Croquet"
 
+    Scenario: Players of one name are listed in the order of their numbers
+      Given the golf croquet world ranking player "Ivor Brand" with the world ranking number 5 from "wales"
+      And the golf croquet world ranking player "Ivor Brand" with the world ranking number 4 from "england"
+      When the golf croquet world ranking players are asked for page 1 with that key
+      Then the first golf croquet world ranking player listed is from "england"
+      And the second golf croquet world ranking player listed is from "wales"
+
     Scenario: An association croquet player is not listed
       Given the world ranking player "Ann Archer" with the world ranking number 11
       When the golf croquet world ranking players are asked for page 1 with that key

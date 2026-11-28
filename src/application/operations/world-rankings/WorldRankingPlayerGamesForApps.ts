@@ -34,8 +34,9 @@ export interface WorldRankingPlayerGamesForAppsPage {
 }
 
 /**
- * The games of the world ranking player of `sport` the site gave `playerId`, those that changed after `changedSince` where one is given, a
- * page of `pageSize` at a time, for an app. For anybody, so it names nobody.
+ * The games of the world ranking player of `sport` the site gave `playerId`,
+ * those that changed after `changedSince` where one is given, a page of
+ * `pageSize` at a time, for an app. For anybody, so it names nobody.
  * A page size over `mostGamesInAPage` is answered as that size and not
  * refused, as the list of the players is.
  */
